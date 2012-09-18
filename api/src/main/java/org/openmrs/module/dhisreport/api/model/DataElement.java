@@ -23,20 +23,19 @@ package org.openmrs.module.dhisreport.api.model;
 
 import java.io.Serializable;
 import javax.xml.bind.annotation.*;
-import org.openmrs.BaseOpenmrsMetadata;
 
 /**
  *
  * @author bobj
  */
 @XmlAccessorType(XmlAccessType.FIELD)
-@XmlType(name = "")
 @XmlRootElement(name = "dataElement")
 public class DataElement  implements Serializable {
     
     protected Integer id;
     
     @XmlAttribute(required = true)
+    @XmlID
     protected String code;
     
     @XmlAttribute(required = true)

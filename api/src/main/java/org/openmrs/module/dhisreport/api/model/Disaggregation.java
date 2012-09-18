@@ -41,6 +41,8 @@ public class Disaggregation implements Serializable {
     protected String name;
     
     @XmlAttribute(required = true)
+    @XmlID
+    @XmlSchemaType(name = "ID")
     protected String code;
     
     @XmlAttribute(required = true)

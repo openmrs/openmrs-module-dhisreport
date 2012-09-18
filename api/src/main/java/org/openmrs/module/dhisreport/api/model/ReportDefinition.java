@@ -17,7 +17,6 @@ import java.io.Serializable;
 import java.util.HashSet;
 import java.util.Set;
 import javax.xml.bind.annotation.*;
-import org.openmrs.BaseOpenmrsMetadata;
 
 /**
  * 
@@ -27,14 +26,15 @@ import org.openmrs.BaseOpenmrsMetadata;
  */
 @XmlAccessorType(XmlAccessType.FIELD)
 @XmlType(name = "", propOrder = {
+    "id",
     "name",
     "uid",
     "code",
-    "periodType",
+//    "periodType",
     "dataValueTemplates"
 })
 @XmlRootElement(name = "reportTemplate")
-public class ReportDefinition extends BaseOpenmrsMetadata implements Serializable {
+public class ReportDefinition implements Serializable {
 
 	protected Integer id;
     
@@ -47,26 +47,23 @@ public class ReportDefinition extends BaseOpenmrsMetadata implements Serializabl
     @XmlElement(required = true)
     protected String code;
 
-    @XmlElement(required = true)
+    @XmlElementWrapper(name="dataValueTemplates")
+    @XmlElement(name="dataValueTemplate")
     protected Set<DataValueTemplate> dataValueTemplates = new HashSet<DataValueTemplate>();
     
-	@Override
 	public Integer getId() {
 		return id;
 	}
 	
-	@Override
 	public void setId(Integer id) {
 		this.id = id;
 	}
     
-    @Override
     public String getName()
     {
         return name;
     }
     
-    @Override
     public void setName(String name)
     {
         this.name = name;
