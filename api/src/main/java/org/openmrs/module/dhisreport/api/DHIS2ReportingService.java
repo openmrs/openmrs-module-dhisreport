@@ -24,7 +24,7 @@ import org.openmrs.module.dhisreport.api.model.DataValueTemplate;
 import org.openmrs.module.dhisreport.api.model.Disaggregation;
 import org.openmrs.module.dhisreport.api.model.ReportDefinition;
 import org.springframework.transaction.annotation.Transactional;
-import utils.MonthlyPeriod;
+import org.openmrs.module.dhisreport.api.utils.MonthlyPeriod;
 
 /**
  * This service exposes module's core functionality. It is a Spring managed bean which is configured in moduleApplicationContext.xml.

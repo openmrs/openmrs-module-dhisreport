@@ -22,7 +22,7 @@ import org.openmrs.module.dhisreport.api.model.DataElement;
 import org.openmrs.module.dhisreport.api.model.DataValueTemplate;
 import org.openmrs.module.dhisreport.api.model.Disaggregation;
 import org.openmrs.module.dhisreport.api.model.ReportDefinition;
-import utils.MonthlyPeriod;
+import org.openmrs.module.dhisreport.api.utils.MonthlyPeriod;
 
 /**
  * It is a default implementation of  {@link DHIS2ReportingDAO}.
