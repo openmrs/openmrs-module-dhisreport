@@ -16,6 +16,7 @@ package org.openmrs.module.dhisreport.api.model;
 import java.io.Serializable;
 import java.util.HashSet;
 import java.util.Set;
+import javax.xml.bind.annotation.*;
 import org.openmrs.BaseOpenmrsMetadata;
 
 /**
@@ -24,16 +25,29 @@ import org.openmrs.BaseOpenmrsMetadata;
  * 
  * @author bobj
  */
+@XmlAccessorType(XmlAccessType.FIELD)
+@XmlType(name = "", propOrder = {
+    "name",
+    "uid",
+    "code",
+    "periodType",
+    "dataValueTemplates"
+})
+@XmlRootElement(name = "reportTemplate")
 public class ReportDefinition extends BaseOpenmrsMetadata implements Serializable {
 
 	protected Integer id;
     
+    @XmlElement(required = true)
     protected String name;
 	
+    @XmlElement(required = true)
     protected String uid;
     
+    @XmlElement(required = true)
     protected String code;
 
+    @XmlElement(required = true)
     protected Set<DataValueTemplate> dataValueTemplates = new HashSet<DataValueTemplate>();
     
 	@Override

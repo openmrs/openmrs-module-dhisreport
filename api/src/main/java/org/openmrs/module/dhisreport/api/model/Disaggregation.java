@@ -22,6 +22,7 @@ package org.openmrs.module.dhisreport.api.model;
 
 
 import java.io.Serializable;
+import javax.xml.bind.annotation.*;
 import org.openmrs.BaseOpenmrsMetadata;
 
 /**
@@ -29,23 +30,27 @@ import org.openmrs.BaseOpenmrsMetadata;
  * 
  * @author bobj
  */
-public class Disaggregation extends BaseOpenmrsMetadata implements Serializable { 
+@XmlAccessorType(XmlAccessType.FIELD)
+@XmlType(name = "")
+@XmlRootElement(name = "disaggregation")
+public class Disaggregation implements Serializable { 
     
     protected Integer id;
     
+    @XmlAttribute(required = true)
     protected String name;
     
+    @XmlAttribute(required = true)
     protected String code;
     
+    @XmlAttribute(required = true)
     protected String uid;
 
-    @Override
     public Integer getId()
     {
         return id;
     }
 
-    @Override
     public void setId( Integer id )
     {
         this.id = id;

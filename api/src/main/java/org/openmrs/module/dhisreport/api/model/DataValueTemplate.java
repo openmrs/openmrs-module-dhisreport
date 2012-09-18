@@ -22,22 +22,29 @@ package org.openmrs.module.dhisreport.api.model;
 
 
 import java.io.Serializable;
+import javax.xml.bind.annotation.*;
 import org.openmrs.BaseOpenmrsMetadata;
 
 /**
  *
  * @author bobj
  */
+@XmlAccessorType(XmlAccessType.FIELD)
+@XmlType(name = "")
+@XmlRootElement(name = "dataValueTemplate")
 public class DataValueTemplate extends BaseOpenmrsMetadata implements Serializable{
     
     protected Integer id;
     
     protected ReportDefinition reportDefinition;
     
+    @XmlAttribute(required = true)
     protected DataElement dataelement;
     
+    @XmlAttribute(required = true)
     protected Disaggregation disaggregation;
     
+    @XmlElement(name="annotation",required = false)
     protected String query;
 
     public ReportDefinition getReportDefinition()

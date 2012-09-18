@@ -22,20 +22,27 @@ package org.openmrs.module.dhisreport.api.model;
 
 
 import java.io.Serializable;
+import javax.xml.bind.annotation.*;
 import org.openmrs.BaseOpenmrsMetadata;
 
 /**
  *
  * @author bobj
  */
-public class DataElement extends BaseOpenmrsMetadata implements Serializable {
+@XmlAccessorType(XmlAccessType.FIELD)
+@XmlType(name = "")
+@XmlRootElement(name = "dataElement")
+public class DataElement  implements Serializable {
     
     protected Integer id;
     
+    @XmlAttribute(required = true)
     protected String code;
     
+    @XmlAttribute(required = true)
     protected String uid;
     
+    @XmlAttribute(required = true)
     protected String name;
 
     public String getUid()
@@ -58,25 +65,21 @@ public class DataElement extends BaseOpenmrsMetadata implements Serializable {
         this.code = code;
     }
 
-    @Override
     public Integer getId()
     {
         return id;
     }
 
-    @Override
     public void setId( Integer id )
     {
         this.id = id;
     }
 
-    @Override
     public String getName()
     {
         return name;
     }
 
-    @Override
     public void setName( String name )
     {
         this.name = name;
