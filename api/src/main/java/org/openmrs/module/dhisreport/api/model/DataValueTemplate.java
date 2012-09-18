@@ -123,4 +123,8 @@ public class DataValueTemplate extends BaseOpenmrsMetadata implements Serializab
         return hash;
     }
     
+    public String toString()
+    {
+        return "DVT: "+ this.getId() + " : " + this.getDataelement().getName() + " : " + this.getDisaggregation().getName();
+    }
 }

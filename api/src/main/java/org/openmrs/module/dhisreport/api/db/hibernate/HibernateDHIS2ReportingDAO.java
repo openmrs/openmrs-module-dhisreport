@@ -10,12 +10,14 @@
 package org.openmrs.module.dhisreport.api.db.hibernate;
 
 
+import java.util.Collection;
+import java.util.List;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
+import org.hibernate.Query;
 import org.hibernate.SessionFactory;
 import org.openmrs.module.dhisreport.api.db.DHIS2ReportingDAO;
 import org.openmrs.module.dhisreport.api.model.DataElement;
-import org.openmrs.module.dhisreport.api.model.DataValueTemplate;
 import org.openmrs.module.dhisreport.api.model.Disaggregation;
 import org.openmrs.module.dhisreport.api.model.ReportDefinition;
 
@@ -58,6 +60,12 @@ public class HibernateDHIS2ReportingDAO implements DHIS2ReportingDAO
     }
 
     @Override
+    public void deleteDataElement( DataElement de )
+    {
+        sessionFactory.getCurrentSession().delete( de );
+    }
+
+    @Override
     public Disaggregation getDisaggregation( Integer id )
     {
         return (Disaggregation) sessionFactory.getCurrentSession().get( Disaggregation.class, id );
@@ -71,19 +79,6 @@ public class HibernateDHIS2ReportingDAO implements DHIS2ReportingDAO
     }
 
     @Override
-    public DataValueTemplate getDataDataValueTemplate( Integer id )
-    {
-        return (DataValueTemplate) sessionFactory.getCurrentSession().get( DataValueTemplate.class, id );
-    }
-
-    @Override
-    public DataValueTemplate saveDataValueTemplate( DataValueTemplate dvt )
-    {
-        sessionFactory.getCurrentSession().saveOrUpdate(dvt);
-        return dvt;
-    }
-
-    @Override
     public ReportDefinition getReportDefinition( Integer id )
     {
         return (ReportDefinition) sessionFactory.getCurrentSession().get( ReportDefinition.class, id );
@@ -94,5 +89,38 @@ public class HibernateDHIS2ReportingDAO implements DHIS2ReportingDAO
     {
         sessionFactory.getCurrentSession().saveOrUpdate(rd);
         return rd;
+    }
+
+    @Override
+    public Collection<DataElement> getAllDataElements()
+    {
+      	Query query = sessionFactory.getCurrentSession().createQuery("from DataElement order by name asc");
+    	return (List<DataElement>) query.list();
+    }
+
+    @Override
+    public Collection<Disaggregation> getAllDisaggregations()
+    {
+      	Query query = sessionFactory.getCurrentSession().createQuery("from Disaggregation");
+    	return (List<Disaggregation>) query.list();
+    }
+
+    @Override
+    public void deleteDisaggregation( Disaggregation disagg )
+    {
+        sessionFactory.getCurrentSession().delete( disagg );
+    }
+
+    @Override
+    public Collection<ReportDefinition> getAllReportDefinitions()
+    {
+      	Query query = sessionFactory.getCurrentSession().createQuery("from ReportDefintion order by name asc");
+    	return (List<ReportDefinition>) query.list();
+    }
+
+    @Override
+    public void deleteReportDefinition( ReportDefinition rd )
+    {
+        sessionFactory.getCurrentSession().delete( rd );
     }
 }

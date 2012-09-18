@@ -119,4 +119,9 @@ public class DataElement extends BaseOpenmrsMetadata implements Serializable {
         return hash;
     }
 
+    public String toString()
+    {
+        return "DVT: "+ this.getId() + " : " + this.getCode() + " : " + this.getUid() + " : " + this.getName();
+    }
+
 }

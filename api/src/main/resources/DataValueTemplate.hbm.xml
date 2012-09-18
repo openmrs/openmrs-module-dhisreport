@@ -6,9 +6,9 @@
       <generator class="native"/>
     </id>
     <discriminator column="id" insert="false"/>
-    <property column="report_definition_id" name="reportDefinition"/>
-    <property column="dataelement_id" name="dataelement"/>
-    <property column="disaggregation_id" name="disaggregation"/>
+    <many-to-one name="dataelement" column="dataelement_id" not-null="true"/>
+    <many-to-one name="disaggregation" column="disaggregation_id"  not-null="true"/>
     <property column="query" length="2048" name="query"/>
+    <many-to-one name="reportDefinition" column="report_definition_id" not-null="true" />
   </class>
 </hibernate-mapping>

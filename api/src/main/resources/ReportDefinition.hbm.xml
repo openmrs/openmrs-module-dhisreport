@@ -9,7 +9,9 @@
     <property column="report_name" name="name"/>
     <property column="uid" name="uid"/>
     <property column="code" name="code"/>
-    <set name="dataValueTemplates" table="${project.parent.artifactId}_datavalue_template">
+    <set name="dataValueTemplates" 
+      table="${project.parent.artifactId}_datavalue_template"
+      cascade="all-delete-orphan">
       <key column="report_definition_id"/>
       <one-to-many class="DataValueTemplate"/>
     </set>

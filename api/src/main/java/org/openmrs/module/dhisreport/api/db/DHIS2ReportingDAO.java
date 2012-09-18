@@ -13,9 +13,9 @@
  */
 package org.openmrs.module.dhisreport.api.db;
 
+import java.util.Collection;
 import org.openmrs.module.dhisreport.api.DHIS2ReportingService;
 import org.openmrs.module.dhisreport.api.model.DataElement;
-import org.openmrs.module.dhisreport.api.model.DataValueTemplate;
 import org.openmrs.module.dhisreport.api.model.Disaggregation;
 import org.openmrs.module.dhisreport.api.model.ReportDefinition;
 
@@ -28,16 +28,24 @@ public interface DHIS2ReportingDAO {
 
     public DataElement saveDataElement(DataElement de);
 	
+    public void deleteDataElement(DataElement de);
+    
+    public Collection<DataElement> getAllDataElements();
+    
     public Disaggregation getDisaggregation(Integer id);
 
     public Disaggregation saveDisaggregation(Disaggregation disagg);
-	
-    public DataValueTemplate getDataDataValueTemplate(Integer id);
 
-    public DataValueTemplate saveDataValueTemplate(DataValueTemplate dvt);
-	
+    public Collection<Disaggregation> getAllDisaggregations();
+
+    public void deleteDisaggregation(Disaggregation disagg);
+
     public ReportDefinition getReportDefinition(Integer id);
 
     public ReportDefinition saveReportDefinition(ReportDefinition rd);
-	
+
+    public Collection<ReportDefinition> getAllReportDefinitions();
+
+    public void deleteReportDefinition(ReportDefinition rd);
+
 }

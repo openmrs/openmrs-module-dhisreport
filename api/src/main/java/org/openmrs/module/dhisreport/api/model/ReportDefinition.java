@@ -14,6 +14,7 @@
 package org.openmrs.module.dhisreport.api.model;
 
 import java.io.Serializable;
+import java.util.HashSet;
 import java.util.Set;
 import org.openmrs.BaseOpenmrsMetadata;
 
@@ -33,7 +34,7 @@ public class ReportDefinition extends BaseOpenmrsMetadata implements Serializabl
     
     protected String code;
 
-    protected Set<DataValueTemplate> dataValueTemplates;
+    protected Set<DataValueTemplate> dataValueTemplates = new HashSet<DataValueTemplate>();
     
 	@Override
 	public Integer getId() {
@@ -89,6 +90,7 @@ public class ReportDefinition extends BaseOpenmrsMetadata implements Serializabl
     
     public void addDataValueTemplate(DataValueTemplate dataValueTemplate)
     {
+        dataValueTemplate.setReportDefinition( this );
         dataValueTemplates.add( dataValueTemplate );
     }
 

@@ -15,6 +15,7 @@ package org.openmrs.module.dhisreport.api.impl;
 
 import java.io.InputStream;
 import java.net.URL;
+import java.util.Collection;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import org.openmrs.api.impl.BaseOpenmrsService;
@@ -28,6 +29,7 @@ import org.openmrs.module.dhisreport.api.db.DHIS2ReportingDAO;
 import org.openmrs.module.dhisreport.api.dhis.DhisException;
 import org.openmrs.module.dhisreport.api.dhis.HttpDhis2Server;
 import org.openmrs.module.dhisreport.api.model.DataElement;
+import org.openmrs.module.dhisreport.api.model.Disaggregation;
 import org.openmrs.module.dhisreport.api.model.ReportDefinition;
 
 /**
@@ -114,6 +116,25 @@ public class DHIS2ReportingServiceImpl extends BaseOpenmrsService implements DHI
         return dao.saveDataElement( de );
     }
 
+    
+    @Override
+    public void purgeDataElement( DataElement de )
+    {
+        dao.deleteDataElement( de );
+    }
+
+    @Override
+    public Disaggregation getDisaggregation( Integer id )
+    {
+        return dao.getDisaggregation( id );
+    }
+
+    @Override
+    public Disaggregation saveDisaggregation( Disaggregation disagg )
+    {
+        return dao.saveDisaggregation( disagg );
+    }
+
     @Override
     public ReportDefinition getReportDefinition( Integer id )
     {
@@ -127,8 +148,39 @@ public class DHIS2ReportingServiceImpl extends BaseOpenmrsService implements DHI
     }
 
     @Override
+    public Collection<DataElement> getAllDataElements()
+    {
+        return dao.getAllDataElements();
+    }
+
+    @Override
+    public void purgeDisaggregation( Disaggregation disagg )
+    {
+        dao.deleteDisaggregation( disagg );
+    }
+
+    @Override
+    public Collection<Disaggregation> getAllDisaggregations()
+    {
+        return dao.getAllDisaggregations();
+    }
+
+    @Override
+    public void purgeReportDefinition( ReportDefinition rd )
+    {
+        dao.deleteReportDefinition( rd );
+    }
+
+    @Override
+    public Collection<ReportDefinition> getAllReportDefinitions()
+    {
+        return dao.getAllReportDefinitions();
+    }
+
+    @Override
     public DataValueSet evaluateReportDefinition( ReportDefinition reportDefinition, String period, Location location )
     {
         throw new UnsupportedOperationException( "Not supported yet." );
     }
+
 }
