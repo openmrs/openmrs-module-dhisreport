@@ -28,7 +28,7 @@ import javax.xml.bind.annotation.*;
  * @author bobj
  */
 @XmlAccessorType(XmlAccessType.FIELD)
-@XmlType(name = "")
+@XmlType(name = "DataValueTemplate")
 @XmlRootElement(name = "dataValueTemplate")
 public class DataValueTemplate implements Serializable {
     
@@ -36,7 +36,7 @@ public class DataValueTemplate implements Serializable {
     
     protected ReportDefinition reportDefinition;
     
-    @XmlAttribute(required = true)
+    @XmlAttribute(name="dataElement",required = true)
     @XmlIDREF
     protected DataElement dataelement;
     

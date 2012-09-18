@@ -23,7 +23,6 @@ package org.openmrs.module.dhisreport.api.model;
 
 import java.io.Serializable;
 import javax.xml.bind.annotation.*;
-import org.openmrs.BaseOpenmrsMetadata;
 
 /**
  * Represents a dhis2 categoryoptioncombo
@@ -31,7 +30,6 @@ import org.openmrs.BaseOpenmrsMetadata;
  * @author bobj
  */
 @XmlAccessorType(XmlAccessType.FIELD)
-@XmlType(name = "")
 @XmlRootElement(name = "disaggregation")
 public class Disaggregation implements Serializable { 
     
@@ -42,7 +40,6 @@ public class Disaggregation implements Serializable {
     
     @XmlAttribute(required = true)
     @XmlID
-    @XmlSchemaType(name = "ID")
     protected String code;
     
     @XmlAttribute(required = true)

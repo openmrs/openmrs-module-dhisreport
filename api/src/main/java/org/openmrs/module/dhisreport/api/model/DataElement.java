@@ -123,7 +123,7 @@ public class DataElement  implements Serializable {
 
     public String toString()
     {
-        return "DVT: "+ this.getId() + " : " + this.getCode() + " : " + this.getUid() + " : " + this.getName();
+        return "DE: "+ this.getId() + " : " + this.getCode() + " : " + this.getUid() + " : " + this.getName();
     }
 
 }
