@@ -14,10 +14,13 @@
 package org.openmrs.module.dhisreport.api.db;
 
 import java.util.Collection;
+import org.openmrs.Location;
 import org.openmrs.module.dhisreport.api.DHIS2ReportingService;
 import org.openmrs.module.dhisreport.api.model.DataElement;
+import org.openmrs.module.dhisreport.api.model.DataValueTemplate;
 import org.openmrs.module.dhisreport.api.model.Disaggregation;
 import org.openmrs.module.dhisreport.api.model.ReportDefinition;
+import utils.MonthlyPeriod;
 
 /**
  *  Database methods for {@link DHIS2ReportingService}.
@@ -48,4 +51,6 @@ public interface DHIS2ReportingDAO {
 
     public void deleteReportDefinition(ReportDefinition rd);
 
+    public String evaluateDataValueTemplate(DataValueTemplate dvt, MonthlyPeriod period, Location location );
+    
 }

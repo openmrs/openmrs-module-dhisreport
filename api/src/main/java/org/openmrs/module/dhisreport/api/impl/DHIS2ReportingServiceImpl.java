@@ -29,8 +29,10 @@ import org.openmrs.module.dhisreport.api.db.DHIS2ReportingDAO;
 import org.openmrs.module.dhisreport.api.dhis.DhisException;
 import org.openmrs.module.dhisreport.api.dhis.HttpDhis2Server;
 import org.openmrs.module.dhisreport.api.model.DataElement;
+import org.openmrs.module.dhisreport.api.model.DataValueTemplate;
 import org.openmrs.module.dhisreport.api.model.Disaggregation;
 import org.openmrs.module.dhisreport.api.model.ReportDefinition;
+import utils.MonthlyPeriod;
 
 /**
  * It is a default implementation of {@link DHIS2ReportingService}.
@@ -178,9 +180,14 @@ public class DHIS2ReportingServiceImpl extends BaseOpenmrsService implements DHI
     }
 
     @Override
-    public DataValueSet evaluateReportDefinition( ReportDefinition reportDefinition, String period, Location location )
+    public String evaluateDataValueTemplate( DataValueTemplate dv, MonthlyPeriod period, Location location )
+    {
+        return dao.evaluateDataValueTemplate( dv, period, location );
+    }
+
+    @Override
+    public DataValueSet evaluateReportDefinition( ReportDefinition reportDefinition, MonthlyPeriod period, Location location )
     {
         throw new UnsupportedOperationException( "Not supported yet." );
     }
-
 }

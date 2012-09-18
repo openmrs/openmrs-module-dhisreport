@@ -16,10 +16,13 @@ import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.hibernate.Query;
 import org.hibernate.SessionFactory;
+import org.openmrs.Location;
 import org.openmrs.module.dhisreport.api.db.DHIS2ReportingDAO;
 import org.openmrs.module.dhisreport.api.model.DataElement;
+import org.openmrs.module.dhisreport.api.model.DataValueTemplate;
 import org.openmrs.module.dhisreport.api.model.Disaggregation;
 import org.openmrs.module.dhisreport.api.model.ReportDefinition;
+import utils.MonthlyPeriod;
 
 /**
  * It is a default implementation of  {@link DHIS2ReportingDAO}.
@@ -122,5 +125,18 @@ public class HibernateDHIS2ReportingDAO implements DHIS2ReportingDAO
     public void deleteReportDefinition( ReportDefinition rd )
     {
         sessionFactory.getCurrentSession().delete( rd );
+    }
+
+    @Override
+    public String evaluateDataValueTemplate( DataValueTemplate dvt, MonthlyPeriod period, Location location )
+    {
+        String queryString = dvt.getQuery();
+        Query query = sessionFactory.getCurrentSession().createSQLQuery( queryString );
+        
+        query.setParameter( "locationId", location.getId().toString());
+        query.setParameter( "startOfPeriod", period.getStart());
+        query.setParameter( "endOfPeriod", period.getEnd());
+        
+        return query.uniqueResult().toString();
     }
 }

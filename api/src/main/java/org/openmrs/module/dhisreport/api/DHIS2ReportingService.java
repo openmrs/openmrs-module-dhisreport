@@ -20,9 +20,11 @@ import org.hisp.dhis.dxf2.importsummary.ImportSummary;
 import org.openmrs.Location;
 import org.openmrs.api.OpenmrsService;
 import org.openmrs.module.dhisreport.api.model.DataElement;
+import org.openmrs.module.dhisreport.api.model.DataValueTemplate;
 import org.openmrs.module.dhisreport.api.model.Disaggregation;
 import org.openmrs.module.dhisreport.api.model.ReportDefinition;
 import org.springframework.transaction.annotation.Transactional;
+import utils.MonthlyPeriod;
 
 /**
  * This service exposes module's core functionality. It is a Spring managed bean which is configured in moduleApplicationContext.xml.
@@ -165,10 +167,19 @@ public interface DHIS2ReportingService extends OpenmrsService {
     
     /**
      * 
+     * @param dv
+     * @param period
+     * @param location
+     * @return 
+     */
+    String evaluateDataValueTemplate(DataValueTemplate dv, MonthlyPeriod period, Location location);
+
+    /**
+     * 
      * @param reportDefinition
      * @param period
      * @param location
      * @return 
      */
-    DataValueSet evaluateReportDefinition(ReportDefinition reportDefinition, String period, Location location);
+    DataValueSet evaluateReportDefinition(ReportDefinition reportDefinition, MonthlyPeriod period, Location location);
 }
