@@ -21,6 +21,7 @@ import java.util.logging.Logger;
 import org.openmrs.api.impl.BaseOpenmrsService;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
+import org.hisp.dhis.dxf2.datavalueset.DataValue;
 import org.hisp.dhis.dxf2.datavalueset.DataValueSet;
 import org.hisp.dhis.dxf2.importsummary.ImportSummary;
 import org.openmrs.Location;
@@ -185,9 +186,35 @@ public class DHIS2ReportingServiceImpl extends BaseOpenmrsService implements DHI
         return dao.evaluateDataValueTemplate( dv, period, location );
     }
 
+    /**
+     * Create a datavalueset report
+     * TODO: handle the sql query exceptions which are bound to happen
+     * 
+     * @param reportDefinition
+     * @param period
+     * @param location
+     * @return 
+     */
     @Override
     public DataValueSet evaluateReportDefinition( ReportDefinition reportDefinition, MonthlyPeriod period, Location location )
     {
-        throw new UnsupportedOperationException( "Not supported yet." );
+        Collection<DataValueTemplate> templates = reportDefinition.getDataValueTemplates();
+        DataValueSet dataValueSet = new DataValueSet();
+        dataValueSet.setDataElementIdScheme( "code");
+        dataValueSet.setOrgUnitIdScheme( "code");
+        dataValueSet.setPeriod( period.getAsIsoString());
+        dataValueSet.setOrgUnit( "OU_" + location.getId());
+        
+        Collection<DataValue> dataValues = dataValueSet.getDataValues();
+        
+        for (DataValueTemplate dvt : templates)
+        {
+            DataValue dataValue = new DataValue();
+            dataValue.setDataElement( dvt.getDataelement().getCode());
+            dataValue.setValue( dao.evaluateDataValueTemplate( dvt, period, location) );
+            dataValues.add( dataValue );
+        }
+        
+        return dataValueSet;
     }
 }
