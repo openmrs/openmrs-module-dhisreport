@@ -1,0 +1,10 @@
+<?xml version='1.0' encoding='UTF-8'?>
+<importSummary xmlns="http://dhis2.org/schema/dxf/2.0">
+    <status>SUCCESS</status>
+    <description>Import process completed successfully</description>
+    <dataValueCount imported="3" updated="0" ignored="1"/>
+    <dataSetComplete>false</dataSetComplete>
+    <conflicts>
+        <conflict object="OrganisationUnit" value="Jkhdsf8sdf4"/>
+    </conflicts>
+</importSummary>

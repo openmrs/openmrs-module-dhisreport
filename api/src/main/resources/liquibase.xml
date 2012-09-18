@@ -1,0 +1,83 @@
+<?xml version="1.0" encoding="UTF-8"?>
+ 
+<databaseChangeLog xmlns="http://www.liquibase.org/xml/ns/dbchangelog/1.9"
+    xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+    xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog/1.9
+                  http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-1.9.xsd">
+    
+    <changeSet id="dhisreport5fdfds" author="bobj">
+      <createTable tableName="dhisreport__report_definition">
+        <column name="id" autoIncrement="true" type="int" >
+          <constraints primaryKey="true"/>
+        </column>
+        <column name="report_name" type="varchar(255)" >
+          <constraints nullable="false"/>
+        </column>
+        <column name="uid" type="varchar(255)" >
+          <constraints nullable="false"/>
+        </column>
+        <column name="code" type="varchar(255)" >
+          <constraints nullable="false"/>
+        </column>
+      </createTable>
+      <createTable tableName="dhisreport__dataelement">
+        <column name="id" autoIncrement="true" type="int" >
+          <constraints primaryKey="true"/>
+        </column>
+        <column name="de_name" type="varchar(255)" >
+          <constraints nullable="false"/>
+        </column>
+        <column name="uid" type="varchar(255)" >
+          <constraints nullable="false"/>
+        </column>
+        <column name="code" type="varchar(255)" >
+          <constraints nullable="false"/>
+        </column>
+      </createTable>
+      <createTable tableName="dhisreport__disaggregation">
+        <column name="id" autoIncrement="true" type="int" >
+          <constraints primaryKey="true"/>
+        </column>
+        <column name="disagg_name" type="varchar(255)" >
+          <constraints nullable="false"/>
+        </column>
+        <column name="uid" type="varchar(255)" >
+          <constraints nullable="false"/>
+        </column>
+        <column name="code" type="varchar(255)" >
+          <constraints nullable="false"/>
+        </column>
+      </createTable>
+      <createTable tableName="dhisreport__datavalue_template">
+        <column name="id" autoIncrement="true" type="int" >
+          <constraints primaryKey="true" />
+        </column>
+        <column name="report_definition_id" type="int" >
+          <constraints nullable="false"/>
+        </column>
+        <column name="dataelement_id" type="int" >
+          <constraints nullable="false"/>
+        </column>
+        <column name="dissagregation_id" type="int" >
+          <constraints nullable="false"/>
+        </column>
+        <column name="query" type="text" >
+          <constraints nullable="false"/>
+        </column>
+      </createTable>
+      
+      <addForeignKeyConstraint baseTableName="dhisreport__datavalue_template" 
+        baseColumnNames="dataelement_id" constraintName="fk_dataelement_datavaluetemplate" 
+        referencedTableName="dhisreport__dataelement" referencedColumnNames="id"/>
+
+      <addForeignKeyConstraint baseTableName="dhisreport__datavalue_template" 
+        baseColumnNames="dissagregation_id" constraintName="fk_dissagregation_datavaluetemplate" 
+        referencedTableName="dhisreport__disaggregation" referencedColumnNames="id"/>
+
+      <addForeignKeyConstraint baseTableName="dhisreport__datavalue_template" 
+        baseColumnNames="report_definition_id" constraintName="fk_report_definition_datavaluetemplate" 
+        referencedTableName="dhisreport__report_definition" referencedColumnNames="id"/>
+      
+    </changeSet>
+    
+</databaseChangeLog>
