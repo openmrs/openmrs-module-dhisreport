@@ -16,6 +16,7 @@
 	<bean id="sessionFactory" class="org.openmrs.api.db.hibernate.HibernateSessionFactoryBean">
 		<property name="configLocations">
 			<list>
+                <value>classpath:hibernate.cfg.xml</value>
 				<value>classpath:test-hibernate.cfg.xml</value>
 			</list>
 		</property>
