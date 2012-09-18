@@ -14,9 +14,7 @@
 package org.openmrs.module.dhisreport.api.model;
 
 import java.io.Serializable;
-import java.util.List;
 import java.util.Set;
-import org.openmrs.BaseOpenmrsObject;
 import org.openmrs.BaseOpenmrsMetadata;
 
 /**

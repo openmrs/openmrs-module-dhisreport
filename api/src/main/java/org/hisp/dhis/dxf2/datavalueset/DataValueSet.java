@@ -32,6 +32,8 @@ import javax.xml.datatype.XMLGregorianCalendar;
 })
 @XmlRootElement(name = "dataValueSet")
 public class DataValueSet {
+    
+    public static enum Month {JAN, FEB, MAR, APR, MAY, JUN, JUL, AUG, SEP, NOV, DEC };
 
     @XmlElement(required = true)
     protected List<DataValue> dataValue = new LinkedList<DataValue>();

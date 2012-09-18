@@ -22,6 +22,7 @@ import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.hisp.dhis.dxf2.datavalueset.DataValueSet;
 import org.hisp.dhis.dxf2.importsummary.ImportSummary;
+import org.openmrs.Location;
 import org.openmrs.module.dhisreport.api.DHIS2ReportingService;
 import org.openmrs.module.dhisreport.api.db.DHIS2ReportingDAO;
 import org.openmrs.module.dhisreport.api.dhis.DhisException;
@@ -111,5 +112,23 @@ public class DHIS2ReportingServiceImpl extends BaseOpenmrsService implements DHI
     public DataElement saveDataElement( DataElement de )
     {
         return dao.saveDataElement( de );
+    }
+
+    @Override
+    public ReportDefinition getReportDefinition( Integer id )
+    {
+        return dao.getReportDefinition( id );
+    }
+
+    @Override
+    public ReportDefinition saveReportDefinition( ReportDefinition reportDefinition )
+    {
+        return dao.saveReportDefinition( reportDefinition );
+    }
+
+    @Override
+    public DataValueSet evaluateReportDefinition( ReportDefinition reportDefinition, String period, Location location )
+    {
+        throw new UnsupportedOperationException( "Not supported yet." );
     }
 }

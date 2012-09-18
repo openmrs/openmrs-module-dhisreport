@@ -15,6 +15,9 @@ package org.openmrs.module.dhisreport.api.db;
 
 import org.openmrs.module.dhisreport.api.DHIS2ReportingService;
 import org.openmrs.module.dhisreport.api.model.DataElement;
+import org.openmrs.module.dhisreport.api.model.DataValueTemplate;
+import org.openmrs.module.dhisreport.api.model.Disaggregation;
+import org.openmrs.module.dhisreport.api.model.ReportDefinition;
 
 /**
  *  Database methods for {@link DHIS2ReportingService}.
@@ -24,4 +27,17 @@ public interface DHIS2ReportingDAO {
     public DataElement getDataElement(Integer id);
 
     public DataElement saveDataElement(DataElement de);
+	
+    public Disaggregation getDisaggregation(Integer id);
+
+    public Disaggregation saveDisaggregation(Disaggregation disagg);
+	
+    public DataValueTemplate getDataDataValueTemplate(Integer id);
+
+    public DataValueTemplate saveDataValueTemplate(DataValueTemplate dvt);
+	
+    public ReportDefinition getReportDefinition(Integer id);
+
+    public ReportDefinition saveReportDefinition(ReportDefinition rd);
+	
 }

@@ -13,12 +13,11 @@
  */
 package org.openmrs.module.dhisreport.api;
 
-import java.io.InputStream;
 import java.net.URL;
 import org.hisp.dhis.dxf2.datavalueset.DataValueSet;
 import org.hisp.dhis.dxf2.importsummary.ImportSummary;
+import org.openmrs.Location;
 import org.openmrs.api.OpenmrsService;
-import org.openmrs.module.dhisreport.api.dhis.DhisException;
 import org.openmrs.module.dhisreport.api.model.DataElement;
 import org.openmrs.module.dhisreport.api.model.ReportDefinition;
 import org.springframework.transaction.annotation.Transactional;
@@ -47,4 +46,12 @@ public interface DHIS2ReportingService extends OpenmrsService {
 
     @Transactional
     DataElement saveDataElement(DataElement de);
+
+    @Transactional(readOnly=true)
+    ReportDefinition getReportDefinition(Integer id);
+
+    @Transactional
+    ReportDefinition saveReportDefinition(ReportDefinition reportDefinition);
+    
+    DataValueSet evaluateReportDefinition(ReportDefinition reportDefinition, String period, Location location);
 }
