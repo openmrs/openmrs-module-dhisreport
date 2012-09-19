@@ -28,10 +28,10 @@
 	
 	<!-- Maps hibernate file's, if present -->
 	<mappingFiles>
-        <mapping resource="ReportDefinition.hbm.xml" />
-        <mapping resource="DataElement.hbm.xml" />
-        <mapping resource="Disaggregation.hbm.xml" />
-        <mapping resource="DataValueTemplate.hbm.xml" />
+        ReportDefinition.hbm.xml
+        DataElement.hbm.xml
+        Disaggregation.hbm.xml
+        DataValueTemplate.hbm.xml
 	</mappingFiles>
 
 	<!-- Internationalization -->

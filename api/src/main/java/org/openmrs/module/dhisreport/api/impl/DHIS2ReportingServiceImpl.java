@@ -18,22 +18,22 @@ import java.net.URL;
 import java.util.Collection;
 import java.util.logging.Level;
 import java.util.logging.Logger;
-import org.openmrs.api.impl.BaseOpenmrsService;
+import javax.xml.bind.JAXBContext;
+import javax.xml.bind.Unmarshaller;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.hisp.dhis.dxf2.datavalueset.DataValue;
 import org.hisp.dhis.dxf2.datavalueset.DataValueSet;
 import org.hisp.dhis.dxf2.importsummary.ImportSummary;
 import org.openmrs.Location;
+import org.openmrs.api.impl.BaseOpenmrsService;
 import org.openmrs.module.dhisreport.api.DHIS2ReportingService;
 import org.openmrs.module.dhisreport.api.db.DHIS2ReportingDAO;
 import org.openmrs.module.dhisreport.api.dhis.DhisException;
 import org.openmrs.module.dhisreport.api.dhis.HttpDhis2Server;
-import org.openmrs.module.dhisreport.api.model.DataElement;
-import org.openmrs.module.dhisreport.api.model.DataValueTemplate;
-import org.openmrs.module.dhisreport.api.model.Disaggregation;
-import org.openmrs.module.dhisreport.api.model.ReportDefinition;
+import org.openmrs.module.dhisreport.api.model.*;
 import org.openmrs.module.dhisreport.api.utils.MonthlyPeriod;
+import org.springframework.core.io.ClassPathResource;
 
 /**
  * It is a default implementation of {@link DHIS2ReportingService}.
@@ -216,5 +216,35 @@ public class DHIS2ReportingServiceImpl extends BaseOpenmrsService implements DHI
         }
         
         return dataValueSet;
+    }
+
+    @Override
+    public void SaveReportTemplates( ReportTemplates rt )
+    {
+        throw new UnsupportedOperationException( "Not supported yet." );
+    }
+    
+    public void unMarshallandSaveReportTemplates(InputStream is) throws Exception
+    {
+        JAXBContext jaxbContext = JAXBContext.newInstance( ReportTemplates.class );
+        Unmarshaller jaxbUnmarshaller = jaxbContext.createUnmarshaller();
+        ReportTemplates reportTemplates = (ReportTemplates) jaxbUnmarshaller.unmarshal( is );
+
+        for (DataElement de : reportTemplates.getDataElements( ) )
+        {
+            saveDataElement( de );
+        }
+        for (Disaggregation disagg : reportTemplates.getDisaggregations())
+        {
+            saveDisaggregation( disagg );
+        }
+        for ( ReportDefinition rd : reportTemplates.getReportTemplates() )
+        {
+            for (DataValueTemplate dvt : rd.getDataValueTemplates())
+            {
+                dvt.setReportDefinition( rd );
+            }
+            saveReportDefinition( rd );
+        }
     }
 }

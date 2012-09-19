@@ -137,25 +137,6 @@ public class DHIS2ReportingServiceDAOTest extends BaseModuleContextSensitiveTest
     public void unMarshallandSaveReportTemplates() throws Exception
     {
         ClassPathResource resource = new ClassPathResource( "templates_ethiopia.xml" );
-        JAXBContext jaxbContext = JAXBContext.newInstance( ReportTemplates.class );
-        Unmarshaller jaxbUnmarshaller = jaxbContext.createUnmarshaller();
-        ReportTemplates reportTemplates = (ReportTemplates) jaxbUnmarshaller.unmarshal( resource.getInputStream() );
-
-        for (DataElement de : reportTemplates.getDataElements( ) )
-        {
-            service.saveDataElement( de );
-        }
-        for (Disaggregation disagg : reportTemplates.getDisaggregations())
-        {
-            service.saveDisaggregation( disagg );
-        }
-        for ( ReportDefinition rd : reportTemplates.getReportTemplates() )
-        {
-            for (DataValueTemplate dvt : rd.getDataValueTemplates())
-            {
-                dvt.setReportDefinition( rd );
-            }
-            service.saveReportDefinition( rd );
-        }
+        service.unMarshallandSaveReportTemplates( resource.getInputStream());
     }
 }
