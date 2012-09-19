@@ -14,10 +14,10 @@
           <constraints nullable="false"/>
         </column>
         <column name="uid" type="varchar(255)" >
-          <constraints nullable="false"/>
+          <constraints nullable="false" unique="true"/>
         </column>
         <column name="code" type="varchar(255)" >
-          <constraints nullable="false"/>
+          <constraints nullable="false" unique="true"/>
         </column>
       </createTable>
       <createTable tableName="dhisreport_dataelement">
@@ -28,10 +28,10 @@
           <constraints nullable="false"/>
         </column>
         <column name="uid" type="varchar(255)" >
-          <constraints nullable="false"/>
+          <constraints nullable="false" unique="true"/>
         </column>
         <column name="code" type="varchar(255)" >
-          <constraints nullable="false"/>
+          <constraints nullable="false" unique="true"/>
         </column>
       </createTable>
       <createTable tableName="dhisreport_disaggregation">
@@ -42,10 +42,10 @@
           <constraints nullable="false"/>
         </column>
         <column name="uid" type="varchar(255)" >
-          <constraints nullable="false"/>
+          <constraints nullable="false" unique="true"/>
         </column>
         <column name="code" type="varchar(255)" >
-          <constraints nullable="false"/>
+          <constraints nullable="false" unique="true"/>
         </column>
       </createTable>
       <createTable tableName="dhisreport_datavalue_template">

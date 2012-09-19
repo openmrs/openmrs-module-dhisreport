@@ -29,6 +29,7 @@ import org.openmrs.module.dhisreport.api.utils.MonthlyPeriod;
  */
 public class HibernateDHIS2ReportingDAO implements DHIS2ReportingDAO
 {
+
     protected final Log log = LogFactory.getLog( this.getClass() );
 
     private SessionFactory sessionFactory;
@@ -58,7 +59,7 @@ public class HibernateDHIS2ReportingDAO implements DHIS2ReportingDAO
     @Override
     public DataElement saveDataElement( DataElement de )
     {
-        sessionFactory.getCurrentSession().saveOrUpdate(de);
+        sessionFactory.getCurrentSession().saveOrUpdate( de );
         return de;
     }
 
@@ -77,7 +78,7 @@ public class HibernateDHIS2ReportingDAO implements DHIS2ReportingDAO
     @Override
     public Disaggregation saveDisaggregation( Disaggregation disagg )
     {
-        sessionFactory.getCurrentSession().saveOrUpdate(disagg);
+        sessionFactory.getCurrentSession().saveOrUpdate( disagg );
         return disagg;
     }
 
@@ -90,22 +91,22 @@ public class HibernateDHIS2ReportingDAO implements DHIS2ReportingDAO
     @Override
     public ReportDefinition saveReportDefinition( ReportDefinition rd )
     {
-        sessionFactory.getCurrentSession().saveOrUpdate(rd);
+        sessionFactory.getCurrentSession().saveOrUpdate( rd );
         return rd;
     }
 
     @Override
     public Collection<DataElement> getAllDataElements()
     {
-      	Query query = sessionFactory.getCurrentSession().createQuery("from DataElement order by name asc");
-    	return (List<DataElement>) query.list();
+        Query query = sessionFactory.getCurrentSession().createQuery( "from DataElement order by name asc" );
+        return (List<DataElement>) query.list();
     }
 
     @Override
     public Collection<Disaggregation> getAllDisaggregations()
     {
-      	Query query = sessionFactory.getCurrentSession().createQuery("from Disaggregation");
-    	return (List<Disaggregation>) query.list();
+        Query query = sessionFactory.getCurrentSession().createQuery( "from Disaggregation" );
+        return (List<Disaggregation>) query.list();
     }
 
     @Override
@@ -117,8 +118,8 @@ public class HibernateDHIS2ReportingDAO implements DHIS2ReportingDAO
     @Override
     public Collection<ReportDefinition> getAllReportDefinitions()
     {
-      	Query query = sessionFactory.getCurrentSession().createQuery("from ReportDefintion order by name asc");
-    	return (List<ReportDefinition>) query.list();
+        Query query = sessionFactory.getCurrentSession().createQuery( "from ReportDefinition order by name asc" );
+        return (List<ReportDefinition>) query.list();
     }
 
     @Override
@@ -132,11 +133,11 @@ public class HibernateDHIS2ReportingDAO implements DHIS2ReportingDAO
     {
         String queryString = dvt.getQuery();
         Query query = sessionFactory.getCurrentSession().createSQLQuery( queryString );
-        
-        query.setParameter( "locationId", location.getId().toString());
-        query.setParameter( "startOfPeriod", period.getStart());
-        query.setParameter( "endOfPeriod", period.getEnd());
-        
+
+        query.setParameter( "locationId", location.getId().toString() );
+        query.setParameter( "startOfPeriod", period.getStart() );
+        query.setParameter( "endOfPeriod", period.getEnd() );
+
         return query.uniqueResult().toString();
     }
 }
