@@ -204,6 +204,7 @@ public class DHIS2ReportingServiceImpl extends BaseOpenmrsService implements DHI
         dataValueSet.setOrgUnitIdScheme( "code");
         dataValueSet.setPeriod( period.getAsIsoString());
         dataValueSet.setOrgUnit( "OU_" + location.getId());
+        dataValueSet.setDataSet( reportDefinition.getCode());
         
         Collection<DataValue> dataValues = dataValueSet.getDataValues();
         

@@ -10,10 +10,15 @@
 package org.openmrs.module.dhisreport.web.controller;
 
 
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
+import org.hisp.dhis.dxf2.datavalueset.DataValueSet;
+import org.openmrs.Location;
 import org.openmrs.api.context.Context;
 import org.openmrs.module.dhisreport.api.DHIS2ReportingService;
+import org.openmrs.module.dhisreport.api.utils.MonthlyPeriod;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.ModelMap;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -29,13 +34,23 @@ public class ExecuteReportController
 
     protected final Log log = LogFactory.getLog( getClass() );
 
-    @RequestMapping(value = "/module/dhisreport/reportDefinition", method = RequestMethod.GET)
-    public void manage( ModelMap model, @RequestParam(value = "reportDefinition_id", required = false) Integer reportDefinition_id )
+    @RequestMapping(value = "/module/dhisreport/executeReport", method = RequestMethod.POST)
+    public void executeReport( ModelMap model, 
+        @RequestParam(value = "reportDefinition_id", required = true) Integer reportDefinition_id,
+        @RequestParam(value = "location", required = true) Integer location_id,
+        @RequestParam(value = "date", required = true) String dateStr) throws ParseException
     {
         DHIS2ReportingService service = Context.getService( DHIS2ReportingService.class );
         
+        MonthlyPeriod period = new MonthlyPeriod( new SimpleDateFormat("yyyy-MM-dd").parse( dateStr ));
+        Location location = Context.getLocationService().getLocation( location_id );
+        
+        DataValueSet dvs = service.evaluateReportDefinition( service.getReportDefinition( reportDefinition_id), period, location );
+        
+        //System.out.println("DVS: " + dvs.getDataSet());
+        //System.out.println("DataValuesS: " + dvs.getDataValues().size());
+        
         model.addAttribute( "user", Context.getAuthenticatedUser() );
-        model.addAttribute( "reportDefinition", service.getReportDefinition( reportDefinition_id) );
-        model.addAttribute( "locations", Context.getLocationService().getAllLocations());
+        model.addAttribute( "dataValueSet", dvs);
     }
 }
