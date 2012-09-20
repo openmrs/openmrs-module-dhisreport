@@ -4,7 +4,7 @@
 <%@ include file="template/localHeader.jsp"%>
 
 <table>
-    <thead>
+    <thead style="background-color: #1AAC9B; color: white; padding: 2px;">
         <tr>
             <td>Action</td>
             <td>Link</td>
