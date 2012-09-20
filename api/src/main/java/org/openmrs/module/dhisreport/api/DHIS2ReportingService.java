@@ -14,15 +14,15 @@
 package org.openmrs.module.dhisreport.api;
 
 import java.io.InputStream;
-import java.net.URL;
 import java.util.Collection;
 import org.hisp.dhis.dxf2.datavalueset.DataValueSet;
 import org.hisp.dhis.dxf2.importsummary.ImportSummary;
 import org.openmrs.Location;
 import org.openmrs.api.OpenmrsService;
+import org.openmrs.module.dhisreport.api.dhis.HttpDhis2Server;
 import org.openmrs.module.dhisreport.api.model.*;
-import org.springframework.transaction.annotation.Transactional;
 import org.openmrs.module.dhisreport.api.utils.MonthlyPeriod;
+import org.springframework.transaction.annotation.Transactional;
 
 /**
  * This service exposes module's core functionality. It is a Spring managed bean which is configured in moduleApplicationContext.xml.
@@ -42,13 +42,17 @@ public interface DHIS2ReportingService extends OpenmrsService {
     // -----------------------------------------------------------------------
     
     /**
-     * Initialize credentials for DHIS server
+     * Initialize url and credentials for DHIS server
      * 
-     * @param url
-     * @param user
-     * @param password 
+     * @param server
      */
-    public void setDHISParams(URL url, String user, String password );
+    public void setDhis2Server(HttpDhis2Server server );
+ 
+    /**
+     * 
+     * @return the Dhis2 server
+     */
+    public HttpDhis2Server getDhis2Server();
     
     /**
      * Fetches report templates from DHIS

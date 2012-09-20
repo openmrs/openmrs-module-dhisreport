@@ -23,12 +23,12 @@ import org.springframework.web.bind.annotation.RequestMethod;
  * The main controller.
  */
 @Controller
-public class ListReportsController
+public class ListDhis2ReportsController
 {
 
     protected final Log log = LogFactory.getLog( getClass() );
 
-    @RequestMapping(value = "/module/dhisreport/listReports", method = RequestMethod.GET)
+    @RequestMapping(value = "/module/dhisreport/listDhis2Reports", method = RequestMethod.GET)
     public void manage( ModelMap model )
     {
         DHIS2ReportingService service = Context.getService( DHIS2ReportingService.class );

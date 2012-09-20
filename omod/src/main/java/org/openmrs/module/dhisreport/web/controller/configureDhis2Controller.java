@@ -10,6 +10,8 @@
 package org.openmrs.module.dhisreport.web.controller;
 
 
+import java.net.MalformedURLException;
+import java.net.URL;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import org.apache.commons.logging.Log;
@@ -19,6 +21,7 @@ import org.openmrs.Location;
 import org.openmrs.api.context.Context;
 import org.openmrs.module.dhisreport.api.DHIS2ReportingService;
 import org.openmrs.module.dhisreport.api.dhis.Dhis2Server;
+import org.openmrs.module.dhisreport.api.dhis.HttpDhis2Server;
 import org.openmrs.module.dhisreport.api.utils.MonthlyPeriod;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.ModelMap;
@@ -30,32 +33,52 @@ import org.springframework.web.bind.annotation.RequestParam;
  * The main controller.
  */
 @Controller
-public class ExecuteReportController
+public class configureDhis2Controller
 {
 
     protected final Log log = LogFactory.getLog( getClass() );
 
-    @RequestMapping(value = "/module/dhisreport/executeReport", method = RequestMethod.POST)
-    public void executeReport( ModelMap model,
-        @RequestParam(value = "reportDefinition_id", required = true) Integer reportDefinition_id,
-        @RequestParam(value = "location", required = true) Integer location_id,
-        @RequestParam(value = "date", required = true) String dateStr ) throws ParseException
+    @RequestMapping(value = "/module/dhisreport/configureDhis2", method = RequestMethod.GET)
+    public void showConfigForm( ModelMap model )
     {
         DHIS2ReportingService service = Context.getService( DHIS2ReportingService.class );
 
-        MonthlyPeriod period = new MonthlyPeriod( new SimpleDateFormat( "yyyy-MM-dd" ).parse( dateStr ) );
-        Location location = Context.getLocationService().getLocation( location_id );
+        HttpDhis2Server server = service.getDhis2Server();
 
-        DataValueSet dvs = service.evaluateReportDefinition( service.getReportDefinition( reportDefinition_id ), period, location );
-
-        Dhis2Server server = service.getDhis2Server();
-
-        if ( ( server != null ) & ( server.isConfigured() ) )
+        if ( server == null )
         {
-            model.addAttribute( "dhis2Server", server );
+            server = new HttpDhis2Server();
         }
 
         model.addAttribute( "user", Context.getAuthenticatedUser() );
-        model.addAttribute( "dataValueSet", dvs );
+        model.addAttribute( "dhis2Server", server );
+
+    }
+    
+    @RequestMapping(value = "/module/dhisreport/configureDhis2", method = RequestMethod.POST)
+    public void saveConfig( ModelMap model,
+        @RequestParam(value = "url", required = true) String urlString,
+        @RequestParam(value = "username", required = true) String username,
+        @RequestParam(value = "password", required = true) String password ) throws ParseException, MalformedURLException
+    {
+        DHIS2ReportingService service = Context.getService( DHIS2ReportingService.class );
+        HttpDhis2Server server = service.getDhis2Server();
+
+        if ( server == null )
+        {
+            server = new HttpDhis2Server();
+        }
+        
+        URL url = new URL (urlString);
+        server.setUrl( url );
+        server.setUsername( username );
+        server.setPassword( password );
+        
+        service.setDhis2Server( server );
+        
+        log.debug( "Dhis2 server configured: "  + username + ":xxxxxx  " + url.toExternalForm() );
+        
+        model.addAttribute( "dhis2Server", server );
+        model.addAttribute( "user", Context.getAuthenticatedUser() );
     }
 }

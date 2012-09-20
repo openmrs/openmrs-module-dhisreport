@@ -102,6 +102,21 @@ public class HttpDhis2Server implements Dhis2Server
     }
 
     @Override
+    public boolean isConfigured()
+    {
+        if ( username == null | password == null | url == null )
+        {
+            return false;
+        }
+        if ( username.isEmpty() | password.isEmpty() | url.getHost().isEmpty() )
+        {
+            return false;
+        }
+        
+        return true;
+    }
+
+    @Override
     public ImportSummary postReport( DataValueSet report ) throws DhisException
     {
         log.debug( "Posting datavalueset report" );
@@ -128,8 +143,8 @@ public class HttpDhis2Server implements Dhis2Server
                 Credentials creds = new UsernamePasswordCredentials( username, password );
                 Header bs = new BasicScheme().authenticate( creds, httpPost, localcontext );
                 httpPost.addHeader( "Authorization", bs.getValue() );
-                httpPost.addHeader( "Content-Type", "application/xml");
-                httpPost.addHeader( "Accept", "application/xml");
+                httpPost.addHeader( "Content-Type", "application/xml" );
+                httpPost.addHeader( "Accept", "application/xml" );
 
                 httpPost.setEntity( new StringEntity( xmlReport.toString() ) );
                 HttpResponse response = httpclient.execute( targetHost, httpPost, localcontext );
@@ -139,8 +154,9 @@ public class HttpDhis2Server implements Dhis2Server
                 {
                     JAXBContext jaxbImportSummaryContext = JAXBContext.newInstance( ImportSummary.class );
                     Unmarshaller importSummaryUnMarshaller = jaxbImportSummaryContext.createUnmarshaller();
-                    summary = (ImportSummary) importSummaryUnMarshaller.unmarshal( entity.getContent());
-                } else {
+                    summary = (ImportSummary) importSummaryUnMarshaller.unmarshal( entity.getContent() );
+                } else
+                {
                     summary = new ImportSummary();
                     summary.setStatus( ImportStatus.ERROR );
                 }

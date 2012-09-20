@@ -4,7 +4,7 @@
 <%@ include file="template/localHeader.jsp"%>
 
 <table>
-    <thead>
+    <thead style="background-color: #1AAC9B; color: white; padding: 2px;">
         <tr>
             <td>Action</td>
             <td>Link</td>
@@ -25,7 +25,7 @@
         </tr>
         <tr>
             <td>Reports</td>
-            <td><a href="listReports.form">link</a></td>
+            <td><a href="listDhis2Reports.form">link</a></td>
         </tr>
     </tbody>
 </table>

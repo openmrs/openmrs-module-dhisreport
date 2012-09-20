@@ -2,7 +2,6 @@
 <%@ include file="/WEB-INF/template/header.jsp"%>
 
 <%@ include file="template/localHeader.jsp"%>
-
 <h3>Report Definitions</h3>
 <table>
     <c:forEach var="reportDefinition" items="${reportDefinitions}">

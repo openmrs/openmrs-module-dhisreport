@@ -14,7 +14,6 @@
 package org.openmrs.module.dhisreport.api.impl;
 
 import java.io.InputStream;
-import java.net.URL;
 import java.util.Collection;
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -33,7 +32,6 @@ import org.openmrs.module.dhisreport.api.dhis.DhisException;
 import org.openmrs.module.dhisreport.api.dhis.HttpDhis2Server;
 import org.openmrs.module.dhisreport.api.model.*;
 import org.openmrs.module.dhisreport.api.utils.MonthlyPeriod;
-import org.springframework.core.io.ClassPathResource;
 
 /**
  * It is a default implementation of {@link DHIS2ReportingService}.
@@ -45,16 +43,6 @@ public class DHIS2ReportingServiceImpl extends BaseOpenmrsService implements DHI
 	private DHIS2ReportingDAO dao;
     
     private HttpDhis2Server dhis2Server;
-
-    public HttpDhis2Server getDhis2Server()
-    {
-        return dhis2Server;
-    }
-
-    public void setDhis2Server( HttpDhis2Server dhis2Server )
-    {
-        this.dhis2Server = dhis2Server;
-    }
 	
 	/**
      * @param dao the dao to set
@@ -71,12 +59,15 @@ public class DHIS2ReportingServiceImpl extends BaseOpenmrsService implements DHI
     }
 
     @Override
-    public void setDHISParams( URL url, String user, String password )
+    public HttpDhis2Server getDhis2Server()
     {
-        dhis2Server.setUrl( url);
-        dhis2Server.setUsername( user );
-        dhis2Server.setPassword( password );
-        
+        return dhis2Server;
+    }
+
+    @Override
+    public void setDhis2Server( HttpDhis2Server dhis2Server )
+    {
+        this.dhis2Server = dhis2Server;
     }
 
     @Override

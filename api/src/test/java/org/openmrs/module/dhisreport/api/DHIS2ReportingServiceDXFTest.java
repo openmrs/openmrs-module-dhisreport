@@ -21,6 +21,7 @@ import org.junit.Before;
 import org.junit.Ignore;
 import org.junit.Test;
 import org.openmrs.api.context.Context;
+import org.openmrs.module.dhisreport.api.dhis.HttpDhis2Server;
 import org.openmrs.test.BaseModuleContextSensitiveTest;
 import org.springframework.core.io.ClassPathResource;
 
@@ -41,22 +42,24 @@ public class DHIS2ReportingServiceDXFTest extends BaseModuleContextSensitiveTest
     @Test
     public void setServerParamsTest() throws MalformedURLException
     {
-        String user = "admin";
-        String pass = "district";
-        URL url = new URL( "http://apps.dhis2.org/dev" );
+        HttpDhis2Server server = new HttpDhis2Server();
+        server.setUsername( "admin" );
+        server.setPassword( "district" );
+        server.setUrl( new URL( "http://apps.dhis2.org/dev" ) );
 
-        service.setDHISParams( url, user, pass );
+        service.setDhis2Server( server );
     }
 
     @Ignore
     @Test
     public void postDhisReportTest() throws Exception
     {
-        String user = "admin";
-        String pass = "district";
-        URL url = new URL( "http://apps.dhis2.org/dev" );
+        HttpDhis2Server server = new HttpDhis2Server();
+        server.setUsername( "admin" );
+        server.setPassword( "district" );
+        server.setUrl( new URL( "http://apps.dhis2.org/dev" ) );
 
-        service.setDHISParams( url, user, pass );
+        service.setDhis2Server( server );
         ClassPathResource resource = new ClassPathResource( "dvset.xml" );
         JAXBContext jaxbContext = JAXBContext.newInstance( DataValueSet.class );
 

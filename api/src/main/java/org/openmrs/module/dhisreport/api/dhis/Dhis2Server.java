@@ -39,6 +39,8 @@ public interface Dhis2Server {
      */
     // public InputStream fetchDhisResource( String path ) throws DhisException;
     
+    boolean isConfigured();
+    
     ReportDefinition fetchReportTemplates() throws DhisException;
 
     ImportSummary postReport(DataValueSet report ) throws DhisException;

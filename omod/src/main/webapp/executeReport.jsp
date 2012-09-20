@@ -14,6 +14,12 @@
     <c:forEach var="dv" items="${dataValueSet.dataValues}">
         <p>DataElement: ${dv.dataElement}, Value: ${dv.value}</p>
     </c:forEach>
+
+         <c:if test="$dhis2Server">
+           <div>
+             <p><a href="/postDataValueSet">Post</a> to DHIS2 server at ${dhisServer.url}</p>
+           </div>
+        </c:if>
 </c:if>
-    
+
 <%@ include file="/WEB-INF/template/footer.jsp"%>
