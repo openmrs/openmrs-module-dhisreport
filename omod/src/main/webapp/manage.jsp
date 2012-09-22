@@ -12,12 +12,8 @@
     </thead>
     <tbody>
         <tr>
-            <td>Load report definitions</td>
+            <td>Import/Export report definitions</td>
             <td><a href="loadReportDefinitions.form">link</a></td>
-        </tr>
-        <tr>
-            <td>Export report definitions</td>
-            <td><a href="exportReportDefinitions">link</a></td>
         </tr>
         <tr>
             <td>Configure DHIS2 connection</td>

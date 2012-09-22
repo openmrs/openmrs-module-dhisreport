@@ -15,7 +15,7 @@
         </thead>
         <tbody>
             <tr>
-                <td>Base DHIS2 URL (eg: http://apps.dhis2/demo"</td>
+                <td>Base DHIS2 URL (eg: http://apps.dhis2/demo )</td>
                 <td><input name="url" type="text" size="30" value="${dhis2Server.url}" /></td>
             </tr>
             <tr>

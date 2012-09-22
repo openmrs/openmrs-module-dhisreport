@@ -28,7 +28,7 @@ import org.openmrs.Location;
 import org.openmrs.api.impl.BaseOpenmrsService;
 import org.openmrs.module.dhisreport.api.DHIS2ReportingService;
 import org.openmrs.module.dhisreport.api.db.DHIS2ReportingDAO;
-import org.openmrs.module.dhisreport.api.dhis.DhisException;
+import org.openmrs.module.dhisreport.api.dhis.Dhis2Exception;
 import org.openmrs.module.dhisreport.api.dhis.HttpDhis2Server;
 import org.openmrs.module.dhisreport.api.model.*;
 import org.openmrs.module.dhisreport.api.utils.MonthlyPeriod;
@@ -77,7 +77,7 @@ public class DHIS2ReportingServiceImpl extends BaseOpenmrsService implements DHI
         try
         {
             reportTemplate = dhis2Server.fetchReportTemplates();
-        } catch ( DhisException ex )
+        } catch ( Dhis2Exception ex )
         {
             Logger.getLogger( DHIS2ReportingServiceImpl.class.getName() ).log( Level.SEVERE, null, ex );
         }
@@ -91,7 +91,7 @@ public class DHIS2ReportingServiceImpl extends BaseOpenmrsService implements DHI
         try
         {
             summary = dhis2Server.postReport( dvset );
-        } catch ( DhisException ex )
+        } catch ( Dhis2Exception ex )
         {
             Logger.getLogger( DHIS2ReportingServiceImpl.class.getName() ).log( Level.SEVERE, null, ex );
         }

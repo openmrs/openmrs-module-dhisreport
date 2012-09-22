@@ -18,31 +18,19 @@
  *
  **/
 
-package org.openmrs.module.dhisreport.api.dhis;
+package org.hisp.dhis.dxf2;
 
 
-import org.hisp.dhis.dxf2.datavalueset.DataValueSet;
-import org.hisp.dhis.dxf2.importsummary.ImportSummary;
 import org.openmrs.module.dhisreport.api.DHIS2ReportingException;
-import org.openmrs.module.dhisreport.api.model.ReportDefinition;
 
 /**
  *
  * @author bobj
  */
-public interface Dhis2Server {
+public class Dxf2Exception extends DHIS2ReportingException {
     
-    /**
-     * low level method to access dhis2 resources directly
-     * @param path
-     * @return
-     * @throws Dhis2Exception 
-     */
-    // public InputStream fetchDhisResource( String path ) throws Dhis2Exception;
-    
-    boolean isConfigured();
-    
-    ReportDefinition fetchReportTemplates() throws DHIS2ReportingException;
-
-    ImportSummary postReport(DataValueSet report ) throws DHIS2ReportingException;
+    public Dxf2Exception(String message, Throwable cause)
+    {
+        super( message, cause );
+    }
 }

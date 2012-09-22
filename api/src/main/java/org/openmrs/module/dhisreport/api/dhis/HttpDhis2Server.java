@@ -18,11 +18,8 @@
 package org.openmrs.module.dhisreport.api.dhis;
 
 
-import java.io.IOException;
 import java.io.StringWriter;
 import java.net.URL;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 import javax.xml.bind.JAXBContext;
 import javax.xml.bind.JAXBException;
 import javax.xml.bind.Marshaller;
@@ -33,7 +30,6 @@ import org.apache.http.Header;
 import org.apache.http.HttpEntity;
 import org.apache.http.HttpHost;
 import org.apache.http.HttpResponse;
-import org.apache.http.auth.AuthenticationException;
 import org.apache.http.auth.Credentials;
 import org.apache.http.auth.UsernamePasswordCredentials;
 import org.apache.http.client.methods.HttpPost;
@@ -41,9 +37,11 @@ import org.apache.http.entity.StringEntity;
 import org.apache.http.impl.auth.BasicScheme;
 import org.apache.http.impl.client.DefaultHttpClient;
 import org.apache.http.protocol.BasicHttpContext;
+import org.hisp.dhis.dxf2.Dxf2Exception;
 import org.hisp.dhis.dxf2.datavalueset.DataValueSet;
 import org.hisp.dhis.dxf2.importsummary.ImportStatus;
 import org.hisp.dhis.dxf2.importsummary.ImportSummary;
+import org.openmrs.module.dhisreport.api.DHIS2ReportingException;
 import org.openmrs.module.dhisreport.api.model.ReportDefinition;
 
 /**
@@ -112,77 +110,76 @@ public class HttpDhis2Server implements Dhis2Server
         {
             return false;
         }
-        
+
         return true;
     }
 
     @Override
-    public ImportSummary postReport( DataValueSet report ) throws DhisException
+    public ImportSummary postReport( DataValueSet report ) throws DHIS2ReportingException
     {
         log.debug( "Posting datavalueset report" );
         ImportSummary summary = null;
+
+        StringWriter xmlReport = new StringWriter();
         try
         {
-            StringWriter xmlReport = new StringWriter();
             JAXBContext jaxbDataValueSetContext = JAXBContext.newInstance( DataValueSet.class );
+
             Marshaller dataValueSetMarshaller = jaxbDataValueSetContext.createMarshaller();
             // output pretty printed
             dataValueSetMarshaller.setProperty( Marshaller.JAXB_FORMATTED_OUTPUT, true );
             dataValueSetMarshaller.marshal( report, xmlReport );
-
-            String host = url.getHost();
-            int port = url.getPort();
-
-            HttpHost targetHost = new HttpHost( host, port, url.getProtocol() );
-            DefaultHttpClient httpclient = new DefaultHttpClient();
-            BasicHttpContext localcontext = new BasicHttpContext();
-
-            try
-            {
-                HttpPost httpPost = new HttpPost( url.getPath() + DATAVALUESET_PATH );
-                Credentials creds = new UsernamePasswordCredentials( username, password );
-                Header bs = new BasicScheme().authenticate( creds, httpPost, localcontext );
-                httpPost.addHeader( "Authorization", bs.getValue() );
-                httpPost.addHeader( "Content-Type", "application/xml" );
-                httpPost.addHeader( "Accept", "application/xml" );
-
-                httpPost.setEntity( new StringEntity( xmlReport.toString() ) );
-                HttpResponse response = httpclient.execute( targetHost, httpPost, localcontext );
-                HttpEntity entity = response.getEntity();
-
-                if ( entity != null )
-                {
-                    JAXBContext jaxbImportSummaryContext = JAXBContext.newInstance( ImportSummary.class );
-                    Unmarshaller importSummaryUnMarshaller = jaxbImportSummaryContext.createUnmarshaller();
-                    summary = (ImportSummary) importSummaryUnMarshaller.unmarshal( entity.getContent() );
-                } else
-                {
-                    summary = new ImportSummary();
-                    summary.setStatus( ImportStatus.ERROR );
-                }
-                // EntityUtils.consume( entity );
-
-
-                // TODO: fix these catches ...
-            } catch ( AuthenticationException ex )
-            {
-                log.debug( "Authentication error", ex );
-            } catch ( IOException ex )
-            {
-                log.debug( "IO Exception", ex );
-            } finally
-            {
-                httpclient.getConnectionManager().shutdown();
-            }
         } catch ( JAXBException ex )
         {
-            Logger.getLogger( HttpDhis2Server.class.getName() ).log( Level.SEVERE, null, ex );
+            throw new Dxf2Exception("Problem marshalling dataValueSet", ex);
+        }
+
+        String host = url.getHost();
+        int port = url.getPort();
+
+        HttpHost targetHost = new HttpHost( host, port, url.getProtocol() );
+        DefaultHttpClient httpclient = new DefaultHttpClient();
+        BasicHttpContext localcontext = new BasicHttpContext();
+
+        try
+        {
+            HttpPost httpPost = new HttpPost( url.getPath() + DATAVALUESET_PATH );
+            Credentials creds = new UsernamePasswordCredentials( username, password );
+            Header bs = new BasicScheme().authenticate( creds, httpPost, localcontext );
+            httpPost.addHeader( "Authorization", bs.getValue() );
+            httpPost.addHeader( "Content-Type", "application/xml" );
+            httpPost.addHeader( "Accept", "application/xml" );
+
+            httpPost.setEntity( new StringEntity( xmlReport.toString() ) );
+            HttpResponse response = httpclient.execute( targetHost, httpPost, localcontext );
+            HttpEntity entity = response.getEntity();
+
+            if ( entity != null )
+            {
+                JAXBContext jaxbImportSummaryContext = JAXBContext.newInstance( ImportSummary.class );
+                Unmarshaller importSummaryUnMarshaller = jaxbImportSummaryContext.createUnmarshaller();
+                summary = (ImportSummary) importSummaryUnMarshaller.unmarshal( entity.getContent() );
+            } else
+            {
+                summary = new ImportSummary();
+                summary.setStatus( ImportStatus.ERROR );
+            }
+            // EntityUtils.consume( entity );
+
+
+            // TODO: fix these catches ...
+        } catch ( Exception ex )
+        {
+            throw new Dhis2Exception( this, "Problem accessing Dhis2 server", ex );
+        } finally
+        {
+            httpclient.getConnectionManager().shutdown();
         }
         return summary;
     }
 
     @Override
-    public ReportDefinition fetchReportTemplates() throws DhisException
+    public ReportDefinition fetchReportTemplates() throws Dhis2Exception
     {
         throw new UnsupportedOperationException( "Not supported yet." );
     }
