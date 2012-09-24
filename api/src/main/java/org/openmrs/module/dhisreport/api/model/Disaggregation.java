@@ -31,7 +31,7 @@ import javax.xml.bind.annotation.*;
  */
 @XmlAccessorType(XmlAccessType.FIELD)
 @XmlRootElement(name = "disaggregation")
-public class Disaggregation implements Serializable { 
+public class Disaggregation implements Serializable, Identifiable { 
     
     protected Integer id;
     
@@ -45,11 +45,13 @@ public class Disaggregation implements Serializable {
     @XmlAttribute(required = true)
     protected String uid;
 
+    @Override
     public Integer getId()
     {
         return id;
     }
 
+    @Override
     public void setId( Integer id )
     {
         this.id = id;
@@ -75,11 +77,13 @@ public class Disaggregation implements Serializable {
         this.name = name;
     }
 
+    @Override
     public String getUid()
     {
         return uid;
     }
 
+    @Override
     public void setUid( String uid )
     {
         this.uid = uid;

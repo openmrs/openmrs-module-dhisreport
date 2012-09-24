@@ -1,17 +1,14 @@
 /**
- * The contents of this file are subject to the OpenMRS Public License
- * Version 1.0 (the "License"); you may not use this file except in
- * compliance with the License. You may obtain a copy of the License at
- * http://license.openmrs.org
+ * The contents of this file are subject to the OpenMRS Public License Version 1.0 (the "License"); you may not use this
+ * file except in compliance with the License. You may obtain a copy of the License at http://license.openmrs.org
  *
- * Software distributed under the License is distributed on an "AS IS"
- * basis, WITHOUT WARRANTY OF ANY KIND, either express or implied. See the
- * License for the specific language governing rights and limitations
- * under the License.
+ * Software distributed under the License is distributed on an "AS IS" basis, WITHOUT WARRANTY OF ANY KIND, either
+ * express or implied. See the License for the specific language governing rights and limitations under the License.
  *
- * Copyright (C) OpenMRS, LLC.  All Rights Reserved.
+ * Copyright (C) OpenMRS, LLC. All Rights Reserved.
  */
 package org.openmrs.module.dhisreport.api.impl;
+
 
 import java.io.InputStream;
 import java.util.Collection;
@@ -26,6 +23,7 @@ import org.hisp.dhis.dxf2.datavalueset.DataValueSet;
 import org.hisp.dhis.dxf2.importsummary.ImportSummary;
 import org.openmrs.Location;
 import org.openmrs.api.impl.BaseOpenmrsService;
+import org.openmrs.module.dhisreport.api.DHIS2ReportingException;
 import org.openmrs.module.dhisreport.api.DHIS2ReportingService;
 import org.openmrs.module.dhisreport.api.db.DHIS2ReportingDAO;
 import org.openmrs.module.dhisreport.api.dhis.Dhis2Exception;
@@ -36,26 +34,29 @@ import org.openmrs.module.dhisreport.api.utils.MonthlyPeriod;
 /**
  * It is a default implementation of {@link DHIS2ReportingService}.
  */
-public class DHIS2ReportingServiceImpl extends BaseOpenmrsService implements DHIS2ReportingService {
-	
-	protected final Log log = LogFactory.getLog(this.getClass());
-	
-	private DHIS2ReportingDAO dao;
-    
+public class DHIS2ReportingServiceImpl extends BaseOpenmrsService implements DHIS2ReportingService
+{
+
+    protected final Log log = LogFactory.getLog( this.getClass() );
+
+    private DHIS2ReportingDAO dao;
+
     private HttpDhis2Server dhis2Server;
-	
-	/**
+
+    /**
      * @param dao the dao to set
      */
-    public void setDao(DHIS2ReportingDAO dao) {
-	    this.dao = dao;
+    public void setDao( DHIS2ReportingDAO dao )
+    {
+        this.dao = dao;
     }
-    
+
     /**
      * @return the dao
      */
-    public DHIS2ReportingDAO getDao() {
-	    return dao;
+    public DHIS2ReportingDAO getDao()
+    {
+        return dao;
     }
 
     @Override
@@ -72,30 +73,16 @@ public class DHIS2ReportingServiceImpl extends BaseOpenmrsService implements DHI
 
     @Override
     public ReportDefinition getReportTemplates()
+        throws DHIS2ReportingException
     {
-        ReportDefinition reportTemplate = null;
-        try
-        {
-            reportTemplate = dhis2Server.fetchReportTemplates();
-        } catch ( Dhis2Exception ex )
-        {
-            Logger.getLogger( DHIS2ReportingServiceImpl.class.getName() ).log( Level.SEVERE, null, ex );
-        }
-        return reportTemplate;
+        return dhis2Server.fetchReportTemplates();
     }
 
     @Override
-    public ImportSummary postDataValueSet(DataValueSet dvset)
+    public ImportSummary postDataValueSet( DataValueSet dvset )
+        throws DHIS2ReportingException
     {
-        ImportSummary summary = null;
-        try
-        {
-            summary = dhis2Server.postReport( dvset );
-        } catch ( Dhis2Exception ex )
-        {
-            Logger.getLogger( DHIS2ReportingServiceImpl.class.getName() ).log( Level.SEVERE, null, ex );
-        }
-        return summary;
+        return dhis2Server.postReport( dvset );
     }
 
     @Override
@@ -105,12 +92,17 @@ public class DHIS2ReportingServiceImpl extends BaseOpenmrsService implements DHI
     }
 
     @Override
+    public DataElement getDataElementByUid( String uid )
+    {
+        return dao.getDataElementByUid( uid );
+    }
+
+    @Override
     public DataElement saveDataElement( DataElement de )
     {
         return dao.saveDataElement( de );
     }
 
-    
     @Override
     public void purgeDataElement( DataElement de )
     {
@@ -134,7 +126,12 @@ public class DHIS2ReportingServiceImpl extends BaseOpenmrsService implements DHI
     {
         return dao.getReportDefinition( id );
     }
-
+    
+    public ReportDefinition getReportDefinitionByUId(String uid)
+    {
+        return dao.getReportDefinitionByUid( uid );
+    }
+    
     @Override
     public ReportDefinition saveReportDefinition( ReportDefinition reportDefinition )
     {
@@ -178,35 +175,34 @@ public class DHIS2ReportingServiceImpl extends BaseOpenmrsService implements DHI
     }
 
     /**
-     * Create a datavalueset report
-     * TODO: handle the sql query exceptions which are bound to happen
-     * 
+     * Create a datavalueset report TODO: handle the sql query exceptions which are bound to happen
+     *
      * @param reportDefinition
      * @param period
      * @param location
-     * @return 
+     * @return
      */
     @Override
     public DataValueSet evaluateReportDefinition( ReportDefinition reportDefinition, MonthlyPeriod period, Location location )
     {
         Collection<DataValueTemplate> templates = reportDefinition.getDataValueTemplates();
         DataValueSet dataValueSet = new DataValueSet();
-        dataValueSet.setDataElementIdScheme( "code");
-        dataValueSet.setOrgUnitIdScheme( "code");
-        dataValueSet.setPeriod( period.getAsIsoString());
-        dataValueSet.setOrgUnit( "OU_" + location.getId());
-        dataValueSet.setDataSet( reportDefinition.getCode());
-        
+        dataValueSet.setDataElementIdScheme( "code" );
+        dataValueSet.setOrgUnitIdScheme( "code" );
+        dataValueSet.setPeriod( period.getAsIsoString() );
+        dataValueSet.setOrgUnit( "OU_" + location.getId() );
+        dataValueSet.setDataSet( reportDefinition.getCode() );
+
         Collection<DataValue> dataValues = dataValueSet.getDataValues();
-        
-        for (DataValueTemplate dvt : templates)
+
+        for ( DataValueTemplate dvt : templates )
         {
             DataValue dataValue = new DataValue();
-            dataValue.setDataElement( dvt.getDataelement().getCode());
-            dataValue.setValue( dao.evaluateDataValueTemplate( dvt, period, location) );
+            dataValue.setDataElement( dvt.getDataelement().getCode() );
+            dataValue.setValue( dao.evaluateDataValueTemplate( dvt, period, location ) );
             dataValues.add( dataValue );
         }
-        
+
         return dataValueSet;
     }
 
@@ -215,24 +211,24 @@ public class DHIS2ReportingServiceImpl extends BaseOpenmrsService implements DHI
     {
         throw new UnsupportedOperationException( "Not supported yet." );
     }
-    
-    public void unMarshallandSaveReportTemplates(InputStream is) throws Exception
+
+    public void unMarshallandSaveReportTemplates( InputStream is ) throws Exception
     {
         JAXBContext jaxbContext = JAXBContext.newInstance( ReportTemplates.class );
         Unmarshaller jaxbUnmarshaller = jaxbContext.createUnmarshaller();
         ReportTemplates reportTemplates = (ReportTemplates) jaxbUnmarshaller.unmarshal( is );
 
-        for (DataElement de : reportTemplates.getDataElements( ) )
+        for ( DataElement de : reportTemplates.getDataElements() )
         {
             saveDataElement( de );
         }
-        for (Disaggregation disagg : reportTemplates.getDisaggregations())
+        for ( Disaggregation disagg : reportTemplates.getDisaggregations() )
         {
             saveDisaggregation( disagg );
         }
         for ( ReportDefinition rd : reportTemplates.getReportTemplates() )
         {
-            for (DataValueTemplate dvt : rd.getDataValueTemplates())
+            for ( DataValueTemplate dvt : rd.getDataValueTemplates() )
             {
                 dvt.setReportDefinition( rd );
             }

@@ -14,14 +14,13 @@ import java.util.Collection;
 import java.util.List;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
+import org.hibernate.Criteria;
 import org.hibernate.Query;
 import org.hibernate.SessionFactory;
+import org.hibernate.criterion.Restrictions;
 import org.openmrs.Location;
 import org.openmrs.module.dhisreport.api.db.DHIS2ReportingDAO;
-import org.openmrs.module.dhisreport.api.model.DataElement;
-import org.openmrs.module.dhisreport.api.model.DataValueTemplate;
-import org.openmrs.module.dhisreport.api.model.Disaggregation;
-import org.openmrs.module.dhisreport.api.model.ReportDefinition;
+import org.openmrs.module.dhisreport.api.model.*;
 import org.openmrs.module.dhisreport.api.utils.MonthlyPeriod;
 
 /**
@@ -59,8 +58,7 @@ public class HibernateDHIS2ReportingDAO implements DHIS2ReportingDAO
     @Override
     public DataElement saveDataElement( DataElement de )
     {
-        sessionFactory.getCurrentSession().saveOrUpdate( de );
-        return de;
+        return (DataElement) saveObject(de);
     }
 
     @Override
@@ -78,8 +76,7 @@ public class HibernateDHIS2ReportingDAO implements DHIS2ReportingDAO
     @Override
     public Disaggregation saveDisaggregation( Disaggregation disagg )
     {
-        sessionFactory.getCurrentSession().saveOrUpdate( disagg );
-        return disagg;
+        return (Disaggregation) saveObject(disagg);
     }
 
     @Override
@@ -91,8 +88,7 @@ public class HibernateDHIS2ReportingDAO implements DHIS2ReportingDAO
     @Override
     public ReportDefinition saveReportDefinition( ReportDefinition rd )
     {
-        sessionFactory.getCurrentSession().saveOrUpdate( rd );
-        return rd;
+        return (ReportDefinition) saveObject(rd);
     }
 
     @Override
@@ -140,4 +136,45 @@ public class HibernateDHIS2ReportingDAO implements DHIS2ReportingDAO
 
         return query.uniqueResult().toString();
     }
+
+//--------------------------------------------------------------------------------------------------------------
+// Generic methods for DHIS2 identifiable objects
+//--------------------------------------------------------------------------------------------------------------
+    
+    public Identifiable getObjectByUid( String uid, Class<?> clazz )
+    {
+        Criteria criteria = sessionFactory.getCurrentSession().createCriteria( clazz );
+        criteria.add( Restrictions.eq( "uid", uid ) );
+        return (Identifiable) criteria.uniqueResult();
+    }
+
+    public Identifiable saveObject( Identifiable object )
+    {
+        // force merge if uid already exists
+        Identifiable existingObject = getObjectByUid(object.getUid(), object.getClass());
+        if (existingObject != null) {
+                        object.setId(existingObject.getId());
+        }
+        sessionFactory.getCurrentSession().saveOrUpdate( object );
+        return object;
+    }
+
+    @Override
+    public DataElement getDataElementByUid( String uid )
+    {
+        return (DataElement) getObjectByUid( uid, DataElement.class );
+    }
+
+    @Override
+    public Disaggregation getDisaggregationByUid( String uid )
+    {
+        return (Disaggregation) getObjectByUid( uid, Disaggregation.class );
+    }
+    
+    @Override
+    public ReportDefinition getReportDefinitionByUid( String uid )
+    {
+        return (ReportDefinition) getObjectByUid( uid, ReportDefinition.class );
+    }
+
 }

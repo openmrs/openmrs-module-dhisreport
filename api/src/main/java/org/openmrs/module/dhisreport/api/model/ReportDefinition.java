@@ -34,7 +34,7 @@ import javax.xml.bind.annotation.*;
     "dataValueTemplates"
 })
 @XmlRootElement(name = "reportTemplate")
-public class ReportDefinition implements Serializable {
+public class ReportDefinition implements Serializable, Identifiable {
 
 	protected Integer id;
     
@@ -51,10 +51,12 @@ public class ReportDefinition implements Serializable {
     @XmlElement(name="dataValueTemplate")
     protected Set<DataValueTemplate> dataValueTemplates = new HashSet<DataValueTemplate>();
     
+    @Override
 	public Integer getId() {
 		return id;
 	}
 	
+    @Override
 	public void setId(Integer id) {
 		this.id = id;
 	}
@@ -79,11 +81,13 @@ public class ReportDefinition implements Serializable {
         this.code = code;
     }
 
+    @Override
     public String getUid()
     {
         return uid;
     }
 
+    @Override
     public void setUid( String uid )
     {
         this.uid = uid;

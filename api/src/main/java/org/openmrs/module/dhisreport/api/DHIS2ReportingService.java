@@ -55,19 +55,21 @@ public interface DHIS2ReportingService extends OpenmrsService {
     public HttpDhis2Server getDhis2Server();
     
     /**
-     * Fetches report templates from DHIS
      * 
-     * @return 
+     * @return
+     * @throws DHIS2ReportingException 
      */
-    public ReportDefinition getReportTemplates();
+    public ReportDefinition getReportTemplates()
+                throws DHIS2ReportingException;
     
     /**
-     * Post a datavalueset to DHIS
      * 
      * @param dvset
-     * @return 
+     * @return
+     * @throws DHIS2ReportingException 
      */
-    public ImportSummary postDataValueSet(DataValueSet dvset);
+    public ImportSummary postDataValueSet(DataValueSet dvset)
+        throws DHIS2ReportingException;
     
     // -----------------------------------------------------------------------
     // Data access methods
@@ -80,6 +82,14 @@ public interface DHIS2ReportingService extends OpenmrsService {
      */
     @Transactional(readOnly=true)
     public DataElement getDataElement(Integer id);
+
+    /**
+     * 
+     * @param uid
+     * @return 
+     */
+    @Transactional(readOnly=true)
+    public DataElement getDataElementByUid(String uid);
 
     /**
      * 
@@ -140,6 +150,11 @@ public interface DHIS2ReportingService extends OpenmrsService {
      */
     @Transactional(readOnly=true)
     public ReportDefinition getReportDefinition(Integer id);
+
+
+   
+    @Transactional(readOnly=true)
+    public ReportDefinition getReportDefinitionByUId(String uid);
 
     /**
      * 

@@ -34,48 +34,49 @@ public class DHIS2ReportingServiceDAOTest extends BaseModuleContextSensitiveTest
 
     private DHIS2ReportingService service;
 
-    // sample data:  to do prepare a proper dataset
-    private DataElement de1, de2;
-
+    // uids of sample data
+    private static final String DE_ANC1_UID="nvVDDkfbbhf";
+    private static final String DE_ANC4_UID="OWeOBFxrvrv";
+    private static final String RT_POPULATION_UID="Az7yGdS293Y";
+    private static final String DE_POP_UID = "xX6RDH6AZTK";
+    
     private Disaggregation _default;
-
-    private DataValueTemplate dvt1, dvt2;
-
-    private ReportDefinition rd1, rd2, rd3;
-
+    private ReportDefinition rd;
+    
     @Before
     public void before() throws Exception
     {
-        // executeDataSet(XML_DATASET_PATH + new TestUtil().getTestDatasetFilename(XML_HTML_FORM_ENTRY_SERVICE_DATASET));
-        rd1 = new ReportDefinition();
-        rd2 = new ReportDefinition();
-        rd1.setCode( "DS_MORBIDITY" );
-        rd2.setName( "Monthly Morbidity Report" );
-
-        de1 = new DataElement();
-        de1.setName( "Malaria cases" );
-        de1.setCode( "DE1" );
-
-        de2 = new DataElement();
-        de2.setName( "STI cases" );
-        de2.setCode( "DE2" );
-
         _default = new Disaggregation();
         _default.setName( "default" );
         _default.setCode( "default" );
 
         service = Context.getService( DHIS2ReportingService.class );
+        ClassPathResource resource = new ClassPathResource( "templates_ethiopia.xml" );
+        service.unMarshallandSaveReportTemplates( resource.getInputStream());
     }
 
     @Test
     public void dataElementDAOTest()
     {
+        DataElement de1 = new DataElement();
+        de1.setName( "Malaria cases" );
+        de1.setCode( "DE1" );
+        de1.setUid( "ghggyugugug" );
+
+        DataElement de2 = new DataElement();
+        de2.setName( "STI cases" );
+        de2.setCode( "DE2" );
+        de2.setUid( "ghrwyugugpo" );
+        
         DataElement de = service.saveDataElement( de1 );
         assertEquals( de1.getName(), de.getName() );
         service.saveDataElement( de2 );
+        de1.setName( "Something else");
+        service.saveDataElement( de2 );
 
         Collection<DataElement> des = service.getAllDataElements();
-        assertEquals( 2, des.size() );
+        assertEquals( 5, des.size() );
+        
     }
 
     @Test
@@ -88,23 +89,13 @@ public class DHIS2ReportingServiceDAOTest extends BaseModuleContextSensitiveTest
     @Test
     public void dataValueSetDAOTest()
     {
-        service.saveDataElement( de1 );
-        service.saveDisaggregation( _default );
-
-        dvt1 = new DataValueTemplate();
-        dvt1.setDataelement( de1 );
-        dvt1.setDisaggregation( _default );
-
-        rd1.addDataValueTemplate( dvt1 );
-        rd3 = service.saveReportDefinition( rd1 );
-
+        DataElement popDe = service.getDataElementByUid( DE_POP_UID);
         // should fail
-        service.purgeDataElement( de1 );
+        //service.purgeDataElement( de1 );
 
-        assertEquals( rd1.getName(), rd3.getName() );
-        Set<DataValueTemplate> dvTemplates = rd3.getDataValueTemplates();
+        rd = service.getReportDefinitionByUId( DE_POP_UID );
+        Set<DataValueTemplate> dvTemplates = rd.getDataValueTemplates();
         assertEquals( 1, dvTemplates.size() );
-        assertTrue( dvTemplates.contains( dvt1 ) );
         for ( DataValueTemplate dv : dvTemplates )
         {
             System.out.println( dv.getDataelement() );
@@ -119,18 +110,6 @@ public class DHIS2ReportingServiceDAOTest extends BaseModuleContextSensitiveTest
     @Test
     public void queryTest()
     {
-        String query = "select count(*) from dhisreport_dataelement";
-        MonthlyPeriod period = new MonthlyPeriod( new Date() );
-        Location location = new Location();
-        location.setId( 21 );
-
-        service.saveDataElement( de1 );
-        service.saveDataElement( de2 );
-
-        dvt1 = new DataValueTemplate();
-        dvt1.setQuery( query );
-
-        assertEquals( "2", service.evaluateDataValueTemplate( dvt1, period, location ) );
     }
 
     @Test

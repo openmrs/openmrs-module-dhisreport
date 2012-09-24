@@ -30,7 +30,7 @@ import javax.xml.bind.annotation.*;
  */
 @XmlAccessorType(XmlAccessType.FIELD)
 @XmlRootElement(name = "dataElement")
-public class DataElement  implements Serializable {
+public class DataElement implements Serializable, Identifiable  {
     
     protected Integer id;
     
@@ -44,11 +44,13 @@ public class DataElement  implements Serializable {
     @XmlAttribute(required = true)
     protected String name;
 
+    @Override
     public String getUid()
     {
         return uid;
     }
 
+    @Override
     public void setUid( String uid )
     {
         this.uid = uid;
@@ -64,11 +66,13 @@ public class DataElement  implements Serializable {
         this.code = code;
     }
 
+    @Override
     public Integer getId()
     {
         return id;
     }
 
+    @Override
     public void setId( Integer id )
     {
         this.id = id;
