@@ -18,11 +18,15 @@
  *
  **/
 
-package org.hisp.dhis.dxf2.datavalueset;
+package org.openmrs.module.dhisreport.api.dxf2;
 
+import java.io.OutputStream;
 import java.util.ArrayList;
 import java.util.LinkedList;
 import java.util.List;
+import javax.xml.bind.JAXBContext;
+import javax.xml.bind.JAXBException;
+import javax.xml.bind.Marshaller;
 import javax.xml.bind.annotation.*;
 import javax.xml.datatype.XMLGregorianCalendar;
 
@@ -195,6 +199,14 @@ public class DataValueSet {
      */
     public void setPeriod(String value) {
         this.period = value;
+    }
+
+    public void marshall( OutputStream outputStream ) throws JAXBException
+    {
+        JAXBContext jaxbContext = JAXBContext.newInstance( this.getClass() );
+        Marshaller marshaller = jaxbContext.createMarshaller();
+        
+        marshaller.marshal( this, outputStream);
     }
 
 }

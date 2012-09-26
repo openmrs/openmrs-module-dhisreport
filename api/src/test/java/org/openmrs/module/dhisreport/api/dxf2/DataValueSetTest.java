@@ -18,7 +18,7 @@
  *
  **/
 
-package org.hisp.dhis.dxf2.datavalueset;
+package org.openmrs.module.dhisreport.api.dxf2;
 
 
 import java.util.List;

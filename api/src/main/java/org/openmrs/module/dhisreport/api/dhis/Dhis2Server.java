@@ -21,10 +21,10 @@
 package org.openmrs.module.dhisreport.api.dhis;
 
 
-import org.hisp.dhis.dxf2.datavalueset.DataValueSet;
 import org.hisp.dhis.dxf2.importsummary.ImportSummary;
 import org.openmrs.module.dhisreport.api.DHIS2ReportingException;
 import org.openmrs.module.dhisreport.api.model.ReportDefinition;
+import org.openmrs.module.dhisreport.api.dxf2.DataValueSet;
 
 /**
  *

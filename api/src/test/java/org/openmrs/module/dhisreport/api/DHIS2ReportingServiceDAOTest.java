@@ -11,18 +11,12 @@ package org.openmrs.module.dhisreport.api;
 
 
 import java.util.Collection;
-import java.util.Date;
-//import java.util.Set;
-import javax.xml.bind.JAXBContext;
-import javax.xml.bind.Unmarshaller;
 import static org.junit.Assert.*;
 import org.junit.Before;
 import org.junit.Ignore;
 import org.junit.Test;
-import org.openmrs.Location;
 import org.openmrs.api.context.Context;
 import org.openmrs.module.dhisreport.api.model.*;
-import org.openmrs.module.dhisreport.api.utils.MonthlyPeriod;
 import org.openmrs.test.BaseModuleContextSensitiveTest;
 import org.springframework.core.io.ClassPathResource;
 
@@ -96,7 +90,7 @@ public class DHIS2ReportingServiceDAOTest extends BaseModuleContextSensitiveTest
         assertNotNull(service.getAllReportDefinitions());
         
         rd = service.getReportDefinitionByUId( RT_POPULATION_UID );
-        Set<DataValueTemplate> dvTemplates = rd.getDataValueTemplates();
+        Collection<DataValueTemplate> dvTemplates = rd.getDataValueTemplates();
         assertEquals( 2, dvTemplates.size() );
     }
 

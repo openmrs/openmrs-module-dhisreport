@@ -15,7 +15,7 @@ import java.net.URL;
 import javax.xml.bind.JAXBContext;
 import javax.xml.bind.Marshaller;
 import javax.xml.bind.Unmarshaller;
-import org.hisp.dhis.dxf2.datavalueset.DataValueSet;
+import org.openmrs.module.dhisreport.api.dxf2.DataValueSet;
 import org.hisp.dhis.dxf2.importsummary.ImportSummary;
 import org.junit.Before;
 import org.junit.Ignore;

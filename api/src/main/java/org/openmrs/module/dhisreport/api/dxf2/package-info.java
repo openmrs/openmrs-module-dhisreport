@@ -5,7 +5,7 @@
     },
     elementFormDefault = javax.xml.bind.annotation.XmlNsForm.QUALIFIED)
 
-package org.hisp.dhis.dxf2.datavalueset;
+package org.openmrs.module.dhisreport.api.dxf2;
 
 import javax.xml.bind.annotation.XmlNs;
 import javax.xml.bind.annotation.XmlNsForm;

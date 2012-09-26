@@ -38,7 +38,7 @@ import org.apache.http.impl.auth.BasicScheme;
 import org.apache.http.impl.client.DefaultHttpClient;
 import org.apache.http.protocol.BasicHttpContext;
 import org.hisp.dhis.dxf2.Dxf2Exception;
-import org.hisp.dhis.dxf2.datavalueset.DataValueSet;
+import org.openmrs.module.dhisreport.api.dxf2.DataValueSet;
 import org.hisp.dhis.dxf2.importsummary.ImportStatus;
 import org.hisp.dhis.dxf2.importsummary.ImportSummary;
 import org.openmrs.module.dhisreport.api.DHIS2ReportingException;

@@ -16,7 +16,7 @@ package org.openmrs.module.dhisreport.api;
 import java.io.InputStream;
 import java.io.OutputStream;
 import java.util.Collection;
-import org.hisp.dhis.dxf2.datavalueset.DataValueSet;
+import org.openmrs.module.dhisreport.api.dxf2.DataValueSet;
 import org.hisp.dhis.dxf2.importsummary.ImportSummary;
 import org.openmrs.Location;
 import org.openmrs.api.OpenmrsService;
