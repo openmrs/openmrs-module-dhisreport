@@ -92,10 +92,11 @@ public class DHIS2ReportingServiceDAOTest extends BaseModuleContextSensitiveTest
         DataElement popDe = service.getDataElementByUid( DE_POP_UID);
         // should fail
         //service.purgeDataElement( de1 );
-
-        rd = service.getReportDefinitionByUId( DE_POP_UID );
+        assertNotNull(service.getAllReportDefinitions());
+        
+        rd = service.getReportDefinitionByUId( RT_POPULATION_UID );
         Set<DataValueTemplate> dvTemplates = rd.getDataValueTemplates();
-        assertEquals( 1, dvTemplates.size() );
+        assertEquals( 2, dvTemplates.size() );
         for ( DataValueTemplate dv : dvTemplates )
         {
             System.out.println( dv.getDataelement() );

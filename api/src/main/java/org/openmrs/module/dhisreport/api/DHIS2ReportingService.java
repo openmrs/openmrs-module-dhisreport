@@ -14,6 +14,7 @@
 package org.openmrs.module.dhisreport.api;
 
 import java.io.InputStream;
+import java.io.OutputStream;
 import java.util.Collection;
 import org.hisp.dhis.dxf2.datavalueset.DataValueSet;
 import org.hisp.dhis.dxf2.importsummary.ImportSummary;
@@ -59,7 +60,7 @@ public interface DHIS2ReportingService extends OpenmrsService {
      * @return
      * @throws DHIS2ReportingException 
      */
-    public ReportDefinition getReportTemplates()
+    public ReportDefinition fetchReportTemplates()
                 throws DHIS2ReportingException;
     
     /**
@@ -179,7 +180,7 @@ public interface DHIS2ReportingService extends OpenmrsService {
     public Collection<ReportDefinition> getAllReportDefinitions();
 
     // -----------------------------------------------------------------------
-    // Loading ReportTemplates (DHIS2 Data Structure Definition)
+    // ReportTemplates (DHIS2 Data Structure Definition)
     // -----------------------------------------------------------------------
     
     /**
@@ -187,7 +188,7 @@ public interface DHIS2ReportingService extends OpenmrsService {
      * @param rt 
      */
     @Transactional
-    public void SaveReportTemplates(ReportTemplates rt);
+    public void saveReportTemplates(ReportTemplates rt);
 
     /**
      * 
@@ -196,6 +197,17 @@ public interface DHIS2ReportingService extends OpenmrsService {
      */
     public void unMarshallandSaveReportTemplates(InputStream is) throws Exception;
 
+    @Transactional
+    public ReportTemplates getReportTemplates();
+
+    /**
+     * 
+     * @param is
+     * @throws Exception 
+     */
+    public void marshallReportTemplates(OutputStream os, ReportTemplates rt) throws Exception;
+
+    
     // -----------------------------------------------------------------------
     // ReportEvaluation
     // -----------------------------------------------------------------------

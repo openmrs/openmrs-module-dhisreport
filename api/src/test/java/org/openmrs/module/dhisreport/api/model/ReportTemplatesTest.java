@@ -46,7 +46,7 @@ public class ReportTemplatesTest
         Unmarshaller jaxbUnmarshaller = jaxbContext.createUnmarshaller();
         ReportTemplates reportTemplates = (ReportTemplates) jaxbUnmarshaller.unmarshal( resource.getInputStream() );
         assertNotNull( reportTemplates );
-        List<ReportDefinition> reportDefinitions = reportTemplates.getReportTemplates();
+        List<ReportDefinition> reportDefinitions = reportTemplates.getReportDefinitions();
         assertEquals( 2, reportDefinitions.size() );
         for ( ReportDefinition rd : reportDefinitions )
         {
@@ -68,7 +68,7 @@ public class ReportTemplatesTest
 
         Unmarshaller jaxbUnmarshaller = jaxbContext.createUnmarshaller();
         ReportTemplates reportTemplates = (ReportTemplates) jaxbUnmarshaller.unmarshal( resource.getInputStream() );
-        Collection<DataValueTemplate> dvts = reportTemplates.getReportTemplates().get( 1 ).getDataValueTemplates();
+        Collection<DataValueTemplate> dvts = reportTemplates.getReportDefinitions().get( 1 ).getDataValueTemplates();
         for ( DataValueTemplate dvt : dvts )
         {
             dvt.setQuery( "select count(*) from something & something_else" );

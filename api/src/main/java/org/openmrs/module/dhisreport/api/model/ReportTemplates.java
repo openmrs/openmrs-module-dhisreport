@@ -21,6 +21,7 @@
 package org.openmrs.module.dhisreport.api.model;
 
 import java.util.ArrayList;
+import java.util.Collection;
 import java.util.List;
 import javax.xml.bind.annotation.*;
 
@@ -29,7 +30,7 @@ import javax.xml.bind.annotation.*;
 @XmlType(name = "", propOrder = {
     "dataElements",
     "disaggregations",
-    "reportTemplates"
+    "reportDefinitions"
 })
 @XmlRootElement(name = "reportTemplates")
 public class ReportTemplates {
@@ -41,29 +42,45 @@ public class ReportTemplates {
     @XmlElement(name="disaggregation")
     protected List<Disaggregation> disaggregations;
     @XmlElement(name="reportTemplate", required = true)
-    protected List<ReportDefinition> reportTemplates;
+    protected List<ReportDefinition> reportDefinitions;
 
     public List<DataElement> getDataElements() {
         return dataElements;
     }
 
-    public void setDataElements(List<DataElement> dataElements) {
-        this.dataElements = dataElements;
+    public void setDataElements(Collection<DataElement> dataElements) {
+        this.dataElements = new ArrayList<DataElement>();
+        for (DataElement de : dataElements) 
+        {
+            this.dataElements.add( de );
+        }
     }
 
     public List<Disaggregation> getDisaggregations() {
         return disaggregations;
     }
 
-    public void setDisaggregations(List<Disaggregation> disaggs) {
-        this.disaggregations = disaggs;
-    }
-
-    public List<ReportDefinition> getReportTemplates() {
-        if (reportTemplates == null) {
-            reportTemplates = new ArrayList<ReportDefinition>();
+    public void setDisaggregations(Collection<Disaggregation> disaggs) {
+        this.disaggregations = new ArrayList<Disaggregation>();
+        for (Disaggregation disagg : disaggregations) 
+        {
+            this.disaggregations.add( disagg );
         }
-        return this.reportTemplates;
     }
 
+    public List<ReportDefinition> getReportDefinitions() {
+        if (reportDefinitions == null) {
+            reportDefinitions = new ArrayList<ReportDefinition>();
+        }
+        return this.reportDefinitions;
+    }
+
+    public void setReportDefinitions(Collection<ReportDefinition> reportDefinitions)
+    {
+        this.reportDefinitions = new ArrayList<ReportDefinition>();
+        for (ReportDefinition reportDefinition : reportDefinitions) 
+        {
+            this.reportDefinitions.add( reportDefinition );
+        }
+    }
 }

@@ -16,6 +16,7 @@ import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.hibernate.Criteria;
 import org.hibernate.Query;
+import org.hibernate.Session;
 import org.hibernate.SessionFactory;
 import org.hibernate.criterion.Restrictions;
 import org.openmrs.Location;
@@ -150,10 +151,13 @@ public class HibernateDHIS2ReportingDAO implements DHIS2ReportingDAO
 
     public Identifiable saveObject( Identifiable object )
     {
+        Session session = sessionFactory.getCurrentSession();
         // force merge if uid already exists
         Identifiable existingObject = getObjectByUid(object.getUid(), object.getClass());
         if (existingObject != null) {
-                        object.setId(existingObject.getId());
+            session.evict( existingObject);
+            object.setId(existingObject.getId());
+            session.load( object, object.getId());
         }
         sessionFactory.getCurrentSession().saveOrUpdate( object );
         return object;

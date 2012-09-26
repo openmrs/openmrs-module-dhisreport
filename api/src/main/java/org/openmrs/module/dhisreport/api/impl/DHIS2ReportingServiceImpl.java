@@ -11,6 +11,7 @@ package org.openmrs.module.dhisreport.api.impl;
 
 
 import java.io.InputStream;
+import java.io.OutputStream;
 import java.util.Collection;
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -72,7 +73,7 @@ public class DHIS2ReportingServiceImpl extends BaseOpenmrsService implements DHI
     }
 
     @Override
-    public ReportDefinition getReportTemplates()
+    public ReportDefinition fetchReportTemplates()
         throws DHIS2ReportingException
     {
         return dhis2Server.fetchReportTemplates();
@@ -207,7 +208,7 @@ public class DHIS2ReportingServiceImpl extends BaseOpenmrsService implements DHI
     }
 
     @Override
-    public void SaveReportTemplates( ReportTemplates rt )
+    public void saveReportTemplates( ReportTemplates rt )
     {
         throw new UnsupportedOperationException( "Not supported yet." );
     }
@@ -226,7 +227,7 @@ public class DHIS2ReportingServiceImpl extends BaseOpenmrsService implements DHI
         {
             saveDisaggregation( disagg );
         }
-        for ( ReportDefinition rd : reportTemplates.getReportTemplates() )
+        for ( ReportDefinition rd : reportTemplates.getReportDefinitions() )
         {
             for ( DataValueTemplate dvt : rd.getDataValueTemplates() )
             {
@@ -234,5 +235,22 @@ public class DHIS2ReportingServiceImpl extends BaseOpenmrsService implements DHI
             }
             saveReportDefinition( rd );
         }
+    }
+
+    @Override
+    public ReportTemplates getReportTemplates()
+    {
+        ReportTemplates rt = new ReportTemplates();
+        
+        rt.setDataElements( dao.getAllDataElements());
+        rt.setDisaggregations( dao.getAllDisaggregations());
+        
+        return rt;
+    }
+
+    @Override
+    public void marshallReportTemplates( OutputStream os, ReportTemplates rt ) throws Exception
+    {
+        throw new UnsupportedOperationException( "Not supported yet." );
     }
 }
