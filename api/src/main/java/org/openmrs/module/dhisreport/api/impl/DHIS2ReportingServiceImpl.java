@@ -16,6 +16,7 @@ import java.util.Collection;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import javax.xml.bind.JAXBContext;
+import javax.xml.bind.Marshaller;
 import javax.xml.bind.Unmarshaller;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
@@ -242,8 +243,9 @@ public class DHIS2ReportingServiceImpl extends BaseOpenmrsService implements DHI
     {
         ReportTemplates rt = new ReportTemplates();
         
-        rt.setDataElements( dao.getAllDataElements());
-        rt.setDisaggregations( dao.getAllDisaggregations());
+        rt.setDataElements( getAllDataElements());
+        rt.setDisaggregations( getAllDisaggregations());
+        rt.setReportDefinitions( getAllReportDefinitions());
         
         return rt;
     }
@@ -251,6 +253,9 @@ public class DHIS2ReportingServiceImpl extends BaseOpenmrsService implements DHI
     @Override
     public void marshallReportTemplates( OutputStream os, ReportTemplates rt ) throws Exception
     {
-        throw new UnsupportedOperationException( "Not supported yet." );
+        JAXBContext jaxbContext = JAXBContext.newInstance( ReportTemplates.class );
+        Marshaller marshaller = jaxbContext.createMarshaller();
+        
+        marshaller.marshal( rt, os);
     }
 }

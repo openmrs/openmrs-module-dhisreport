@@ -56,6 +56,10 @@ public class ReportTemplatesTest
                 assertNotNull( dvt.getDataelement().getCode() );
                 assertNotNull( dvt.getDataelement().getName() );
                 assertNotNull( dvt.getDataelement().getUid() );
+                assertNotNull( dvt.getDisaggregation() );
+                assertNotNull( dvt.getDisaggregation().getCode() );
+                assertNotNull( dvt.getDisaggregation().getName() );
+                assertNotNull( dvt.getDisaggregation().getUid() );
             }
         }
     }

@@ -12,7 +12,7 @@ package org.openmrs.module.dhisreport.api;
 
 import java.util.Collection;
 import java.util.Date;
-import java.util.Set;
+//import java.util.Set;
 import javax.xml.bind.JAXBContext;
 import javax.xml.bind.Unmarshaller;
 import static org.junit.Assert.*;
@@ -82,8 +82,9 @@ public class DHIS2ReportingServiceDAOTest extends BaseModuleContextSensitiveTest
     @Test
     public void disAggregationDAOTest()
     {
-        _default = service.saveDisaggregation( _default );
-        assertNotNull( _default.getId() );
+        assertEquals(3,service.getAllDataElements().size());
+        assertEquals(3,service.getAllDisaggregations().size());
+        assertEquals(2, service.getAllReportDefinitions().size());
     }
 
     @Test
@@ -97,11 +98,6 @@ public class DHIS2ReportingServiceDAOTest extends BaseModuleContextSensitiveTest
         rd = service.getReportDefinitionByUId( RT_POPULATION_UID );
         Set<DataValueTemplate> dvTemplates = rd.getDataValueTemplates();
         assertEquals( 2, dvTemplates.size() );
-        for ( DataValueTemplate dv : dvTemplates )
-        {
-            System.out.println( dv.getDataelement() );
-            System.out.println( dv.toString() );
-        }
     }
 
     /**
@@ -118,5 +114,19 @@ public class DHIS2ReportingServiceDAOTest extends BaseModuleContextSensitiveTest
     {
         ClassPathResource resource = new ClassPathResource( "templates_ethiopia.xml" );
         service.unMarshallandSaveReportTemplates( resource.getInputStream());
+    }
+
+    @Test
+    public void marshallerTest() throws Exception
+    {
+        ClassPathResource resource = new ClassPathResource( "templates_ethiopia.xml" );
+        service.unMarshallandSaveReportTemplates( resource.getInputStream());
+        
+        ReportTemplates rds = service.getReportTemplates();
+        assertEquals(3,rds.getDataElements().size());
+        assertEquals(3,rds.getDisaggregations().size());
+        assertEquals(2,rds.getReportDefinitions().size());
+
+        service.marshallReportTemplates( System.out, rds);
     }
 }

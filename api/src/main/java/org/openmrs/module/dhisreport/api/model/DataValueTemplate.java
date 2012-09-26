@@ -1,24 +1,22 @@
 /**
- *  Copyright 2009 Society for Health Information Systems Programmes, India (HISP India)
+ * Copyright 2009 Society for Health Information Systems Programmes, India (HISP India)
  *
- *  This file is part of DHISReporting module.
+ * This file is part of DHISReporting module.
  *
- *  Billing module is free software: you can redistribute it and/or modify
- *  it under the terms of the GNU General Public License as published by
- *  the Free Software Foundation, either version 3 of the License, or
- *  (at your option) any later version.
-
- *  Billing module is distributed in the hope that it will be useful,
- *  but WITHOUT ANY WARRANTY; without even the implied warranty of
- *  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- *  GNU General Public License for more details.
+ * Billing module is free software: you can redistribute it and/or modify it under the terms of the GNU General Public
+ * License as published by the Free Software Foundation, either version 3 of the License, or (at your option) any later
+ * version.
  *
- *  You should have received a copy of the GNU General Public License
- *  along with Billing module.  If not, see <http://www.gnu.org/licenses/>.
+ * Billing module is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the implied
+ * warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the GNU General Public License for more details.
  *
- **/
-
+ * You should have received a copy of the GNU General Public License along with Billing module. If not, see
+ * <http://www.gnu.org/licenses/>.
+ *
+ *
+ */
 package org.openmrs.module.dhisreport.api.model;
+
 
 import java.io.Serializable;
 import javax.xml.bind.annotation.*;
@@ -27,26 +25,27 @@ import javax.xml.bind.annotation.*;
  *
  * @author bobj
  */
-@XmlAccessorType(XmlAccessType.FIELD)
-@XmlType(name = "DataValueTemplate")
+@XmlType(name = "dataValueTemplate", propOrder =
+{
+    "dataelement",
+    "disaggregation",
+    "query"
+})
 @XmlRootElement(name = "dataValueTemplate")
-public class DataValueTemplate implements Serializable {
-    
+public class DataValueTemplate implements Serializable
+{
+
     protected Integer id;
-    
+
     protected ReportDefinition reportDefinition;
-    
-    @XmlAttribute(name="dataElement",required = true)
-    @XmlIDREF
+
     protected DataElement dataelement;
-    
-    @XmlAttribute(required = true)
-    @XmlIDREF
+
     protected Disaggregation disaggregation;
-    
-    @XmlElement(name="annotation",required = false)
+
     protected String query;
 
+    @XmlTransient
     public ReportDefinition getReportDefinition()
     {
         return reportDefinition;
@@ -56,7 +55,9 @@ public class DataValueTemplate implements Serializable {
     {
         this.reportDefinition = reportDefinition;
     }
-    
+
+    @XmlAttribute(name = "dataElement", required = true)
+    @XmlIDREF
     public DataElement getDataelement()
     {
         return dataelement;
@@ -67,6 +68,8 @@ public class DataValueTemplate implements Serializable {
         this.dataelement = dataelement;
     }
 
+    @XmlAttribute(name = "disaggregation", required = true)
+    @XmlIDREF
     public Disaggregation getDisaggregation()
     {
         return disaggregation;
@@ -77,6 +80,7 @@ public class DataValueTemplate implements Serializable {
         this.disaggregation = disaggregation;
     }
 
+    @XmlTransient
     public Integer getId()
     {
         return id;
@@ -87,6 +91,7 @@ public class DataValueTemplate implements Serializable {
         this.id = id;
     }
 
+    @XmlElement(name = "annotation", required = false)
     public String getQuery()
     {
         return query;
@@ -109,7 +114,7 @@ public class DataValueTemplate implements Serializable {
             return false;
         }
         final DataValueTemplate other = (DataValueTemplate) obj;
-        
+
         if ( this.dataelement != other.dataelement && ( this.dataelement == null || !this.dataelement.equals( other.dataelement ) ) )
         {
             return false;
@@ -129,9 +134,9 @@ public class DataValueTemplate implements Serializable {
         hash = 53 * hash + ( this.disaggregation != null ? this.disaggregation.hashCode() : 0 );
         return hash;
     }
-    
+
     public String toString()
     {
-        return "DVT: "+ this.getId() + " : " + this.getDataelement().getName() + " : " + this.getDisaggregation().getName();
+        return "DVT: " + this.getId() + " : " + this.getDataelement().getName() + " : " + this.getDisaggregation().getName();
     }
 }

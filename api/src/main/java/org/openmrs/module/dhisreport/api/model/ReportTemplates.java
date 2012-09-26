@@ -38,9 +38,11 @@ public class ReportTemplates {
     @XmlElementWrapper(name="dataElements", required=true)
     @XmlElement(name="dataElement")
     protected List<DataElement> dataElements;
+    
     @XmlElementWrapper(name="disaggregations", required=true)
     @XmlElement(name="disaggregation")
     protected List<Disaggregation> disaggregations;
+    
     @XmlElement(name="reportTemplate", required = true)
     protected List<ReportDefinition> reportDefinitions;
 
@@ -60,7 +62,7 @@ public class ReportTemplates {
         return disaggregations;
     }
 
-    public void setDisaggregations(Collection<Disaggregation> disaggs) {
+    public void setDisaggregations(Collection<Disaggregation> disaggregations) {
         this.disaggregations = new ArrayList<Disaggregation>();
         for (Disaggregation disagg : disaggregations) 
         {

@@ -45,6 +45,7 @@ public class ReportDefinition implements Serializable, Identifiable {
     protected String uid;
     
     @XmlElement(required = true)
+    @XmlID
     protected String code;
 
     @XmlElementWrapper(name="dataValueTemplates")

@@ -36,15 +36,15 @@ public class Disaggregation implements Serializable, Identifiable {
     protected Integer id;
     
     @XmlAttribute(required = true)
-    protected String name;
-    
-    @XmlAttribute(required = true)
     @XmlID
     protected String code;
     
     @XmlAttribute(required = true)
     protected String uid;
 
+    @XmlAttribute(required = true)
+    protected String name;
+    
     @Override
     public Integer getId()
     {
