@@ -3,23 +3,18 @@
 
 <%@ include file="template/localHeader.jsp"%>
 
-<h3>Report result</h3>
+<h3>Import Summary</h3>
 
-<c:if test="${not empty dataValueSet}">
+<c:if test="${not empty importSummary}">
     <table>
-        <tr><td>DataSet: </td><td>${dataValueSet.dataSet}</td></tr>
-        <tr><td>OrgUnit: </td><td>${dataValueSet.orgUnit}</td></tr>
-        <tr><td>Period: </td><td>${dataValueSet.period}</td></tr>
+        <tr><td>Status: </td><td>${importSummary.status}</td></tr>
+        <tr><td>Description: </td><td>${importSummary.description}</td></tr>
+        <tr><td>DataValue count: </td><td>${importSummary.dataValueCount}</td></tr>
     </table>
-    <c:forEach var="dv" items="${dataValueSet.dataValues}">
-        <p>DataElement: ${dv.dataElement}, Value: ${dv.value}</p>
+    <c:forEach var="conflict" items="${importSummary.conflicts}">
+        <p>Conflict: ${conflict.object}, Value: ${conflict.value}</p>
     </c:forEach>
 
-         <c:if test="$dhis2Server">
-           <div>
-             <p><a href="/postDataValueSet">Post</a> to DHIS2 server at ${dhisServer.url}</p>
-           </div>
-        </c:if>
 </c:if>
 
 <%@ include file="/WEB-INF/template/footer.jsp"%>

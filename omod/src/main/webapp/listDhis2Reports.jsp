@@ -7,7 +7,7 @@
     <c:forEach var="reportDefinition" items="${reportDefinitions}">
         <tr>
             <td>${reportDefinition.name}</td>
-            <td><a href="reportDefinition.form?reportDefinition_id=${reportDefinition.id}">Link</a>
+            <td><a href="setupReport.form?reportDefinition_id=${reportDefinition.id}">Link</a>
         </tr>
     </c:forEach>
     <c:if test="${ fn:length(reportDefinitions) == 0 }">

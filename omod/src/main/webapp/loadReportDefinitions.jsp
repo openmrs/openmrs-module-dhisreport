@@ -19,7 +19,9 @@
 	</div>
 	
 </div>
+</form>
 
+<form action="exportReportDefinitions.form">
 <div>
 <b class="boxHeader">Export report definitions</b>
     <div class="box">

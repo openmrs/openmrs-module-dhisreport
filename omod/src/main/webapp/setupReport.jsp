@@ -21,10 +21,24 @@
             <td><input type="text" name="date" /></td>
         </tr>
         <tr>                   
-            <td /><td><input type="submit" value="Execute"></td>
+            <td /><td><select name="resultDestination">
+                    <option value="preview">Preview</option>
+                    <option value="save">Download as Xml</option>
+                    <c:if test="${not empty dhis2Server}">
+                        <option value="post">Post to DHIS</option>
+                    </c:if>
+                </select>
+            </td>
         </tr>
-    </table>
-    <input type="hidden" name="reportDefinition_id" value="${reportDefinition.id}" />
+        <tr>
+            <td />
+            <td>
+                <input type="submit" value="Generate" />
+            </td>
+        </tr>
+
+</table>
+<input type="hidden" name="reportDefinition_id" value="${reportDefinition.id}" />
 </form>
 
 

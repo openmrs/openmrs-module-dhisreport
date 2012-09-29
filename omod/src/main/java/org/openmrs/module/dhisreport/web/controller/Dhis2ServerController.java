@@ -9,20 +9,14 @@
  */
 package org.openmrs.module.dhisreport.web.controller;
 
-
 import java.net.MalformedURLException;
 import java.net.URL;
 import java.text.ParseException;
-import java.text.SimpleDateFormat;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
-import org.hisp.dhis.dxf2.datavalueset.DataValueSet;
-import org.openmrs.Location;
 import org.openmrs.api.context.Context;
 import org.openmrs.module.dhisreport.api.DHIS2ReportingService;
-import org.openmrs.module.dhisreport.api.dhis.Dhis2Server;
 import org.openmrs.module.dhisreport.api.dhis.HttpDhis2Server;
-import org.openmrs.module.dhisreport.api.utils.MonthlyPeriod;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.ModelMap;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -33,7 +27,7 @@ import org.springframework.web.bind.annotation.RequestParam;
  * The main controller.
  */
 @Controller
-public class configureDhis2Controller
+public class Dhis2ServerController
 {
 
     protected final Log log = LogFactory.getLog( getClass() );
