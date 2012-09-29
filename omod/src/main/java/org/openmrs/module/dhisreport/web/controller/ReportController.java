@@ -77,8 +77,8 @@ public class ReportController
         @RequestParam(value = "reportDefinition_id", required = true) Integer reportDefinition_id,
         @RequestParam(value = "location", required = true) Integer location_id,
         @RequestParam(value = "resultDestination", required = true) String destination,
-        @RequestParam(value = "date", required = true) String dateStr,
-        HttpServletResponse response )
+        @RequestParam(value = "date", required = true) String dateStr )
+        //HttpServletResponse response )
         throws ParseException, IOException, JAXBException, DHIS2ReportingException
     {
         DHIS2ReportingService service = Context.getService( DHIS2ReportingService.class );
@@ -91,7 +91,7 @@ public class ReportController
         model.addAttribute( "user", Context.getAuthenticatedUser() );
         model.addAttribute( "dataValueSet", dvs );
 
-        /*if ( destination.equals( "post" ) )
+        if ( destination.equals( "post" ) )
         {
             ImportSummary importSummary = Context.getService( DHIS2ReportingService.class ).postDataValueSet( dvs );
             model.addAttribute( "importSummary", importSummary );
@@ -99,15 +99,14 @@ public class ReportController
         {
             if ( destination.equals( "save" ) )
             {
-                response.setContentType( "application/xml" );
-                response.setCharacterEncoding( "UTF-8" );
-                response.addHeader( "Content-Disposition", "attachment; filename=report.xml" );
-                dvs.marshall( response.getOutputStream() );
+//                response.setContentType( "application/xml" );
+//                response.setCharacterEncoding( "UTF-8" );
+//                response.addHeader( "Content-Disposition", "attachment; filename=report.xml" );
             } else
             {
                 model.addAttribute( "user", Context.getAuthenticatedUser() );
                 model.addAttribute( "dataValueSet", dvs );
             }
-        }*/
+        }
     }
 }
