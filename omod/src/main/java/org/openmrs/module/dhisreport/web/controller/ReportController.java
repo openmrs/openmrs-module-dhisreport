@@ -27,7 +27,6 @@ import org.openmrs.module.dhisreport.api.utils.MonthlyPeriod;
 import org.openmrs.module.dhisreport.api.DHIS2ReportingException;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.ModelMap;
-import org.springframework.web.servlet.ModelAndView;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
@@ -78,8 +77,7 @@ public class ReportController
         @RequestParam(value = "location", required = true) Integer location_id,
         @RequestParam(value = "resultDestination", required = true) String destination,
         @RequestParam(value = "date", required = true) String dateStr )
-        //HttpServletResponse response )
-        throws ParseException, IOException, JAXBException, DHIS2ReportingException
+        throws ParseException, DHIS2ReportingException
     {
         DHIS2ReportingService service = Context.getService( DHIS2ReportingService.class );
 
@@ -95,18 +93,29 @@ public class ReportController
         {
             ImportSummary importSummary = Context.getService( DHIS2ReportingService.class ).postDataValueSet( dvs );
             model.addAttribute( "importSummary", importSummary );
-        } else
-        {
-            if ( destination.equals( "save" ) )
-            {
-//                response.setContentType( "application/xml" );
-//                response.setCharacterEncoding( "UTF-8" );
-//                response.addHeader( "Content-Disposition", "attachment; filename=report.xml" );
-            } else
-            {
-                model.addAttribute( "user", Context.getAuthenticatedUser() );
-                model.addAttribute( "dataValueSet", dvs );
-            }
         }
+    }
+
+    @RequestMapping(value = "/module/dhisreport/executeReport", method = RequestMethod.POST)
+    public void saveReport( ModelMap model,
+        @RequestParam(value = "reportDefinition_id", required = true) Integer reportDefinition_id,
+        @RequestParam(value = "location", required = true) Integer location_id,
+        @RequestParam(value = "resultDestination", required = true) String destination,
+        @RequestParam(value = "date", required = true) String dateStr,
+        HttpServletResponse response )
+        throws ParseException, IOException, JAXBException, DHIS2ReportingException
+    {
+        DHIS2ReportingService service = Context.getService( DHIS2ReportingService.class );
+
+        MonthlyPeriod period = new MonthlyPeriod( new SimpleDateFormat( "yyyy-MM-dd" ).parse( dateStr ) );
+        Location location = Context.getLocationService().getLocation( location_id );
+
+        DataValueSet dvs = service.evaluateReportDefinition( service.getReportDefinition( reportDefinition_id ), period, location );
+
+        response.setContentType( "application/xml" );
+        response.setCharacterEncoding( "UTF-8" );
+        response.addHeader( "Content-Disposition", "attachment; filename=report.xml" );
+        
+        dvs.marshall( response.getOutputStream());
     }
 }

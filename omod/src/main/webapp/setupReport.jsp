@@ -23,7 +23,6 @@
         <tr>                   
             <td /><td><select name="resultDestination">
                     <option value="preview">Preview</option>
-                    <option value="save">Download as Xml</option>
                     <c:if test="${not empty dhis2Server}">
                         <option value="post">Post to DHIS</option>
                     </c:if>
