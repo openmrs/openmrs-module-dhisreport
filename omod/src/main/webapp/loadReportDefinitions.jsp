@@ -29,6 +29,7 @@
 			<span>Export as xml: </span>
 			<input type="submit" name="export" value="Export"/>
 		</span>
+	</div>
 </div>
 </form>
 
