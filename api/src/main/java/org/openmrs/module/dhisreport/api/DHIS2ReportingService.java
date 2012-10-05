@@ -229,4 +229,17 @@ public interface DHIS2ReportingService extends OpenmrsService {
      * @return 
      */
     DataValueSet evaluateReportDefinition(ReportDefinition reportDefinition, MonthlyPeriod period, Location location);
+    
+    /**
+     * 
+     * @param id
+     * @return
+     */
+    DataValueTemplate getDataValueTemplate (Integer id);
+    
+    /**
+     * 
+     * @param dvt
+     */
+    void saveDataValueTemplate(DataValueTemplate dvt);
 }

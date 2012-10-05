@@ -255,4 +255,18 @@ public class DHIS2ReportingServiceImpl extends BaseOpenmrsService implements DHI
         
         marshaller.marshal( rt, os);
     }
+
+    @Override
+    public DataValueTemplate getDataValueTemplate( Integer id )
+    {
+        return dao.getDataValueTemplate(id);
+    }
+
+    @Override
+    public void saveDataValueTemplate( DataValueTemplate dvt )
+    {
+        // TODO Auto-generated method stub
+        dao.saveDataValueTemplate(dvt);
+        
+    }
 }

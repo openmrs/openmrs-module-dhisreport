@@ -56,4 +56,8 @@ public interface DHIS2ReportingDAO
     public void deleteReportDefinition( ReportDefinition rd );
 
     public String evaluateDataValueTemplate( DataValueTemplate dvt, MonthlyPeriod period, Location location );
+    
+    public DataValueTemplate getDataValueTemplate (Integer id);
+    
+    public DataValueTemplate saveDataValueTemplate (DataValueTemplate dvt);
 }

@@ -131,9 +131,9 @@ public class HibernateDHIS2ReportingDAO implements DHIS2ReportingDAO
         String queryString = dvt.getQuery();
         Query query = sessionFactory.getCurrentSession().createSQLQuery( queryString );
 
-        query.setParameter( "locationId", location.getId().toString() );
-        query.setParameter( "startOfPeriod", period.getStart() );
-        query.setParameter( "endOfPeriod", period.getEnd() );
+        //query.setParameter( "locationId", location.getId().toString() );
+        //query.setParameter( "startOfPeriod", period.getStart() );
+        //query.setParameter( "endOfPeriod", period.getEnd() );
 
         return query.uniqueResult().toString();
     }
@@ -179,6 +179,19 @@ public class HibernateDHIS2ReportingDAO implements DHIS2ReportingDAO
     public ReportDefinition getReportDefinitionByUid( String uid )
     {
         return (ReportDefinition) getObjectByUid( uid, ReportDefinition.class );
+    }
+
+    @Override
+    public DataValueTemplate getDataValueTemplate( Integer id )
+    {
+        return (DataValueTemplate) sessionFactory.getCurrentSession().get( DataValueTemplate.class, id );
+    }
+
+    @Override
+    public DataValueTemplate saveDataValueTemplate( DataValueTemplate dvt )
+    {
+        sessionFactory.getCurrentSession().saveOrUpdate( dvt );
+        return dvt;
     }
 
 }
