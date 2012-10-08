@@ -25,6 +25,8 @@ import javax.xml.bind.Marshaller;
 import javax.xml.bind.Unmarshaller;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNotNull;
+import static org.junit.Assert.assertTrue;
+import static org.junit.Assert.assertFalse;
 import org.junit.Test;
 import org.openmrs.api.context.Context;
 import org.openmrs.module.dhisreport.api.DHIS2ReportingService;
@@ -36,7 +38,6 @@ import org.springframework.core.io.ClassPathResource;
  */
 public class ReportTemplatesTest
 {
-
     @Test
     public void unMarshallReportTemplates() throws Exception
     {
@@ -79,5 +80,21 @@ public class ReportTemplatesTest
         }
         Marshaller jaxbmarshaller = jaxbContext.createMarshaller();
         jaxbmarshaller.marshal( reportTemplates, System.out );
+    }
+    
+    @Test
+    public void testDodgyQueries()
+    {
+        String updateQuery = "Some Update query";
+        String deleteQuery = "Some delete query";
+        String safeQuery = "Some safe query";
+        
+        DataValueTemplate dvt = new DataValueTemplate();
+        dvt.setQuery( updateQuery );
+        assertTrue(dvt.potentialUpdateDelete());
+        dvt.setQuery( deleteQuery );
+        assertTrue(dvt.potentialUpdateDelete());
+        dvt.setQuery( safeQuery );
+        assertFalse(dvt.potentialUpdateDelete());
     }
 }

@@ -34,6 +34,8 @@ import javax.xml.bind.annotation.*;
 @XmlRootElement(name = "dataValueTemplate")
 public class DataValueTemplate implements Serializable
 {
+    // Regex testing for update/delete
+    private static final String SQL_SANITY_CHECK = ".*((?i)update|delete).*";
 
     protected Integer id;
 
@@ -100,6 +102,11 @@ public class DataValueTemplate implements Serializable
     public void setQuery( String query )
     {
         this.query = query;
+    }
+
+    public boolean potentialUpdateDelete()
+    {
+        return query.matches( SQL_SANITY_CHECK ); 
     }
 
     @Override

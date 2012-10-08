@@ -10,6 +10,8 @@
 package org.openmrs.module.dhisreport.api.db.hibernate;
 
 
+import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Collection;
 import java.util.List;
 import org.apache.commons.logging.Log;
@@ -20,6 +22,7 @@ import org.hibernate.Session;
 import org.hibernate.SessionFactory;
 import org.hibernate.criterion.Restrictions;
 import org.openmrs.Location;
+import org.openmrs.module.dhisreport.api.DHIS2ReportingException;
 import org.openmrs.module.dhisreport.api.db.DHIS2ReportingDAO;
 import org.openmrs.module.dhisreport.api.model.*;
 import org.openmrs.module.dhisreport.api.utils.MonthlyPeriod;
@@ -29,7 +32,11 @@ import org.openmrs.module.dhisreport.api.utils.MonthlyPeriod;
  */
 public class HibernateDHIS2ReportingDAO implements DHIS2ReportingDAO
 {
-
+    // query parameters
+    private static final String LOCATION = "locationId";
+    private static final String START = "startDate";
+    private static final String END = "endDate";
+    
     protected final Log log = LogFactory.getLog( this.getClass() );
 
     private SessionFactory sessionFactory;
@@ -127,19 +134,38 @@ public class HibernateDHIS2ReportingDAO implements DHIS2ReportingDAO
 
     @Override
     public String evaluateDataValueTemplate( DataValueTemplate dvt, MonthlyPeriod period, Location location )
+        throws DHIS2ReportingException
     {
         String queryString = dvt.getQuery();
-        if ( dvt.getQuery() == null || dvt.getQuery().isEmpty() )
+        if ( queryString == null || queryString.isEmpty() )
         {
             log.debug( "Empty query for " + dvt.getDataelement().getName() + " : " + dvt.getDisaggregation().getName() );
             return null;
         }
-
+        
+        if (dvt.potentialUpdateDelete()) {
+            throw new DHIS2ReportingException(
+                "Attempt to execute potential update/delete query for " + dvt.getDataelement().getName() + " : " + dvt.getDisaggregation().getName());
+        }
+        
         Query query = sessionFactory.getCurrentSession().createSQLQuery( queryString );
 
-        query.setParameter( "locationId", location.getId().toString() );
-        query.setParameter( "startOfPeriod", period.getStart() );
-        query.setParameter( "endOfPeriod", period.getEnd() );
+        List<String> parameters = new ArrayList<String>( Arrays.asList( query.getNamedParameters() ) );
+        if ( parameters.isEmpty() )
+        {
+            // no named parameters, assume old-style positional parameters for start and end date
+            query.setParameter( 0, period.getStart() );
+            query.setParameter( 1, period.getEnd() );
+        } else
+        {
+            // loactionId is optional
+            if ( parameters.contains( "locationId" ) )
+            {
+                query.setParameter( "locationId", location.getId().toString() );
+            }
+            query.setParameter( "startOfPeriod", period.getStart() );
+            query.setParameter( "endOfPeriod", period.getEnd() );
+        }
 
         return query.uniqueResult().toString();
     }

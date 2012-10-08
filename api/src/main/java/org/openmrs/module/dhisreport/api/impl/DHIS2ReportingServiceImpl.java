@@ -169,6 +169,7 @@ public class DHIS2ReportingServiceImpl extends BaseOpenmrsService implements DHI
 
     @Override
     public String evaluateDataValueTemplate( DataValueTemplate dv, MonthlyPeriod period, Location location )
+        throws DHIS2ReportingException
     {
         return dao.evaluateDataValueTemplate( dv, period, location );
     }
@@ -198,11 +199,18 @@ public class DHIS2ReportingServiceImpl extends BaseOpenmrsService implements DHI
         {
             DataValue dataValue = new DataValue();
             dataValue.setDataElement( dvt.getDataelement().getCode() );
-            String value = dao.evaluateDataValueTemplate( dvt, period, location );
-            if ( value != null )
+            try
             {
-                dataValue.setValue( value );
-                dataValues.add( dataValue );
+                String value = dao.evaluateDataValueTemplate( dvt, period, location );
+                if ( value != null )
+                {
+                    dataValue.setValue( value );
+                    dataValues.add( dataValue );
+                }
+            } catch ( DHIS2ReportingException ex )
+            {
+                // TODO: percolate this through to UI
+                log.warn( ex.getMessage() );
             }
         }
 

@@ -12,6 +12,7 @@ package org.openmrs.module.dhisreport.api.db;
 
 import java.util.Collection;
 import org.openmrs.Location;
+import org.openmrs.module.dhisreport.api.DHIS2ReportingException;
 import org.openmrs.module.dhisreport.api.DHIS2ReportingService;
 import org.openmrs.module.dhisreport.api.model.DataElement;
 import org.openmrs.module.dhisreport.api.model.DataValueTemplate;
@@ -55,7 +56,8 @@ public interface DHIS2ReportingDAO
 
     public void deleteReportDefinition( ReportDefinition rd );
 
-    public String evaluateDataValueTemplate( DataValueTemplate dvt, MonthlyPeriod period, Location location );
+    public String evaluateDataValueTemplate( DataValueTemplate dvt, MonthlyPeriod period, Location location )
+        throws DHIS2ReportingException;
     
     public DataValueTemplate getDataValueTemplate (Integer id);
     
