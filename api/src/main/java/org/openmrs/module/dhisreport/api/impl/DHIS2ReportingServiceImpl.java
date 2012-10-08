@@ -125,12 +125,12 @@ public class DHIS2ReportingServiceImpl extends BaseOpenmrsService implements DHI
     {
         return dao.getReportDefinition( id );
     }
-    
-    public ReportDefinition getReportDefinitionByUId(String uid)
+
+    public ReportDefinition getReportDefinitionByUId( String uid )
     {
         return dao.getReportDefinitionByUid( uid );
     }
-    
+
     @Override
     public ReportDefinition saveReportDefinition( ReportDefinition reportDefinition )
     {
@@ -198,8 +198,12 @@ public class DHIS2ReportingServiceImpl extends BaseOpenmrsService implements DHI
         {
             DataValue dataValue = new DataValue();
             dataValue.setDataElement( dvt.getDataelement().getCode() );
-            dataValue.setValue( dao.evaluateDataValueTemplate( dvt, period, location ) );
-            dataValues.add( dataValue );
+            String value = dao.evaluateDataValueTemplate( dvt, period, location );
+            if ( value != null )
+            {
+                dataValue.setValue( value );
+                dataValues.add( dataValue );
+            }
         }
 
         return dataValueSet;
@@ -239,11 +243,11 @@ public class DHIS2ReportingServiceImpl extends BaseOpenmrsService implements DHI
     public ReportTemplates getReportTemplates()
     {
         ReportTemplates rt = new ReportTemplates();
-        
-        rt.setDataElements( getAllDataElements());
-        rt.setDisaggregations( getAllDisaggregations());
-        rt.setReportDefinitions( getAllReportDefinitions());
-        
+
+        rt.setDataElements( getAllDataElements() );
+        rt.setDisaggregations( getAllDisaggregations() );
+        rt.setReportDefinitions( getAllReportDefinitions() );
+
         return rt;
     }
 
@@ -252,21 +256,21 @@ public class DHIS2ReportingServiceImpl extends BaseOpenmrsService implements DHI
     {
         JAXBContext jaxbContext = JAXBContext.newInstance( ReportTemplates.class );
         Marshaller marshaller = jaxbContext.createMarshaller();
-        
-        marshaller.marshal( rt, os);
+
+        marshaller.marshal( rt, os );
     }
 
     @Override
     public DataValueTemplate getDataValueTemplate( Integer id )
     {
-        return dao.getDataValueTemplate(id);
+        return dao.getDataValueTemplate( id );
     }
 
     @Override
     public void saveDataValueTemplate( DataValueTemplate dvt )
     {
         // TODO Auto-generated method stub
-        dao.saveDataValueTemplate(dvt);
-        
+        dao.saveDataValueTemplate( dvt );
+
     }
 }

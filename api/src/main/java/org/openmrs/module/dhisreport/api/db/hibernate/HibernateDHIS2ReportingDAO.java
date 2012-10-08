@@ -59,7 +59,7 @@ public class HibernateDHIS2ReportingDAO implements DHIS2ReportingDAO
     @Override
     public DataElement saveDataElement( DataElement de )
     {
-        return (DataElement) saveObject(de);
+        return (DataElement) saveObject( de );
     }
 
     @Override
@@ -77,7 +77,7 @@ public class HibernateDHIS2ReportingDAO implements DHIS2ReportingDAO
     @Override
     public Disaggregation saveDisaggregation( Disaggregation disagg )
     {
-        return (Disaggregation) saveObject(disagg);
+        return (Disaggregation) saveObject( disagg );
     }
 
     @Override
@@ -89,7 +89,7 @@ public class HibernateDHIS2ReportingDAO implements DHIS2ReportingDAO
     @Override
     public ReportDefinition saveReportDefinition( ReportDefinition rd )
     {
-        return (ReportDefinition) saveObject(rd);
+        return (ReportDefinition) saveObject( rd );
     }
 
     @Override
@@ -129,11 +129,17 @@ public class HibernateDHIS2ReportingDAO implements DHIS2ReportingDAO
     public String evaluateDataValueTemplate( DataValueTemplate dvt, MonthlyPeriod period, Location location )
     {
         String queryString = dvt.getQuery();
+        if ( dvt.getQuery() == null || dvt.getQuery().isEmpty() )
+        {
+            log.debug( "Empty query for " + dvt.getDataelement().getName() + " : " + dvt.getDisaggregation().getName() );
+            return null;
+        }
+
         Query query = sessionFactory.getCurrentSession().createSQLQuery( queryString );
 
-        //query.setParameter( "locationId", location.getId().toString() );
-        //query.setParameter( "startOfPeriod", period.getStart() );
-        //query.setParameter( "endOfPeriod", period.getEnd() );
+        query.setParameter( "locationId", location.getId().toString() );
+        query.setParameter( "startOfPeriod", period.getStart() );
+        query.setParameter( "endOfPeriod", period.getEnd() );
 
         return query.uniqueResult().toString();
     }
@@ -141,7 +147,6 @@ public class HibernateDHIS2ReportingDAO implements DHIS2ReportingDAO
 //--------------------------------------------------------------------------------------------------------------
 // Generic methods for DHIS2 identifiable objects
 //--------------------------------------------------------------------------------------------------------------
-    
     public Identifiable getObjectByUid( String uid, Class<?> clazz )
     {
         Criteria criteria = sessionFactory.getCurrentSession().createCriteria( clazz );
@@ -153,11 +158,12 @@ public class HibernateDHIS2ReportingDAO implements DHIS2ReportingDAO
     {
         Session session = sessionFactory.getCurrentSession();
         // force merge if uid already exists
-        Identifiable existingObject = getObjectByUid(object.getUid(), object.getClass());
-        if (existingObject != null) {
-            session.evict( existingObject);
-            object.setId(existingObject.getId());
-            session.load( object, object.getId());
+        Identifiable existingObject = getObjectByUid( object.getUid(), object.getClass() );
+        if ( existingObject != null )
+        {
+            session.evict( existingObject );
+            object.setId( existingObject.getId() );
+            session.load( object, object.getId() );
         }
         sessionFactory.getCurrentSession().saveOrUpdate( object );
         return object;
@@ -174,7 +180,7 @@ public class HibernateDHIS2ReportingDAO implements DHIS2ReportingDAO
     {
         return (Disaggregation) getObjectByUid( uid, Disaggregation.class );
     }
-    
+
     @Override
     public ReportDefinition getReportDefinitionByUid( String uid )
     {
@@ -193,5 +199,4 @@ public class HibernateDHIS2ReportingDAO implements DHIS2ReportingDAO
         sessionFactory.getCurrentSession().saveOrUpdate( dvt );
         return dvt;
     }
-
 }
