@@ -12,7 +12,7 @@
             <td>
                 <select name="location"> 
                     <c:forEach var="location" items="${locations}" >
-                        <option value="${location.id}" />${location.name}</option>
+                        <option value="${fn:substring(location.name,fn:indexOf(location.name,"[") + 1,fn:indexOf(location.name,"]"))}" />${location.name}</option>
                     </c:forEach>
                 </select>
             </td>
