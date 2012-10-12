@@ -11,11 +11,13 @@
 			<tbody>
 				<tr>
 					<th></th>
-					<th>Name</th>
-					<th>Code</th>
-					<th>Data Element</th>
-					<th>Query</th>
-					<th>Action</th>
+					<th>[Report Definition Name]</th>
+					<th>[Report Definition Code]</th>
+					<th>[Data Element]</th>
+					<th>[Disaggregation Name]</th>
+					<th>[Disaggregation Code]</th>
+					<th>[Query]</th>
+					<th>[Action]</th>
 				</tr>
 				<c:forEach var="dataValueTemplate" varStatus="varStatus"
 					items="${reportDefinition.dataValueTemplates}">
@@ -26,6 +28,8 @@
 						<td>${reportDefinition.name}</td>
 						<td><b><u>${reportDefinition.code}</u></b></td>
 						<th>${dataValueTemplate.dataelement.name}</th>
+						<td>${dataValueTemplate.disaggregation.name}</td>
+						<td><b><u>${dataValueTemplate.disaggregation.code}</u></b></td>
 
 						<td><i><span id="reportDefinition_query${dataValueTemplate.id }">${dataValueTemplate.query}</span></i></td>
 
