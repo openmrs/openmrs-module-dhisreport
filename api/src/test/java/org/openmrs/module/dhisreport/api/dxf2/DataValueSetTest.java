@@ -28,16 +28,9 @@ import java.util.List;
 import javax.xml.bind.JAXBContext;
 import javax.xml.bind.Marshaller;
 import javax.xml.bind.Unmarshaller;
-import javax.xml.namespace.NamespaceContext;
-import javax.xml.transform.Result;
-import javax.xml.xpath.XPath;
-import javax.xml.xpath.XPathExpression;
-import javax.xml.xpath.XPathFactory;
-import org.apache.ws.commons.util.NamespaceContextImpl;
 import static org.junit.Assert.assertEquals;
 import org.junit.Test;
 import org.springframework.core.io.ClassPathResource;
-import org.w3c.dom.Document;
 
 /**
  *
