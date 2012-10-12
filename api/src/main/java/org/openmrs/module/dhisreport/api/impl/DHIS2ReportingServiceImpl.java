@@ -172,6 +172,8 @@ public class DHIS2ReportingServiceImpl extends BaseOpenmrsService implements DHI
 		for (DataValueTemplate dvt : templates) {
 			DataValue dataValue = new DataValue();
 			dataValue.setDataElement(dvt.getDataelement().getCode());
+            dataValue.setCategoryOptionCombo( dvt.getDisaggregation().getCode());
+            
 			try {
 				String value = dao.evaluateDataValueTemplate(dvt, period, location);
 				if (value != null) {

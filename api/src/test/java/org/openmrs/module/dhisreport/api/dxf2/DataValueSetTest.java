@@ -21,13 +21,23 @@
 package org.openmrs.module.dhisreport.api.dxf2;
 
 
+import java.io.StringReader;
+import java.io.StringWriter;
+import java.io.Writer;
 import java.util.List;
 import javax.xml.bind.JAXBContext;
 import javax.xml.bind.Marshaller;
 import javax.xml.bind.Unmarshaller;
+import javax.xml.namespace.NamespaceContext;
+import javax.xml.transform.Result;
+import javax.xml.xpath.XPath;
+import javax.xml.xpath.XPathExpression;
+import javax.xml.xpath.XPathFactory;
+import org.apache.ws.commons.util.NamespaceContextImpl;
 import static org.junit.Assert.assertEquals;
 import org.junit.Test;
 import org.springframework.core.io.ClassPathResource;
+import org.w3c.dom.Document;
 
 /**
  *
@@ -44,12 +54,20 @@ public class DataValueSetTest {
         List<DataValue> dataValues = dvset.getDataValues();
         dataValues.add( new DataValue("DE1", "45"));
         dataValues.add( new DataValue("DE2", "45"));
-        dataValues.add( new DataValue("DE3", "45"));
+        dataValues.add( new DataValue("DE3", "r543efdgty2", "53"));
+        
+        Writer xmlWriter = new StringWriter();
         
         JAXBContext jaxbContext = JAXBContext.newInstance( DataValueSet.class );
 
         Marshaller jaxbmarshaller = jaxbContext.createMarshaller();
-        jaxbmarshaller.marshal( dvset, System.out);
+        jaxbmarshaller.marshal( dvset, xmlWriter);
+        String xml = xmlWriter.toString();
+        
+        System.out.println(xml);
+        // TODO :  some xpath tests on this
+        StringReader xmlReader = new StringReader(xml);
+        
     }
     
     @Test
