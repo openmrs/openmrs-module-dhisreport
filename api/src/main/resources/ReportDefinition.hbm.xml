@@ -11,8 +11,8 @@
     <property column="code" name="code"/>
     <set name="dataValueTemplates" 
       table="${project.parent.artifactId}_datavalue_template"
-      cascade="all-delete-orphan">
-      <key column="report_definition_id"/>
+      cascade="all-delete-orphan" inverse="true" lazy="true" fetch="select">
+      <key column="report_definition_id" not-null="true"/>
       <one-to-many class="DataValueTemplate"/>
     </set>
   </class>
