@@ -22,9 +22,9 @@
 	</organization>
 
 	<scm>
-		<connection>scm:svn:https://svn.openmrs.org/openmrs-modules/dhisreport/trunk/</connection>
-		<developerConnection>scm:svn:https://svn.openmrs.org/openmrs-modules/dhisreport/trunk/</developerConnection>
-		<url>https://svn.openmrs.org/openmrs-modules/dhisreport/trunk/</url>
+		<connection>scm:git:https://github.com/hispindia/dhisreport.git</connection>
+		<developerConnection>scm:git:https://github.com/hispindia/dhisreport.git</developerConnection>
+		<url>https://github.com/hispindia/dhisreport</url>
 	</scm>
 
 	<modules>
@@ -33,26 +33,13 @@
 	</modules>
 	
 	<properties>
-		<openMRSVersion>1.8.3</openMRSVersion>
+		<openMRSVersion>1.8.2</openMRSVersion>
 		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
 	</properties>
 
 	<dependencyManagement>
 		<dependencies>
 		
-			<!--
-			Libraries to add as dependencies with compile or runtime scope:
-			Find matching dependencies in the maven central repository.
-			<dependency>
-				<groupId>org.other.library</groupId>
-				<artifactId>library-name</artifactId>
-				<version>library.version</version>
-				<scope>compile</scope>
-			</dependency>
-			-->
-			
-			
-
 			<!-- Begin OpenMRS core -->
 			
 			<dependency>

@@ -1,88 +1,87 @@
 <project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-	xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
-	<modelVersion>4.0.0</modelVersion>
+         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
+    <modelVersion>4.0.0</modelVersion>
 
-	<parent>
-		<groupId>org.openmrs.module</groupId>
-		<artifactId>dhisreport</artifactId>
-		<version>1.0-SNAPSHOT</version>
-	</parent>
+    <parent>
+        <groupId>org.openmrs.module</groupId>
+        <artifactId>dhisreport</artifactId>
+        <version>1.0-SNAPSHOT</version>
+    </parent>
 
-	<artifactId>dhisreport-api</artifactId>
-	<packaging>jar</packaging>
-	<name>DHIS2 Reporting Module API</name>
-	<description>API project for DHIS2Reporting</description>
+    <artifactId>dhisreport-api</artifactId>
+    <packaging>jar</packaging>
+    <name>DHIS2 Reporting Module API</name>
+    <description>API project for DHIS2Reporting</description>
 
-	<dependencies>
-	
-		<!-- 
-		Add other dependencies from parent's pom:
-		<dependency>
-			<groupId>org.other.library</groupId> 
-			<artifactId>library-name</artifactId>
-		</dependency> 
-		-->
-
+    <dependencies>
+        <!-- Begin OpenMRS core -->
+        <dependency>
+            <groupId>org.openmrs.api</groupId>
+            <artifactId>openmrs-api</artifactId>
+            <type>jar</type>
+            <exclusions>
+                <exclusion>
+                    <artifactId>xercesImpl</artifactId>
+                    <groupId>xerces</groupId>
+                </exclusion>
+            </exclusions>
+        </dependency>
 		
-		
-
-		<!-- Begin OpenMRS core -->
-		
-		<dependency>
-			<groupId>org.openmrs.api</groupId>
-			<artifactId>openmrs-api</artifactId>
-			<type>jar</type>
-		 <exclusions>
-		  <exclusion>
-		   <artifactId>xercesImpl</artifactId>
-		   <groupId>xerces</groupId>
-		  </exclusion>
-		 </exclusions>
-		</dependency>
-		
-		<dependency>
-			<groupId>org.openmrs.api</groupId>
-			<artifactId>openmrs-api</artifactId>
-			<type>test-jar</type>
-			<scope>test</scope>
-		</dependency>
+        <dependency>
+            <groupId>org.openmrs.api</groupId>
+            <artifactId>openmrs-api</artifactId>
+            <type>test-jar</type>
+            <scope>test</scope>
+        </dependency>
 				
-		<dependency>
-			<groupId>org.openmrs.test</groupId>
-			<artifactId>openmrs-test</artifactId>
-			<type>pom</type>
-			<scope>test</scope>
-		</dependency>
+        <dependency>
+            <groupId>org.openmrs.test</groupId>
+            <artifactId>openmrs-test</artifactId>
+            <type>pom</type>
+            <scope>test</scope>
+            <exclusions>
+                <exclusion>
+                    <artifactId>commons-logging</artifactId>
+                    <groupId>commons-logging</groupId>
+                </exclusion>
+            </exclusions>
+        </dependency>
 				
-		<!-- End OpenMRS core -->
-	 <dependency>
-	  <groupId>org.apache.httpcomponents</groupId>
-	  <artifactId>httpcore</artifactId>
-	  <version>4.2</version>
-	  <type>jar</type>
-	 </dependency>
-	 <dependency>
-	  <groupId>org.apache.httpcomponents</groupId>
-	  <artifactId>httpclient</artifactId>
-	  <version>4.2</version>
-	  <type>jar</type>
-	 </dependency>
-	</dependencies>
+        <!-- End OpenMRS core -->
+        <dependency>
+            <groupId>org.apache.httpcomponents</groupId>
+            <artifactId>httpcore</artifactId>
+            <version>4.2</version>
+            <type>jar</type>
+        </dependency>
+        <dependency>
+            <groupId>org.apache.httpcomponents</groupId>
+            <artifactId>httpclient</artifactId>
+            <version>4.2</version>
+            <type>jar</type>
+            <exclusions>
+                <exclusion>
+                    <artifactId>commons-logging</artifactId>
+                    <groupId>commons-logging</groupId>
+                </exclusion>
+            </exclusions>
+        </dependency>
+    </dependencies>
 	
-	<build>
-		<resources>
-			<resource>
-				<directory>src/main/resources</directory>
-				<filtering>true</filtering>
-			</resource>
-		</resources>
+    <build>
+        <resources>
+            <resource>
+                <directory>src/main/resources</directory>
+                <filtering>true</filtering>
+            </resource>
+        </resources>
 
-		<testResources>
-			<testResource>
-				<directory>src/test/resources</directory>
-				<filtering>true</filtering>
-			</testResource>
-		</testResources>
-	</build>
+        <testResources>
+            <testResource>
+                <directory>src/test/resources</directory>
+                <filtering>true</filtering>
+            </testResource>
+        </testResources>
+    </build>
 
 </project>
