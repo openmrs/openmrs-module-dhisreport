@@ -32,6 +32,7 @@ import javax.xml.bind.annotation.*;
 @XmlRootElement(name = "dataElement")
 public class DataElement implements Serializable, Identifiable  {
     
+    @XmlTransient
     protected Integer id;
     
     @XmlAttribute(required = true)

@@ -33,6 +33,7 @@ import javax.xml.bind.annotation.*;
 @XmlRootElement(name = "disaggregation")
 public class Disaggregation implements Serializable, Identifiable { 
     
+    @XmlTransient
     protected Integer id;
     
     @XmlAttribute(required = true)

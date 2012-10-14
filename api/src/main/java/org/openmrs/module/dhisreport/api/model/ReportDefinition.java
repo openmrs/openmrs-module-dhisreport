@@ -26,7 +26,6 @@ import javax.xml.bind.annotation.*;
  */
 @XmlAccessorType(XmlAccessType.FIELD)
 @XmlType(name = "", propOrder = {
-    "id",
     "name",
     "uid",
     "code",
@@ -36,7 +35,8 @@ import javax.xml.bind.annotation.*;
 @XmlRootElement(name = "reportTemplate")
 public class ReportDefinition implements Serializable, Identifiable {
 
-	protected Integer id;
+	@XmlTransient
+    protected Integer id;
     
     @XmlElement(required = true)
     protected String name;
