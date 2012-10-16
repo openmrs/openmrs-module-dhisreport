@@ -1,80 +1,79 @@
 <?xml version="1.0" encoding="UTF-8"?>
- 
 <databaseChangeLog xmlns="http://www.liquibase.org/xml/ns/dbchangelog/1.9"
-    xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-    xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog/1.9
+                   xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+                   xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog/1.9
                   http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-1.9.xsd">
     
     <changeSet id="dhisreport55fdfds" author="bobj">
-      <createTable tableName="dhisreport_report_definition">
-        <column name="id" autoIncrement="true" type="int" >
-          <constraints primaryKey="true"/>
-        </column>
-        <column name="report_name" type="varchar(255)" >
-          <constraints nullable="false"/>
-        </column>
-        <column name="uid" type="varchar(255)" >
-          <constraints nullable="false" unique="true"/>
-        </column>
-        <column name="code" type="varchar(255)" >
-          <constraints nullable="false" unique="true"/>
-        </column>
-      </createTable>
-      <createTable tableName="dhisreport_dataelement">
-        <column name="id" autoIncrement="true" type="int" >
-          <constraints primaryKey="true"/>
-        </column>
-        <column name="de_name" type="varchar(255)" >
-          <constraints nullable="false"/>
-        </column>
-        <column name="uid" type="varchar(255)" >
-          <constraints nullable="false" unique="true"/>
-        </column>
-        <column name="code" type="varchar(255)" >
-          <constraints nullable="false" unique="true"/>
-        </column>
-      </createTable>
-      <createTable tableName="dhisreport_disaggregation">
-        <column name="id" autoIncrement="true" type="int" >
-          <constraints primaryKey="true"/>
-        </column>
-        <column name="disagg_name" type="varchar(255)" >
-          <constraints nullable="false"/>
-        </column>
-        <column name="uid" type="varchar(255)" >
-          <constraints nullable="false" unique="true"/>
-        </column>
-        <column name="code" type="varchar(255)" >
-          <constraints nullable="false" unique="true"/>
-        </column>
-      </createTable>
-      <createTable tableName="dhisreport_datavalue_template">
-        <column name="id" autoIncrement="true" type="int" >
-          <constraints primaryKey="true" />
-        </column>
-        <column name="report_definition_id" type="int" >
-          <constraints nullable="false"/>
-        </column>
-        <column name="dataelement_id" type="int" >
-          <constraints nullable="false"/>
-        </column>
-        <column name="disaggregation_id" type="int" >
-          <constraints nullable="false"/>
-        </column>
-        <column name="query" type="text" />
-      </createTable>
+        <createTable tableName="dhisreport_report_definition">
+            <column name="id" autoIncrement="true" type="int" >
+                <constraints primaryKey="true"/>
+            </column>
+            <column name="report_name" type="varchar(255)" >
+                <constraints nullable="false"/>
+            </column>
+            <column name="uid" type="varchar(255)" >
+                <constraints nullable="false" unique="true"/>
+            </column>
+            <column name="code" type="varchar(255)" >
+                <constraints nullable="false" unique="true"/>
+            </column>
+        </createTable>
+        <createTable tableName="dhisreport_dataelement">
+            <column name="id" autoIncrement="true" type="int" >
+                <constraints primaryKey="true"/>
+            </column>
+            <column name="de_name" type="varchar(255)" >
+                <constraints nullable="false"/>
+            </column>
+            <column name="uid" type="varchar(255)" >
+                <constraints nullable="false" unique="true"/>
+            </column>
+            <column name="code" type="varchar(255)" >
+                <constraints nullable="false" unique="true"/>
+            </column>
+        </createTable>
+        <createTable tableName="dhisreport_disaggregation">
+            <column name="id" autoIncrement="true" type="int" >
+                <constraints primaryKey="true"/>
+            </column>
+            <column name="disagg_name" type="varchar(255)" >
+                <constraints nullable="false"/>
+            </column>
+            <column name="uid" type="varchar(255)" >
+                <constraints nullable="false" unique="true"/>
+            </column>
+            <column name="code" type="varchar(255)" >
+                <constraints nullable="false" unique="true"/>
+            </column>
+        </createTable>
+        <createTable tableName="dhisreport_datavalue_template">
+            <column name="id" autoIncrement="true" type="int" >
+                <constraints primaryKey="true" />
+            </column>
+            <column name="report_definition_id" type="int" >
+                <constraints nullable="false"/>
+            </column>
+            <column name="dataelement_id" type="int" >
+                <constraints nullable="false"/>
+            </column>
+            <column name="disaggregation_id" type="int" >
+                <constraints nullable="false"/>
+            </column>
+            <column name="query" type="text" />
+        </createTable>
       
-      <addForeignKeyConstraint baseTableName="dhisreport_datavalue_template" 
-        baseColumnNames="dataelement_id" constraintName="fk_dataelement_datavaluetemplate" 
-        referencedTableName="dhisreport_dataelement" referencedColumnNames="id"/>
+        <addForeignKeyConstraint baseTableName="dhisreport_datavalue_template" 
+                                 baseColumnNames="dataelement_id" constraintName="fk_dataelement_datavaluetemplate" 
+                                 referencedTableName="dhisreport_dataelement" referencedColumnNames="id"/>
 
-      <addForeignKeyConstraint baseTableName="dhisreport_datavalue_template" 
-        baseColumnNames="disaggregation_id" constraintName="fk_disaggregation_datavaluetemplate" 
-        referencedTableName="dhisreport_disaggregation" referencedColumnNames="id"/>
+        <addForeignKeyConstraint baseTableName="dhisreport_datavalue_template" 
+                                 baseColumnNames="disaggregation_id" constraintName="fk_disaggregation_datavaluetemplate" 
+                                 referencedTableName="dhisreport_disaggregation" referencedColumnNames="id"/>
 
-      <addForeignKeyConstraint baseTableName="dhisreport_datavalue_template" 
-        baseColumnNames="report_definition_id" constraintName="fk_report_definition_datavaluetemplate" 
-        referencedTableName="dhisreport_report_definition" referencedColumnNames="id"/>
+        <addForeignKeyConstraint baseTableName="dhisreport_datavalue_template" 
+                                 baseColumnNames="report_definition_id" constraintName="fk_report_definition_datavaluetemplate" 
+                                 referencedTableName="dhisreport_report_definition" referencedColumnNames="id"/>
       
     </changeSet>
     

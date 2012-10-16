@@ -36,9 +36,8 @@
             </td>
         </tr>
 
-</table>
-<input type="hidden" name="reportDefinition_id" value="${reportDefinition.id}" />
+    </table>
+    <input type="hidden" name="reportDefinition_id" value="${reportDefinition.id}" />
 </form>
-
 
 <%@ include file="/WEB-INF/template/footer.jsp"%>

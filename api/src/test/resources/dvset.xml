@@ -1,12 +1,12 @@
 <dataValueSet xmlns="http://dhis2.org/schema/dxf/2.0" 
-  period="201201" 
-  orgUnit="OU_559" orgUnitIdScheme="code" 
-  dataSetId="DS_543073"
-  dataElementIdScheme="code">
+              period="201201" 
+              orgUnit="OU_559" orgUnitIdScheme="code" 
+              dataSetId="DS_543073"
+              dataElementIdScheme="code">
   
-  <dataValue dataElement="DE_98454" value="12"/>
-  <dataValue dataElement="DE_98445" value="13"/>
-  <dataValue dataElement="DE_98456" value="14"/>
-  <dataValue dataElement="DE_98453" value="15"/>
-  <dataValue dataElement="unknown" value="15"/>
+    <dataValue dataElement="DE_98454" value="12"/>
+    <dataValue dataElement="DE_98445" value="13"/>
+    <dataValue dataElement="DE_98456" value="14"/>
+    <dataValue dataElement="DE_98453" value="15"/>
+    <dataValue dataElement="unknown" value="15"/>
 </dataValueSet>

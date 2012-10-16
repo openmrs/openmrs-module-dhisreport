@@ -1,14 +1,14 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE hibernate-mapping PUBLIC "-//Hibernate/Hibernate Mapping DTD 3.0//EN" "http://hibernate.sourceforge.net/hibernate-mapping-3.0.dtd">
 <hibernate-mapping package="org.openmrs.module.dhisreport.api.model">
-  <class name="DataValueTemplate" table="${project.parent.artifactId}_datavalue_template">
-    <id column="id" name="id" unsaved-value="0">
-      <generator class="native"/>
-    </id>
-    <discriminator column="id" insert="false"/>
-    <many-to-one name="dataelement" column="dataelement_id" not-null="true"/>
-    <many-to-one name="disaggregation" column="disaggregation_id"  not-null="true"/>
-    <property column="query" length="2048" name="query"/>
-    <many-to-one name="reportDefinition" column="report_definition_id" not-null="true" fetch="select"/>
-  </class>
+    <class name="DataValueTemplate" table="${project.parent.artifactId}_datavalue_template">
+        <id column="id" name="id" unsaved-value="0">
+            <generator class="native"/>
+        </id>
+        <discriminator column="id" insert="false"/>
+        <many-to-one name="dataelement" column="dataelement_id" not-null="true"/>
+        <many-to-one name="disaggregation" column="disaggregation_id"  not-null="true"/>
+        <property column="query" length="2048" name="query"/>
+        <many-to-one name="reportDefinition" column="report_definition_id" not-null="true" fetch="select"/>
+    </class>
 </hibernate-mapping>

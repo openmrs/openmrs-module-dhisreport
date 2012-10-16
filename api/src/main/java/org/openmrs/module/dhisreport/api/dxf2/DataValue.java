@@ -21,22 +21,25 @@ package org.openmrs.module.dhisreport.api.dxf2;
 
 import javax.xml.bind.annotation.*;
 
-@XmlAccessorType(XmlAccessType.FIELD)
-@XmlType(name = "")
-@XmlRootElement(name = "dataValue")
-public class DataValue {
+@XmlAccessorType( XmlAccessType.FIELD )
+@XmlType( name = "" )
+@XmlRootElement( name = "dataValue" )
+public class DataValue
+{
 
-    @XmlAttribute(required = true)
+    @XmlAttribute( required = true )
     protected String dataElement;
+
     @XmlAttribute
     protected String categoryOptionCombo;
-    @XmlAttribute(required = true)
+
+    @XmlAttribute( required = true )
     protected String value;
 
     public DataValue()
     {
     }
-    
+
     public DataValue( String dataElement, String value )
     {
         this.dataElement = dataElement;
@@ -50,7 +53,6 @@ public class DataValue {
         this.value = value;
     }
 
-    
     /**
      * Gets the value of the dataElement property.
      * 
@@ -59,7 +61,8 @@ public class DataValue {
      *     {@link String }
      *     
      */
-    public String getDataElement() {
+    public String getDataElement()
+    {
         return dataElement;
     }
 
@@ -71,7 +74,8 @@ public class DataValue {
      *     {@link String }
      *     
      */
-    public void setDataElement(String value) {
+    public void setDataElement( String value )
+    {
         this.dataElement = value;
     }
 
@@ -83,7 +87,8 @@ public class DataValue {
      *     {@link String }
      *     
      */
-    public String getCategoryOptionCombo() {
+    public String getCategoryOptionCombo()
+    {
         return categoryOptionCombo;
     }
 
@@ -95,7 +100,8 @@ public class DataValue {
      *     {@link String }
      *     
      */
-    public void setCategoryOptionCombo(String value) {
+    public void setCategoryOptionCombo( String value )
+    {
         this.categoryOptionCombo = value;
     }
 
@@ -107,7 +113,8 @@ public class DataValue {
      *     {@link String }
      *     
      */
-    public String getValue() {
+    public String getValue()
+    {
         return value;
     }
 
@@ -119,7 +126,8 @@ public class DataValue {
      *     {@link String }
      *     
      */
-    public void setValue(String value) {
+    public void setValue( String value )
+    {
         this.value = value;
     }
 

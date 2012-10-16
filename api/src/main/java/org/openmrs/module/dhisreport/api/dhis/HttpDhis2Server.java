@@ -19,7 +19,6 @@
  **/
 package org.openmrs.module.dhisreport.api.dhis;
 
-
 import java.io.StringWriter;
 import java.net.URL;
 import javax.xml.bind.JAXBContext;
@@ -50,16 +49,15 @@ import org.openmrs.module.dhisreport.api.model.ReportDefinition;
  *
  * @author bobj
  */
-public class HttpDhis2Server implements Dhis2Server
+public class HttpDhis2Server
+    implements Dhis2Server
 {
 
     private static Log log = LogFactory.getLog( HttpDhis2Server.class );
 
-    public static final String REPORTS_METADATA_PATH =
-        "/api/forms.xml";
+    public static final String REPORTS_METADATA_PATH = "/api/forms.xml";
 
-    public static final String DATAVALUESET_PATH =
-        "/api/dataValueSets?dataElementIdScheme=code&orgUnitIdScheme=uid";
+    public static final String DATAVALUESET_PATH = "/api/dataValueSets?dataElementIdScheme=code&orgUnitIdScheme=uid";
 
     private URL url;
 
@@ -117,7 +115,8 @@ public class HttpDhis2Server implements Dhis2Server
     }
 
     @Override
-    public ImportSummary postReport( DataValueSet report ) throws DHIS2ReportingException
+    public ImportSummary postReport( DataValueSet report )
+        throws DHIS2ReportingException
     {
         log.debug( "Posting datavalueset report" );
         ImportSummary summary = null;
@@ -131,9 +130,10 @@ public class HttpDhis2Server implements Dhis2Server
             // output pretty printed
             dataValueSetMarshaller.setProperty( Marshaller.JAXB_FORMATTED_OUTPUT, true );
             dataValueSetMarshaller.marshal( report, xmlReport );
-        } catch ( JAXBException ex )
+        }
+        catch ( JAXBException ex )
         {
-            throw new Dxf2Exception("Problem marshalling dataValueSet", ex);
+            throw new Dxf2Exception( "Problem marshalling dataValueSet", ex );
         }
 
         String host = url.getHost();
@@ -161,19 +161,21 @@ public class HttpDhis2Server implements Dhis2Server
                 JAXBContext jaxbImportSummaryContext = JAXBContext.newInstance( ImportSummary.class );
                 Unmarshaller importSummaryUnMarshaller = jaxbImportSummaryContext.createUnmarshaller();
                 summary = (ImportSummary) importSummaryUnMarshaller.unmarshal( entity.getContent() );
-            } else
+            }
+            else
             {
                 summary = new ImportSummary();
                 summary.setStatus( ImportStatus.ERROR );
             }
             // EntityUtils.consume( entity );
 
-
             // TODO: fix these catches ...
-        } catch ( Exception ex )
+        }
+        catch ( Exception ex )
         {
             throw new Dhis2Exception( this, "Problem accessing Dhis2 server", ex );
-        } finally
+        }
+        finally
         {
             httpclient.getConnectionManager().shutdown();
         }
@@ -181,7 +183,8 @@ public class HttpDhis2Server implements Dhis2Server
     }
 
     @Override
-    public ReportDefinition fetchReportTemplates() throws Dhis2Exception
+    public ReportDefinition fetchReportTemplates()
+        throws Dhis2Exception
     {
         throw new UnsupportedOperationException( "Not supported yet." );
     }

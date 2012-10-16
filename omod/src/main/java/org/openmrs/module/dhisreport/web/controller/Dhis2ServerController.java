@@ -42,7 +42,7 @@ public class Dhis2ServerController
 
     protected final Log log = LogFactory.getLog( getClass() );
 
-    @RequestMapping(value = "/module/dhisreport/configureDhis2", method = RequestMethod.GET)
+    @RequestMapping( value = "/module/dhisreport/configureDhis2", method = RequestMethod.GET )
     public void showConfigForm( ModelMap model )
     {
         DHIS2ReportingService service = Context.getService( DHIS2ReportingService.class );
@@ -58,12 +58,13 @@ public class Dhis2ServerController
         model.addAttribute( "dhis2Server", server );
 
     }
-    
-    @RequestMapping(value = "/module/dhisreport/configureDhis2", method = RequestMethod.POST)
-    public void saveConfig( ModelMap model,
-        @RequestParam(value = "url", required = true) String urlString,
-        @RequestParam(value = "username", required = true) String username,
-        @RequestParam(value = "password", required = true) String password ) throws ParseException, MalformedURLException
+
+    @RequestMapping( value = "/module/dhisreport/configureDhis2", method = RequestMethod.POST )
+    public void saveConfig( ModelMap model, @RequestParam( value = "url", required = true )
+    String urlString, @RequestParam( value = "username", required = true )
+    String username, @RequestParam( value = "password", required = true )
+    String password )
+        throws ParseException, MalformedURLException
     {
         DHIS2ReportingService service = Context.getService( DHIS2ReportingService.class );
         HttpDhis2Server server = service.getDhis2Server();
@@ -72,16 +73,16 @@ public class Dhis2ServerController
         {
             server = new HttpDhis2Server();
         }
-        
-        URL url = new URL (urlString);
+
+        URL url = new URL( urlString );
         server.setUrl( url );
         server.setUsername( username );
         server.setPassword( password );
-        
+
         service.setDhis2Server( server );
-        
-        log.debug( "Dhis2 server configured: "  + username + ":xxxxxx  " + url.toExternalForm() );
-        
+
+        log.debug( "Dhis2 server configured: " + username + ":xxxxxx  " + url.toExternalForm() );
+
         model.addAttribute( "dhis2Server", server );
         model.addAttribute( "user", Context.getAuthenticatedUser() );
     }

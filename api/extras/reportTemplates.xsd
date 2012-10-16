@@ -1,65 +1,65 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <xs:schema xmlns:xs="http://www.w3.org/2001/XMLSchema" elementFormDefault="qualified">
-  <xs:element name="reportTemplates">
-    <xs:complexType>
-      <xs:sequence>
-        <xs:element ref="dataElements"/>
-        <xs:element ref="disaggregations"/>
-        <xs:element maxOccurs="unbounded" ref="reportTemplate"/>
-      </xs:sequence>
-    </xs:complexType>
-  </xs:element>
-  <xs:element name="dataElements">
-    <xs:complexType>
-      <xs:sequence>
-        <xs:element maxOccurs="unbounded" ref="dataElement"/>
-      </xs:sequence>
-    </xs:complexType>
-  </xs:element>
-  <xs:element name="dataElement">
-    <xs:complexType>
-      <xs:attribute name="code" use="required" type="xs:ID"/>
-      <xs:attribute name="name" use="required" />
-      <xs:attribute name="type" use="required" />
-      <xs:attribute name="uid" use="required" type="xs:NCName"/>
-    </xs:complexType>
-  </xs:element>
-  <xs:element name="disaggregations">
-    <xs:complexType>
-      <xs:sequence>
-        <xs:element maxOccurs="unbounded" ref="disaggregation"/>
-      </xs:sequence>
-    </xs:complexType>
-  </xs:element>
-  <xs:element name="disaggregation">
-    <xs:complexType>
-      <xs:attribute name="code" use="required" type="xs:NCName"/>
-      <xs:attribute name="name" use="required" />
-      <xs:attribute name="uid" use="required" type="xs:NCName"/>
-    </xs:complexType>
-  </xs:element>
-  <xs:element name="reportTemplate">
-    <xs:complexType>
-      <xs:sequence>
-        <xs:element name="name" type="xs:string"/>
-        <xs:element name="uid" type="xs:NCName"/>
-        <xs:element name="code" type="xs:NCName"/>
-        <xs:element name="periodType" />
-        <xs:element ref="dataValueTemplates"/>
-      </xs:sequence>
-    </xs:complexType>
-  </xs:element>
-  <xs:element name="dataValueTemplates">
-    <xs:complexType>
-      <xs:sequence>
-        <xs:element maxOccurs="unbounded" ref="dataValueTemplate"/>
-      </xs:sequence>
-    </xs:complexType>
-  </xs:element>
-  <xs:element name="dataValueTemplate">
-    <xs:complexType>
-      <xs:attribute name="dataElement" use="required" type="xs:IDREF"/>
-      <xs:attribute name="disaggregation" use="required" type="xs:NCName"/>
-    </xs:complexType>
-  </xs:element>
+    <xs:element name="reportTemplates">
+        <xs:complexType>
+            <xs:sequence>
+                <xs:element ref="dataElements"/>
+                <xs:element ref="disaggregations"/>
+                <xs:element maxOccurs="unbounded" ref="reportTemplate"/>
+            </xs:sequence>
+        </xs:complexType>
+    </xs:element>
+    <xs:element name="dataElements">
+        <xs:complexType>
+            <xs:sequence>
+                <xs:element maxOccurs="unbounded" ref="dataElement"/>
+            </xs:sequence>
+        </xs:complexType>
+    </xs:element>
+    <xs:element name="dataElement">
+        <xs:complexType>
+            <xs:attribute name="code" use="required" type="xs:ID"/>
+            <xs:attribute name="name" use="required" />
+            <xs:attribute name="type" use="required" />
+            <xs:attribute name="uid" use="required" type="xs:NCName"/>
+        </xs:complexType>
+    </xs:element>
+    <xs:element name="disaggregations">
+        <xs:complexType>
+            <xs:sequence>
+                <xs:element maxOccurs="unbounded" ref="disaggregation"/>
+            </xs:sequence>
+        </xs:complexType>
+    </xs:element>
+    <xs:element name="disaggregation">
+        <xs:complexType>
+            <xs:attribute name="code" use="required" type="xs:NCName"/>
+            <xs:attribute name="name" use="required" />
+            <xs:attribute name="uid" use="required" type="xs:NCName"/>
+        </xs:complexType>
+    </xs:element>
+    <xs:element name="reportTemplate">
+        <xs:complexType>
+            <xs:sequence>
+                <xs:element name="name" type="xs:string"/>
+                <xs:element name="uid" type="xs:NCName"/>
+                <xs:element name="code" type="xs:NCName"/>
+                <xs:element name="periodType" />
+                <xs:element ref="dataValueTemplates"/>
+            </xs:sequence>
+        </xs:complexType>
+    </xs:element>
+    <xs:element name="dataValueTemplates">
+        <xs:complexType>
+            <xs:sequence>
+                <xs:element maxOccurs="unbounded" ref="dataValueTemplate"/>
+            </xs:sequence>
+        </xs:complexType>
+    </xs:element>
+    <xs:element name="dataValueTemplate">
+        <xs:complexType>
+            <xs:attribute name="dataElement" use="required" type="xs:IDREF"/>
+            <xs:attribute name="disaggregation" use="required" type="xs:NCName"/>
+        </xs:complexType>
+    </xs:element>
 </xs:schema>

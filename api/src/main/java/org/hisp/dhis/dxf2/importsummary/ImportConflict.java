@@ -30,21 +30,20 @@ package org.hisp.dhis.dxf2.importsummary;
 import javax.xml.bind.annotation.XmlAccessType;
 import javax.xml.bind.annotation.XmlAccessorType;
 import javax.xml.bind.annotation.XmlAttribute;
-import javax.xml.bind.annotation.XmlRootElement;
 
-@XmlAccessorType(XmlAccessType.FIELD)
+@XmlAccessorType( XmlAccessType.FIELD )
 public class ImportConflict
 {
-    @XmlAttribute(required=true)
+    @XmlAttribute( required = true )
     private String object;
 
-    @XmlAttribute(required=true)
+    @XmlAttribute( required = true )
     private String value;
 
     public ImportConflict()
     {
     }
-    
+
     public ImportConflict( String object, String value )
     {
         this.object = object;
@@ -74,9 +73,6 @@ public class ImportConflict
     @Override
     public String toString()
     {
-        return "ImportConflict{" +
-            "object='" + object + '\'' +
-            ", value='" + value + '\'' +
-            '}';
+        return "ImportConflict{" + "object='" + object + '\'' + ", value='" + value + '\'' + '}';
     }
 }

@@ -29,32 +29,37 @@ import org.openmrs.module.web.extension.AdministrationSectionExt;
  * This class defines the links that will appear on the administration page under the
  * "dhisreport.title" heading. 
  */
-public class AdminList extends AdministrationSectionExt {
-	
-	/**
-	 * @see AdministrationSectionExt#getMediaType()
-	 */
+public class AdminList
+    extends AdministrationSectionExt
+{
+
+    /**
+     * @see AdministrationSectionExt#getMediaType()
+     */
     @Override
-	public Extension.MEDIA_TYPE getMediaType() {
-		return Extension.MEDIA_TYPE.html;
-	}
-	
-	/**
-	 * @see AdministrationSectionExt#getTitle()
-	 */
+    public Extension.MEDIA_TYPE getMediaType()
+    {
+        return Extension.MEDIA_TYPE.html;
+    }
+
+    /**
+     * @see AdministrationSectionExt#getTitle()
+     */
     @Override
-	public String getTitle() {
-		return "dhisreport.title";
-	}
-	
-	/**
-	 * @see AdministrationSectionExt#getLinks()
-	 */
+    public String getTitle()
+    {
+        return "dhisreport.title";
+    }
+
+    /**
+     * @see AdministrationSectionExt#getLinks()
+     */
     @Override
-	public Map<String, String> getLinks() {
-		LinkedHashMap<String, String> map = new LinkedHashMap<String, String>();
-		map.put("/module/dhisreport/manage.form", "dhisreport.manage");
-		return map;
-	}
-	
+    public Map<String, String> getLinks()
+    {
+        LinkedHashMap<String, String> map = new LinkedHashMap<String, String>();
+        map.put( "/module/dhisreport/manage.form", "dhisreport.manage" );
+        return map;
+    }
+
 }

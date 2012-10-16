@@ -19,7 +19,6 @@
  **/
 package org.openmrs.module.dhisreport.api;
 
-
 import java.util.Collection;
 import static org.junit.Assert.*;
 import org.junit.Before;
@@ -33,22 +32,28 @@ import org.springframework.core.io.ClassPathResource;
 /**
  * Tests {@link ${DHIS2ReportingService}}.
  */
-public class DHIS2ReportingServiceDAOTest extends BaseModuleContextSensitiveTest
+public class DHIS2ReportingServiceDAOTest
+    extends BaseModuleContextSensitiveTest
 {
 
     private DHIS2ReportingService service;
 
     // uids of sample data
-    private static final String DE_ANC1_UID="nvVDDkfbbhf";
-    private static final String DE_ANC4_UID="OWeOBFxrvrv";
-    private static final String RT_POPULATION_UID="Az7yGdS293Y";
+    private static final String DE_ANC1_UID = "nvVDDkfbbhf";
+
+    private static final String DE_ANC4_UID = "OWeOBFxrvrv";
+
+    private static final String RT_POPULATION_UID = "Az7yGdS293Y";
+
     private static final String DE_POP_UID = "xX6RDH6AZTK";
-    
+
     private Disaggregation _default;
+
     private ReportDefinition rd;
-    
+
     @Before
-    public void before() throws Exception
+    public void before()
+        throws Exception
     {
         _default = new Disaggregation();
         _default.setName( "default" );
@@ -56,7 +61,7 @@ public class DHIS2ReportingServiceDAOTest extends BaseModuleContextSensitiveTest
 
         service = Context.getService( DHIS2ReportingService.class );
         ClassPathResource resource = new ClassPathResource( "templates_ethiopia.xml" );
-        service.unMarshallandSaveReportTemplates( resource.getInputStream());
+        service.unMarshallandSaveReportTemplates( resource.getInputStream() );
     }
 
     @Test
@@ -71,34 +76,34 @@ public class DHIS2ReportingServiceDAOTest extends BaseModuleContextSensitiveTest
         de2.setName( "STI cases" );
         de2.setCode( "DE2" );
         de2.setUid( "ghrwyugugpo" );
-        
+
         DataElement de = service.saveDataElement( de1 );
         assertEquals( de1.getName(), de.getName() );
         service.saveDataElement( de2 );
-        de1.setName( "Something else");
+        de1.setName( "Something else" );
         service.saveDataElement( de2 );
 
         Collection<DataElement> des = service.getAllDataElements();
         assertEquals( 5, des.size() );
-        
+
     }
 
     @Test
     public void disAggregationDAOTest()
     {
-        assertEquals(3,service.getAllDataElements().size());
-        assertEquals(3,service.getAllDisaggregations().size());
-        assertEquals(2, service.getAllReportDefinitions().size());
+        assertEquals( 3, service.getAllDataElements().size() );
+        assertEquals( 3, service.getAllDisaggregations().size() );
+        assertEquals( 2, service.getAllReportDefinitions().size() );
     }
 
     @Test
     public void dataValueSetDAOTest()
     {
-        DataElement popDe = service.getDataElementByUid( DE_POP_UID);
+        DataElement popDe = service.getDataElementByUid( DE_POP_UID );
         // should fail
         //service.purgeDataElement( de1 );
-        assertNotNull(service.getAllReportDefinitions());
-        
+        assertNotNull( service.getAllReportDefinitions() );
+
         rd = service.getReportDefinitionByUId( RT_POPULATION_UID );
         Collection<DataValueTemplate> dvTemplates = rd.getDataValueTemplates();
         assertEquals( 2, dvTemplates.size() );
@@ -114,23 +119,25 @@ public class DHIS2ReportingServiceDAOTest extends BaseModuleContextSensitiveTest
     }
 
     @Test
-    public void unMarshallandSaveReportTemplates() throws Exception
+    public void unMarshallandSaveReportTemplates()
+        throws Exception
     {
         ClassPathResource resource = new ClassPathResource( "templates_ethiopia.xml" );
-        service.unMarshallandSaveReportTemplates( resource.getInputStream());
+        service.unMarshallandSaveReportTemplates( resource.getInputStream() );
     }
 
     @Test
-    public void marshallerTest() throws Exception
+    public void marshallerTest()
+        throws Exception
     {
         ClassPathResource resource = new ClassPathResource( "templates_ethiopia.xml" );
-        service.unMarshallandSaveReportTemplates( resource.getInputStream());
-        
-        ReportTemplates rds = service.getReportTemplates();
-        assertEquals(3,rds.getDataElements().size());
-        assertEquals(3,rds.getDisaggregations().size());
-        assertEquals(2,rds.getReportDefinitions().size());
+        service.unMarshallandSaveReportTemplates( resource.getInputStream() );
 
-        service.marshallReportTemplates( System.out, rds);
+        ReportTemplates rds = service.getReportTemplates();
+        assertEquals( 3, rds.getDataElements().size() );
+        assertEquals( 3, rds.getDisaggregations().size() );
+        assertEquals( 2, rds.getReportDefinitions().size() );
+
+        service.marshallReportTemplates( System.out, rds );
     }
 }

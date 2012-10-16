@@ -19,7 +19,6 @@
  **/
 package org.openmrs.module.dhisreport.api;
 
-
 import java.util.Calendar;
 import static org.junit.Assert.assertEquals;
 import org.junit.Test;
@@ -30,17 +29,18 @@ import org.openmrs.module.dhisreport.api.utils.Period;
  *
  * @author bobj
  */
-public class PeriodTest {
-    
+public class PeriodTest
+{
+
     @Test
     public void startAndEndDatesTest()
     {
         Calendar cal = Calendar.getInstance();
         cal.set( 2012, Calendar.MARCH, 5 );
-        Period p = new MonthlyPeriod(cal.getTime());
-        
-        System.out.println( p.getStart().toString());
-        System.out.println( p.getEnd().toString());
+        Period p = new MonthlyPeriod( cal.getTime() );
+
+        System.out.println( p.getStart().toString() );
+        System.out.println( p.getEnd().toString() );
     }
 
     @Test
@@ -48,9 +48,9 @@ public class PeriodTest {
     {
         Calendar cal = Calendar.getInstance();
         cal.set( 2012, Calendar.MARCH, 5 );
-        Period p = new MonthlyPeriod(cal.getTime());
-        
-        assertEquals("201203", p.getAsIsoString());
+        Period p = new MonthlyPeriod( cal.getTime() );
+
+        assertEquals( "201203", p.getAsIsoString() );
     }
-        
+
 }

@@ -27,28 +27,27 @@ package org.hisp.dhis.dxf2.importsummary;
  * SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-import java.util.ArrayList;
 import java.util.List;
 import javax.xml.bind.annotation.*;
 
-@XmlAccessorType(XmlAccessType.FIELD)
-@XmlRootElement(name = "importSummary")
+@XmlAccessorType( XmlAccessType.FIELD )
+@XmlRootElement( name = "importSummary" )
 public class ImportSummary
 {
-    @XmlElement(required = true)
+    @XmlElement( required = true )
     private ImportStatus status;
 
-    @XmlElement(required = true)
+    @XmlElement( required = true )
     private String description;
 
-    @XmlElement(required = true)
+    @XmlElement( required = true )
     private ImportCount dataValueCount;
 
-    @XmlElementWrapper(name="conflicts", required=false)
-    @XmlElement(name="conflict")
+    @XmlElementWrapper( name = "conflicts", required = false )
+    @XmlElement( name = "conflict" )
     private List<ImportConflict> conflicts;
 
-    @XmlElement(required = true)
+    @XmlElement( required = true )
     private String dataSetComplete;
 
     public ImportSummary()

@@ -23,32 +23,35 @@ package org.openmrs.module.dhisreport.api;
  *
  * @author bobj
  */
-public class DHIS2ReportingException extends Exception {
-    
+public class DHIS2ReportingException
+    extends Exception
+{
+
     private Throwable cause = null;
-    
+
     public DHIS2ReportingException()
     {
         super();
     }
 
-    public DHIS2ReportingException(String message)
+    public DHIS2ReportingException( String message )
     {
-        super(message);
+        super( message );
     }
-    
-    public DHIS2ReportingException(String message, Throwable cause)
+
+    public DHIS2ReportingException( String message, Throwable cause )
     {
-        super(message);
+        super( message );
         this.cause = cause;
     }
 
-    public DHIS2ReportingException(Throwable cause)
+    public DHIS2ReportingException( Throwable cause )
     {
         super();
         this.cause = cause;
     }
 
+    @Override
     public Throwable getCause()
     {
         return cause;

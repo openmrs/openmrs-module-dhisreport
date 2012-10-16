@@ -26,14 +26,14 @@
                 </exclusion>
             </exclusions>
         </dependency>
-		
+        
         <dependency>
             <groupId>org.openmrs.api</groupId>
             <artifactId>openmrs-api</artifactId>
             <type>test-jar</type>
             <scope>test</scope>
         </dependency>
-				
+        
         <dependency>
             <groupId>org.openmrs.test</groupId>
             <artifactId>openmrs-test</artifactId>
@@ -46,7 +46,7 @@
                 </exclusion>
             </exclusions>
         </dependency>
-				
+        
         <!-- End OpenMRS core -->
         <dependency>
             <groupId>org.apache.httpcomponents</groupId>
@@ -67,8 +67,21 @@
             </exclusions>
         </dependency>
     </dependencies>
-	
+    
     <build>
+        <plugins>
+            <plugin>
+                <groupId>com.googlecode.maven-java-formatter-plugin</groupId>
+                <artifactId>maven-java-formatter-plugin</artifactId>
+                <executions>
+                    <execution>
+                        <goals>
+                            <goal>format</goal>
+                        </goals>
+                    </execution>
+                </executions>
+            </plugin>
+        </plugins>
         <resources>
             <resource>
                 <directory>src/main/resources</directory>

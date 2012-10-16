@@ -19,19 +19,19 @@
  **/
 package org.openmrs.module.dhisreport.api.utils;
 
-
 import java.util.Date;
 
 /**
  *
  * @author bobj
  */
-public interface Period {
-    
+public interface Period
+{
+
     public Date getStart();
 
     public Date getEnd();
-    
+
     public String getAsIsoString();
 
 }

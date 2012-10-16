@@ -19,7 +19,6 @@
  **/
 package org.openmrs.module.dhisreport.api.utils;
 
-
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
 import java.util.Date;
@@ -28,14 +27,16 @@ import java.util.Date;
  *
  * @author bobj
  */
-public class MonthlyPeriod implements Period {
-    
+public class MonthlyPeriod
+    implements Period
+{
+
     public static final String ISO_FORMAT = "yyyyMM";
 
     protected Date startDate;
-    
+
     protected Date endDate;
-    
+
     @Override
     public Date getStart()
     {
@@ -48,7 +49,7 @@ public class MonthlyPeriod implements Period {
         return endDate;
     }
 
-    public MonthlyPeriod(Date date)
+    public MonthlyPeriod( Date date )
     {
         Calendar cal = Calendar.getInstance();
         cal.setTime( date );
@@ -57,12 +58,11 @@ public class MonthlyPeriod implements Period {
         cal.set( Calendar.DAY_OF_MONTH, cal.getActualMaximum( Calendar.DAY_OF_MONTH ) );
         endDate = cal.getTime();
     }
-    
+
     @Override
     public String getAsIsoString()
     {
-       return new SimpleDateFormat( ISO_FORMAT ).format( getStart() );
+        return new SimpleDateFormat( ISO_FORMAT ).format( getStart() );
     }
-
 
 }

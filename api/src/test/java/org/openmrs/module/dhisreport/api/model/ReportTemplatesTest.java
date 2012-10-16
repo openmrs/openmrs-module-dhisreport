@@ -19,7 +19,6 @@
  **/
 package org.openmrs.module.dhisreport.api.model;
 
-
 import java.util.Collection;
 import java.util.List;
 import javax.xml.bind.JAXBContext;
@@ -30,8 +29,6 @@ import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertTrue;
 import static org.junit.Assert.assertFalse;
 import org.junit.Test;
-import org.openmrs.api.context.Context;
-import org.openmrs.module.dhisreport.api.DHIS2ReportingService;
 import org.springframework.core.io.ClassPathResource;
 
 /**
@@ -41,7 +38,8 @@ import org.springframework.core.io.ClassPathResource;
 public class ReportTemplatesTest
 {
     @Test
-    public void unMarshallReportTemplates() throws Exception
+    public void unMarshallReportTemplates()
+        throws Exception
     {
         ClassPathResource resource = new ClassPathResource( "templates_ethiopia.xml" );
         JAXBContext jaxbContext = JAXBContext.newInstance( ReportTemplates.class );
@@ -68,7 +66,8 @@ public class ReportTemplatesTest
     }
 
     @Test
-    public void marshallReportTemplates() throws Exception
+    public void marshallReportTemplates()
+        throws Exception
     {
         ClassPathResource resource = new ClassPathResource( "templates_ethiopia.xml" );
         JAXBContext jaxbContext = JAXBContext.newInstance( ReportTemplates.class );
@@ -83,20 +82,20 @@ public class ReportTemplatesTest
         Marshaller jaxbmarshaller = jaxbContext.createMarshaller();
         jaxbmarshaller.marshal( reportTemplates, System.out );
     }
-    
+
     @Test
     public void testDodgyQueries()
     {
         String updateQuery = "Some Update query";
         String deleteQuery = "Some delete query";
         String safeQuery = "Some safe query";
-        
+
         DataValueTemplate dvt = new DataValueTemplate();
         dvt.setQuery( updateQuery );
-        assertTrue(dvt.potentialUpdateDelete());
+        assertTrue( dvt.potentialUpdateDelete() );
         dvt.setQuery( deleteQuery );
-        assertTrue(dvt.potentialUpdateDelete());
+        assertTrue( dvt.potentialUpdateDelete() );
         dvt.setQuery( safeQuery );
-        assertFalse(dvt.potentialUpdateDelete());
+        assertFalse( dvt.potentialUpdateDelete() );
     }
 }

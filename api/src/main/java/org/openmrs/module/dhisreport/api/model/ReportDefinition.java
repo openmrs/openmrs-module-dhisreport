@@ -30,50 +30,50 @@ import javax.xml.bind.annotation.*;
  * 
  * @author bobj
  */
-@XmlAccessorType(XmlAccessType.FIELD)
-@XmlType(name = "", propOrder = {
-    "name",
-    "uid",
-    "code",
+@XmlAccessorType( XmlAccessType.FIELD )
+@XmlType( name = "", propOrder = { "name", "uid", "code",
 //    "periodType",
-    "dataValueTemplates"
-})
-@XmlRootElement(name = "reportTemplate")
-public class ReportDefinition implements Serializable, Identifiable {
+    "dataValueTemplates" } )
+@XmlRootElement( name = "reportTemplate" )
+public class ReportDefinition
+    implements Serializable, Identifiable
+{
 
-	@XmlTransient
+    @XmlTransient
     protected Integer id;
-    
-    @XmlElement(required = true)
+
+    @XmlElement( required = true )
     protected String name;
-	
-    @XmlElement(required = true)
+
+    @XmlElement( required = true )
     protected String uid;
-    
-    @XmlElement(required = true)
+
+    @XmlElement( required = true )
     @XmlID
     protected String code;
 
-    @XmlElementWrapper(name="dataValueTemplates")
-    @XmlElement(name="dataValueTemplate")
+    @XmlElementWrapper( name = "dataValueTemplates" )
+    @XmlElement( name = "dataValueTemplate" )
     protected Set<DataValueTemplate> dataValueTemplates = new HashSet<DataValueTemplate>();
-    
+
     @Override
-	public Integer getId() {
-		return id;
-	}
-	
+    public Integer getId()
+    {
+        return id;
+    }
+
     @Override
-	public void setId(Integer id) {
-		this.id = id;
-	}
-    
+    public void setId( Integer id )
+    {
+        this.id = id;
+    }
+
     public String getName()
     {
         return name;
     }
-    
-    public void setName(String name)
+
+    public void setName( String name )
     {
         this.name = name;
     }
@@ -109,18 +109,18 @@ public class ReportDefinition implements Serializable, Identifiable {
     {
         this.dataValueTemplates = dataValueTemplates;
     }
-    
-    public void addDataValueTemplate(DataValueTemplate dataValueTemplate)
+
+    public void addDataValueTemplate( DataValueTemplate dataValueTemplate )
     {
         dataValueTemplate.setReportDefinition( this );
         dataValueTemplates.add( dataValueTemplate );
     }
 
-    public void removeDataValueTemplate(DataValueTemplate dataValueTemplate)
+    public void removeDataValueTemplate( DataValueTemplate dataValueTemplate )
     {
         dataValueTemplates.remove( id );
     }
-    
+
     @Override
     public boolean equals( Object obj )
     {
@@ -133,15 +133,15 @@ public class ReportDefinition implements Serializable, Identifiable {
             return false;
         }
         final ReportDefinition other = (ReportDefinition) obj;
-        if ( ( this.name == null ) ? ( other.name != null ) : !this.name.equals( other.name ) )
+        if ( (this.name == null) ? (other.name != null) : !this.name.equals( other.name ) )
         {
             return false;
         }
-        if ( ( this.uid == null ) ? ( other.uid != null ) : !this.uid.equals( other.uid ) )
+        if ( (this.uid == null) ? (other.uid != null) : !this.uid.equals( other.uid ) )
         {
             return false;
         }
-        if ( ( this.code == null ) ? ( other.code != null ) : !this.code.equals( other.code ) )
+        if ( (this.code == null) ? (other.code != null) : !this.code.equals( other.code ) )
         {
             return false;
         }
@@ -152,9 +152,9 @@ public class ReportDefinition implements Serializable, Identifiable {
     public int hashCode()
     {
         int hash = 7;
-        hash = 29 * hash + ( this.name != null ? this.name.hashCode() : 0 );
-        hash = 29 * hash + ( this.uid != null ? this.uid.hashCode() : 0 );
-        hash = 29 * hash + ( this.code != null ? this.code.hashCode() : 0 );
+        hash = 29 * hash + (this.name != null ? this.name.hashCode() : 0);
+        hash = 29 * hash + (this.uid != null ? this.uid.hashCode() : 0);
+        hash = 29 * hash + (this.code != null ? this.code.hashCode() : 0);
         return hash;
     }
 

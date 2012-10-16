@@ -19,19 +19,21 @@
  **/
 package org.openmrs.module.dhisreport.api.dhis;
 
-
 import org.openmrs.module.dhisreport.api.DHIS2ReportingException;
 
 /**
  *
  * @author bobj
  */
-public class Dhis2Exception extends DHIS2ReportingException {
-    
+public class Dhis2Exception
+    extends DHIS2ReportingException
+{
+
     private HttpDhis2Server server;
-    
-    Dhis2Exception( HttpDhis2Server server, String message, Throwable cause) {
-        super(message , cause);
+
+    Dhis2Exception( HttpDhis2Server server, String message, Throwable cause )
+    {
+        super( message, cause );
         this.server = server;
     }
 

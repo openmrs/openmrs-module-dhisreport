@@ -28,8 +28,7 @@
             </exclusions>
         </dependency>
         <!-- End OpenMRS modules -->
-		
-
+        
         <!-- Begin OpenMRS core -->
         <dependency>
             <groupId>org.openmrs.api</groupId>
@@ -42,7 +41,7 @@
             <artifactId>openmrs-web</artifactId>
             <type>jar</type>
         </dependency>
-		
+        
         <dependency>
             <groupId>org.openmrs.api</groupId>
             <artifactId>openmrs-api</artifactId>
@@ -63,7 +62,7 @@
             <type>pom</type>
             <scope>test</scope>
         </dependency>
-		
+        
         <!-- End OpenMRS core -->
 
     </dependencies>
@@ -109,7 +108,7 @@
                     </configuration>
                 </plugin>
                 <!--This plugin's configuration is used to store Eclipse m2e settings 
-           					only. It has no influence on the Maven build itself. -->
+                only. It has no influence on the Maven build itself. -->
                 <plugin>
                     <groupId>org.eclipse.m2e</groupId>
                     <artifactId>lifecycle-mapping</artifactId>
@@ -151,6 +150,17 @@
         </pluginManagement>
 
         <plugins>
+            <plugin>
+                <groupId>com.googlecode.maven-java-formatter-plugin</groupId>
+                <artifactId>maven-java-formatter-plugin</artifactId>
+                <executions>
+                    <execution>
+                        <goals>
+                            <goal>format</goal>
+                        </goals>
+                    </execution>
+                </executions>
+            </plugin>
             <plugin>
                 <groupId>org.openmrs.maven.plugins</groupId>
                 <artifactId>maven-openmrs-plugin</artifactId>

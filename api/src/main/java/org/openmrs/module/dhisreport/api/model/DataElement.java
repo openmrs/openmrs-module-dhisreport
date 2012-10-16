@@ -19,7 +19,6 @@
  **/
 package org.openmrs.module.dhisreport.api.model;
 
-
 import java.io.Serializable;
 import javax.xml.bind.annotation.*;
 
@@ -27,21 +26,23 @@ import javax.xml.bind.annotation.*;
  *
  * @author bobj
  */
-@XmlAccessorType(XmlAccessType.FIELD)
-@XmlRootElement(name = "dataElement")
-public class DataElement implements Serializable, Identifiable  {
-    
+@XmlAccessorType( XmlAccessType.FIELD )
+@XmlRootElement( name = "dataElement" )
+public class DataElement
+    implements Serializable, Identifiable
+{
+
     @XmlTransient
     protected Integer id;
-    
-    @XmlAttribute(required = true)
+
+    @XmlAttribute( required = true )
     @XmlID
     protected String code;
-    
-    @XmlAttribute(required = true)
+
+    @XmlAttribute( required = true )
     protected String uid;
-    
-    @XmlAttribute(required = true)
+
+    @XmlAttribute( required = true )
     protected String name;
 
     @Override
@@ -100,15 +101,15 @@ public class DataElement implements Serializable, Identifiable  {
             return false;
         }
         final DataElement other = (DataElement) obj;
-        if ( ( this.code == null ) ? ( other.code != null ) : !this.code.equals( other.code ) )
+        if ( (this.code == null) ? (other.code != null) : !this.code.equals( other.code ) )
         {
             return false;
         }
-        if ( ( this.uid == null ) ? ( other.uid != null ) : !this.uid.equals( other.uid ) )
+        if ( (this.uid == null) ? (other.uid != null) : !this.uid.equals( other.uid ) )
         {
             return false;
         }
-        if ( ( this.name == null ) ? ( other.name != null ) : !this.name.equals( other.name ) )
+        if ( (this.name == null) ? (other.name != null) : !this.name.equals( other.name ) )
         {
             return false;
         }
@@ -119,15 +120,16 @@ public class DataElement implements Serializable, Identifiable  {
     public int hashCode()
     {
         int hash = 3;
-        hash = 89 * hash + ( this.code != null ? this.code.hashCode() : 0 );
-        hash = 89 * hash + ( this.uid != null ? this.uid.hashCode() : 0 );
-        hash = 89 * hash + ( this.name != null ? this.name.hashCode() : 0 );
+        hash = 89 * hash + (this.code != null ? this.code.hashCode() : 0);
+        hash = 89 * hash + (this.uid != null ? this.uid.hashCode() : 0);
+        hash = 89 * hash + (this.name != null ? this.name.hashCode() : 0);
         return hash;
     }
 
+    @Override
     public String toString()
     {
-        return "DE: "+ this.getId() + " : " + this.getCode() + " : " + this.getUid() + " : " + this.getName();
+        return "DE: " + this.getId() + " : " + this.getCode() + " : " + this.getUid() + " : " + this.getName();
     }
 
 }

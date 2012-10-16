@@ -19,7 +19,6 @@
  **/
 package org.openmrs.module.dhisreport;
 
-
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.openmrs.module.ModuleActivator;
@@ -27,50 +26,64 @@ import org.openmrs.module.ModuleActivator;
 /**
  * This class contains the logic that is run every time this module is either started or stopped.
  */
-public class DHIS2ReportingActivator implements ModuleActivator {
-	
-	protected Log log = LogFactory.getLog(getClass());
-		
-	/**
-	 * @see ModuleActivator#willRefreshContext()
-	 */
-	public void willRefreshContext() {
-		log.info("Refreshing DHIS2 Reporting Module");
-	}
-	
-	/**
-	 * @see ModuleActivator#contextRefreshed()
-	 */
-	public void contextRefreshed() {
-		log.info("DHIS2 Reporting Module refreshed");
-	}
-	
-	/**
-	 * @see ModuleActivator#willStart()
-	 */
-	public void willStart() {
-		log.info("Starting DHIS2 Reporting Module");
-	}
-	
-	/**
-	 * @see ModuleActivator#started()
-	 */
-	public void started() {
-		log.info("DHIS2 Reporting Module started");
-	}
-	
-	/**
-	 * @see ModuleActivator#willStop()
-	 */
-	public void willStop() {
-		log.info("Stopping DHIS2 Reporting Module");
-	}
-	
-	/**
-	 * @see ModuleActivator#stopped()
-	 */
-	public void stopped() {
-		log.info("DHIS2 Reporting Module stopped");
-	}
-		
+public class DHIS2ReportingActivator
+    implements ModuleActivator
+{
+
+    protected Log log = LogFactory.getLog( getClass() );
+
+    /**
+     * @see ModuleActivator#willRefreshContext()
+     */
+    @Override
+    public void willRefreshContext()
+    {
+        log.info( "Refreshing DHIS2 Reporting Module" );
+    }
+
+    /**
+     * @see ModuleActivator#contextRefreshed()
+     */
+    @Override
+    public void contextRefreshed()
+    {
+        log.info( "DHIS2 Reporting Module refreshed" );
+    }
+
+    /**
+     * @see ModuleActivator#willStart()
+     */
+    @Override
+    public void willStart()
+    {
+        log.info( "Starting DHIS2 Reporting Module" );
+    }
+
+    /**
+     * @see ModuleActivator#started()
+     */
+    @Override
+    public void started()
+    {
+        log.info( "DHIS2 Reporting Module started" );
+    }
+
+    /**
+     * @see ModuleActivator#willStop()
+     */
+    @Override
+    public void willStop()
+    {
+        log.info( "Stopping DHIS2 Reporting Module" );
+    }
+
+    /**
+     * @see ModuleActivator#stopped()
+     */
+    @Override
+    public void stopped()
+    {
+        log.info( "DHIS2 Reporting Module stopped" );
+    }
+
 }

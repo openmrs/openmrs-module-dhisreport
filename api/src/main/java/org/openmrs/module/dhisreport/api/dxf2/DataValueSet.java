@@ -29,31 +29,38 @@ import javax.xml.bind.Marshaller;
 import javax.xml.bind.annotation.*;
 import javax.xml.datatype.XMLGregorianCalendar;
 
-@XmlAccessorType(XmlAccessType.FIELD)
-@XmlType(name = "", propOrder = {
-    "dataValue"
-})
-@XmlRootElement(name = "dataValueSet")
-public class DataValueSet {
-    
-    public static enum Month {JAN, FEB, MAR, APR, MAY, JUN, JUL, AUG, SEP, NOV, DEC };
+@XmlAccessorType( XmlAccessType.FIELD )
+@XmlType( name = "", propOrder = { "dataValue" } )
+@XmlRootElement( name = "dataValueSet" )
+public class DataValueSet
+{
 
-    @XmlElement(required = true)
+    public static enum Month
+    {
+        JAN, FEB, MAR, APR, MAY, JUN, JUL, AUG, SEP, NOV, DEC
+    };
+
+    @XmlElement( required = true )
     protected List<DataValue> dataValue = new LinkedList<DataValue>();
-    @XmlAttribute
-    @XmlSchemaType(name = "date")
-    protected XMLGregorianCalendar completeDate;
-    @XmlAttribute(required = true)
-    protected String dataSet;
-    @XmlAttribute(required = true)
-    protected String orgUnit;
-    @XmlAttribute(required = true)
-    protected String period;
-    @XmlAttribute(required = false)
-    protected String dataElementIdScheme;
-    @XmlAttribute(required = false)
-    protected String orgUnitIdScheme;
 
+    @XmlAttribute
+    @XmlSchemaType( name = "date" )
+    protected XMLGregorianCalendar completeDate;
+
+    @XmlAttribute( required = true )
+    protected String dataSet;
+
+    @XmlAttribute( required = true )
+    protected String orgUnit;
+
+    @XmlAttribute( required = true )
+    protected String period;
+
+    @XmlAttribute( required = false )
+    protected String dataElementIdScheme;
+
+    @XmlAttribute( required = false )
+    protected String orgUnitIdScheme;
 
     /**
      * Gets the value of the dataValue property.
@@ -77,8 +84,10 @@ public class DataValueSet {
      * 
      * 
      */
-    public List<DataValue> getDataValues() {
-        if (dataValue == null) {
+    public List<DataValue> getDataValues()
+    {
+        if ( dataValue == null )
+        {
             dataValue = new ArrayList<DataValue>();
         }
         return this.dataValue;
@@ -112,7 +121,8 @@ public class DataValueSet {
      *     {@link XMLGregorianCalendar }
      *     
      */
-    public XMLGregorianCalendar getCompleteDate() {
+    public XMLGregorianCalendar getCompleteDate()
+    {
         return completeDate;
     }
 
@@ -124,7 +134,8 @@ public class DataValueSet {
      *     {@link XMLGregorianCalendar }
      *     
      */
-    public void setCompleteDate(XMLGregorianCalendar value) {
+    public void setCompleteDate( XMLGregorianCalendar value )
+    {
         this.completeDate = value;
     }
 
@@ -136,7 +147,8 @@ public class DataValueSet {
      *     {@link String }
      *     
      */
-    public String getDataSet() {
+    public String getDataSet()
+    {
         return dataSet;
     }
 
@@ -148,7 +160,8 @@ public class DataValueSet {
      *     {@link String }
      *     
      */
-    public void setDataSet(String value) {
+    public void setDataSet( String value )
+    {
         this.dataSet = value;
     }
 
@@ -160,7 +173,8 @@ public class DataValueSet {
      *     {@link String }
      *     
      */
-    public String getOrgUnit() {
+    public String getOrgUnit()
+    {
         return orgUnit;
     }
 
@@ -172,7 +186,8 @@ public class DataValueSet {
      *     {@link String }
      *     
      */
-    public void setOrgUnit(String value) {
+    public void setOrgUnit( String value )
+    {
         this.orgUnit = value;
     }
 
@@ -184,7 +199,8 @@ public class DataValueSet {
      *     {@link String }
      *     
      */
-    public String getPeriod() {
+    public String getPeriod()
+    {
         return period;
     }
 
@@ -196,16 +212,18 @@ public class DataValueSet {
      *     {@link String }
      *     
      */
-    public void setPeriod(String value) {
+    public void setPeriod( String value )
+    {
         this.period = value;
     }
 
-    public void marshall( OutputStream outputStream ) throws JAXBException
+    public void marshall( OutputStream outputStream )
+        throws JAXBException
     {
         JAXBContext jaxbContext = JAXBContext.newInstance( this.getClass() );
         Marshaller marshaller = jaxbContext.createMarshaller();
-        
-        marshaller.marshal( this, outputStream);
+
+        marshaller.marshal( this, outputStream );
     }
 
 }

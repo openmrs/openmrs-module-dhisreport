@@ -18,20 +18,20 @@
  *
 */
 input.ui-button {    
-	/*font-size:10px;*/
-	margin: 1px;
+    /*font-size:10px;*/
+    margin: 1px;
 }
 
 input.ui-button:hover {    
-	background: #e5e5e5;
+    background: #e5e5e5;
 }
 
 .large-button{
-	font-size:10px;
+    font-size:10px;
 }
 
 .small-button{
-	font-size:8px;
+    font-size:8px;
 }
 
 input[type="file"]{

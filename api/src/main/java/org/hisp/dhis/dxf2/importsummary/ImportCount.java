@@ -29,16 +29,16 @@ package org.hisp.dhis.dxf2.importsummary;
 
 import javax.xml.bind.annotation.*;
 
-@XmlAccessorType(XmlAccessType.FIELD)
+@XmlAccessorType( XmlAccessType.FIELD )
 public class ImportCount
 {
-    @XmlAttribute(required = true)
+    @XmlAttribute( required = true )
     private int imported;
 
-    @XmlAttribute(required = true)
+    @XmlAttribute( required = true )
     private int updated;
 
-    @XmlAttribute(required = true)
+    @XmlAttribute( required = true )
     private int ignored;
 
     public ImportCount()

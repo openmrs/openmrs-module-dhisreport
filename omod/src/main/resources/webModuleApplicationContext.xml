@@ -20,14 +20,13 @@
   		    http://www.springframework.org/schema/util
   		    http://www.springframework.org/schema/util/spring-util-3.0.xsd">
 
-	<!-- Add here beans related to the web context -->
+    <!-- Add here beans related to the web context -->
 
 	 
-	<!-- Annotation based controllers -->
-        <!-- causes problems with older version of spring included in OpenMRS v1.8 -->
-	<!--bean class="org.springframework.web.servlet.mvc.annotation.DefaultAnnotationHandlerMapping"/-->
+    <!-- Annotation based controllers -->
+    <!-- causes problems with older version of spring included in OpenMRS v1.8 -->
+    <!--bean class="org.springframework.web.servlet.mvc.annotation.DefaultAnnotationHandlerMapping"/-->
 	
-	<context:component-scan base-package="org.openmrs.module.dhisreport" />
- 
+    <context:component-scan base-package="org.openmrs.module.dhisreport" />
 		
 </beans>

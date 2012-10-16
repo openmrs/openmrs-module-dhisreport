@@ -19,7 +19,6 @@
  **/
 package org.openmrs.module.dhisreport.api;
 
-
 import java.net.MalformedURLException;
 import java.net.URL;
 import javax.xml.bind.JAXBContext;
@@ -38,19 +37,23 @@ import org.springframework.core.io.ClassPathResource;
 /**
  * Tests {@link ${DHIS2ReportingService}}.
  */
-public class DHIS2ReportingServiceDXFTest extends BaseModuleContextSensitiveTest
+public class DHIS2ReportingServiceDXFTest
+    extends BaseModuleContextSensitiveTest
 {
 
-    private DHIS2ReportingService  service;
-	
-	@Before
-	public void before() throws Exception {
-		// executeDataSet(XML_DATASET_PATH + new TestUtil().getTestDatasetFilename(XML_HTML_FORM_ENTRY_SERVICE_DATASET));
-		service = Context.getService( DHIS2ReportingService.class );
-	}
+    private DHIS2ReportingService service;
+
+    @Before
+    public void before()
+        throws Exception
+    {
+        // executeDataSet(XML_DATASET_PATH + new TestUtil().getTestDatasetFilename(XML_HTML_FORM_ENTRY_SERVICE_DATASET));
+        service = Context.getService( DHIS2ReportingService.class );
+    }
 
     @Test
-    public void setServerParamsTest() throws MalformedURLException
+    public void setServerParamsTest()
+        throws MalformedURLException
     {
         HttpDhis2Server server = new HttpDhis2Server();
         server.setUsername( "admin" );
@@ -62,7 +65,8 @@ public class DHIS2ReportingServiceDXFTest extends BaseModuleContextSensitiveTest
 
     @Ignore
     @Test
-    public void postDhisReportTest() throws Exception
+    public void postDhisReportTest()
+        throws Exception
     {
         HttpDhis2Server server = new HttpDhis2Server();
         server.setUsername( "admin" );
@@ -79,6 +83,6 @@ public class DHIS2ReportingServiceDXFTest extends BaseModuleContextSensitiveTest
         JAXBContext importSummaryContext = JAXBContext.newInstance( ImportSummary.class );
 
         Marshaller jaxbmarshaller = importSummaryContext.createMarshaller();
-        jaxbmarshaller.marshal( summary, System.out);
-     }
+        jaxbmarshaller.marshal( summary, System.out );
+    }
 }

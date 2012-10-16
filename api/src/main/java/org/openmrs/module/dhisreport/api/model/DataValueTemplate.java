@@ -19,7 +19,6 @@
  **/
 package org.openmrs.module.dhisreport.api.model;
 
-
 import java.io.Serializable;
 import javax.xml.bind.annotation.*;
 
@@ -27,14 +26,10 @@ import javax.xml.bind.annotation.*;
  *
  * @author bobj
  */
-@XmlType(name = "dataValueTemplate", propOrder =
-{
-    "dataelement",
-    "disaggregation",
-    "query"
-})
-@XmlRootElement(name = "dataValueTemplate")
-public class DataValueTemplate implements Serializable
+@XmlType( name = "dataValueTemplate", propOrder = { "dataelement", "disaggregation", "query" } )
+@XmlRootElement( name = "dataValueTemplate" )
+public class DataValueTemplate
+    implements Serializable
 {
     // Regex testing for update/delete
     private static final String SQL_SANITY_CHECK = ".*((?i)update|delete).*";
@@ -60,7 +55,7 @@ public class DataValueTemplate implements Serializable
         this.reportDefinition = reportDefinition;
     }
 
-    @XmlAttribute(name = "dataElement", required = true)
+    @XmlAttribute( name = "dataElement", required = true )
     @XmlIDREF
     public DataElement getDataelement()
     {
@@ -72,7 +67,7 @@ public class DataValueTemplate implements Serializable
         this.dataelement = dataelement;
     }
 
-    @XmlAttribute(name = "disaggregation", required = true)
+    @XmlAttribute( name = "disaggregation", required = true )
     @XmlIDREF
     public Disaggregation getDisaggregation()
     {
@@ -95,7 +90,7 @@ public class DataValueTemplate implements Serializable
         this.id = id;
     }
 
-    @XmlElement(name = "annotation", required = false)
+    @XmlElement( name = "annotation", required = false )
     public String getQuery()
     {
         return query;
@@ -108,7 +103,7 @@ public class DataValueTemplate implements Serializable
 
     public boolean potentialUpdateDelete()
     {
-        return query.matches( SQL_SANITY_CHECK ); 
+        return query.matches( SQL_SANITY_CHECK );
     }
 
     @Override
@@ -124,11 +119,13 @@ public class DataValueTemplate implements Serializable
         }
         final DataValueTemplate other = (DataValueTemplate) obj;
 
-        if ( this.dataelement != other.dataelement && ( this.dataelement == null || !this.dataelement.equals( other.dataelement ) ) )
+        if ( this.dataelement != other.dataelement
+            && (this.dataelement == null || !this.dataelement.equals( other.dataelement )) )
         {
             return false;
         }
-        if ( this.disaggregation != other.disaggregation && ( this.disaggregation == null || !this.disaggregation.equals( other.disaggregation ) ) )
+        if ( this.disaggregation != other.disaggregation
+            && (this.disaggregation == null || !this.disaggregation.equals( other.disaggregation )) )
         {
             return false;
         }
@@ -139,14 +136,16 @@ public class DataValueTemplate implements Serializable
     public int hashCode()
     {
         int hash = 7;
-        hash = 53 * hash + ( this.dataelement != null ? this.dataelement.hashCode() : 0 );
-        hash = 53 * hash + ( this.disaggregation != null ? this.disaggregation.hashCode() : 0 );
+        hash = 53 * hash + (this.dataelement != null ? this.dataelement.hashCode() : 0);
+        hash = 53 * hash + (this.disaggregation != null ? this.disaggregation.hashCode() : 0);
         return hash;
     }
 
+    @Override
     public String toString()
     {
-        return "DVT: " + this.getId() + " : " + this.getDataelement().getName() + " : " + this.getDisaggregation().getName();
+        return "DVT: " + this.getId() + " : " + this.getDataelement().getName() + " : "
+            + this.getDisaggregation().getName();
     }
 
 }

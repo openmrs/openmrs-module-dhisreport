@@ -19,7 +19,6 @@
  **/
 package org.openmrs.module.dhisreport.api.dxf2;
 
-
 import java.io.StringReader;
 import java.io.StringWriter;
 import java.io.Writer;
@@ -47,7 +46,8 @@ public class DataValueSetTest
 {
 
     @Test
-    public void marshallDataValueSet() throws Exception
+    public void marshallDataValueSet()
+        throws Exception
     {
         DataValueSet dvset = new DataValueSet();
         dvset.setDataSet( "ANC" );
@@ -65,7 +65,6 @@ public class DataValueSetTest
         jaxbmarshaller.marshal( dvset, xmlWriter );
         String xml = xmlWriter.toString();
 
-
         System.out.println( xml );
         assertEquals( "3", xpathTest( "count(//d:dataValue)", xml ) );
         assertEquals( "53", xpathTest( "//d:dataValue[3]/@value", xml ) );
@@ -74,7 +73,8 @@ public class DataValueSetTest
     }
 
     @Test
-    public void unMarshallDataValueSet() throws Exception
+    public void unMarshallDataValueSet()
+        throws Exception
     {
         ClassPathResource resource = new ClassPathResource( "dvset.xml" );
         JAXBContext jaxbContext = JAXBContext.newInstance( DataValueSet.class );
@@ -84,7 +84,8 @@ public class DataValueSetTest
         assertEquals( 5, dvset.getDataValues().size() );
     }
 
-    protected String xpathTest( String xpathString, String xml ) throws XPathExpressionException
+    protected String xpathTest( String xpathString, String xml )
+        throws XPathExpressionException
     {
         InputSource source = new InputSource( new StringReader( xml ) );
         XPathFactory factory = XPathFactory.newInstance();
@@ -95,7 +96,8 @@ public class DataValueSetTest
     }
 
     // we need this to resolve dxf2 namespace in xpath
-    protected class Dxf2NamespaceResolver implements NamespaceContext
+    protected class Dxf2NamespaceResolver
+        implements NamespaceContext
     {
 
         @Override
@@ -104,12 +106,14 @@ public class DataValueSetTest
             if ( prefix == null )
             {
                 throw new IllegalArgumentException( "No prefix provided!" );
-            } else
+            }
+            else
             {
                 if ( prefix.equals( "d" ) )
                 {
                     return "http://dhis2.org/schema/dxf/2.0";
-                } else
+                }
+                else
                 {
                     return XMLConstants.NULL_NS_URI;
                 }
