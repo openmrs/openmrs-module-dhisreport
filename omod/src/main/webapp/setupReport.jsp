@@ -3,12 +3,12 @@
 
 <%@ include file="template/localHeader.jsp"%>
 
-<h3>Report Definition for ${reportDefinition.name}</h3>
+<h3><spring:message code="dhisreport.reportDefinitionFor" /> ${reportDefinition.name}</h3>
 
 <form action="executeReport.form" method="post">
     <table>
         <tr>
-            <td>Location</td>
+            <td><spring:message code="dhisreport.Location" /></td>
             <td>
                 <select name="location"> 
                     <c:forEach var="location" items="${locations}" >
@@ -17,14 +17,14 @@
                 </select>
             </td>
         <tr>
-            <td>Date (eg 2012-03-01)</td>
+            <td><spring:message code="dhisreport.Date" /></td>
             <td><input type="text" name="date" /></td>
         </tr>
         <tr>                   
             <td /><td><select name="resultDestination">
-                    <option value="preview">Preview</option>
+                    <option value="preview"><spring:message code="dhisreport.Preview" /></option>
                     <c:if test="${not empty dhis2Server}">
-                        <option value="post">Post to DHIS</option>
+                        <option value="post"><spring:message code="dhisreport.postToDHIS" /></option>
                     </c:if>
                 </select>
             </td>
@@ -32,7 +32,7 @@
         <tr>
             <td />
             <td>
-                <input type="submit" value="Generate" />
+                <input type="submit" value="<spring:message code="dhisreport.Generate" />" />
             </td>
         </tr>
 

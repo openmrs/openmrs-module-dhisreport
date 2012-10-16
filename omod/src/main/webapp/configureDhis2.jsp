@@ -3,32 +3,32 @@
 
 <%@ include file="template/localHeader.jsp"%>
 
-<h3>DHIS2 Server</h3>
+<h3><spring:message code="dhisreport.dhis2" />DHIS2 Server</h3>
 
 <form method="POST">
     <table>
         <thead style="background-color: #1AAC9B; color: white; padding: 2px;">
             <tr>
-                <td>Parameter</td>
-                <td>Value</td>
+                <td><spring:message code="dhisreport.parameter" /></td>
+                <td><spring:message code="dhisreport.value" /></td>
             </tr>
         </thead>
         <tbody>
             <tr>
-                <td>Base DHIS2 URL (eg: http://apps.dhis2/demo )</td>
+                <td><spring:message code="dhisreport.dhis2URL" /></td>
                 <td><input name="url" type="text" size="30" value="${dhis2Server.url}" /></td>
             </tr>
             <tr>
-                <td>User name</td>
+                <td><spring:message code="dhisreport.dhis2UserName" /></td>
                 <td><input name="username" type="text" size="20" value="${dhis2Server.username}" /></td>
             </tr>
             <tr>
-                <td>Password</td>
+                <td><spring:message code="dhisreport.dhis2Password" /></td>
                 <td><input name="password" type="password" size="20" value="${dhis2Server.password}"/></td>
             </tr>
             <tr>
                 <td />
-                <td><input name="submit" type="submit" value="Save" /></td>
+                <td><input name="submit" type="submit" value="<spring:message code="dhisreport.dhis2saveButton" />" /></td>
             </tr>
         </tbody>
     </table>

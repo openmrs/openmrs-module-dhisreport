@@ -90,7 +90,7 @@ public class ReportDefinitionController {
 		ReportDefinition rd = service.getReportDefinition(reportDefinition_id);
 		
 		service.purgeReportDefinition(rd);
-		return "/module/dhisreport/listDhis2Reports";
+		return "redirect:/module/dhisreport/listDhis2Reports.form";
 	}
 	
 	@RequestMapping(value = "/module/dhisreport/editDataValueTemplate.htm", method = RequestMethod.GET)

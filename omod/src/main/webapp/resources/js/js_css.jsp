@@ -30,19 +30,19 @@
 				jQuery("#reportDefinition_edit" + id).hide();
 				
 				if(jQuery("#reportDefinition_save" + id).html() == ""){
-					jQuery("#reportDefinition_save" + id).append('<a onclick="REPORTDEFINITION.save(' + id + ')">Save</a>');
+					jQuery("#reportDefinition_save" + id).append('<a onclick="REPORTDEFINITION.save(' + id + ')"><spring:message code="dhisreport.save" /></a>');
 					
-					var strQuery = jQuery("#reportDefinition_query" + id).html();
+					var strQuery = jQuery("#reportDefinition_query" + id).text();
 					jQuery("#reportDefinition_query" + id).html('<textarea id="textarea_query'+ id + '">' + strQuery  + '</textarea>');
 				}
 				else{
 					jQuery("#reportDefinition_save" + id).show();
-					var strQuery = jQuery("#reportDefinition_query" + id).html();
+					var strQuery = jQuery("#reportDefinition_query" + id).text();
 					jQuery("#reportDefinition_query" + id).html('<textarea id="textarea_query'+ id + '">' + strQuery  + '</textarea>');
 				}
 			},
 			deleteReportDefinition: function(id) {
-				if(confirm("Are you sure?")){
+				if(confirm("<spring:message code="dhisreport.rus" />")){
 					var link = getContextPath() + "/module/dhisreport/deleteReportDefinition.htm?reportDefinition_id=" + id;
 					if(opener!=undefined) {
 						jQuery(opener.location).attr({href : link});
@@ -61,9 +61,11 @@
 						dataValueTemplate_query: newQuery
 					}),
 					success : function() {
-							jQuery("#reportDefinition_query" + id).html(newQuery);
-							jQuery("#reportDefinition_save" + id).hide();
-							jQuery("#reportDefinition_edit" + id).show();
+							//jQuery("#reportDefinition_query" + id).text(newQuery);
+							//jQuery("#reportDefinition_save" + id).hide();
+							//jQuery("#reportDefinition_edit" + id).show();
+							// to help the highlight function work
+							location.reload(); 
 					},
 					error : function(xhr, ajaxOptions, thrownError) {
 						alert(thrownError);
