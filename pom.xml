@@ -1,4 +1,4 @@
-<?xml version="1.0" encoding="UTF-8"?>
+﻿<?xml version="1.0" encoding="UTF-8"?>
 <project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
 	<modelVersion>4.0.0</modelVersion>
 
@@ -8,18 +8,32 @@
 	<packaging>pom</packaging>
 	<name>DHIS2 Reporting Module</name>
 	<description>Posts aggregate reports to dhis2 based on dataelements bound to sql queries</description>
-	<url>https://wiki.openmrs.org/display/docs/DHIS2+Reporting+Module+Module</url>
+	<url>https://wiki.openmrs.org/display/docs/DHIS2+Reporting+Module</url>
 	
 	<developers>
 		<developer>
 			<name>Bob Jolliffe</name>
 		</developer>
+		<developer>
+			<name>Thái Chương</name>
+		</developer>
+		<developer>
+			<name>Saptarshi Purkayastha</name>
+			<email>saptarsp@idi.ntnu.no</email>
+		</developer>
 	</developers>
 	
 	<organization>
-		<name>OpenMRS</name>
-		<url>http://openmrs.org</url>
+		<name>HISP India</name>
+		<url>http://www.hispindia.org</url>
 	</organization>
+	
+	<licenses>
+		<license>
+			<name>GNU General Public License (GPL)</name>
+			<url>http://www.gnu.org/licenses/gpl.txt</url>
+		</license>
+	</licenses>
 
 	<scm>
 		<connection>scm:git:https://github.com/hispindia/dhisreport.git</connection>
