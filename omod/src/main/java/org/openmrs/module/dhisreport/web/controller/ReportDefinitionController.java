@@ -22,6 +22,7 @@ package org.openmrs.module.dhisreport.web.controller;
 import java.io.InputStream;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+import javax.servlet.http.HttpSession;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.openmrs.api.context.Context;
@@ -29,11 +30,13 @@ import org.openmrs.module.dhisreport.api.DHIS2ReportingService;
 import org.openmrs.module.dhisreport.api.model.DataValueTemplate;
 import org.openmrs.module.dhisreport.api.model.ReportDefinition;
 import org.openmrs.module.dhisreport.api.model.ReportTemplates;
+import org.openmrs.web.WebConstants;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.ModelMap;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.context.request.WebRequest;
 import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.multipart.MultipartHttpServletRequest;
 
@@ -56,6 +59,7 @@ public class ReportDefinitionController
     public void upload( ModelMap model, HttpServletRequest request )
         throws Exception
     {
+        HttpSession session = request.getSession();
         model.addAttribute( "user", Context.getAuthenticatedUser() );
 
         MultipartHttpServletRequest multipartRequest = (MultipartHttpServletRequest) request;
@@ -66,10 +70,14 @@ public class ReportDefinitionController
         try
         {
             service.unMarshallandSaveReportTemplates( is );
+            session.setAttribute( WebConstants.OPENMRS_MSG_ATTR, Context.getMessageSourceService().getMessage(
+                "dhisreport.uploadSuccess" ) );
         }
         catch ( Exception ex )
         {
             log.error( "Error loading file: " + ex );
+            session.setAttribute( WebConstants.OPENMRS_ERROR_ATTR, Context.getMessageSourceService().getMessage(
+                "dhisreport.uploadError" ) );
         }
         finally
         {
@@ -102,7 +110,7 @@ public class ReportDefinitionController
     @RequestMapping( value = "/module/dhisreport/deleteReportDefinition", method = RequestMethod.GET )
     public String deleteReportDefinition( ModelMap model,
         @RequestParam( value = "reportDefinition_id", required = false )
-        Integer reportDefinition_id )
+        Integer reportDefinition_id, WebRequest webRequest )
     {
         DHIS2ReportingService service = Context.getService( DHIS2ReportingService.class );
 
@@ -111,6 +119,8 @@ public class ReportDefinitionController
         ReportDefinition rd = service.getReportDefinition( reportDefinition_id );
 
         service.purgeReportDefinition( rd );
+        webRequest.setAttribute( WebConstants.OPENMRS_MSG_ATTR, Context.getMessageSourceService().getMessage(
+            "dhisreport.deleteSuccess" ), WebRequest.SCOPE_SESSION );
         return "redirect:/module/dhisreport/listDhis2Reports.form";
     }
 

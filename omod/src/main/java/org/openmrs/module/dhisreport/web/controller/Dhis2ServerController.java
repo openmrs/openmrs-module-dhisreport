@@ -27,11 +27,13 @@ import org.apache.commons.logging.LogFactory;
 import org.openmrs.api.context.Context;
 import org.openmrs.module.dhisreport.api.DHIS2ReportingService;
 import org.openmrs.module.dhisreport.api.dhis.HttpDhis2Server;
+import org.openmrs.web.WebConstants;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.ModelMap;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.context.request.WebRequest;
 
 /**
  * The main controller.
@@ -63,7 +65,7 @@ public class Dhis2ServerController
     public void saveConfig( ModelMap model, @RequestParam( value = "url", required = true )
     String urlString, @RequestParam( value = "username", required = true )
     String username, @RequestParam( value = "password", required = true )
-    String password )
+    String password, WebRequest webRequest )
         throws ParseException, MalformedURLException
     {
         DHIS2ReportingService service = Context.getService( DHIS2ReportingService.class );
@@ -85,5 +87,7 @@ public class Dhis2ServerController
 
         model.addAttribute( "dhis2Server", server );
         model.addAttribute( "user", Context.getAuthenticatedUser() );
+        webRequest.setAttribute( WebConstants.OPENMRS_MSG_ATTR, Context.getMessageSourceService().getMessage(
+            "dhisreport.saveConfigSuccess" ), WebRequest.SCOPE_SESSION );
     }
 }
