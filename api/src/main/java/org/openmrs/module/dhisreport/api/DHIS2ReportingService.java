@@ -28,7 +28,7 @@ import org.openmrs.Location;
 import org.openmrs.api.OpenmrsService;
 import org.openmrs.module.dhisreport.api.dhis.HttpDhis2Server;
 import org.openmrs.module.dhisreport.api.model.*;
-import org.openmrs.module.dhisreport.api.utils.MonthlyPeriod;
+import org.openmrs.module.dhisreport.api.utils.Period;
 import org.springframework.transaction.annotation.Transactional;
 
 /**
@@ -202,7 +202,7 @@ public interface DHIS2ReportingService
      * @param location
      * @return
      */
-    String evaluateDataValueTemplate( DataValueTemplate dv, MonthlyPeriod period, Location location )
+    String evaluateDataValueTemplate( DataValueTemplate dv, Period period, Location location )
         throws DHIS2ReportingException;
 
     /**
@@ -211,7 +211,7 @@ public interface DHIS2ReportingService
      * @param location
      * @return
      */
-    DataValueSet evaluateReportDefinition( ReportDefinition reportDefinition, MonthlyPeriod period, Location location );
+    DataValueSet evaluateReportDefinition( ReportDefinition reportDefinition, Period period, Location location );
 
     /**
      * @param id

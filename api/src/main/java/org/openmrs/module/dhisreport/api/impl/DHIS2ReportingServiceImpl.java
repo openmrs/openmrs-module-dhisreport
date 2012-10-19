@@ -35,9 +35,9 @@ import org.openmrs.module.dhisreport.api.DHIS2ReportingService;
 import org.openmrs.module.dhisreport.api.db.DHIS2ReportingDAO;
 import org.openmrs.module.dhisreport.api.dhis.HttpDhis2Server;
 import org.openmrs.module.dhisreport.api.model.*;
-import org.openmrs.module.dhisreport.api.utils.MonthlyPeriod;
 import org.openmrs.module.dhisreport.api.dxf2.DataValue;
 import org.openmrs.module.dhisreport.api.dxf2.DataValueSet;
+import org.openmrs.module.dhisreport.api.utils.Period;
 
 /**
  * It is a default implementation of {@link DHIS2ReportingService}.
@@ -179,7 +179,7 @@ public class DHIS2ReportingServiceImpl
     }
 
     @Override
-    public String evaluateDataValueTemplate( DataValueTemplate dv, MonthlyPeriod period, Location location )
+    public String evaluateDataValueTemplate( DataValueTemplate dv, Period period, Location location )
         throws DHIS2ReportingException
     {
         return dao.evaluateDataValueTemplate( dv, period, location );
@@ -194,8 +194,7 @@ public class DHIS2ReportingServiceImpl
      * @return
      */
     @Override
-    public DataValueSet evaluateReportDefinition( ReportDefinition reportDefinition, MonthlyPeriod period,
-        Location location )
+    public DataValueSet evaluateReportDefinition( ReportDefinition reportDefinition, Period period, Location location )
     {
         Collection<DataValueTemplate> templates = reportDefinition.getDataValueTemplates();
         DataValueSet dataValueSet = new DataValueSet();

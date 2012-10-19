@@ -34,7 +34,7 @@ import org.openmrs.Location;
 import org.openmrs.module.dhisreport.api.DHIS2ReportingException;
 import org.openmrs.module.dhisreport.api.db.DHIS2ReportingDAO;
 import org.openmrs.module.dhisreport.api.model.*;
-import org.openmrs.module.dhisreport.api.utils.MonthlyPeriod;
+import org.openmrs.module.dhisreport.api.utils.Period;
 
 /**
  * It is a default implementation of {@link DHIS2ReportingDAO}.
@@ -147,7 +147,7 @@ public class HibernateDHIS2ReportingDAO
     }
 
     @Override
-    public String evaluateDataValueTemplate( DataValueTemplate dvt, MonthlyPeriod period, Location location )
+    public String evaluateDataValueTemplate( DataValueTemplate dvt, Period period, Location location )
         throws DHIS2ReportingException
     {
         String queryString = dvt.getQuery();

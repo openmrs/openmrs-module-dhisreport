@@ -31,11 +31,15 @@ import org.openmrs.module.dhisreport.api.DHIS2ReportingService;
 import org.openmrs.module.dhisreport.api.dhis.Dhis2Server;
 import org.openmrs.module.dhisreport.api.dxf2.DataValueSet;
 import org.openmrs.module.dhisreport.api.utils.MonthlyPeriod;
+import org.openmrs.module.dhisreport.api.utils.Period;
+import org.openmrs.module.dhisreport.api.utils.WeeklyPeriod;
+import org.openmrs.web.WebConstants;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.ModelMap;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.context.request.WebRequest;
 
 /**
  * The main controller.
@@ -84,12 +88,29 @@ public class ReportController
     Integer reportDefinition_id, @RequestParam( value = "location", required = true )
     String OU_Code, @RequestParam( value = "resultDestination", required = true )
     String destination, @RequestParam( value = "date", required = true )
-    String dateStr )
-        throws ParseException, DHIS2ReportingException
+    String dateStr, WebRequest webRequest )
+        throws DHIS2ReportingException
     {
         DHIS2ReportingService service = Context.getService( DHIS2ReportingService.class );
-
-        MonthlyPeriod period = new MonthlyPeriod( new SimpleDateFormat( "yyyy-MM-dd" ).parse( dateStr ) );
+        Period period;
+        try
+        {
+            period = new MonthlyPeriod( new SimpleDateFormat( "yyyy-MM-dd" ).parse( dateStr ) );
+        }
+        catch ( ParseException pex )
+        {
+            try
+            {
+                period = new WeeklyPeriod( new SimpleDateFormat( "yyyy-'W'ww" ).parse( dateStr ) );
+            }
+            catch ( ParseException ex )
+            {
+                log.error( "Cannot convert passed string to date... Please check dateFormat", ex );
+                webRequest.setAttribute( WebConstants.OPENMRS_ERROR_ATTR, Context.getMessageSourceService().getMessage(
+                    "dhisreport.dateFormatError" ), WebRequest.SCOPE_SESSION );
+                return;
+            }
+        }
 
         // Get Location by OrgUnit Code
         Location location = service.getLocationByOU_Code( OU_Code );

@@ -27,7 +27,7 @@ import org.openmrs.module.dhisreport.api.model.DataElement;
 import org.openmrs.module.dhisreport.api.model.DataValueTemplate;
 import org.openmrs.module.dhisreport.api.model.Disaggregation;
 import org.openmrs.module.dhisreport.api.model.ReportDefinition;
-import org.openmrs.module.dhisreport.api.utils.MonthlyPeriod;
+import org.openmrs.module.dhisreport.api.utils.Period;
 
 /**
  * Database methods for {@link DHIS2ReportingService}.
@@ -65,7 +65,7 @@ public interface DHIS2ReportingDAO
 
     public void deleteReportDefinition( ReportDefinition rd );
 
-    public String evaluateDataValueTemplate( DataValueTemplate dvt, MonthlyPeriod period, Location location )
+    public String evaluateDataValueTemplate( DataValueTemplate dvt, Period period, Location location )
         throws DHIS2ReportingException;
 
     public DataValueTemplate getDataValueTemplate( Integer id );
