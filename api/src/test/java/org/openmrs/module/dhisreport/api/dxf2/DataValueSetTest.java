@@ -19,6 +19,7 @@
  **/
 package org.openmrs.module.dhisreport.api.dxf2;
 
+import java.io.ByteArrayOutputStream;
 import java.io.StringReader;
 import java.io.StringWriter;
 import java.io.Writer;
@@ -69,6 +70,29 @@ public class DataValueSetTest
         assertEquals( "3", xpathTest( "count(//d:dataValue)", xml ) );
         assertEquals( "53", xpathTest( "//d:dataValue[3]/@value", xml ) );
         assertEquals( "r543efdgty2", xpathTest( "//d:dataValue[3]/@categoryOptionCombo", xml ) );
+
+    }
+
+    @Test
+    public void marshallSDMXDataValueSet()
+        throws Exception
+    {
+        DataValueSet dvset = new DataValueSet();
+        dvset.setDataSet( "ANC" );
+        dvset.setOrgUnit( "OU1" );
+        dvset.setPeriod( "2012-09" );
+        List<DataValue> dataValues = dvset.getDataValues();
+        dataValues.add( new DataValue( "DE1", "45" ) );
+        dataValues.add( new DataValue( "DE2", "45" ) );
+        dataValues.add( new DataValue( "DE3", "r543efdgty2", "53" ) );
+
+        ByteArrayOutputStream outStream = new ByteArrayOutputStream();
+        dvset.marshallSDMX( outStream );
+
+        System.out.println( outStream.toString() );
+        //        assertEquals( "3", xpathTest( "count(//d:dataValue)", xml ) );
+        //        assertEquals( "53", xpathTest( "//d:dataValue[3]/@value", xml ) );
+        //        assertEquals( "r543efdgty2", xpathTest( "//d:dataValue[3]/@categoryOptionCombo", xml ) );
 
     }
 
