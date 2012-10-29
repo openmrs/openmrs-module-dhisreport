@@ -25,7 +25,9 @@ import java.util.Date;
 import org.junit.Test;
 import static org.junit.Assert.*;
 import static org.hamcrest.CoreMatchers.*;
+import org.junit.Ignore;
 
+@Ignore
 public class WeeklyPeriodTest
 {
 

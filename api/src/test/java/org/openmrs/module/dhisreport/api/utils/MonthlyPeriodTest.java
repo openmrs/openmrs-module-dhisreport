@@ -53,20 +53,10 @@ public class MonthlyPeriodTest
         throws ParseException
     {
         MonthlyPeriod instance = new MonthlyPeriod( new SimpleDateFormat( "yyyy-MM-dd" ).parse( "2012-10-19" ) );
-        Date expResult = new SimpleDateFormat( "yyyy-MM-dd" ).parse( "2012-10-31" );
-        Date result = instance.getEnd();
-        assertEquals( expResult, result );
-    }
+        Date expResult = new SimpleDateFormat( "yyyy-MM-dd" ).parse( "2012-11-01" );
+        long time = expResult.getTime() - 1;
+        expResult.setTime( time );
 
-    /**
-     * Test of getEnd method, of class MonthlyPeriod when dates not equal to.
-     */
-    @Test
-    public void testGetEndNotEqualTo()
-        throws ParseException
-    {
-        MonthlyPeriod instance = new MonthlyPeriod( new SimpleDateFormat( "yyyy-MM-dd" ).parse( "2012-10-19" ) );
-        Date expResult = new SimpleDateFormat( "yyyy-MM-dd'T'HH:mm:ss" ).parse( "2012-10-31T23:59:59" );
         Date result = instance.getEnd();
         assertEquals( expResult, result );
     }
