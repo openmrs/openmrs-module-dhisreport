@@ -90,9 +90,8 @@ public class DataValueSetTest
         dvset.marshallSDMX( outStream );
 
         System.out.println( outStream.toString() );
-        //        assertEquals( "3", xpathTest( "count(//d:dataValue)", xml ) );
-        //        assertEquals( "53", xpathTest( "//d:dataValue[3]/@value", xml ) );
-        //        assertEquals( "r543efdgty2", xpathTest( "//d:dataValue[3]/@categoryOptionCombo", xml ) );
+        assertEquals( "3", xpathTest( "count(//*[local-name()='OBS_VALUE'])", outStream.toString() ) );
+        assertEquals( "r543efdgty2", xpathTest( "//*[local-name()='OBS_VALUE'][3]/@DISAGG", outStream.toString() ) );
 
     }
 

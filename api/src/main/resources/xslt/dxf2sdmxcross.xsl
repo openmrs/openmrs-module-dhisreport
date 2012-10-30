@@ -3,19 +3,18 @@
   xmlns:ns="urn:sdmx:org.sdmx.infomodel.keyfamily.KeyFamily=DHIS2:KF_DHIS2_SIMPLE:1.0:cross"
   version="1.0">
   
+  <xsl:param name="date" >2012-01-01</xsl:param>
+  
   <xsl:template match="/">
     <CrossSectionalData xmlns="http://www.SDMX.org/resources/SDMXML/schemas/v2_0/message" 
       xmlns:common="http://www.SDMX.org/resources/SDMXML/schemas/v2_0/common"
-      xmlns:ns="urn:sdmx:org.sdmx.infomodel.keyfamily.KeyFamily=DHIS2:KF_DHIS2_SIMPLE:1.0:cross"
-      xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" 
-      xsi:schemaLocation="http://www.SDMX.org/resources/SDMXML/schemas/v2_0/message SDMXMessage.xsd 
-      urn:sdmx:org.sdmx.infomodel.keyfamily.KeyFamily=DHIS2:KF_DHIS2_SIMPLE:1.0:cross file:./KF_HOSP_cross.xsd">
+      xmlns:ns="urn:sdmx:org.sdmx.infomodel.keyfamily.KeyFamily=DHIS2:KF_DHIS2_SIMPLE:1.0:cross">
       
       <Header>
         <ID>OpenMRS-Export</ID>
         <Test>false</Test>
-        <Prepared>2012-03-21</Prepared>
-        <Sender id="DDU"/>
+        <Prepared><xsl:value-of select="$date"/></Prepared>
+        <Sender id="{/d:dataValueSet/@orgUnit}"/>
       </Header>
 
       <xsl:apply-templates />
@@ -24,19 +23,23 @@
   </xsl:template>
   
   <xsl:template match="d:dataValueSet">
-    <ns:DataSet FREQ="M" TIME_PERIOD="2012-01" FACILITY="DDU" datasetID="KF_HOSP">
+    <ns:DataSet FREQ="M" TIME_PERIOD="{@period}" FACILITY="{@orgUnit}" datasetID="{@dataSet}">
       <ns:Group>
         <ns:Section>
-          <ns:OBS_VALUE DATAELEMENT="DE001" value="34" />
-          <ns:OBS_VALUE DATAELEMENT="DE002" value="36" />
-          <ns:OBS_VALUE DATAELEMENT="DE003" value="34" />
-          <ns:OBS_VALUE DATAELEMENT="DE004" value="12" />
-          <ns:OBS_VALUE DATAELEMENT="DE005" value="5" />
+          <xsl:apply-templates />
         </ns:Section>
       </ns:Group>
-      
     </ns:DataSet>
-    
   </xsl:template>
-    
+
+  <xsl:template match="d:dataValue">
+    <xsl:element name="OBS_VALUE" namespace="urn:sdmx:org.sdmx.infomodel.keyfamily.KeyFamily=DHIS2:KF_DHIS2_SIMPLE:1.0:cross">
+      <xsl:attribute name="DATAELEMENT"><xsl:value-of select="@dataElement"/></xsl:attribute>  
+      <xsl:if test="@categoryOptionCombo">
+        <xsl:attribute name="DISAGG"><xsl:value-of select="@categoryOptionCombo"/></xsl:attribute>
+      </xsl:if>
+      <xsl:attribute name="value"><xsl:value-of select="@value"/></xsl:attribute>  
+    </xsl:element>
+  </xsl:template>
+  
 </xsl:stylesheet>

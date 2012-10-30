@@ -19,7 +19,9 @@
 package org.openmrs.module.dhisreport.api.dxf2;
 
 import java.io.OutputStream;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.LinkedList;
 import java.util.List;
 import javax.xml.bind.JAXBContext;
@@ -234,8 +236,8 @@ public class DataValueSet
         Transformer t = tf.newTransformer( new StreamSource( ClassLoader.class
             .getResourceAsStream( "/xslt/dxf2sdmxcross.xsl" ) ) );
 
-        // run transformation
+        String dateParam = new SimpleDateFormat( "yyyy-MM-dd" ).format( new Date() );
+        t.setParameter( "date", dateParam );
         t.transform( source, new StreamResult( outputStream ) );
-
     }
 }
