@@ -1,7 +1,7 @@
 <dataValueSet xmlns="http://dhis2.org/schema/dxf/2.0" 
               period="201201" 
               orgUnit="OU_559" orgUnitIdScheme="code" 
-              dataSetId="DS_543073"
+              dataSet="DS_543073"
               dataElementIdScheme="code">
   
     <dataValue dataElement="DE_98454" value="12"/>
