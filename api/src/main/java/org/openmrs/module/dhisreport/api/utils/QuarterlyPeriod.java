@@ -19,13 +19,12 @@
  **/
 package org.openmrs.module.dhisreport.api.utils;
 
-import java.text.SimpleDateFormat;
 import java.util.Date;
 import org.joda.time.DateTime;
 import org.joda.time.DateTimeConstants;
 
 /**
- * Class to create period for weekly reporting. 
+ * Class to create period for Quarterly reporting. 
  * You can also mention just the week number in ISO8601 and initializes startDate and endDate
  */
 public class QuarterlyPeriod
