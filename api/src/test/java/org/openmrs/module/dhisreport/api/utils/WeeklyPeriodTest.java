@@ -25,9 +25,7 @@ import java.util.Date;
 import org.junit.Test;
 import static org.junit.Assert.*;
 import static org.hamcrest.CoreMatchers.*;
-import org.junit.Ignore;
 
-@Ignore
 public class WeeklyPeriodTest
 {
 
@@ -42,8 +40,8 @@ public class WeeklyPeriodTest
     public void testGetStart()
         throws ParseException
     {
-        WeeklyPeriod instance = new WeeklyPeriod( new SimpleDateFormat( "yyyy'W'ww" ).parse( "2012W10" ) );
-        Date expResult = new SimpleDateFormat( "yyyy-MM-dd" ).parse( "2012-03-04" );
+        WeeklyPeriod instance = new WeeklyPeriod( new SimpleDateFormat( "yyyy-MM-dd" ).parse( "2012-11-20" ) );
+        Date expResult = new SimpleDateFormat( "yyyy-MM-dd'T'HH:mm:ss.SSS" ).parse( "2012-11-19T00:00:00.000" );
         Date result = instance.getStart();
         assertEquals( expResult, result );
     }
@@ -55,8 +53,8 @@ public class WeeklyPeriodTest
     public void testGetEnd()
         throws ParseException
     {
-        WeeklyPeriod instance = new WeeklyPeriod( new SimpleDateFormat( "yyyy'W'ww" ).parse( "2012W10" ) );
-        Date expResult = new SimpleDateFormat( "yyyy-MM-dd'T'HH:mm:ss" ).parse( "2012-03-09T23:59:59" );
+        WeeklyPeriod instance = new WeeklyPeriod( new SimpleDateFormat( "yyyy-MM-dd" ).parse( "2012-11-20" ) );
+        Date expResult = new SimpleDateFormat( "yyyy-MM-dd'T'HH:mm:ss.SSS" ).parse( "2012-11-25T23:59:59.999" );
         Date result = instance.getEnd();
         assertEquals( expResult, result );
     }
@@ -68,8 +66,8 @@ public class WeeklyPeriodTest
     public void testGetEndNotEqualTo()
         throws ParseException
     {
-        WeeklyPeriod instance = new WeeklyPeriod( new SimpleDateFormat( "yyyy'W'ww" ).parse( "2012W10" ) );
-        Date expResult = new SimpleDateFormat( "yyyy-MM-dd'T'HH:mm:ss" ).parse( "2012-03-09T00:00:00" );
+        WeeklyPeriod instance = new WeeklyPeriod( new SimpleDateFormat( "yyyy-MM-dd" ).parse( "2012-11-20" ) );
+        Date expResult = new SimpleDateFormat( "yyyy-MM-dd'T'HH:mm:ss" ).parse( "2012-11-25T00:00:00" );
         Date result = instance.getEnd();
         assertThat( expResult, not( equalTo( result ) ) );
     }
@@ -81,8 +79,8 @@ public class WeeklyPeriodTest
     public void testGetAsIsoString()
         throws ParseException
     {
-        WeeklyPeriod instance = new WeeklyPeriod( new SimpleDateFormat( "yyyy'W'ww" ).parse( "2012W10" ) );
-        String expResult = "2012W10";
+        WeeklyPeriod instance = new WeeklyPeriod( new SimpleDateFormat( "yyyy-MM-dd" ).parse( "2012-11-20" ) );
+        String expResult = "2012W47";
         String result = instance.getAsIsoString();
         assertEquals( expResult, result );
     }
