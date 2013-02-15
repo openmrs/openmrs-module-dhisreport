@@ -5,6 +5,7 @@
 $locationId = '1';
 $startOfPeriod = '20120901';
 $endOfPeriod = '20120930';
+$period = "201009";
 // template file I got from Christine
 $reportTemplatesFile = "/home/bobj/Downloads/git_a2.xml";
 $connstr = 'mysql:host=localhost;dbname=ethiopiademo';
@@ -24,10 +25,12 @@ try {
     foreach ($xml->reportTemplate as $reportTemplate)
     {
         // start a new datavalueset
-        $dataValueSet = new SimpleXMLElement("<datavalueSet />");
+        $dataValueSet = new SimpleXMLElement("<datavalueSet xmlns='http://dhis2.org/schema/dxf/2.0'/>");
+        $dataValueSet->addAttribute('period',$period);
+        $dataValueSet->addAttribute('orgUnit',$locationId);
+        //$dataValueSet->addAttribute('dataSet',$reporttemplate[dataSet]);
         $dataValueSet->addAttribute('orgUnitIdScheme','code');
         $dataValueSet->addAttribute('dataElementIdScheme','code');
-        // TODO: add namespace, period, orgnit attributes etc ...
 
         // foreach value in the set
         foreach ($reportTemplate->dataValueTemplates->dataValueTemplate as $dataValueTemplate)
