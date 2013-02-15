@@ -20,8 +20,8 @@
 package org.openmrs.module.dhisreport.api.utils;
 
 import java.text.SimpleDateFormat;
-import java.util.Calendar;
 import java.util.Date;
+import org.joda.time.DateTime;
 
 /**
  *
@@ -51,16 +51,9 @@ public class MonthlyPeriod
 
     public MonthlyPeriod( Date date )
     {
-        Calendar cal = Calendar.getInstance();
-        cal.setTime( date );
-        cal.set( Calendar.DAY_OF_MONTH, 1 );
-        startDate = cal.getTime();
-        cal.set( Calendar.DAY_OF_MONTH, cal.getActualMaximum( Calendar.DAY_OF_MONTH ) );
-        cal.set( Calendar.HOUR_OF_DAY, 23 );
-        cal.set( Calendar.MINUTE, 59 );
-        cal.set( Calendar.SECOND, 59 );
-        cal.set( Calendar.MILLISECOND, 999 );
-        endDate = cal.getTime();
+        DateTime dt = new DateTime( date );
+        startDate = dt.dayOfMonth().withMinimumValue().toDate();
+        endDate = dt.dayOfMonth().withMaximumValue().withTime( 23, 59, 59, 999 ).toDate();
     }
 
     @Override

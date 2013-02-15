@@ -40,6 +40,22 @@
         <developerConnection>scm:git:https://github.com/hispindia/dhisreport.git</developerConnection>
         <url>https://github.com/hispindia/dhisreport</url>
     </scm>
+	
+	<distributionManagement>
+        <!-- use the following if you're not using a snapshot version. -->
+            <repository>
+                <id>shimla-nexus</id>
+                <name>Shimla nexus repo</name>
+                <url>http://hospdev.hispindia.org/nexus/content/repositories/releases/</url>
+            </repository>
+        <!-- use the following if you ARE using a snapshot version. -->
+            <snapshotRepository>
+                <id>shimla-nexus</id>
+                <name>Shimla nexus repo</name>
+                <url>http://hospdev.hispindia.org/nexus/content/repositories/snapshots/</url>
+                <uniqueVersion>false</uniqueVersion>
+             </snapshotRepository>
+     </distributionManagement>
 
     <modules>
         <module>api</module>
@@ -97,6 +113,12 @@
             </dependency>
 						
             <!-- End OpenMRS core -->
+            
+            <dependency>
+                <groupId>joda-time</groupId>
+                <artifactId>joda-time</artifactId>
+                <version>2.1</version>
+            </dependency>
 
         </dependencies>
     </dependencyManagement>

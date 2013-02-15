@@ -20,8 +20,9 @@
 package org.openmrs.module.dhisreport.api.utils;
 
 import java.text.SimpleDateFormat;
-import java.util.Calendar;
 import java.util.Date;
+import org.joda.time.DateTime;
+import org.joda.time.DateTimeConstants;
 
 /**
  * Class to create period for weekly reporting. 
@@ -51,14 +52,9 @@ public class WeeklyPeriod
 
     public WeeklyPeriod( Date date )
     {
-        Calendar cal = Calendar.getInstance();
-        cal.setTime( date );
-        startDate = cal.getTime();
-        cal.add( Calendar.DAY_OF_MONTH, 5 );
-        cal.add( Calendar.HOUR_OF_DAY, 23 );
-        cal.add( Calendar.MINUTE, 59 );
-        cal.add( Calendar.SECOND, 59 );
-        endDate = cal.getTime();
+        DateTime dt = new DateTime( date );
+        startDate = dt.withDayOfWeek( DateTimeConstants.MONDAY ).toDate();
+        endDate = dt.withDayOfWeek( DateTimeConstants.SUNDAY ).withTime( 23, 59, 59, 999 ).toDate();
     }
 
     @Override
