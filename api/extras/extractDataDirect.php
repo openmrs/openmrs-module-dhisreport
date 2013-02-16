@@ -74,16 +74,15 @@ try {
             $dataValue->addAttribute('value', $value ); 
         }
 
+        // POST tp DHIS2
+        $ch=curl_init($dhis2."api/dataValueSets/");
+        curl_setopt($ch, CURLOPT_CUSTOMREQUEST, "POST");
+        curl_setopt($ch, CURLOPT_POSTFIELDS, $dataValueSet->asXml());
+        curl_setopt($ch, CURLOPT_USERPWD, $dhis2_user.":".$dhis2_passwd );
+        curl_setopt($ch, CURLOPT_HTTPHEADER,array('Content-type: application/xml'));
+        $result = curl_exec($ch);
+        curl_close($ch);
     }
-
-    // POST tp DHIS2
-    $ch=curl_init($dhis2."api/dataValueSets/");
-    curl_setopt($ch, CURLOPT_CUSTOMREQUEST, "POST");
-    curl_setopt($ch, CURLOPT_POSTFIELDS, $dataValueSet->asXml());
-    curl_setopt($ch, CURLOPT_USERPWD, $dhis2_user.":".$dhis2_passwd );
-    curl_setopt($ch, CURLOPT_HTTPHEADER,array('Content-type: application/xml'));
-    $result = curl_exec($ch);
-    curl_close($ch);
 
 } catch(PDOException $e) {
     error_log ('PDO error: ' . $e->getMessage());
