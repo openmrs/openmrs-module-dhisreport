@@ -19,6 +19,7 @@
  **/
 package org.openmrs.module.dhisreport.api.dhis;
 
+import java.io.IOException;
 import java.io.StringWriter;
 import java.net.URL;
 import javax.xml.bind.JAXBContext;
@@ -31,6 +32,7 @@ import org.apache.http.Header;
 import org.apache.http.HttpEntity;
 import org.apache.http.HttpHost;
 import org.apache.http.HttpResponse;
+import org.apache.http.auth.AuthenticationException;
 import org.apache.http.auth.Credentials;
 import org.apache.http.auth.UsernamePasswordCredentials;
 import org.apache.http.client.methods.HttpPost;
@@ -39,10 +41,10 @@ import org.apache.http.impl.auth.BasicScheme;
 import org.apache.http.impl.client.DefaultHttpClient;
 import org.apache.http.protocol.BasicHttpContext;
 import org.hisp.dhis.dxf2.Dxf2Exception;
-import org.openmrs.module.dhisreport.api.dxf2.DataValueSet;
 import org.hisp.dhis.dxf2.importsummary.ImportStatus;
 import org.hisp.dhis.dxf2.importsummary.ImportSummary;
 import org.openmrs.module.dhisreport.api.DHIS2ReportingException;
+import org.openmrs.module.dhisreport.api.dxf2.DataValueSet;
 import org.openmrs.module.dhisreport.api.model.ReportDefinition;
 
 /**
@@ -155,6 +157,11 @@ public class HttpDhis2Server
             httpPost.setEntity( new StringEntity( xmlReport.toString() ) );
             HttpResponse response = httpclient.execute( targetHost, httpPost, localcontext );
             HttpEntity entity = response.getEntity();
+            
+            if (response.getStatusLine().getStatusCode() != 200) 
+            {
+                throw new Dhis2Exception(this, response.getStatusLine().getReasonPhrase(), null);
+            }
 
             if ( entity != null )
             {
@@ -170,10 +177,17 @@ public class HttpDhis2Server
             // EntityUtils.consume( entity );
 
             // TODO: fix these catches ...
-        }
-        catch ( Exception ex )
+        } catch ( JAXBException ex )
         {
-            throw new Dhis2Exception( this, "Problem accessing Dhis2 server", ex );
+            throw new Dhis2Exception( this, "Problem unmarshalling ImportSummary", ex );
+        } 
+        catch ( AuthenticationException ex )
+        {
+            throw new Dhis2Exception( this, "Problem authenticating to DHIS2 server", ex );
+        }
+        catch ( IOException ex )
+        {
+            throw new Dhis2Exception( this, "Problem accessing DHIS2 server", ex );
         }
         finally
         {
