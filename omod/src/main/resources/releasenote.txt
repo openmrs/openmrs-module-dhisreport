@@ -1,0 +1,6 @@
+1.0
+released by ghanshyam on 20-may-2013
+- #340 [SDMX]Error on running the query
+- #341 [SDMX]Unable to edit a data element
+
+
