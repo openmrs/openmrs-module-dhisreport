@@ -5,7 +5,7 @@
     <parent>
         <groupId>org.openmrs.module</groupId>
         <artifactId>dhisreport</artifactId>
-        <version>1.0</version>
+        <version>1.1-SNAPSHOT</version>
     </parent>
 
     <artifactId>dhisreport-omod</artifactId>
@@ -141,6 +141,25 @@
                                     <action>
                                         <ignore></ignore>
                                     </action>
+                                </pluginExecution>
+                                <pluginExecution>
+                                	<pluginExecutionFilter>
+                                		<groupId>
+                                			com.googlecode.maven-java-formatter-plugin
+                                		</groupId>
+                                		<artifactId>
+                                			maven-java-formatter-plugin
+                                		</artifactId>
+                                		<versionRange>
+                                			[0.3.1,)
+                                		</versionRange>
+                                		<goals>
+                                			<goal>format</goal>
+                                		</goals>
+                                	</pluginExecutionFilter>
+                                	<action>
+                                		<ignore></ignore>
+                                	</action>
                                 </pluginExecution>
                             </pluginExecutions>
                         </lifecycleMappingMetadata>
