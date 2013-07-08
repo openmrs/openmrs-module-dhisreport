@@ -58,6 +58,7 @@ public class AdminList
     public Map<String, String> getLinks()
     {
         LinkedHashMap<String, String> map = new LinkedHashMap<String, String>();
+        map.put( "/module/dhisreport/listDhis2Reports.form", "dhisreport.home" );
         map.put( "/module/dhisreport/manage.form", "dhisreport.manage" );
         return map;
     }

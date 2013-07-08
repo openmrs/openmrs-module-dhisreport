@@ -22,8 +22,11 @@ package org.openmrs.module.dhisreport.web.controller;
 import java.net.MalformedURLException;
 import java.net.URL;
 import java.text.ParseException;
+import java.util.List;
+
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
+import org.openmrs.GlobalProperty;
 import org.openmrs.api.context.Context;
 import org.openmrs.module.dhisreport.api.DHIS2ReportingService;
 import org.openmrs.module.dhisreport.api.dhis.HttpDhis2Server;
@@ -50,11 +53,28 @@ public class Dhis2ServerController
         DHIS2ReportingService service = Context.getService( DHIS2ReportingService.class );
 
         HttpDhis2Server server = service.getDhis2Server();
+        String dhisurl = Context.getAdministrationService().getGlobalProperty( "dhisreport.dhis2URL" );
+        String dhisusername = Context.getAdministrationService().getGlobalProperty( "dhisreport.dhis2UserName" );
+        String dhispassword = Context.getAdministrationService().getGlobalProperty( "dhisreport.dhis2Password" );
+
+        URL url = null;
+        try
+        {
+            url = new URL( dhisurl );
+        }
+        catch ( MalformedURLException e )
+        {
+            // TODO Auto-generated catch block
+            e.printStackTrace();
+        }
 
         if ( server == null )
         {
             server = new HttpDhis2Server();
         }
+        server.setUrl( url );
+        server.setUsername( dhisusername );
+        server.setPassword( dhispassword );
 
         model.addAttribute( "user", Context.getAuthenticatedUser() );
         model.addAttribute( "dhis2Server", server );
@@ -70,6 +90,33 @@ public class Dhis2ServerController
     {
         DHIS2ReportingService service = Context.getService( DHIS2ReportingService.class );
         HttpDhis2Server server = service.getDhis2Server();
+
+        List<GlobalProperty> gbl = Context.getAdministrationService().getGlobalPropertiesByPrefix( "dhisreport" );
+
+        System.out.println( "dassssssssssssssssssssssssssss" + urlString + username + password );
+
+        for ( GlobalProperty g : gbl )
+        {
+            if ( g.getProperty() == "dhisreport.dhis2URL" )
+            {
+                System.out.println( g.getDescription() );
+                g.setPropertyValue( urlString );
+            }
+            if ( g.getProperty() == "dhisreport.dhis2UserName" )
+            {
+                System.out.println( g.getDescription() );
+
+                //                g.setPropertyValue( username );
+                g.setProperty( urlString );
+            }
+            if ( g.getProperty() == "dhisreport.password" )
+            {
+                System.out.println( g.getDescription() );
+
+                g.setPropertyValue( password );
+            }
+
+        }
 
         if ( server == null )
         {

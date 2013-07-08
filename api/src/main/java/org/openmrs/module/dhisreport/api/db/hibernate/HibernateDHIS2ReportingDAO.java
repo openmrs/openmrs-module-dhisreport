@@ -29,6 +29,7 @@ import org.hibernate.Criteria;
 import org.hibernate.Query;
 import org.hibernate.Session;
 import org.hibernate.SessionFactory;
+import org.hibernate.Transaction;
 import org.hibernate.criterion.Restrictions;
 import org.openmrs.Location;
 import org.openmrs.module.dhisreport.api.DHIS2ReportingException;
@@ -189,12 +190,15 @@ public class HibernateDHIS2ReportingDAO
 
     public Identifiable saveObject( Identifiable object )
     {
+        System.out.println( "inside save object==============" );
         Session session = sessionFactory.getCurrentSession();
         // force merge if uid already exists
+        System.out.println( object.getUid() + "====" + object.getClass() );
         Identifiable existingObject = getObjectByUid( object.getUid(), object.getClass() );
         if ( existingObject != null )
         {
             session.evict( existingObject );
+            System.out.println( "existing object====" + existingObject.getId() );
             object.setId( existingObject.getId() );
             session.load( object, object.getId() );
         }
@@ -234,10 +238,51 @@ public class HibernateDHIS2ReportingDAO
     }
 
     @Override
+    public DataValueTemplate saveDataValueTemplateTest( DataValueTemplate dvt )
+    {
+
+        ReportDefinition rd = getReportDefinitionByUid( dvt.getReportDefinition().getUid() );
+        DataElement de = getDataElementByUid( dvt.getDataelement().getUid() );
+        Disaggregation dis = getDisaggregationByUid( dvt.getDisaggregation().getUid() );
+        dvt.setDataelement( de );
+        dvt.setDisaggregation( dis );
+        dvt.setReportDefinition( rd );
+        System.out.println( de.getId() + de.getName() + dis.getId() + dis.getName() + rd.getId() + rd.getName() );
+
+        Criteria criteria = sessionFactory.getCurrentSession().createCriteria( DataValueTemplate.class );
+        criteria.add( Restrictions.eq( "reportDefinition", rd ) ).add( Restrictions.eq( "dataelement", de ) ).add(
+            Restrictions.eq( "disaggregation", dis ) );
+
+        DataValueTemplate dvt_db = (DataValueTemplate) criteria.uniqueResult();
+
+        if ( dvt_db == null )
+        {
+            sessionFactory.getCurrentSession().saveOrUpdate( dvt );
+            return dvt;
+        }
+        else
+        {
+
+            return dvt_db;
+        }
+
+    }
+
+    @Override
     public Location getLocationByOU_Code( String OU_Code )
     {
         Criteria criteria = sessionFactory.getCurrentSession().createCriteria( Location.class );
         criteria.add( Restrictions.like( "name", "%" + OU_Code + "%" ) );
         return (Location) criteria.uniqueResult();
+    }
+
+    @Override
+    public DataElement getDataElementByCode( String code )
+    {
+
+        Criteria criteria = sessionFactory.getCurrentSession().createCriteria( DataElement.class );
+        criteria.add( Restrictions.eq( "code", code ) );
+        return (DataElement) criteria.uniqueResult();
+
     }
 }

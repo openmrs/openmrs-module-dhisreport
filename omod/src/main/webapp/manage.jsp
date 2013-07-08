@@ -23,6 +23,10 @@
             <td><spring:message code="dhisreport.reports" /></td>
             <td><a href="listDhis2Reports.form"><spring:message code="dhisreport.Link" /></a></td>
         </tr>
+        <tr>
+            <td><spring:message code="dhisreport.syncReports" /></td>
+            <td><a href="syncReports.form"><spring:message code="dhisreport.Link" /></a></td>
+        </tr>
     </tbody>
 </table>
 

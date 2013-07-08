@@ -24,6 +24,10 @@
         <point>org.openmrs.admin.list</point>
         <class>${project.parent.groupId}.${project.parent.artifactId}.extension.html.AdminList</class>
     </extension>
+    <extension>
+		<point>org.openmrs.gutter.tools</point>
+		<class>${project.parent.groupId}.${project.parent.artifactId}.extension.html.DhisReportHeader</class>
+	</extension>
 	
     <!-- Maps hibernate file's, if present -->
     <mappingFiles>
@@ -32,7 +36,41 @@
         Disaggregation.hbm.xml
         DataValueTemplate.hbm.xml
     </mappingFiles>
-
+	
+	<privilege>
+		<name>View Dhisreport</name>
+		<description>Allows user to view Dhisreporting</description>
+	</privilege>
+	<privilege>
+		<name>Manage Dhisreport</name>
+		<description>Allows user to manage Dhisreport</description>
+	</privilege>
+	
+	
+	<globalProperty>
+		<property>${project.parent.artifactId}.dhis2URL </property>
+		<defaultValue>http://httpbin.org/post</defaultValue>
+		<description>
+			DHIS2 URL where the report has to be sent. 
+		</description>
+	</globalProperty>
+	<globalProperty>
+		<property>${project.parent.artifactId}.dhis2UserName</property>
+		<defaultValue>dhis2 username</defaultValue>
+		<description>
+			The Username of the DHIS Server 
+		</description>
+	</globalProperty>
+	<globalProperty>
+		<property>${project.parent.artifactId}.dhis2Password</property>
+		<defaultValue></defaultValue>
+		<description>
+			The Password of the DHIS Server 
+		</description>
+	</globalProperty>
+		
+	
+	
     <!-- Internationalization -->
     <!-- All message codes should start with ${project.parent.artifactId}. -->
     <messages>

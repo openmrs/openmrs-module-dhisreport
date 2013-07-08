@@ -94,6 +94,13 @@ public interface DHIS2ReportingService
     public DataElement getDataElementByUid( String uid );
 
     /**
+     * @param code
+     * @return
+     */
+    @Transactional( readOnly = true )
+    public DataElement getDataElementByCode( String code );
+
+    /**
      * @param de
      * @return
      */
@@ -231,4 +238,6 @@ public interface DHIS2ReportingService
      * @return
      */
     public Location getLocationByOU_Code( String OU_Code );
+
+    public void saveDataValueTemplateTest( DataValueTemplate dvt );
 }

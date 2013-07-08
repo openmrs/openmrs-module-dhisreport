@@ -157,10 +157,10 @@ public class HttpDhis2Server
             httpPost.setEntity( new StringEntity( xmlReport.toString() ) );
             HttpResponse response = httpclient.execute( targetHost, httpPost, localcontext );
             HttpEntity entity = response.getEntity();
-            
-            if (response.getStatusLine().getStatusCode() != 200) 
+
+            if ( response.getStatusLine().getStatusCode() != 200 )
             {
-                throw new Dhis2Exception(this, response.getStatusLine().getReasonPhrase(), null);
+                throw new Dhis2Exception( this, response.getStatusLine().getReasonPhrase(), null );
             }
 
             if ( entity != null )
@@ -177,10 +177,11 @@ public class HttpDhis2Server
             // EntityUtils.consume( entity );
 
             // TODO: fix these catches ...
-        } catch ( JAXBException ex )
+        }
+        catch ( JAXBException ex )
         {
             throw new Dhis2Exception( this, "Problem unmarshalling ImportSummary", ex );
-        } 
+        }
         catch ( AuthenticationException ex )
         {
             throw new Dhis2Exception( this, "Problem authenticating to DHIS2 server", ex );

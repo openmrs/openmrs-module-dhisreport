@@ -22,6 +22,10 @@ package org.openmrs.module.dhisreport.api.impl;
 import java.io.InputStream;
 import java.io.OutputStream;
 import java.util.Collection;
+import java.util.List;
+import java.util.ListIterator;
+import java.util.Set;
+
 import javax.xml.bind.JAXBContext;
 import javax.xml.bind.Marshaller;
 import javax.xml.bind.Unmarshaller;
@@ -29,6 +33,7 @@ import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.hisp.dhis.dxf2.importsummary.ImportSummary;
 import org.openmrs.Location;
+import org.openmrs.api.context.Context;
 import org.openmrs.api.impl.BaseOpenmrsService;
 import org.openmrs.module.dhisreport.api.DHIS2ReportingException;
 import org.openmrs.module.dhisreport.api.DHIS2ReportingService;
@@ -38,6 +43,7 @@ import org.openmrs.module.dhisreport.api.model.*;
 import org.openmrs.module.dhisreport.api.dxf2.DataValue;
 import org.openmrs.module.dhisreport.api.dxf2.DataValueSet;
 import org.openmrs.module.dhisreport.api.utils.Period;
+import org.springframework.transaction.annotation.Transactional;
 
 /**
  * It is a default implementation of {@link DHIS2ReportingService}.
@@ -105,6 +111,12 @@ public class DHIS2ReportingServiceImpl
     public DataElement getDataElementByUid( String uid )
     {
         return dao.getDataElementByUid( uid );
+    }
+
+    @Override
+    public DataElement getDataElementByCode( String code )
+    {
+        return dao.getDataElementByCode( code );
     }
 
     @Override
@@ -234,7 +246,23 @@ public class DHIS2ReportingServiceImpl
     @Override
     public void saveReportTemplates( ReportTemplates rt )
     {
-        throw new UnsupportedOperationException( "Not supported yet." );
+        //        throw new UnsupportedOperationException( "Not supported yet." );
+
+        List<ReportDefinition> reportdef = rt.getReportDefinitions();
+
+        for ( ReportDefinition rd : reportdef )
+        {
+
+            Set<DataValueTemplate> datavaluetemplate = rd.getDataValueTemplates();
+
+            for ( DataValueTemplate dvt : datavaluetemplate )
+            {
+
+                saveDataValueTemplateTest( dvt );
+
+            }
+
+        }
     }
 
     public void unMarshallandSaveReportTemplates( InputStream is )
@@ -254,9 +282,13 @@ public class DHIS2ReportingServiceImpl
         }
         for ( ReportDefinition rd : reportTemplates.getReportDefinitions() )
         {
+            System.out.println( "entered my choice loop------------------------------------" );
+            System.out.println( rd.getName() );
             for ( DataValueTemplate dvt : rd.getDataValueTemplates() )
             {
+                System.out.println( "davt--------------------------" );
                 dvt.setReportDefinition( rd );
+                System.out.println( dvt.getId() );
             }
             saveReportDefinition( rd );
         }
@@ -298,8 +330,16 @@ public class DHIS2ReportingServiceImpl
     }
 
     @Override
+    public void saveDataValueTemplateTest( DataValueTemplate dvt )
+    {
+        dao.saveDataValueTemplateTest( dvt );
+
+    }
+
+    @Override
     public Location getLocationByOU_Code( String OU_Code )
     {
         return dao.getLocationByOU_Code( OU_Code );
     }
+
 }

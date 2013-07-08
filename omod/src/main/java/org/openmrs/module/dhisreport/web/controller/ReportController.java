@@ -19,8 +19,14 @@
  **/
 package org.openmrs.module.dhisreport.web.controller;
 
+import java.net.MalformedURLException;
+import java.net.URL;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.hisp.dhis.dxf2.importsummary.ImportSummary;
@@ -29,7 +35,10 @@ import org.openmrs.api.context.Context;
 import org.openmrs.module.dhisreport.api.DHIS2ReportingException;
 import org.openmrs.module.dhisreport.api.DHIS2ReportingService;
 import org.openmrs.module.dhisreport.api.dhis.Dhis2Server;
+import org.openmrs.module.dhisreport.api.dhis.HttpDhis2Server;
+import org.openmrs.module.dhisreport.api.dxf2.DataValue;
 import org.openmrs.module.dhisreport.api.dxf2.DataValueSet;
+import org.openmrs.module.dhisreport.api.model.DataElement;
 import org.openmrs.module.dhisreport.api.utils.MonthlyPeriod;
 import org.openmrs.module.dhisreport.api.utils.Period;
 import org.openmrs.module.dhisreport.api.utils.WeeklyPeriod;
@@ -75,7 +84,25 @@ public class ReportController
         model.addAttribute( "reportDefinition", service.getReportDefinition( reportDefinition_id ) );
         model.addAttribute( "locations", Context.getLocationService().getAllLocations() );
 
-        Dhis2Server server = service.getDhis2Server();
+        String dhisurl = Context.getAdministrationService().getGlobalProperty( "dhisreport.dhis2URL" );
+        String dhisusername = Context.getAdministrationService().getGlobalProperty( "dhisreport.dhis2UserName" );
+        String dhispassword = Context.getAdministrationService().getGlobalProperty( "dhisreport.dhis2Password" );
+
+        HttpDhis2Server server = service.getDhis2Server();
+
+        URL url = null;
+        try
+        {
+            url = new URL( dhisurl );
+        }
+        catch ( MalformedURLException e )
+        {
+            e.printStackTrace();
+        }
+
+        server.setUrl( url );
+        server.setUsername( dhisusername );
+        server.setPassword( dhispassword );
 
         if ( (server != null) & (server.isConfigured()) )
         {
@@ -88,16 +115,33 @@ public class ReportController
     Integer reportDefinition_id, @RequestParam( value = "location", required = true )
     String OU_Code, @RequestParam( value = "resultDestination", required = true )
     String destination, @RequestParam( value = "date", required = true )
-    String dateStr, WebRequest webRequest )
+    String dateStr, @RequestParam( value = "frequency", required = true )
+    String freq, WebRequest webRequest )
         throws DHIS2ReportingException
     {
         DHIS2ReportingService service = Context.getService( DHIS2ReportingService.class );
-        Period period;
-        try
+        Period period = null;
+        System.out.println( "freeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeee" + freq );
+        System.out.println( "dasdasssssssssssssssssssss" + dateStr );
+
+        if ( freq.equalsIgnoreCase( "monthly" ) )
         {
-            period = new MonthlyPeriod( new SimpleDateFormat( "yyyy-MM-dd" ).parse( dateStr ) );
+            dateStr = dateStr.concat( "-01" );
+            try
+            {
+                System.out.println( "helloooooooooo1=====" + dateStr );
+                period = new MonthlyPeriod( new SimpleDateFormat( "yyyy-MMM-dd" ).parse( dateStr ) );
+                System.out.println( "helloooooooooo2=====" + period );
+            }
+            catch ( ParseException pex )
+            {
+                log.error( "Cannot convert passed string to date... Please check dateFormat", pex );
+                webRequest.setAttribute( WebConstants.OPENMRS_ERROR_ATTR, Context.getMessageSourceService().getMessage(
+                    "Date Parsing Error" ), WebRequest.SCOPE_SESSION );
+                return;
+            }
         }
-        catch ( ParseException pex )
+        if ( freq.equalsIgnoreCase( "weekly" ) )
         {
             try
             {
@@ -107,21 +151,42 @@ public class ReportController
             {
                 log.error( "Cannot convert passed string to date... Please check dateFormat", ex );
                 webRequest.setAttribute( WebConstants.OPENMRS_ERROR_ATTR, Context.getMessageSourceService().getMessage(
-                    "dhisreport.dateFormatError" ), WebRequest.SCOPE_SESSION );
+                    "Date Parsing Error" ), WebRequest.SCOPE_SESSION );
                 return;
             }
+        }
+        if ( freq.equalsIgnoreCase( "daily" ) )
+        {
+
+            webRequest.setAttribute( WebConstants.OPENMRS_ERROR_ATTR, Context.getMessageSourceService().getMessage(
+                "dhisreport.dateFormatError" ), WebRequest.SCOPE_SESSION );
+            return;
+
         }
 
         // Get Location by OrgUnit Code
         Location location = service.getLocationByOU_Code( OU_Code );
-
+        System.out.println( "helloooooooooo3=====" + period );
         DataValueSet dvs = service.evaluateReportDefinition( service.getReportDefinition( reportDefinition_id ),
             period, location );
         // Set OrgUnit code into DataValueSet
         dvs.setOrgUnit( OU_Code );
 
+        List<DataValue> datavalue = dvs.getDataValues();
+        Map<DataElement, String> deset = new HashMap<DataElement, String>();
+
+        for ( DataValue dv : datavalue )
+        {
+
+            DataElement detrmp = service.getDataElementByCode( dv.getDataElement() );
+            System.out.println( detrmp.getName() + detrmp.getCode() );
+            deset.put( detrmp, dv.getValue() );
+
+        }
+
         model.addAttribute( "user", Context.getAuthenticatedUser() );
         model.addAttribute( "dataValueSet", dvs );
+        model.addAttribute( "dataElementMap", deset );
 
         if ( destination.equals( "post" ) )
         {
@@ -161,4 +226,14 @@ public class ReportController
     //
     // dvs.marshall( response.getOutputStream());
     // }
+
+    @RequestMapping( value = "/module/dhisreport/syncReports", method = RequestMethod.GET )
+    public void syncReports( ModelMap model )
+    {
+        DHIS2ReportingService service = Context.getService( DHIS2ReportingService.class );
+
+        model.addAttribute( "user", Context.getAuthenticatedUser() );
+        model.addAttribute( "reportDefinitions", service.getAllReportDefinitions() );
+    }
+
 }

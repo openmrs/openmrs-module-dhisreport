@@ -39,6 +39,8 @@ public interface DHIS2ReportingDAO
 
     public DataElement getDataElementByUid( String uid );
 
+    public DataElement getDataElementByCode( String code );
+
     public DataElement saveDataElement( DataElement de );
 
     public void deleteDataElement( DataElement de );
@@ -73,4 +75,6 @@ public interface DHIS2ReportingDAO
     public DataValueTemplate saveDataValueTemplate( DataValueTemplate dvt );
 
     public Location getLocationByOU_Code( String OU_Code );
+
+    public DataValueTemplate saveDataValueTemplateTest( DataValueTemplate dvt );
 }

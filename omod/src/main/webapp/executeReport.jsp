@@ -13,10 +13,14 @@
             <tr><td><spring:message code="dhisreport.period" />: </td><td>${dataValueSet.period}</td></tr>
         </table>
     </div>
-    <c:forEach var="dv" items="${dataValueSet.dataValues}">
-        <p><spring:message code="dhisreport.dataElement" />: ${dv.dataElement}, Value: ${dv.value}</p>
+    <!-- <c:forEach var="dv" items="${dataValueSet.dataValues}">
+        <p><spring:message code="dhisreport.dataElement" />: Code: ${dv.dataElement}, Value: ${dv.value}</p>
     </c:forEach>
-
+     -->
+    <c:forEach var="dvm" items="${dataElementMap}">
+        <p><spring:message code="dhisreport.dataElement" />: Name: ${dvm.key.name} Code: ${dvm.key.name} Value: ${dvm.value}</p>
+    </c:forEach>
+    
 </c:if>
 <c:if test="${not empty importSummary}">
     <div>
