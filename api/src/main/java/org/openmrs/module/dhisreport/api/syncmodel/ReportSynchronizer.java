@@ -23,13 +23,16 @@ import org.openmrs.module.dhisreport.api.model.ReportTemplates;
 public class ReportSynchronizer
 {
 
+    DHIS2ReportingService service = null;
+
     public void fullSync()
         throws UnsupportedEncodingException
     {
-
+        service = Context.getService( DHIS2ReportingService.class );
         //Fetch DataElement group page
-
-        String webPage = "http://localhost:8081/dhis/api/dataElementGroups.xml";
+        URL dhisurl = service.getDhis2Server().getUrl();
+        String url = dhisurl.toString();
+        String webPage = url + "/api/dataElementGroups.xml";
         String OpenmrsdeURL = "";
         String html = fetchURL( webPage );
         InputStream stream = new ByteArrayInputStream( html.getBytes( "UTF-8" ) );
@@ -177,8 +180,8 @@ public class ReportSynchronizer
         String result = "";
         try
         {
-            String name = "admin";
-            String password = "district";
+            String name = service.getDhis2Server().getUsername();
+            String password = service.getDhis2Server().getPassword();
 
             String authString = name + ":" + password;
             //			System.out.println("auth string: " + authString);
