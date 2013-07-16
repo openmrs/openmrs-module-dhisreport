@@ -20,7 +20,7 @@ package org.openmrs.module.dhisreport.api.syncmodel;
  *
  **/
 
-public class SyncDisaggregation
+public class SyncCategoryCombo
 
 {
     protected String id;

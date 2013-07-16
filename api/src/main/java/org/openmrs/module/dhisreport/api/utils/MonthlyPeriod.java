@@ -31,7 +31,7 @@ public class MonthlyPeriod
     implements Period
 {
 
-    public static final String ISO_FORMAT = "yyyyMM";
+    public static final String ISO_FORMAT = "yyyyMMM";
 
     protected Date startDate;
 

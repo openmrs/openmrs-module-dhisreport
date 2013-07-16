@@ -1,7 +1,5 @@
 package org.openmrs.module.dhisreport.api.syncmodel;
 
-import java.util.List;
-
 /**
  *  Copyright 2012 Society for Health Information Systems Programmes, India (HISP India)
  *
@@ -22,7 +20,7 @@ import java.util.List;
  *
  **/
 
-public class SyncDataElement
+public class SyncCategoryOptionCombo
 
 {
     protected String id;
@@ -35,10 +33,6 @@ public class SyncDataElement
 
     protected String href;
 
-    protected List<SyncCategoryOptionCombo> dag;
-
-    protected List<SyncDataSet> ds;
-
     public String getCode()
     {
         return code;
@@ -47,26 +41,6 @@ public class SyncDataElement
     public void setCode( String code )
     {
         this.code = code;
-    }
-
-    public List<SyncCategoryOptionCombo> getDisaggregation()
-    {
-        return dag;
-    }
-
-    public void setDisaggregation( List<SyncCategoryOptionCombo> disag )
-    {
-        this.dag = disag;
-    }
-
-    public List<SyncDataSet> getDataSet()
-    {
-        return ds;
-    }
-
-    public void setDataSet( List<SyncDataSet> ds )
-    {
-        this.ds = ds;
     }
 
     public String getHref()
@@ -139,7 +113,8 @@ public class SyncDataElement
     @Override
     public String toString()
     {
-        return "DE: " + this.getId() + " : " + this.getCode() + " : " + this.getName() + ":" + this.getHref();
+        return "DISAggregations: " + this.getId() + " : " + this.getCode() + " : " + this.getName() + ":"
+            + this.getHref();
     }
 
 }

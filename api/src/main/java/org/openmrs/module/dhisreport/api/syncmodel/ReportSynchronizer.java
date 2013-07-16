@@ -66,12 +66,17 @@ public class ReportSynchronizer
             //fetch the set of datasets for each element
             List<SyncDataSet> datasets = read.readDS( html );
             //fetch the list of dissagregations for each element
-            List<SyncDisaggregation> disaggregations = read.readDisaggregation( html );
+            List<SyncCategoryCombo> categoryCombo = read.readCategoryCombo( html );
+
+            String CategoryComboURL = categoryCombo.get( 0 ).getHref().concat( ".xml" );
+            html = fetchURL( CategoryComboURL );
+
+            List<SyncCategoryOptionCombo> disaggregations = read.readCategoryOptionCombo( html );
 
             item.setDataSet( datasets );
             item.setDisaggregation( disaggregations );
 
-            for ( SyncDisaggregation d : disaggregations )
+            for ( SyncCategoryOptionCombo d : disaggregations )
             {
                 System.out.println( d );
             }
@@ -88,7 +93,7 @@ public class ReportSynchronizer
     }
 
     private void updateReferences( SyncDataElement de, List<SyncDataSet> datasets,
-        List<SyncDisaggregation> disaggregations )
+        List<SyncCategoryOptionCombo> disaggregations )
     {
 
         DHIS2ReportingService service = Context.getService( DHIS2ReportingService.class );
@@ -110,7 +115,7 @@ public class ReportSynchronizer
             System.out.println( "hello2" );
         }
 
-        for ( SyncDisaggregation sdisag : disaggregations )
+        for ( SyncCategoryOptionCombo sdisag : disaggregations )
         {
             System.out.println( "hello3" );
             Disaggregation disag = new Disaggregation();

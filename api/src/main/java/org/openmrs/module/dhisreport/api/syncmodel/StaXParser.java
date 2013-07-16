@@ -266,9 +266,9 @@ public class StaXParser
     }
 
     @SuppressWarnings( { "unchecked", "null" } )
-    public List<SyncDisaggregation> readDisaggregation( String html )
+    public List<SyncCategoryCombo> readCategoryCombo( String html )
     {
-        List<SyncDisaggregation> items = new ArrayList<SyncDisaggregation>();
+        List<SyncCategoryCombo> items = new ArrayList<SyncCategoryCombo>();
         try
         {
             // First create a new XMLInputFactory
@@ -279,7 +279,7 @@ public class StaXParser
             //      InputStream in = new FileInputStream(configFile);
             XMLEventReader eventReader = inputFactory.createXMLEventReader( stream );
             // Read the XML document
-            SyncDisaggregation item = null;
+            SyncCategoryCombo item = null;
 
             while ( eventReader.hasNext() )
             {
@@ -292,7 +292,7 @@ public class StaXParser
                     if ( startElement.getName().getLocalPart() == ("categoryCombo") == true )
                     {
 
-                        item = new SyncDisaggregation();
+                        item = new SyncCategoryCombo();
 
                         //        	  System.out.println("wasup");
                         Iterator<Attribute> attributes = startElement.getAttributes();
@@ -331,6 +331,90 @@ public class StaXParser
                 {
                     EndElement endElement = event.asEndElement();
                     if ( endElement.getName().getLocalPart() == ("categoryCombo") )
+                    {
+                        items.add( item );
+                    }
+                }
+
+            }
+        }
+        catch ( XMLStreamException e )
+        {
+            e.printStackTrace();
+        }
+        catch ( UnsupportedEncodingException e )
+        {
+            e.printStackTrace();
+        }
+        return items;
+    }
+
+    @SuppressWarnings( { "unchecked", "null" } )
+    public List<SyncCategoryOptionCombo> readCategoryOptionCombo( String html )
+    {
+        List<SyncCategoryOptionCombo> items = new ArrayList<SyncCategoryOptionCombo>();
+        try
+        {
+            // First create a new XMLInputFactory
+            XMLInputFactory inputFactory = XMLInputFactory.newInstance();
+            // Setup a new eventReader
+            InputStream stream = new ByteArrayInputStream( html.getBytes( "UTF-8" ) );
+
+            //      InputStream in = new FileInputStream(configFile);
+            XMLEventReader eventReader = inputFactory.createXMLEventReader( stream );
+            // Read the XML document
+            SyncCategoryOptionCombo item = null;
+
+            while ( eventReader.hasNext() )
+            {
+                XMLEvent event = eventReader.nextEvent();
+
+                if ( event.isStartElement() )
+                {
+                    StartElement startElement = event.asStartElement();
+
+                    if ( startElement.getName().getLocalPart() == ("categoryOptionCombo") == true )
+                    {
+
+                        item = new SyncCategoryOptionCombo();
+
+                        //        	  System.out.println("wasup");
+                        Iterator<Attribute> attributes = startElement.getAttributes();
+                        while ( attributes.hasNext() )
+                        {
+                            Attribute attribute = attributes.next();
+                            //                    System.out.println(attribute);
+                            if ( attribute.getName().toString().equals( "name" ) )
+                            {
+                                item.setName( attribute.getValue() );
+                            }
+                            if ( attribute.getName().toString().equals( "href" ) )
+                            {
+                                item.setHref( attribute.getValue() );
+                            }
+                            if ( attribute.getName().toString().equals( "id" ) )
+                            {
+                                item.setId( attribute.getValue() );
+                            }
+                            if ( attribute.getName().toString().equals( "code" ) )
+                            {
+                                item.setCode( attribute.getValue() );
+                            }
+                            if ( item.code == null )
+                            {
+                                item.setCode( item.getId() );
+                            }
+
+                        }
+
+                    }
+
+                }
+                // If we reach the end of an item element we add it to the list
+                if ( event.isEndElement() )
+                {
+                    EndElement endElement = event.asEndElement();
+                    if ( endElement.getName().getLocalPart() == ("categoryOptionCombo") )
                     {
                         items.add( item );
                     }
