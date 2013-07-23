@@ -97,19 +97,19 @@ public class Dhis2ServerController
 
         for ( GlobalProperty g : gbl )
         {
-            if ( g.getProperty() == "dhisreport.dhis2URL" )
+            if ( g.getProperty().equals( "dhisreport.dhis2URL" ) )
             {
                 System.out.println( g.getDescription() );
                 g.setPropertyValue( urlString );
             }
-            if ( g.getProperty() == "dhisreport.dhis2UserName" )
+            if ( g.getProperty().equals( "dhisreport.dhis2UserName" ) )
             {
                 System.out.println( g.getDescription() );
 
                 //                g.setPropertyValue( username );
-                g.setProperty( urlString );
+                g.setPropertyValue( username );
             }
-            if ( g.getProperty() == "dhisreport.password" )
+            if ( g.getProperty().equals( "dhisreport.password" ) )
             {
                 System.out.println( g.getDescription() );
 
