@@ -10,7 +10,14 @@
                 href="${pageContext.request.contextPath}/module/dhisreport/manage.form"><spring:message
                 code="dhisreport.manage" /></a>
     </li>
-
+	
+	<li
+	        <c:if test='<%= request.getRequestURI().contains("/listDhis2Reports") %>'>class="active"</c:if>>
+	            <a
+	                href="${pageContext.request.contextPath}/module/dhisreport/listDhis2Reports.form"><spring:message
+	                code="dhisreport.managereports" /></a>
+    </li>
+	
     <!-- Add further links here -->
 </ul>
 <h2>
