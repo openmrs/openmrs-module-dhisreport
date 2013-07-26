@@ -126,11 +126,12 @@ public class ReportController
 
         if ( freq.equalsIgnoreCase( "monthly" ) )
         {
+            dateStr = replacedateStrMonth( dateStr );
             dateStr = dateStr.concat( "-01" );
             try
             {
                 System.out.println( "helloooooooooo1=====" + dateStr );
-                period = new MonthlyPeriod( new SimpleDateFormat( "yyyy-MMM-dd" ).parse( dateStr ) );
+                period = new MonthlyPeriod( new SimpleDateFormat( "yyyy-MM-dd" ).parse( dateStr ) );
                 System.out.println( "helloooooooooo2=====" + period );
             }
             catch ( ParseException pex )
@@ -166,7 +167,7 @@ public class ReportController
 
         // Get Location by OrgUnit Code
         Location location = service.getLocationByOU_Code( OU_Code );
-        System.out.println( "helloooooooooo3=====" + period );
+        //        System.out.println( "helloooooooooo3=====" + period );
         DataValueSet dvs = service.evaluateReportDefinition( service.getReportDefinition( reportDefinition_id ),
             period, location );
         // Set OrgUnit code into DataValueSet
@@ -226,6 +227,87 @@ public class ReportController
     //
     // dvs.marshall( response.getOutputStream());
     // }
+
+    private String replacedateStrMonth( String dateStr )
+    {
+
+        String str = "";
+        System.out.println( dateStr.substring( 5, 8 ) );
+
+        if ( dateStr.substring( 5, 8 ).equalsIgnoreCase( "Jan" ) )
+        {
+            System.out.println( "converting date" );
+            str = dateStr.replaceFirst( "Jan", "01" );
+            System.out.println( "converting date" + str );
+        }
+        else if ( dateStr.substring( 5, 8 ).equalsIgnoreCase( "Feb" ) )
+        {
+            System.out.println( "converting date" );
+            str = dateStr.replaceFirst( "Feb", "02" );
+            System.out.println( "converting date" + str );
+        }
+        else if ( dateStr.substring( 5, 8 ).equalsIgnoreCase( "Mar" ) )
+        {
+            System.out.println( "converting date" );
+            str = dateStr.replaceFirst( "Mar", "03" );
+            System.out.println( "converting date" + str );
+        }
+        if ( dateStr.substring( 5, 8 ).equalsIgnoreCase( "Apr" ) )
+        {
+            System.out.println( "converting date" );
+            str = dateStr.replaceFirst( "Apr", "04" );
+            System.out.println( "converting date" + str );
+        }
+        if ( dateStr.substring( 5, 8 ).equalsIgnoreCase( "May" ) )
+        {
+            System.out.println( "converting date" );
+            str = dateStr.replaceFirst( "May", "05" );
+            System.out.println( "converting date" + str );
+        }
+        if ( dateStr.substring( 5, 8 ).equalsIgnoreCase( "Jun" ) )
+        {
+            System.out.println( "converting date" );
+            str = dateStr.replaceFirst( "Jun", "06" );
+            System.out.println( "converting date" + str );
+        }
+        if ( dateStr.substring( 5, 8 ).equalsIgnoreCase( "Jul" ) )
+        {
+            System.out.println( "converting date" );
+            str = dateStr.replaceFirst( "Jul", "07" );
+        }
+        if ( dateStr.substring( 5, 8 ).equalsIgnoreCase( "Aug" ) )
+        {
+            System.out.println( "converting date" );
+            str = dateStr.replaceFirst( "Aug", "08" );
+            System.out.println( "converting date" + str );
+        }
+        if ( dateStr.substring( 5, 8 ).equalsIgnoreCase( "Sep" ) )
+        {
+            System.out.println( "converting date" );
+            str = dateStr.replaceFirst( "Sep", "09" );
+            System.out.println( "converting date" + str );
+        }
+        if ( dateStr.substring( 5, 8 ).equalsIgnoreCase( "Oct" ) )
+        {
+            System.out.println( "converting date" );
+            str = dateStr.replaceFirst( "Oct", "10" );
+            System.out.println( "converting date" + str );
+        }
+        if ( dateStr.substring( 5, 8 ).equalsIgnoreCase( "Nov" ) )
+        {
+            System.out.println( "converting date" );
+            str = dateStr.replaceFirst( "Nov", "11" );
+            System.out.println( "converting date" + str );
+        }
+        if ( dateStr.substring( 5, 8 ).equalsIgnoreCase( "Dec" ) )
+        {
+            System.out.println( "converting date" );
+            str = dateStr.replaceFirst( "Dec", "12" );
+            System.out.println( "converting date" + str );
+        }
+
+        return str;
+    }
 
     @RequestMapping( value = "/module/dhisreport/syncReports", method = RequestMethod.GET )
     public void syncReports( ModelMap model )

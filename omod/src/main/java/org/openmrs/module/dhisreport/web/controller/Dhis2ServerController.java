@@ -109,9 +109,9 @@ public class Dhis2ServerController
                 //                g.setPropertyValue( username );
                 g.setPropertyValue( username );
             }
-            if ( g.getProperty().equals( "dhisreport.password" ) )
+            if ( g.getProperty().equals( "dhisreport.dhis2Password" ) )
             {
-                System.out.println( g.getDescription() );
+                System.out.println( "hello/;" + g.getDescription() );
 
                 g.setPropertyValue( password );
             }
