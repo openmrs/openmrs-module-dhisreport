@@ -56,10 +56,8 @@ public class DataValue
     /**
      * Gets the value of the dataElement property.
      * 
-     * @return
-     *     possible object is
-     *     {@link String }
-     *     
+     * @return possible object is {@link String }
+     * 
      */
     public String getDataElement()
     {
@@ -69,10 +67,8 @@ public class DataValue
     /**
      * Sets the value of the dataElement property.
      * 
-     * @param value
-     *     allowed object is
-     *     {@link String }
-     *     
+     * @param value allowed object is {@link String }
+     * 
      */
     public void setDataElement( String value )
     {
@@ -82,10 +78,8 @@ public class DataValue
     /**
      * Gets the value of the categoryOptionCombo property.
      * 
-     * @return
-     *     possible object is
-     *     {@link String }
-     *     
+     * @return possible object is {@link String }
+     * 
      */
     public String getCategoryOptionCombo()
     {
@@ -95,10 +89,8 @@ public class DataValue
     /**
      * Sets the value of the categoryOptionCombo property.
      * 
-     * @param value
-     *     allowed object is
-     *     {@link String }
-     *     
+     * @param value allowed object is {@link String }
+     * 
      */
     public void setCategoryOptionCombo( String value )
     {
@@ -108,10 +100,8 @@ public class DataValue
     /**
      * Gets the value of the value property.
      * 
-     * @return
-     *     possible object is
-     *     {@link String }
-     *     
+     * @return possible object is {@link String }
+     * 
      */
     public String getValue()
     {
@@ -121,10 +111,8 @@ public class DataValue
     /**
      * Sets the value of the value property.
      * 
-     * @param value
-     *     allowed object is
-     *     {@link String }
-     *     
+     * @param value allowed object is {@link String }
+     * 
      */
     public void setValue( String value )
     {

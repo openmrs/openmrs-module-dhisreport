@@ -77,4 +77,11 @@
       
     </changeSet>
     
+    <changeSet id="dhisreport_2" author="apurv">
+	    <addColumn tableName="dhisreport_report_definition">
+	        <column name="periodType" type="varchar(16)" />
+	    </addColumn>
+    </changeSet>
+    
+    
 </databaseChangeLog>

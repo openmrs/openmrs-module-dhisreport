@@ -20,7 +20,7 @@
 package org.openmrs.module.dhisreport.api;
 
 /**
- *
+ * 
  * @author bobj
  */
 public class DHIS2ReportingException

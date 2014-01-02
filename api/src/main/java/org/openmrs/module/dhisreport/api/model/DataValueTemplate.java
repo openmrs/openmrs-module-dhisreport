@@ -23,7 +23,7 @@ import java.io.Serializable;
 import javax.xml.bind.annotation.*;
 
 /**
- *
+ * 
  * @author bobj
  */
 @XmlType( name = "dataValueTemplate", propOrder = { "dataelement", "disaggregation", "query" } )
@@ -31,6 +31,11 @@ import javax.xml.bind.annotation.*;
 public class DataValueTemplate
     implements Serializable
 {
+    /**
+	 * 
+	 */
+    private static final long serialVersionUID = -5401867722816005727L;
+
     // Regex testing for update/delete
     private static final String SQL_SANITY_CHECK = ".*((?i)update|delete).*";
 

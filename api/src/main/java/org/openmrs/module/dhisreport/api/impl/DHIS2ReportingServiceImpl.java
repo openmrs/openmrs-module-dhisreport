@@ -198,7 +198,8 @@ public class DHIS2ReportingServiceImpl
     }
 
     /**
-     * Create a datavalueset report TODO: handle the sql query exceptions which are bound to happen
+     * Create a datavalueset report TODO: handle the sql query exceptions which
+     * are bound to happen
      * 
      * @param reportDefinition
      * @param period
@@ -213,7 +214,8 @@ public class DHIS2ReportingServiceImpl
         dataValueSet.setDataElementIdScheme( "code" );
         dataValueSet.setOrgUnitIdScheme( "code" );
         dataValueSet.setPeriod( period.getAsIsoString() );
-        // dataValueSet.setOrgUnit( "OU_" + location.getId() ); /* Removed because will set directly from the controller */
+        // dataValueSet.setOrgUnit( "OU_" + location.getId() ); /* Removed
+        // because will set directly from the controller */
         dataValueSet.setDataSet( reportDefinition.getCode() );
 
         Collection<DataValue> dataValues = dataValueSet.getDataValues();
@@ -246,7 +248,7 @@ public class DHIS2ReportingServiceImpl
     @Override
     public void saveReportTemplates( ReportTemplates rt )
     {
-        //        throw new UnsupportedOperationException( "Not supported yet." );
+        // throw new UnsupportedOperationException( "Not supported yet." );
 
         List<ReportDefinition> reportdef = rt.getReportDefinitions();
 
@@ -286,9 +288,11 @@ public class DHIS2ReportingServiceImpl
             System.out.println( rd.getName() );
             for ( DataValueTemplate dvt : rd.getDataValueTemplates() )
             {
-                System.out.println( "davt--------------------------" );
+                // System.out.println( "davt--------------------------" );
                 dvt.setReportDefinition( rd );
-                System.out.println( dvt.getId() );
+
+                saveDataValueTemplate( dvt );
+                // System.out.println( dvt.getId() );
             }
             saveReportDefinition( rd );
         }

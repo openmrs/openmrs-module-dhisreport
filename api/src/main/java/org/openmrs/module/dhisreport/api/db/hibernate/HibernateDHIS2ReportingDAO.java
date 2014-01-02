@@ -23,6 +23,7 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collection;
 import java.util.List;
+
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.hibernate.Criteria;
@@ -36,10 +37,12 @@ import org.openmrs.module.dhisreport.api.DHIS2ReportingException;
 import org.openmrs.module.dhisreport.api.db.DHIS2ReportingDAO;
 import org.openmrs.module.dhisreport.api.model.*;
 import org.openmrs.module.dhisreport.api.utils.Period;
+import org.springframework.transaction.annotation.Transactional;
 
 /**
  * It is a default implementation of {@link DHIS2ReportingDAO}.
  */
+
 public class HibernateDHIS2ReportingDAO
     implements DHIS2ReportingDAO
 {
@@ -81,7 +84,7 @@ public class HibernateDHIS2ReportingDAO
     @Override
     public DataElement saveDataElement( DataElement de )
     {
-        return (DataElement) saveObject( de );
+        return (DataElement) saveDataElementObject( de );
     }
 
     @Override
@@ -111,7 +114,9 @@ public class HibernateDHIS2ReportingDAO
     @Override
     public ReportDefinition saveReportDefinition( ReportDefinition rd )
     {
-        return (ReportDefinition) saveObject( rd );
+        System.out.println( "sending the report definition for being saved which has period :------"
+            + rd.getPeriodType() );
+        return (ReportDefinition) saveReportDefinitionObject( rd );
     }
 
     @Override
@@ -178,9 +183,9 @@ public class HibernateDHIS2ReportingDAO
         return query.uniqueResult().toString();
     }
 
-    //--------------------------------------------------------------------------------------------------------------
+    // --------------------------------------------------------------------------------------------------------------
     // Generic methods for DHIS2 identifiable objects
-    //--------------------------------------------------------------------------------------------------------------
+    // --------------------------------------------------------------------------------------------------------------
     public Identifiable getObjectByUid( String uid, Class<?> clazz )
     {
         Criteria criteria = sessionFactory.getCurrentSession().createCriteria( clazz );
@@ -188,21 +193,87 @@ public class HibernateDHIS2ReportingDAO
         return (Identifiable) criteria.uniqueResult();
     }
 
-    public Identifiable saveObject( Identifiable object )
+    @Transactional
+    public Identifiable saveReportDefinitionObject( ReportDefinition object )
     {
-        System.out.println( "inside save object==============" );
+        System.out.println( "inside save object==============" + object.getUid() );
         Session session = sessionFactory.getCurrentSession();
         // force merge if uid already exists
-        System.out.println( object.getUid() + "====" + object.getClass() );
-        Identifiable existingObject = getObjectByUid( object.getUid(), object.getClass() );
+
+        ReportDefinition existingObject = (ReportDefinition) getObjectByUid( object.getUid(), object.getClass() );
+
         if ( existingObject != null )
         {
+            System.out.println( "existing oject :--" + existingObject.getUid() + "====" + existingObject.toString() );
+            // session.evict( existingObject );
+            System.out.println( "existing object====" + existingObject.getId() );
+            // session.delete( existingObject );
+            // object.setId( existingObject.getId() );
+            // session.load( object, object.getId() );
+            existingObject.setPeriodType( object.getPeriodType() );
+            existingObject.setName( object.getName() );
+            existingObject.setCode( object.getCode() );
+
+            session.update( existingObject );
+            return existingObject;
+
+        }
+        // sessionFactory.getCurrentSession().saveOrUpdate( object );
+        session.save( object );
+        return object;
+    }
+
+    @Transactional
+    public Identifiable saveDataElementObject( DataElement object )
+    {
+        System.out.println( "inside save object==============" + object.getUid() );
+        Session session = sessionFactory.getCurrentSession();
+        // force merge if uid already exists
+
+        DataElement existingObject = (DataElement) getObjectByUid( object.getUid(), object.getClass() );
+
+        if ( existingObject != null )
+        {
+            System.out.println( "existing oject :--" + existingObject.getUid() + "====" + existingObject.toString() );
+            // session.evict( existingObject );
+            System.out.println( "existing object====" + existingObject.getId() );
+            // session.delete( existingObject );
+            // object.setId( existingObject.getId() );
+            // session.load( object, object.getId() );
+            existingObject.setName( object.getName() );
+            existingObject.setCode( object.getCode() );
+
+            session.update( existingObject );
+            return existingObject;
+
+        }
+        // sessionFactory.getCurrentSession().saveOrUpdate( object );
+        session.save( object );
+        return object;
+    }
+
+    @Transactional
+    public Identifiable saveObject( Identifiable object )
+    {
+        System.out.println( "inside save object==============" + object.getUid() );
+        Session session = sessionFactory.getCurrentSession();
+        // force merge if uid already exists
+
+        Identifiable existingObject = getObjectByUid( object.getUid(), object.getClass() );
+
+        if ( existingObject != null )
+        {
+            System.out.println( "existing oject :--" + existingObject.getUid() + "====" + existingObject.toString() );
             session.evict( existingObject );
             System.out.println( "existing object====" + existingObject.getId() );
+            // session.delete( existingObject );
             object.setId( existingObject.getId() );
             session.load( object, object.getId() );
+            // session.update( object );
+            // return object;
         }
         sessionFactory.getCurrentSession().saveOrUpdate( object );
+        // session.save( object );
         return object;
     }
 
@@ -250,8 +321,8 @@ public class HibernateDHIS2ReportingDAO
         System.out.println( de.getId() + de.getName() + dis.getId() + dis.getName() + rd.getId() + rd.getName() );
 
         Criteria criteria = sessionFactory.getCurrentSession().createCriteria( DataValueTemplate.class );
-        criteria.add( Restrictions.eq( "reportDefinition", rd ) ).add( Restrictions.eq( "dataelement", de ) ).add(
-            Restrictions.eq( "disaggregation", dis ) );
+        criteria.add( Restrictions.eq( "reportDefinition", rd ) ).add( Restrictions.eq( "dataelement", de ) )
+            .add( Restrictions.eq( "disaggregation", dis ) );
 
         DataValueTemplate dvt_db = (DataValueTemplate) criteria.uniqueResult();
 

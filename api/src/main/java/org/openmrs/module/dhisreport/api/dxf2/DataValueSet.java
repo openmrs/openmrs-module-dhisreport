@@ -74,21 +74,26 @@ public class DataValueSet
 
     /**
      * Gets the value of the dataValue property.
-     *
-     * <p> This accessor method returns a reference to the live list, not a snapshot. Therefore any modification you
-     * make to the returned list will be present inside the JAXB object. This is why there is not a
+     * 
+     * <p>
+     * This accessor method returns a reference to the live list, not a
+     * snapshot. Therefore any modification you make to the returned list will
+     * be present inside the JAXB object. This is why there is not a
      * <CODE>set</CODE> method for the dataValue property.
-     *
-     * <p> For example, to add a new item, do as follows:
+     * 
+     * <p>
+     * For example, to add a new item, do as follows:
+     * 
      * <pre>
-     *    getDataValue().add(newItem);
+     * getDataValue().add( newItem );
      * </pre>
-     *
-     *
-     * <p> Objects of the following type(s) are allowed in the list
+     * 
+     * 
+     * <p>
+     * Objects of the following type(s) are allowed in the list
      * {@link DataValue }
-     *
-     *
+     * 
+     * 
      */
     public List<DataValue> getDataValues()
     {
@@ -121,10 +126,9 @@ public class DataValueSet
 
     /**
      * Gets the value of the completeDate property.
-     *
-     * @return possible object is
-     *     {@link XMLGregorianCalendar }
-     *
+     * 
+     * @return possible object is {@link XMLGregorianCalendar }
+     * 
      */
     public XMLGregorianCalendar getCompleteDate()
     {
@@ -133,10 +137,9 @@ public class DataValueSet
 
     /**
      * Sets the value of the completeDate property.
-     *
-     * @param value allowed object is
-     *     {@link XMLGregorianCalendar }
-     *
+     * 
+     * @param value allowed object is {@link XMLGregorianCalendar }
+     * 
      */
     public void setCompleteDate( XMLGregorianCalendar value )
     {
@@ -145,10 +148,9 @@ public class DataValueSet
 
     /**
      * Gets the value of the dataSet property.
-     *
-     * @return possible object is
-     *     {@link String }
-     *
+     * 
+     * @return possible object is {@link String }
+     * 
      */
     public String getDataSet()
     {
@@ -157,10 +159,9 @@ public class DataValueSet
 
     /**
      * Sets the value of the dataSet property.
-     *
-     * @param value allowed object is
-     *     {@link String }
-     *
+     * 
+     * @param value allowed object is {@link String }
+     * 
      */
     public void setDataSet( String value )
     {
@@ -169,10 +170,9 @@ public class DataValueSet
 
     /**
      * Gets the value of the orgUnit property.
-     *
-     * @return possible object is
-     *     {@link String }
-     *
+     * 
+     * @return possible object is {@link String }
+     * 
      */
     public String getOrgUnit()
     {
@@ -181,10 +181,9 @@ public class DataValueSet
 
     /**
      * Sets the value of the orgUnit property.
-     *
-     * @param value allowed object is
-     *     {@link String }
-     *
+     * 
+     * @param value allowed object is {@link String }
+     * 
      */
     public void setOrgUnit( String value )
     {
@@ -193,10 +192,9 @@ public class DataValueSet
 
     /**
      * Gets the value of the period property.
-     *
-     * @return possible object is
-     *     {@link String }
-     *
+     * 
+     * @return possible object is {@link String }
+     * 
      */
     public String getPeriod()
     {
@@ -205,10 +203,9 @@ public class DataValueSet
 
     /**
      * Sets the value of the period property.
-     *
-     * @param value allowed object is
-     *     {@link String }
-     *
+     * 
+     * @param value allowed object is {@link String }
+     * 
      */
     public void setPeriod( String value )
     {

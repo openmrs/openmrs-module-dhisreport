@@ -25,7 +25,7 @@ import org.openmrs.module.dhisreport.api.model.ReportDefinition;
 import org.openmrs.module.dhisreport.api.dxf2.DataValueSet;
 
 /**
- *
+ * 
  * @author bobj
  */
 public interface Dhis2Server
@@ -33,11 +33,13 @@ public interface Dhis2Server
 
     /**
      * low level method to access dhis2 resources directly
+     * 
      * @param path
      * @return
-     * @throws Dhis2Exception 
+     * @throws Dhis2Exception
      */
-    // public InputStream fetchDhisResource( String path ) throws Dhis2Exception;
+    // public InputStream fetchDhisResource( String path ) throws
+    // Dhis2Exception;
 
     boolean isConfigured();
 

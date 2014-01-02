@@ -40,7 +40,7 @@ public class StaXParser
             // First create a new XMLInputFactory
             XMLInputFactory inputFactory = XMLInputFactory.newInstance();
             // Setup a new eventReader
-            //      InputStream in = new FileInputStream(configFile);
+            // InputStream in = new FileInputStream(configFile);
             XMLEventReader eventReader = inputFactory.createXMLEventReader( in );
             // Read the XML document
             SyncDataElementGroup item = null;
@@ -55,7 +55,7 @@ public class StaXParser
                     // If we have a item element we create a new item
                     if ( startElement.getName().getLocalPart() == ("dataElementGroup") )
                     {
-                        //            System.out.println("reaeched here1");
+                        // System.out.println("reaeched here1");
                         item = new SyncDataElementGroup();
                         // We read the attributes from this tag and add the date
                         // attribute to our object
@@ -63,7 +63,7 @@ public class StaXParser
                         while ( attributes.hasNext() )
                         {
                             Attribute attribute = attributes.next();
-                            //              System.out.println(attribute);
+                            // System.out.println(attribute);
                             if ( attribute.getName().toString().equals( "name" ) )
                             {
                                 item.setName( attribute.getValue() );
@@ -115,7 +115,7 @@ public class StaXParser
             // Setup a new eventReader
             InputStream stream = new ByteArrayInputStream( html.getBytes( "UTF-8" ) );
 
-            //      InputStream in = new FileInputStream(configFile);
+            // InputStream in = new FileInputStream(configFile);
             XMLEventReader eventReader = inputFactory.createXMLEventReader( stream );
             // Read the XML document
             SyncDataElement item = null;
@@ -133,12 +133,12 @@ public class StaXParser
 
                         item = new SyncDataElement();
 
-                        //        	  System.out.println("wasup");
+                        // System.out.println("wasup");
                         Iterator<Attribute> attributes = startElement.getAttributes();
                         while ( attributes.hasNext() )
                         {
                             Attribute attribute = attributes.next();
-                            //                    System.out.println(attribute);
+                            // System.out.println(attribute);
                             if ( attribute.getName().toString().equals( "name" ) )
                             {
                                 item.setName( attribute.getValue() );
@@ -196,7 +196,7 @@ public class StaXParser
             // Setup a new eventReader
             InputStream stream = new ByteArrayInputStream( html.getBytes( "UTF-8" ) );
 
-            //      InputStream in = new FileInputStream(configFile);
+            // InputStream in = new FileInputStream(configFile);
             XMLEventReader eventReader = inputFactory.createXMLEventReader( stream );
             // Read the XML document
             SyncDataSet item = null;
@@ -214,12 +214,12 @@ public class StaXParser
 
                         item = new SyncDataSet();
 
-                        //        	  System.out.println("wasup");
+                        // System.out.println("wasup");
                         Iterator<Attribute> attributes = startElement.getAttributes();
                         while ( attributes.hasNext() )
                         {
                             Attribute attribute = attributes.next();
-                            //                    System.out.println(attribute);
+                            // System.out.println(attribute);
                             if ( attribute.getName().toString().equals( "name" ) )
                             {
                                 item.setName( attribute.getValue() );
@@ -276,7 +276,7 @@ public class StaXParser
             // Setup a new eventReader
             InputStream stream = new ByteArrayInputStream( html.getBytes( "UTF-8" ) );
 
-            //      InputStream in = new FileInputStream(configFile);
+            // InputStream in = new FileInputStream(configFile);
             XMLEventReader eventReader = inputFactory.createXMLEventReader( stream );
             // Read the XML document
             SyncCategoryCombo item = null;
@@ -294,12 +294,12 @@ public class StaXParser
 
                         item = new SyncCategoryCombo();
 
-                        //        	  System.out.println("wasup");
+                        // System.out.println("wasup");
                         Iterator<Attribute> attributes = startElement.getAttributes();
                         while ( attributes.hasNext() )
                         {
                             Attribute attribute = attributes.next();
-                            //                    System.out.println(attribute);
+                            // System.out.println(attribute);
                             if ( attribute.getName().toString().equals( "name" ) )
                             {
                                 item.setName( attribute.getValue() );
@@ -360,7 +360,7 @@ public class StaXParser
             // Setup a new eventReader
             InputStream stream = new ByteArrayInputStream( html.getBytes( "UTF-8" ) );
 
-            //      InputStream in = new FileInputStream(configFile);
+            // InputStream in = new FileInputStream(configFile);
             XMLEventReader eventReader = inputFactory.createXMLEventReader( stream );
             // Read the XML document
             SyncCategoryOptionCombo item = null;
@@ -378,12 +378,12 @@ public class StaXParser
 
                         item = new SyncCategoryOptionCombo();
 
-                        //        	  System.out.println("wasup");
+                        // System.out.println("wasup");
                         Iterator<Attribute> attributes = startElement.getAttributes();
                         while ( attributes.hasNext() )
                         {
                             Attribute attribute = attributes.next();
-                            //                    System.out.println(attribute);
+                            // System.out.println(attribute);
                             if ( attribute.getName().toString().equals( "name" ) )
                             {
                                 item.setName( attribute.getValue() );
@@ -431,5 +431,45 @@ public class StaXParser
             e.printStackTrace();
         }
         return items;
+    }
+
+    public String readPeriodType( String html )
+    {
+        String periodType = new String();
+        try
+        {
+            // First create a new XMLInputFactory
+            XMLInputFactory inputFactory = XMLInputFactory.newInstance();
+            // Setup a new eventReader
+            InputStream stream = new ByteArrayInputStream( html.getBytes( "UTF-8" ) );
+
+            // InputStream in = new FileInputStream(configFile);
+            XMLEventReader eventReader = inputFactory.createXMLEventReader( stream );
+            // Read the XML document
+
+            while ( eventReader.hasNext() )
+            {
+                XMLEvent event = eventReader.nextEvent();
+
+                if ( event.isStartElement() )
+                {
+                    StartElement startElement = event.asStartElement();
+
+                    if ( startElement.getName().getLocalPart() == ("periodType") == true )
+                    {
+                        periodType = eventReader.getElementText();
+                    }
+                }
+            }
+        }
+        catch ( XMLStreamException e )
+        {
+            e.printStackTrace();
+        }
+        catch ( UnsupportedEncodingException e )
+        {
+            e.printStackTrace();
+        }
+        return periodType;
     }
 }

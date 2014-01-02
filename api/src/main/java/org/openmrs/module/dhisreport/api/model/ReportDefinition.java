@@ -31,13 +31,16 @@ import javax.xml.bind.annotation.*;
  * @author bobj
  */
 @XmlAccessorType( XmlAccessType.FIELD )
-@XmlType( name = "", propOrder = { "name", "uid", "code",
-//    "periodType",
-    "dataValueTemplates" } )
+@XmlType( name = "", propOrder = { "name", "uid", "code", "periodType", "dataValueTemplates" } )
 @XmlRootElement( name = "reportTemplate" )
 public class ReportDefinition
     implements Serializable, Identifiable
 {
+
+    /**
+	 * 
+	 */
+    private static final long serialVersionUID = -6618213228326732404L;
 
     @XmlTransient
     protected Integer id;
@@ -51,6 +54,9 @@ public class ReportDefinition
     @XmlElement( required = true )
     @XmlID
     protected String code;
+
+    @XmlElement( required = true )
+    protected String periodType;
 
     @XmlElementWrapper( name = "dataValueTemplates" )
     @XmlElement( name = "dataValueTemplate" )
@@ -156,6 +162,16 @@ public class ReportDefinition
         hash = 29 * hash + (this.uid != null ? this.uid.hashCode() : 0);
         hash = 29 * hash + (this.code != null ? this.code.hashCode() : 0);
         return hash;
+    }
+
+    public String getPeriodType()
+    {
+        return periodType;
+    }
+
+    public void setPeriodType( String periodType )
+    {
+        this.periodType = periodType;
     }
 
 }

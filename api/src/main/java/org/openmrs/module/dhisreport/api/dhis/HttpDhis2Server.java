@@ -48,7 +48,7 @@ import org.openmrs.module.dhisreport.api.dxf2.DataValueSet;
 import org.openmrs.module.dhisreport.api.model.ReportDefinition;
 
 /**
- *
+ * 
  * @author bobj
  */
 public class HttpDhis2Server
@@ -138,8 +138,13 @@ public class HttpDhis2Server
             throw new Dxf2Exception( "Problem marshalling dataValueSet", ex );
         }
 
+        System.out.print( "URL-" + url );
+
         String host = url.getHost();
         int port = url.getPort();
+
+        System.out.print( "URL-" + url + ":host-" + host + ":port-" );
+        System.out.println( port );
 
         HttpHost targetHost = new HttpHost( host, port, url.getProtocol() );
         DefaultHttpClient httpclient = new DefaultHttpClient();

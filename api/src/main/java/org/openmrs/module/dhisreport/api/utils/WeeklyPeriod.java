@@ -25,8 +25,8 @@ import org.joda.time.DateTime;
 import org.joda.time.DateTimeConstants;
 
 /**
- * Class to create period for weekly reporting. 
- * You can also mention just the week number in ISO8601 and initializes startDate and endDate
+ * Class to create period for weekly reporting. You can also mention just the
+ * week number in ISO8601 and initializes startDate and endDate
  */
 public class WeeklyPeriod
     implements Period

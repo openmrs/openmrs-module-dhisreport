@@ -17,49 +17,54 @@
  *  along with DHIS2 Reporting module.  If not, see <http://www.gnu.org/licenses/>.
  *
  **/
-package org.openmrs.module.dhisreport.api.utils;
+package org.openmrs.module.dhisreport.api.model;
 
-import java.text.SimpleDateFormat;
-import java.util.Date;
-import org.joda.time.DateTime;
+import java.io.Serializable;
+import javax.xml.bind.annotation.*;
 
 /**
  * 
- * @author bobj
+ * @author apurv
  */
-public class MonthlyPeriod
-    implements Period
+public class ServerDetails
 {
 
-    public static final String ISO_FORMAT = "yyyyMM";
+    protected Integer id;
 
-    protected Date startDate;
+    protected String url;
 
-    protected Date endDate;
+    protected String username;
 
-    @Override
-    public Date getStart()
+    protected String password;
+
+    public String getUrl()
     {
-        return startDate;
+        return url;
     }
 
-    @Override
-    public Date getEnd()
+    public void setUrl( String url )
     {
-        return endDate;
+        this.url = url;
     }
 
-    public MonthlyPeriod( Date date )
+    public String getUsername()
     {
-        DateTime dt = new DateTime( date );
-        startDate = dt.dayOfMonth().withMinimumValue().toDate();
-        endDate = dt.dayOfMonth().withMaximumValue().withTime( 23, 59, 59, 999 ).toDate();
+        return username;
     }
 
-    @Override
-    public String getAsIsoString()
+    public void setUsername( String username )
     {
-        return new SimpleDateFormat( ISO_FORMAT ).format( getStart() );
+        this.username = username;
+    }
+
+    public String getPassword()
+    {
+        return password;
+    }
+
+    public void setPassword( String password )
+    {
+        this.password = password;
     }
 
 }

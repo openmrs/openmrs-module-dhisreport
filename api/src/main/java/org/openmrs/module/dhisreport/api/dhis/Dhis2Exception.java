@@ -22,7 +22,7 @@ package org.openmrs.module.dhisreport.api.dhis;
 import org.openmrs.module.dhisreport.api.DHIS2ReportingException;
 
 /**
- *
+ * 
  * @author bobj
  */
 public class Dhis2Exception

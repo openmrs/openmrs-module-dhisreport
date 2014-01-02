@@ -22,7 +22,7 @@ package org.openmrs.module.dhisreport.api.utils;
 import java.util.Date;
 
 /**
- *
+ * 
  * @author bobj
  */
 public interface Period
