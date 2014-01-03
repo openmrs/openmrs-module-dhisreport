@@ -284,15 +284,15 @@ public class DHIS2ReportingServiceImpl
         }
         for ( ReportDefinition rd : reportTemplates.getReportDefinitions() )
         {
-            System.out.println( "entered my choice loop------------------------------------" );
-            System.out.println( rd.getName() );
+            //            System.out.println( "entered my choice loop------------------------------------" );
+            //            System.out.println( rd.getName() );
             for ( DataValueTemplate dvt : rd.getDataValueTemplates() )
             {
-                // System.out.println( "davt--------------------------" );
+                //                System.out.println( "davt--------------------------" );
                 dvt.setReportDefinition( rd );
 
-                saveDataValueTemplate( dvt );
-                // System.out.println( dvt.getId() );
+                //                saveDataValueTemplate( dvt );
+                //                System.out.println( dvt.getId() );
             }
             saveReportDefinition( rd );
         }
