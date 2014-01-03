@@ -7,7 +7,7 @@
 
 <form method="POST">
     <table>
-    	<!-- <openmrs:portlet url="globalProperties" parameters="title=${title}|propertyPrefix=dhisreport.|excludePrefix=dhisreport.started"/> -->
+    	<!-- openmrs:portlet url="globalProperties" parameters="title=${title}|propertyPrefix=dhisreport.|excludePrefix=dhisreport.started"/-->
         <thead style="background-color: #1AAC9B; color: white; padding: 2px;">
             <tr>
                 <td><spring:message code="dhisreport.parameter" /></td>
@@ -32,7 +32,6 @@
                 <td><input name="submit" type="submit" value="<spring:message code="dhisreport.dhis2saveButton" />" /></td>
             </tr>
         </tbody>
-       
     </table>
 </form>
 

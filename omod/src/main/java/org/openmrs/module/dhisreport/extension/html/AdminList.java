@@ -26,8 +26,8 @@ import org.openmrs.module.Extension;
 import org.openmrs.module.web.extension.AdministrationSectionExt;
 
 /**
- * This class defines the links that will appear on the administration page under the
- * "dhisreport.title" heading. 
+ * This class defines the links that will appear on the administration page
+ * under the "dhisreport.title" heading.
  */
 public class AdminList
     extends AdministrationSectionExt

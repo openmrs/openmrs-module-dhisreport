@@ -32,7 +32,7 @@ import org.junit.Test;
 import org.springframework.core.io.ClassPathResource;
 
 /**
- *
+ * 
  * @author bobj
  */
 public class ReportTemplatesTest

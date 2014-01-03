@@ -61,26 +61,26 @@ public class QuarterlyPeriod
         if ( monthNum >= 1 && monthNum <= 3 )
         {
             startDate = dt.withMonthOfYear( DateTimeConstants.JANUARY ).dayOfMonth().withMinimumValue().toDate();
-            endDate = dt.withMonthOfYear( DateTimeConstants.MARCH ).dayOfMonth().withMaximumValue()
-                .withTime( 23, 59, 59, 999 ).toDate();
+            endDate = dt.withMonthOfYear( DateTimeConstants.MARCH ).dayOfMonth().withMaximumValue().withTime( 23, 59,
+                59, 999 ).toDate();
         }
         else if ( monthNum >= 4 && monthNum <= 6 )
         {
             startDate = dt.withMonthOfYear( DateTimeConstants.APRIL ).dayOfMonth().withMinimumValue().toDate();
-            endDate = dt.withMonthOfYear( DateTimeConstants.JUNE ).dayOfMonth().withMaximumValue()
-                .withTime( 23, 59, 59, 999 ).toDate();
+            endDate = dt.withMonthOfYear( DateTimeConstants.JUNE ).dayOfMonth().withMaximumValue().withTime( 23, 59,
+                59, 999 ).toDate();
         }
         else if ( monthNum >= 7 && monthNum <= 9 )
         {
             startDate = dt.withMonthOfYear( DateTimeConstants.JULY ).dayOfMonth().withMinimumValue().toDate();
-            endDate = dt.withMonthOfYear( DateTimeConstants.SEPTEMBER ).dayOfMonth().withMaximumValue()
-                .withTime( 23, 59, 59, 999 ).toDate();
+            endDate = dt.withMonthOfYear( DateTimeConstants.SEPTEMBER ).dayOfMonth().withMaximumValue().withTime( 23,
+                59, 59, 999 ).toDate();
         }
         else if ( monthNum >= 10 && monthNum <= 12 )
         {
             startDate = dt.withMonthOfYear( DateTimeConstants.OCTOBER ).dayOfMonth().withMinimumValue().toDate();
-            endDate = dt.withMonthOfYear( DateTimeConstants.DECEMBER ).dayOfMonth().withMaximumValue()
-                .withTime( 23, 59, 59, 999 ).toDate();
+            endDate = dt.withMonthOfYear( DateTimeConstants.DECEMBER ).dayOfMonth().withMaximumValue().withTime( 23,
+                59, 59, 999 ).toDate();
         }
     }
 

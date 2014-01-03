@@ -18,7 +18,7 @@
     </c:forEach>
      -->
     <c:forEach var="dvm" items="${dataElementMap}">
-        <p><spring:message code="dhisreport.dataElement" />: Name: ${dvm.key.name} Code: ${dvm.key.name} Value: ${dvm.value}</p>
+        <p><spring:message code="dhisreport.dataElement" />: Name: ${dvm.key.name} Code: ${dvm.key.code} Value: ${dvm.value}</p>
     </c:forEach>
     
 </c:if>

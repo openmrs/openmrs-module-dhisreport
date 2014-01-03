@@ -38,8 +38,8 @@ public class ReportDefinition
 {
 
     /**
-	 * 
-	 */
+     * 
+     */
     private static final long serialVersionUID = -6618213228326732404L;
 
     @XmlTransient

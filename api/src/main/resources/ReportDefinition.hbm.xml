@@ -9,6 +9,7 @@
         <property column="report_name" name="name"/>
         <property column="uid" name="uid"/>
         <property column="code" name="code"/>
+        <property column="periodType" name="periodType"/>
         <set name="dataValueTemplates" 
          table="${project.parent.artifactId}_datavalue_template"
          cascade="all-delete-orphan" inverse="true" lazy="true" fetch="select">

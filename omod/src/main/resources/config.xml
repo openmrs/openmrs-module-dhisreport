@@ -69,7 +69,21 @@
 		</description>
 	</globalProperty>
 		
-	
+	<globalProperty>
+		<property>${project.parent.artifactId}.dhis2SyncDate</property>
+		<defaultValue></defaultValue>
+		<description>
+			The last sync date of reports.
+		</description>
+	</globalProperty>
+	<globalProperty>
+		<property>${project.parent.artifactId}.hospitalLocation</property>
+		<defaultValue></defaultValue>
+		<description>
+			Location ID of the hospital.
+		</description>
+	</globalProperty>
+		
 	
     <!-- Internationalization -->
     <!-- All message codes should start with ${project.parent.artifactId}. -->

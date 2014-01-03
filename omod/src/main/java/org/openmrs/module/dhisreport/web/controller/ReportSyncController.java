@@ -19,6 +19,11 @@
  **/
 package org.openmrs.module.dhisreport.web.controller;
 
+import java.text.DateFormat;
+import java.text.SimpleDateFormat;
+import java.util.Calendar;
+import java.util.Date;
+import java.util.List;
 import java.io.UnsupportedEncodingException;
 
 import javax.servlet.http.HttpServletRequest;
@@ -26,6 +31,7 @@ import javax.servlet.http.HttpSession;
 
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
+import org.openmrs.GlobalProperty;
 import org.openmrs.api.context.Context;
 import org.openmrs.module.dhisreport.api.DHIS2ReportingService;
 import org.openmrs.module.dhisreport.api.model.DataElement;
@@ -52,7 +58,7 @@ public class ReportSyncController
     {
         DHIS2ReportingService service = Context.getService( DHIS2ReportingService.class );
 
-        System.out.println( "reached here" );
+        System.out.println( "Entered Sync Controller" );
 
         ReportSynchronizer rs = new ReportSynchronizer();
 
@@ -61,6 +67,32 @@ public class ReportSyncController
 
             rs.fullSync();
 
+            DateFormat df = new SimpleDateFormat( "MM/dd/yyyy HH:mm:ss" );
+
+            // Get the date today using Calendar object.
+            Date today = Calendar.getInstance().getTime();
+            // Using DateFormat format method we can create a string
+            // representation of a date with the defined format.
+            String reportDate = df.format( today );
+
+            List<GlobalProperty> gbl = Context.getAdministrationService().getGlobalPropertiesByPrefix( "dhisreport" );
+
+            System.out.println( "before"
+                + Context.getAdministrationService().getGlobalProperty( "dhisreport.dhis2SyncDate" ) );
+
+            for ( GlobalProperty g : gbl )
+            {
+                // System.out.println( g.getProperty() );
+                if ( g.getProperty().equals( "dhisreport.dhis2SyncDate" ) )
+                {
+                    System.out.println( g.getDescription() );
+                    g.setPropertyValue( reportDate );
+                    Context.getAdministrationService().saveGlobalProperty( g );
+
+                }
+            }
+
+            System.out.println( Context.getAdministrationService().getGlobalProperty( "dhisreport.dhis2SyncDate" ) );
         }
         catch ( UnsupportedEncodingException e )
         {
@@ -96,7 +128,7 @@ public class ReportSyncController
             {
                 for ( String sId : ids )
                 {
-                    //                    reportId = Integer.parseInt( sId );
+                    // reportId = Integer.parseInt( sId );
                     System.out.println( sId );
                 }
             }
@@ -106,7 +138,9 @@ public class ReportSyncController
             httpSession.setAttribute( WebConstants.OPENMRS_MSG_ATTR, "Can not delete report " );
             log.error( e );
         }
-        //        httpSession.setAttribute(WebConstants.OPENMRS_MSG_ATTR, StringUtils.isBlank(temp) ? "sdmxhddataexport.report.deleted" : temp);
+        // httpSession.setAttribute(WebConstants.OPENMRS_MSG_ATTR,
+        // StringUtils.isBlank(temp) ? "sdmxhddataexport.report.deleted" :
+        // temp);
 
         return "redirect:/module/dhisreport/partReportSync.form";
     }

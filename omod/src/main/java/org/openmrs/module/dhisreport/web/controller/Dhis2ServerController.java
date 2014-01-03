@@ -19,6 +19,7 @@
  **/
 package org.openmrs.module.dhisreport.web.controller;
 
+import java.io.IOException;
 import java.net.MalformedURLException;
 import java.net.URL;
 import java.text.ParseException;
@@ -26,6 +27,13 @@ import java.util.List;
 
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
+import org.apache.http.HttpHost;
+import org.apache.http.HttpResponse;
+import org.apache.http.auth.UsernamePasswordCredentials;
+import org.apache.http.client.methods.HttpGet;
+import org.apache.http.impl.auth.BasicScheme;
+import org.apache.http.impl.client.DefaultHttpClient;
+import org.apache.http.protocol.BasicHttpContext;
 import org.openmrs.GlobalProperty;
 import org.openmrs.api.context.Context;
 import org.openmrs.module.dhisreport.api.DHIS2ReportingService;
@@ -93,30 +101,7 @@ public class Dhis2ServerController
 
         List<GlobalProperty> gbl = Context.getAdministrationService().getGlobalPropertiesByPrefix( "dhisreport" );
 
-        System.out.println( "dassssssssssssssssssssssssssss" + urlString + username + password );
-
-        for ( GlobalProperty g : gbl )
-        {
-            if ( g.getProperty().equals( "dhisreport.dhis2URL" ) )
-            {
-                System.out.println( g.getDescription() );
-                g.setPropertyValue( urlString );
-            }
-            if ( g.getProperty().equals( "dhisreport.dhis2UserName" ) )
-            {
-                System.out.println( g.getDescription() );
-
-                //                g.setPropertyValue( username );
-                g.setPropertyValue( username );
-            }
-            if ( g.getProperty().equals( "dhisreport.dhis2Password" ) )
-            {
-                System.out.println( "hello/;" + g.getDescription() );
-
-                g.setPropertyValue( password );
-            }
-
-        }
+        System.out.println( "parameters received on post request" + urlString + username + password );
 
         if ( server == null )
         {
@@ -130,11 +115,90 @@ public class Dhis2ServerController
 
         service.setDhis2Server( server );
 
-        log.debug( "Dhis2 server configured: " + username + ":xxxxxx  " + url.toExternalForm() );
+        boolean val = testConnection( url, username, password, server, webRequest, model );
 
-        model.addAttribute( "dhis2Server", server );
-        model.addAttribute( "user", Context.getAuthenticatedUser() );
-        webRequest.setAttribute( WebConstants.OPENMRS_MSG_ATTR, Context.getMessageSourceService().getMessage(
-            "dhisreport.saveConfigSuccess" ), WebRequest.SCOPE_SESSION );
+        if ( val == true )
+        {
+            for ( GlobalProperty g : gbl )
+            {
+                if ( g.getProperty().equals( "dhisreport.dhis2URL" ) )
+                {
+                    System.out.println( "Setting URL" + g.getProperty().equals( "dhisreport.dhis2URL" ) );
+                    g.setPropertyValue( urlString );
+
+                }
+                if ( g.getProperty().equals( "dhisreport.dhis2UserName" ) )
+                {
+                    System.out
+                        .println( " Setting  username as -" + g.getProperty().equals( "dhisreport.dhis2UserName" ) );
+
+                    g.setPropertyValue( username );
+                }
+                if ( g.getProperty().equals( "dhisreport.dhis2Password" ) )
+                {
+                    System.out.println( "setting password-" + g.getProperty().equals( "dhisreport.dhis2Password" ) );
+
+                    g.setPropertyValue( password );
+                }
+            }
+        }
+    }
+
+    /*
+     * To test the http connection
+     */
+    public boolean testConnection( URL url, String username, String password, HttpDhis2Server server,
+        WebRequest webRequest, ModelMap model )
+    {
+        String host = url.getHost();
+        int port = url.getPort();
+
+        HttpHost targetHost = new HttpHost( host, port, url.getProtocol() );
+        DefaultHttpClient httpclient = new DefaultHttpClient();
+        BasicHttpContext localcontext = new BasicHttpContext();
+
+        try
+        {
+            HttpGet httpGet = new HttpGet( url.getPath() ); // +
+            // DATAVALUESET_PATH
+            // );
+            httpGet.addHeader( BasicScheme.authenticate( new UsernamePasswordCredentials( username, password ),
+                "UTF-8", false ) );
+
+            HttpResponse response = httpclient.execute( targetHost, httpGet, localcontext );
+
+            System.out.println( "Http Response :" + response + ":" + response.getStatusLine().getStatusCode() );
+
+            if ( response.getStatusLine().getStatusCode() == 200 )
+            {
+                log.debug( "Dhis2 server configured: " + username + ":xxxxxx  " + url.toExternalForm() );
+
+                model.addAttribute( "dhis2Server", server );
+                model.addAttribute( "user", Context.getAuthenticatedUser() );
+                webRequest.setAttribute( WebConstants.OPENMRS_MSG_ATTR, Context.getMessageSourceService().getMessage(
+                    "dhisreport.saveConfigSuccess" ), WebRequest.SCOPE_SESSION );
+                return true;
+            }
+
+            else
+            {
+                log.debug( "Dhis2 server not configured" );
+
+                model.addAttribute( "dhis2Server", server );
+                model.addAttribute( "user", Context.getAuthenticatedUser() );
+                webRequest.setAttribute( WebConstants.OPENMRS_MSG_ATTR, Context.getMessageSourceService().getMessage(
+                    "dhisreport.saveConfigFailure" ), WebRequest.SCOPE_SESSION );
+                return false;
+            }
+        }
+        catch ( IOException ex )
+        {
+            log.debug( "Problem accessing DHIS2 server: " + ex.toString() );
+            return false;
+        }
+        finally
+        {
+            httpclient.getConnectionManager().shutdown();
+        }
     }
 }

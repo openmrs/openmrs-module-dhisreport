@@ -35,7 +35,7 @@ import org.openmrs.test.BaseModuleContextSensitiveTest;
 import org.springframework.core.io.ClassPathResource;
 
 /**
- * Tests {@link ${DHIS2ReportingService}}.
+ * Tests {@link $ DHIS2ReportingService} .
  */
 public class DHIS2ReportingServiceDXFTest
     extends BaseModuleContextSensitiveTest
@@ -47,7 +47,8 @@ public class DHIS2ReportingServiceDXFTest
     public void before()
         throws Exception
     {
-        // executeDataSet(XML_DATASET_PATH + new TestUtil().getTestDatasetFilename(XML_HTML_FORM_ENTRY_SERVICE_DATASET));
+        // executeDataSet(XML_DATASET_PATH + new
+        // TestUtil().getTestDatasetFilename(XML_HTML_FORM_ENTRY_SERVICE_DATASET));
         service = Context.getService( DHIS2ReportingService.class );
     }
 

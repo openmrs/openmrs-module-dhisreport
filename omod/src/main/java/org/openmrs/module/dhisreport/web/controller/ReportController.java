@@ -126,7 +126,8 @@ public class ReportController
 
         if ( freq.equalsIgnoreCase( "monthly" ) )
         {
-            dateStr = replacedateStrMonth( dateStr );
+            if ( dateStr.length() > 7 )
+                dateStr = replacedateStrMonth( dateStr );
             dateStr = dateStr.concat( "-01" );
             try
             {
@@ -167,7 +168,7 @@ public class ReportController
 
         // Get Location by OrgUnit Code
         Location location = service.getLocationByOU_Code( OU_Code );
-        //        System.out.println( "helloooooooooo3=====" + period );
+        System.out.println( "helloooooooooo3=====" + period );
         DataValueSet dvs = service.evaluateReportDefinition( service.getReportDefinition( reportDefinition_id ),
             period, location );
         // Set OrgUnit code into DataValueSet
@@ -227,6 +228,15 @@ public class ReportController
     //
     // dvs.marshall( response.getOutputStream());
     // }
+
+    @RequestMapping( value = "/module/dhisreport/syncReports", method = RequestMethod.GET )
+    public void syncReports( ModelMap model )
+    {
+        DHIS2ReportingService service = Context.getService( DHIS2ReportingService.class );
+
+        model.addAttribute( "user", Context.getAuthenticatedUser() );
+        model.addAttribute( "reportDefinitions", service.getAllReportDefinitions() );
+    }
 
     private String replacedateStrMonth( String dateStr )
     {
@@ -307,15 +317,6 @@ public class ReportController
         }
 
         return str;
-    }
-
-    @RequestMapping( value = "/module/dhisreport/syncReports", method = RequestMethod.GET )
-    public void syncReports( ModelMap model )
-    {
-        DHIS2ReportingService service = Context.getService( DHIS2ReportingService.class );
-
-        model.addAttribute( "user", Context.getAuthenticatedUser() );
-        model.addAttribute( "reportDefinitions", service.getAllReportDefinitions() );
     }
 
 }

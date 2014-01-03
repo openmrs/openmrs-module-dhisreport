@@ -30,7 +30,7 @@ import org.openmrs.test.BaseModuleContextSensitiveTest;
 import org.springframework.core.io.ClassPathResource;
 
 /**
- * Tests {@link ${DHIS2ReportingService}}.
+ * Tests {@link $ DHIS2ReportingService} .
  */
 public class DHIS2ReportingServiceDAOTest
     extends BaseModuleContextSensitiveTest
@@ -101,7 +101,7 @@ public class DHIS2ReportingServiceDAOTest
     {
         DataElement popDe = service.getDataElementByUid( DE_POP_UID );
         // should fail
-        //service.purgeDataElement( de1 );
+        // service.purgeDataElement( de1 );
         assertNotNull( service.getAllReportDefinitions() );
 
         rd = service.getReportDefinitionByUId( RT_POPULATION_UID );
