@@ -38,7 +38,7 @@ public class DhisReportHeader
 
     public String getLabel()
     {
-        return "dhisreport.navtitle";
+        return "DHIS2";
     }
 
     public String getUrl()
