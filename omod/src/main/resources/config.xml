@@ -77,10 +77,10 @@
 		</description>
 	</globalProperty>
 	<globalProperty>
-		<property>${project.parent.artifactId}.hospitalLocation</property>
+		<property>${project.parent.artifactId}.SchedulerURL</property>
 		<defaultValue></defaultValue>
 		<description>
-			Location ID of the hospital.
+			URL of the page where we post reports (e.g. http://localhost:8081/openmrs18/module/dhisreport/executeReport.form )
 		</description>
 	</globalProperty>
 		
