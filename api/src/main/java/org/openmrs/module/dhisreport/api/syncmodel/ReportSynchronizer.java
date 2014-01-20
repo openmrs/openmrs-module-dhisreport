@@ -9,7 +9,9 @@ import java.net.MalformedURLException;
 import java.net.URL;
 import java.net.URLConnection;
 import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 
 import org.apache.commons.codec.binary.Base64;
 import org.apache.commons.logging.Log;
@@ -164,12 +166,12 @@ public class ReportSynchronizer
             // jaxbDisagMarshaller.setProperty(Marshaller.JAXB_FORMATTED_OUTPUT,
             // true);
             // jaxbDisagMarshaller.marshal(disag, System.out);
-            DataValueTemplate dvt = new DataValueTemplate();
-            dvt.setDataelement( jaxde );
-            dvt.setDisaggregation( disag );
-            System.out.println( "set dvt -" + dvt.toString() );
-            // Set<DataValueTemplate> dvts = new HashSet<DataValueTemplate>();
-            // dvts.add( dvt );
+            DataValueTemplate dvt = null;
+            //            dvt.setDataelement( jaxde );
+            //            dvt.setDisaggregation( disag );
+            //            System.out.println( "set dvt -" + dvt.toString() );
+            //            Set<DataValueTemplate> dvts = new HashSet<DataValueTemplate>();
+            //            dvts.add( dvt );
 
             // System.out.println( "hello6" );
             for ( SyncDataSet syds : datasets )
@@ -181,21 +183,27 @@ public class ReportSynchronizer
                 ds.setUid( syds.getId() );
                 ds.setPeriodType( syds.getPeriodType() );
                 System.out.println( "data set Period TYpe:--" + syds.getPeriodType() );
-                // ds.addDataValueTemplate( dvt );
-                dvt.setReportDefinition( ds );
-                // dvt.setId( 4300 );
-                // ds.setDataValueTemplates( dvts );
-                // System.out.println( "hello8" );
                 service.saveReportDefinition( ds );
+
+                dvt = new DataValueTemplate();
+                dvt.setDataelement( jaxde );
+                dvt.setDisaggregation( disag );
+                dvt.setReportDefinition( ds );
+
+                // dvt.setId( 4300 );
+
+                //                ds.addDataValueTemplate( dvt );
+                //                ds.setDataValueTemplates( dvts );
+                // System.out.println( "hello8" );
                 System.out.println( "saved data set-" + ds.getName() );
                 service.saveDataValueTemplateTest( dvt );
-
+                ds.addDataValueTemplate( dvt );
                 rtrepdef = new ArrayList<ReportDefinition>();
                 rtrepdef.add( ds );
                 System.out.println( "creatting report defintion array.. just added" + ds.getName() );
 
             }
-            // service.saveDataValueTemplate( dvt );
+            //            service.saveDataValueTemplateTest( dvt );
             // ReportTemplates rt = new ReportTemplates();
             // rt.setDataElements( rtde );
             // rt.setDisaggregations( rtdisag );

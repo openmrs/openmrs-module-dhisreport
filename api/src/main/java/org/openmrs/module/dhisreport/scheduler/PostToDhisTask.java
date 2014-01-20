@@ -23,11 +23,11 @@ import java.net.URL;
 import java.util.Calendar;
 import java.util.Collection;
 import java.util.Date;
+import java.util.Iterator;
 import java.util.List;
 
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
-import org.apache.http.conn.params.ConnConnectionParamBean;
 import org.openmrs.Location;
 import org.openmrs.api.context.Context;
 import org.openmrs.module.dhisreport.api.DHIS2ReportingService;
@@ -91,7 +91,10 @@ public class PostToDhisTask
         int week = cal.get( Calendar.WEEK_OF_YEAR );
 
         for ( ReportDefinition reports : reportdefs )
+        //        while ( !reportdefs.isEmpty() )
         {
+            //            Iterator<ReportDefinition> reportiterator = reportdefs.iterator();
+            //            ReportDefinition reports = reportiterator.next();
             reportId = reports.getId();
             System.out.println( "reportId is-" + reportId );
             freq = reports.getPeriodType();
@@ -118,7 +121,11 @@ public class PostToDhisTask
                     + "&resultDestination=" + resultDestination + "&reportDefinition_id=" + reportId.toString();
                 // location=DDU01&frequency=monthly&date=2013-Mar&resultDestination=post&reportDefinition_id=58
 
-                sendPost( urlParameters );
+                int reponsecode = sendPost( urlParameters );
+                //                if ( reponsecode == 400 )
+                //                {
+                //                    reportdefs.remove( reports );
+                //                }
                 Thread.sleep( 5000 );
             }
             catch ( Exception e )
@@ -129,7 +136,7 @@ public class PostToDhisTask
                 continue;
             }
 
-        }
+        }//outer
 
         // get parameter for each report
         // send post request for each report
@@ -142,11 +149,13 @@ public class PostToDhisTask
         this.stopExecuting();
     }
 
-    private void sendPost( String urlParameters )
+    private int sendPost( String urlParameters )
         throws Exception
     {
 
         String url = "http://localhost:8081/openmrs18/module/dhisreport/executeReport.form";
+        url = Context.getAdministrationService().getGlobalProperty( "dhisreport.SchedulerURL" );
+
         final String USER_AGENT = "Mozilla/5.0";
 
         URL obj = new URL( url );
@@ -204,7 +213,8 @@ public class PostToDhisTask
         in.close();
 
         // print result
-        System.out.println( response.toString() );
+        //        System.out.println( response.toString() );
+        return responseCode;
 
     }
 }
