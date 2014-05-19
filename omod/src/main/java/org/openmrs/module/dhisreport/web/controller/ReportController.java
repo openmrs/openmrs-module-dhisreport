@@ -147,7 +147,20 @@ public class ReportController
         {
             try
             {
-                period = new WeeklyPeriod( new SimpleDateFormat( "yyyy-'W'ww" ).parse( dateStr ) );
+                String finalweek = "";
+                String[] modify_week = dateStr.split( "W" );
+                Integer weekvalue = Integer.parseInt( dateStr.substring( dateStr.indexOf( 'W' ) + 1 ) ) + 1;
+                if ( weekvalue > 9 )
+                {
+                    weekvalue = weekvalue == 54 ? 53 : weekvalue;
+                    finalweek = modify_week[0].concat( "W" + weekvalue.toString() );
+                }
+                else
+                {
+                    finalweek = modify_week[0].concat( "W0" + weekvalue.toString() );
+                }
+
+                period = new WeeklyPeriod( new SimpleDateFormat( "yyyy-'W'ww" ).parse( finalweek ) );
             }
             catch ( ParseException ex )
             {

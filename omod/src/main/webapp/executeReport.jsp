@@ -16,13 +16,35 @@
     <!-- <c:forEach var="dv" items="${dataValueSet.dataValues}">
         <p><spring:message code="dhisreport.dataElement" />: Code: ${dv.dataElement}, Value: ${dv.value}</p>
     </c:forEach>
-     -->
+    
     <c:forEach var="dvm" items="${dataElementMap}">
         <p><spring:message code="dhisreport.dataElement" />: Name: ${dvm.key.name} Code: ${dvm.key.code} Value: ${dvm.value}</p>
     </c:forEach>
-    
+     -->
+     <br>
+<div>
+	<table style="width:600px">
+	<tr>
+	<th>DataElement Name</th>
+	<th>DataElement Code</th>		
+	<th>Value</th>
+	</tr>
+	<tr>
+	
+    <c:forEach var="dvm" items="${dataElementMap}">
+    <tr>
+  		<td>${dvm.key.name}</td>
+  		<td>${dvm.key.code}</td>		
+  		<td>${dvm.value}</td>
+  	</tr>
+	<tr>
+	
+  	</c:forEach>
+	</table>
+	</div>
 </c:if>
 <c:if test="${not empty importSummary}">
+    
     <div>
         <table>
             <tr><td><spring:message code="dhisreport.status" />; </td><td>${importSummary.status}</td></tr>
