@@ -50,12 +50,12 @@ public class PostToDhisTask
      */
     public PostToDhisTask()
     {
-        log.debug( "hello world task created at " + new Date() );
+        log.debug( "Automated Report Posting Task Created at " + new Date() );
     }
 
     public void execute()
     {
-        log.debug( "executing hello world task" );
+        log.debug( "Started Automated Report Posting Task " );
 
         // get all reports
 
@@ -81,7 +81,7 @@ public class PostToDhisTask
             {
                 String temp = location.getDisplayString();
                 orgUnit = location.getDisplayString().substring( (temp.indexOf( "[" ) + 1), (temp.indexOf( "]" )) );
-                System.out.println( "Current Location ID-" + orgUnit );
+                log.debug( "Current Location ID-" + orgUnit );
             }
         }
 
@@ -97,15 +97,19 @@ public class PostToDhisTask
             //            ReportDefinition reports = reportiterator.next();
             reportId = reports.getId();
             System.out.println( "reportId is-" + reportId );
-            freq = reports.getPeriodType();
 
             try
             {
+                freq = reports.getPeriodType();
                 if ( freq.equalsIgnoreCase( "Monthly" ) )
                 {
                     if ( month == 0 )
                         month = 12;
-                    dateStr = year + "-" + Integer.toString( (month) );
+                    if ( month > 10 )
+                        dateStr = year + "-" + Integer.toString( (month) );
+                    else
+                        dateStr = year + "-0" + Integer.toString( (month) );
+                    //dateStr = year + "-" + Integer.toString( (month) );
                 }
                 if ( freq.equalsIgnoreCase( "Weekly" ) )
                 {
@@ -132,7 +136,8 @@ public class PostToDhisTask
             {
                 // TODO Auto-generated catch block
                 e.printStackTrace();
-                System.out.println( "Enterted Catch for report =" + reportId );
+                log.debug( "Post Failed for report" + reportId + " Reason" + e.getMessage() );
+                log.debug( System.out );
                 continue;
             }
 
@@ -145,7 +150,7 @@ public class PostToDhisTask
 
     public void shutdown()
     {
-        log.debug( "shutting down hello world task" );
+        log.debug( "shutting down Automated Report Posting Task" );
         this.stopExecuting();
     }
 
@@ -165,7 +170,7 @@ public class PostToDhisTask
         con.setRequestMethod( "POST" );
         con.setRequestProperty( "User-Agent", USER_AGENT );
         con.setRequestProperty( "Accept-Language", "en-US,en;q=0.5" );
-        con.setRequestProperty( "Host", "localhost:8081" );
+        //con.setRequestProperty( "Host", "localhost:8081" );
 
         DHIS2ReportingService service = Context.getService( DHIS2ReportingService.class );
         String dhisurl = Context.getAdministrationService().getGlobalProperty( "dhisreport.dhis2URL" );
@@ -181,6 +186,7 @@ public class PostToDhisTask
         catch ( MalformedURLException e )
         {
             e.printStackTrace();
+            log.debug( "Failed to Post Report" + e.getMessage() );
         }
 
         server.setUrl( urltemp );
@@ -198,9 +204,9 @@ public class PostToDhisTask
         wr.close();
 
         int responseCode = con.getResponseCode();
-        System.out.println( "\nSending 'POST' request to URL : " + url );
-        System.out.println( "Post parameters : " + urlParameters );
-        System.out.println( "Response Code : " + responseCode );
+        log.debug( "\nSending 'POST' request to URL : " + url );
+        log.debug( "Post parameters : " + urlParameters );
+        log.debug( "Response Code : " + responseCode );
 
         BufferedReader in = new BufferedReader( new InputStreamReader( con.getInputStream() ) );
         String inputLine;

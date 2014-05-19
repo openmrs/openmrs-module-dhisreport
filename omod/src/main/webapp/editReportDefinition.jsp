@@ -19,9 +19,9 @@
                 <tr>
                     <th></th>
                     <th>[<spring:message code="dhisreport.dataElement" />]</th>
-                    <!-- 
+                    
                     <th>[<spring:message code="dhisreport.disaggregationName" />]</th>
-                    <th>[<spring:message code="dhisreport.disaggregationCode" />]</th>
+                    <!--  <th>[<spring:message code="dhisreport.disaggregationCode" />]</th>
                     -->
                     <th>[<spring:message code="dhisreport.query" />]</th>
                     <th>[<spring:message code="dhisreport.action" />]</th>
@@ -33,9 +33,9 @@
                                    value="dataValueTemplate${dataValueTemplate.id }"
                                    name="dataValueTemplateId"></td>
                         <th>${dataValueTemplate.dataelement.name}</th>
-                        <!--
+                        
                         <td>${dataValueTemplate.disaggregation.name}</td>
-                        <td><b><u>${dataValueTemplate.disaggregation.code}</u></b></td>
+                        <!--<td><b><u>${dataValueTemplate.disaggregation.code}</u></b></td>
                         -->
                         <td><i><pre class="sh_sql" id="reportDefinition_query${dataValueTemplate.id }">${dataValueTemplate.query}</pre></i></td>
 
