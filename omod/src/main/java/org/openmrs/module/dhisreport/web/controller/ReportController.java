@@ -31,6 +31,7 @@ import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.hisp.dhis.dxf2.importsummary.ImportSummary;
 import org.openmrs.Location;
+import org.openmrs.LocationAttribute;
 import org.openmrs.api.context.Context;
 import org.openmrs.module.dhisreport.api.DHIS2ReportingException;
 import org.openmrs.module.dhisreport.api.DHIS2ReportingService;
@@ -119,7 +120,7 @@ public class ReportController
     String freq, WebRequest webRequest )
         throws DHIS2ReportingException
     {
-        DHIS2ReportingService service = Context.getService( DHIS2ReportingService.class );
+        DHIS2ReportingService service = Context.getService( DHIS2ReportingService.class );     
         Period period = null;
         System.out.println( "freeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeee" + freq );
         System.out.println( "dasdasssssssssssssssssssss" + dateStr );
@@ -184,8 +185,12 @@ public class ReportController
         System.out.println( "helloooooooooo3=====" + period );
         DataValueSet dvs = service.evaluateReportDefinition( service.getReportDefinition( reportDefinition_id ),
             period, location );
+        for ( LocationAttribute la : location.getActiveAttributes() )
+        {
+            if ( la.getAttributeType().getName().equals( "FOSAID" ) )
+                dvs.setOrgUnit( la.getValue().toString() );
+        }
         // Set OrgUnit code into DataValueSet
-        dvs.setOrgUnit( OU_Code );
 
         List<DataValue> datavalue = dvs.getDataValues();
         Map<DataElement, String> deset = new HashMap<DataElement, String>();
