@@ -349,7 +349,7 @@ public class HibernateDHIS2ReportingDAO
     public Location getLocationByOU_Code( String OU_Code )
     {
         Criteria criteria = sessionFactory.getCurrentSession().createCriteria( Location.class );
-        criteria.add( Restrictions.like( "name", "%" + OU_Code + "%" ) );
+        criteria.add( Restrictions.like( "name", OU_Code ) );
         return (Location) criteria.uniqueResult();
     }
 
