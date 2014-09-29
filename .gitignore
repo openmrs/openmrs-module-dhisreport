@@ -1,5 +1,8 @@
 # Copied from https://github.com/github/gitignore
 
+MANIFEST.MF
+pom.properties
+
 ### IntelliJ Idea ###
 *.iml
 *.ipr
@@ -7,7 +10,7 @@
 .idea/
 
 ### Maven ###
-target/
+target/*
 #############
 
 ### Eclipse ###
@@ -23,8 +26,19 @@ tmp/**/*
 *~.nib
 local.properties
 .classpath
-.settings/
+.settings/*
 .loadpath
+api/.classpath
+api/.project
+api/.settings/*
+api/target/*
+omod/.classpath
+omod/.project
+omod/.settings/*
+omod/target/*
+test/target/*
+/.settings
+
 
 # External tool builders
 .externalToolBuilders/
@@ -65,3 +79,9 @@ nb-configuration.xml
 *~
 #############
 
+### OpenMRS Files ###
+/webapp/activemq-data
+/webapp/src/main/webapp/WEB-INF/tags/module
+/webapp/src/main/webapp/WEB-INF/dwr-modules.xml
+/webapp/src/main/webapp/WEB-INF/module_messages*
+#############
