@@ -150,15 +150,15 @@ function applyWeeklyHighlight() {
 
 <form action="executeReport.form" method="post">
     <table>
-        <tr>
+       <%--  <tr>
             <td><spring:message code="dhisreport.Location" /></td>
             <td>
                 <select name="location"> 
                     <c:forEach var="location" items="${locations}" >
-                        <option value="${fn:substring(location.name,fn:indexOf(location.name,"[") + 1,fn:indexOf(location.name,"]"))}" />${location.name}</option>
+                        <option>${location.name}</option>
                     </c:forEach>
                 </select>
-            </td>
+            </td> --%>
            <tr>
 				<td><spring:message code="dhisreport.Frequency" /></td>
 				<td>

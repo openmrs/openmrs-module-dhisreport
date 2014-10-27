@@ -23,16 +23,19 @@ import java.net.MalformedURLException;
 import java.net.URL;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import org.apache.commons.lang.StringUtils;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.hisp.dhis.dxf2.importsummary.ImportSummary;
 import org.openmrs.Location;
 import org.openmrs.LocationAttribute;
 import org.openmrs.api.context.Context;
+import org.openmrs.module.dhisreport.api.AggregatedResultSet;
 import org.openmrs.module.dhisreport.api.DHIS2ReportingException;
 import org.openmrs.module.dhisreport.api.DHIS2ReportingService;
 import org.openmrs.module.dhisreport.api.dhis.Dhis2Server;
@@ -113,14 +116,14 @@ public class ReportController
 
     @RequestMapping( value = "/module/dhisreport/executeReport", method = RequestMethod.POST )
     public void executeReport( ModelMap model, @RequestParam( value = "reportDefinition_id", required = true )
-    Integer reportDefinition_id, @RequestParam( value = "location", required = true )
+    Integer reportDefinition_id, @RequestParam( value = "location", required = false )
     String OU_Code, @RequestParam( value = "resultDestination", required = true )
     String destination, @RequestParam( value = "date", required = true )
     String dateStr, @RequestParam( value = "frequency", required = true )
     String freq, WebRequest webRequest )
         throws DHIS2ReportingException
     {
-        DHIS2ReportingService service = Context.getService( DHIS2ReportingService.class );     
+        DHIS2ReportingService service = Context.getService( DHIS2ReportingService.class );
         Period period = null;
         System.out.println( "freeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeee" + freq );
         System.out.println( "dasdasssssssssssssssssssss" + dateStr );
@@ -181,38 +184,66 @@ public class ReportController
         }
 
         // Get Location by OrgUnit Code
-        Location location = service.getLocationByOU_Code( OU_Code );
+        //Location location = service.getLocationByOU_Code( OU_Code );
         System.out.println( "helloooooooooo3=====" + period );
-        DataValueSet dvs = service.evaluateReportDefinition( service.getReportDefinition( reportDefinition_id ),
-            period, location );
-        for ( LocationAttribute la : location.getActiveAttributes() )
+        List<DataValueSet> dvsList = new ArrayList<DataValueSet>();
+        List<Location> locationList = new ArrayList<Location>();
+        //locationList.add( location );
+        //locationList.add( service.getLocationByOU_Code( "Gahombo" ) );
+        locationList.addAll( Context.getLocationService().getAllLocations() );
+
+        //remove locations without FOSAID codes
+        /*for ( Location l : locationList )
         {
-            if ( la.getAttributeType().getName().equals( "FOSAID" ) )
-                dvs.setOrgUnit( la.getValue().toString() );
-        }
-        // Set OrgUnit code into DataValueSet
+            for ( LocationAttribute la : l.getActiveAttributes() )
+            {
+                if ( la.getAttributeType().getName().equals( "FOSAID" ) )
+                {
+                    if ( StringUtils.isEmpty( la.getValue().toString() ) )
+                    {
+                        locationList.remove( l );
+                        break;
+                    }
+                }
 
-        List<DataValue> datavalue = dvs.getDataValues();
-        Map<DataElement, String> deset = new HashMap<DataElement, String>();
-
-        for ( DataValue dv : datavalue )
+            }
+        }*/
+        Map<String, Map> desetList = new HashMap<String, Map>();
+        List<AggregatedResultSet> aggregatedList = new ArrayList<AggregatedResultSet>();
+        for ( Location l : locationList )
         {
+            AggregatedResultSet agrs = new AggregatedResultSet();
+            DataValueSet dvs = service.evaluateReportDefinition( service.getReportDefinition( reportDefinition_id ),
+                period, l );
+            for ( LocationAttribute la : l.getActiveAttributes() )
+            {
+                if ( la.getAttributeType().getName().equals( "FOSAID" ) )
+                    dvs.setOrgUnit( la.getValue().toString() );
+            }
+            // Set OrgUnit code into DataValueSet
 
-            DataElement detrmp = service.getDataElementByCode( dv.getDataElement() );
-            System.out.println( detrmp.getName() + detrmp.getCode() );
-            deset.put( detrmp, dv.getValue() );
+            List<DataValue> datavalue = dvs.getDataValues();
+            Map<DataElement, String> deset = new HashMap<DataElement, String>();
+            for ( DataValue dv : datavalue )
+            {
 
+                DataElement detrmp = service.getDataElementByCode( dv.getDataElement() );
+                System.out.println( detrmp.getName() + detrmp.getCode() );
+                deset.put( detrmp, dv.getValue() );
+            }
+            agrs.setDataValueSet( dvs );
+            agrs.setDataElementMap( deset );
+
+            if ( destination.equals( "post" ) )
+            {
+                ImportSummary importSummary = Context.getService( DHIS2ReportingService.class ).postDataValueSet( dvs );
+                agrs.setImportSummary( importSummary );
+            }
+            aggregatedList.add( agrs );
         }
 
         model.addAttribute( "user", Context.getAuthenticatedUser() );
-        model.addAttribute( "dataValueSet", dvs );
-        model.addAttribute( "dataElementMap", deset );
-
-        if ( destination.equals( "post" ) )
-        {
-            ImportSummary importSummary = Context.getService( DHIS2ReportingService.class ).postDataValueSet( dvs );
-            model.addAttribute( "importSummary", importSummary );
-        }
+        model.addAttribute( "aggregatedList", aggregatedList );
     }
 
     // @RequestMapping(value = "/module/dhisreport/executeReport", method =
