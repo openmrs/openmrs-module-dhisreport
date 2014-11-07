@@ -21,6 +21,7 @@ package org.openmrs.module.dhisreport.api.impl;
 
 import java.io.InputStream;
 import java.io.OutputStream;
+import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
 import java.util.ListIterator;
@@ -29,10 +30,13 @@ import java.util.Set;
 import javax.xml.bind.JAXBContext;
 import javax.xml.bind.Marshaller;
 import javax.xml.bind.Unmarshaller;
+
+import org.apache.commons.lang.StringUtils;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.hisp.dhis.dxf2.importsummary.ImportSummary;
 import org.openmrs.Location;
+import org.openmrs.LocationAttribute;
 import org.openmrs.api.context.Context;
 import org.openmrs.api.impl.BaseOpenmrsService;
 import org.openmrs.module.dhisreport.api.DHIS2ReportingException;
@@ -152,6 +156,11 @@ public class DHIS2ReportingServiceImpl
     public ReportDefinition getReportDefinitionByUId( String uid )
     {
         return dao.getReportDefinitionByUid( uid );
+    }
+
+    public ReportDefinition getReportDefinitionByCode( String code )
+    {
+        return dao.getReportDefinitionByCode( code );
     }
 
     @Override
@@ -346,4 +355,26 @@ public class DHIS2ReportingServiceImpl
         return dao.getLocationByOU_Code( OU_Code );
     }
 
+    @Override
+    public Location getLocationByOrgUnitCode( String orgUnitCode )
+    {
+        List<Location> locationList = new ArrayList<Location>();
+        locationList.addAll( Context.getLocationService().getAllLocations() );
+        for ( Location l : locationList )
+        {
+            for ( LocationAttribute la : l.getActiveAttributes() )
+            {
+                if ( la.getAttributeType().getName().equals( "FOSAID" ) )
+                {
+                    System.out.println( la.getValue().toString() );
+                    if ( (la.getValue().toString()).equals( orgUnitCode ) )
+                    {
+                        return l;
+                    }
+                }
+
+            }
+        }
+        return null;
+    }
 }

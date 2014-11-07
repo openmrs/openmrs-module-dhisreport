@@ -292,6 +292,14 @@ public class HibernateDHIS2ReportingDAO
     }
 
     @Override
+    public ReportDefinition getReportDefinitionByCode( String code )
+    {
+        Criteria criteria = sessionFactory.getCurrentSession().createCriteria( ReportDefinition.class );
+        criteria.add( Restrictions.eq( "code", code ) );
+        return (ReportDefinition) criteria.uniqueResult();
+    }
+
+    @Override
     public DataValueTemplate getDataValueTemplate( Integer id )
     {
         return (DataValueTemplate) sessionFactory.getCurrentSession().get( DataValueTemplate.class, id );

@@ -155,6 +155,9 @@ public interface DHIS2ReportingService
     @Transactional( readOnly = true )
     public ReportDefinition getReportDefinitionByUId( String uid );
 
+    @Transactional( readOnly = true )
+    public ReportDefinition getReportDefinitionByCode( String code );
+
     /**
      * @param reportDefinition
      * @return
@@ -240,4 +243,6 @@ public interface DHIS2ReportingService
     public Location getLocationByOU_Code( String OU_Code );
 
     public void saveDataValueTemplateTest( DataValueTemplate dvt );
+
+    public Location getLocationByOrgUnitCode( String orgUnitCode );
 }

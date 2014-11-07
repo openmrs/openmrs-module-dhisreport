@@ -188,29 +188,32 @@ public class ReportController
         System.out.println( "helloooooooooo3=====" + period );
         List<DataValueSet> dvsList = new ArrayList<DataValueSet>();
         List<Location> locationList = new ArrayList<Location>();
+        List<Location> locationListFinal = new ArrayList<Location>();
         //locationList.add( location );
         //locationList.add( service.getLocationByOU_Code( "Gahombo" ) );
         locationList.addAll( Context.getLocationService().getAllLocations() );
 
         //remove locations without FOSAID codes
-        /*for ( Location l : locationList )
+        for ( Location l : locationList )
         {
             for ( LocationAttribute la : l.getActiveAttributes() )
             {
                 if ( la.getAttributeType().getName().equals( "FOSAID" ) )
                 {
-                    if ( StringUtils.isEmpty( la.getValue().toString() ) )
+                    System.out.println( "Name-----" + la.getAttributeType().getName() + "Value---" + la.getValue() );
+                    if ( !la.getValue().toString().isEmpty() && la.getValue().toString() != null )
                     {
-                        locationList.remove( l );
+                        locationListFinal.add( l );
                         break;
                     }
+
                 }
 
             }
-        }*/
+        }
         Map<String, Map> desetList = new HashMap<String, Map>();
         List<AggregatedResultSet> aggregatedList = new ArrayList<AggregatedResultSet>();
-        for ( Location l : locationList )
+        for ( Location l : locationListFinal )
         {
             AggregatedResultSet agrs = new AggregatedResultSet();
             DataValueSet dvs = service.evaluateReportDefinition( service.getReportDefinition( reportDefinition_id ),

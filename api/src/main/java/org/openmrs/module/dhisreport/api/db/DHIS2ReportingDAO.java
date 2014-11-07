@@ -61,6 +61,8 @@ public interface DHIS2ReportingDAO
 
     public ReportDefinition getReportDefinitionByUid( String uid );
 
+    public ReportDefinition getReportDefinitionByCode( String code );
+
     public ReportDefinition saveReportDefinition( ReportDefinition rd );
 
     public Collection<ReportDefinition> getAllReportDefinitions();

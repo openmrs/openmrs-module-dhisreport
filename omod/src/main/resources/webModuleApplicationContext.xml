@@ -27,6 +27,6 @@
     <!-- causes problems with older version of spring included in OpenMRS v1.8 -->
     <!--bean class="org.springframework.web.servlet.mvc.annotation.DefaultAnnotationHandlerMapping"/-->
 	
-    <context:component-scan base-package="org.openmrs.module.dhisreport" />
+    <context:component-scan base-package="org.openmrs.module.dhisreport,org.openmrs.module.dhisreport.web.controller" />
 		
 </beans>
