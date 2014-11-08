@@ -14,6 +14,7 @@ import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.hisp.dhis.dxf2.Dxf2Exception;
 import org.openmrs.Location;
+import org.openmrs.LocationAttribute;
 import org.openmrs.api.context.Context;
 import org.openmrs.module.dhisreport.api.DHIS2ReportingService;
 import org.openmrs.module.dhisreport.api.dxf2.DataValueSet;
@@ -108,6 +109,12 @@ public class Dhis2ReportResourceController
 
         period = new MonthlyPeriod( new SimpleDateFormat( "yyyy-MM-dd" ).parse( timeperiod ) );
         DataValueSet dvs = service.evaluateReportDefinition( service.getReportDefinitionByCode( reportId ), period, l );
+
+        for ( LocationAttribute la : l.getActiveAttributes() )
+        {
+            if ( la.getAttributeType().getName().equals( "FOSAID" ) )
+                dvs.setOrgUnit( la.getValue().toString() );
+        }
 
         StringWriter xmlReport = new StringWriter();
         try
