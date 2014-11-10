@@ -366,7 +366,7 @@ public class DHIS2ReportingServiceImpl
             {
                 if ( la.getAttributeType().getName().equals( "FOSAID" ) )
                 {
-                    System.out.println( la.getValue().toString() );
+                    // System.out.println( la.getValue().toString() );
                     if ( (la.getValue().toString()).equals( orgUnitCode ) )
                     {
                         return l;

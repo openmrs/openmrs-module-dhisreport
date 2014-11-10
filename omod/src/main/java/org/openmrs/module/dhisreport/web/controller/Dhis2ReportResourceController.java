@@ -42,10 +42,14 @@ public class Dhis2ReportResourceController
     String timeperiod, HttpServletRequest request, HttpServletResponse response )
         throws Exception
     {
+        log.info( "User Authorizing the request" + Context.getAuthenticatedUser() );
+        log.info( "Request Parameters - ReportID" + reportId );
+        log.info( "Request Parameters - LocationID" + location );
+        log.info( "Request Parameters - Timeperiod" + timeperiod );
         //response.setContentType( "text/xml" );
         DHIS2ReportingService service = Context.getService( DHIS2ReportingService.class );
         Period period = null;
-        System.out.println( "dasdasssssssssssssssssssss" + timeperiod );
+        log.debug( "Initial Date Sent by the user: " + timeperiod );
 
         if ( !timeperiod.contains( "W" ) )
         {
@@ -56,9 +60,9 @@ public class Dhis2ReportResourceController
             timeperiod = timeperiod.concat( "-01" );
             try
             {
-                System.out.println( "helloooooooooo1=====" + timeperiod );
+                log.debug( "date before conversion to period" + timeperiod );
                 period = new MonthlyPeriod( new SimpleDateFormat( "yyyy-MM-dd" ).parse( timeperiod ) );
-                System.out.println( "helloooooooooo2=====" + period );
+                log.debug( "Date after conversion to period" + period );
             }
             catch ( ParseException pex )
             {
@@ -98,7 +102,7 @@ public class Dhis2ReportResourceController
 
         // Get Location by OrgUnit Code
         //Location location = service.getLocationByOU_Code( OU_Code );
-        System.out.println( "helloooooooooo3=====" + period );
+        log.debug( "Period =" + period );
 
         Location l = service.getLocationByOrgUnitCode( location );
 
@@ -131,8 +135,9 @@ public class Dhis2ReportResourceController
             throw new Dxf2Exception( "Problem marshalling dataValueSet", ex );
         }
         //System.out.println( xmlReport.toString() );
+        log.info( "Result" + xmlReport.toString() );
         String result = xmlReport.toString();
-        System.out.println( result );
+        //  System.out.println( result );
         return result;
     }
 }
