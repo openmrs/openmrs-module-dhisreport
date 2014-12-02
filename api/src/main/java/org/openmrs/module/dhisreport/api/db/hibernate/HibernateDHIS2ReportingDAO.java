@@ -325,8 +325,7 @@ public class HibernateDHIS2ReportingDAO
         dvt.setDataelement( de );
         dvt.setDisaggregation( dis );
         dvt.setReportDefinition( rd );
-        System.out.println( "Saving dvt de:" + de.getId() + de.getName() + ":diag:" + dis.getId() + dis.getName()
-            + ":rd:" + rd.getId() + rd.getName() );
+      //  System.out.println( "Saving dvt de:" + de.getId() + de.getName() + ":diag:" + dis.getId() + dis.getName() + ":rd:" + rd.getId() + rd.getName() );
 
         Criteria criteria = sessionFactory.getCurrentSession().createCriteria( DataValueTemplate.class );
         criteria.add( Restrictions.eq( "reportDefinition", rd ) ).add( Restrictions.eq( "dataelement", de ) ).add(
@@ -337,19 +336,18 @@ public class HibernateDHIS2ReportingDAO
 
         for ( DataValueTemplate dv : dvtlist )
         {
-            System.out.println( "---" + dv.getId() + "," + dv.getReportDefinition().getId() + ","
-                + dv.getDataelement().getId() + "," + dv.getQuery() );
+           // System.out.println( "---" + dv.getId() + "," + dv.getReportDefinition().getId() + "," + dv.getDataelement().getId() + "," + dv.getQuery() );
         }
 
         if ( dvt_db == null )
         {
-            System.out.println( "null case" );
+           // System.out.println( "null case" );
             sessionFactory.getCurrentSession().save( dvt );
             return dvt;
         }
         else
         {
-            System.out.println( "not null case:" + dvt_db.getId() );
+           // System.out.println( "not null case:" + dvt_db.getId() );
             sessionFactory.getCurrentSession().saveOrUpdate( dvt );
             return dvt_db;
         }

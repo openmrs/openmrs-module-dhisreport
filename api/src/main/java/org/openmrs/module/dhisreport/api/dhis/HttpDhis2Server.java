@@ -138,13 +138,13 @@ public class HttpDhis2Server
             throw new Dxf2Exception( "Problem marshalling dataValueSet", ex );
         }
 
-        System.out.print( "URL-" + url );
+        //System.out.print( "URL-" + url );
 
         String host = url.getHost();
         int port = url.getPort();
 
-        System.out.print( "URL-" + url + ":host-" + host + ":port-" );
-        System.out.println( port );
+        //System.out.print( "URL-" + url + ":host-" + host + ":port-" );
+       // System.out.println( port );
 
         HttpHost targetHost = new HttpHost( host, port, url.getProtocol() );
         DefaultHttpClient httpclient = new DefaultHttpClient();

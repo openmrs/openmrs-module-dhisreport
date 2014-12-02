@@ -39,8 +39,8 @@ public class PeriodTest
         cal.set( 2012, Calendar.MARCH, 5 );
         Period p = new MonthlyPeriod( cal.getTime() );
 
-        System.out.println( p.getStart().toString() );
-        System.out.println( p.getEnd().toString() );
+       // System.out.println( p.getStart().toString() );
+       // System.out.println( p.getEnd().toString() );
     }
 
     @Test
