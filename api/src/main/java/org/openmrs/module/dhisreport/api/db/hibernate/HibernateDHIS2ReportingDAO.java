@@ -84,7 +84,7 @@ public class HibernateDHIS2ReportingDAO
     @Override
     public DataElement saveDataElement( DataElement de )
     {
-        return (DataElement) saveDataElementObject( de );
+        return (DataElement) saveObject( de );
     }
 
     @Override
@@ -157,6 +157,9 @@ public class HibernateDHIS2ReportingDAO
         throws DHIS2ReportingException
     {
         String queryString = dvt.getQuery();
+        queryString = queryString.replaceAll( "\t", " " );
+        queryString = queryString.replaceAll( "\n", " " );
+        queryString = queryString.trim();
         if ( queryString == null || queryString.isEmpty() )
         {
             log.debug( "Empty query for " + dvt.getDataelement().getName() + " : " + dvt.getDisaggregation().getName() );
