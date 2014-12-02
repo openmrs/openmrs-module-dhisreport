@@ -81,7 +81,7 @@ public class PostToDhisTask
             {
                 String temp = location.getDisplayString();
                 orgUnit = location.getDisplayString().substring( (temp.indexOf( "[" ) + 1), (temp.indexOf( "]" )) );
-               // System.out.println( "Current Location ID-" + orgUnit );
+                // System.out.println( "Current Location ID-" + orgUnit );
             }
         }
 
@@ -96,7 +96,7 @@ public class PostToDhisTask
             //            Iterator<ReportDefinition> reportiterator = reportdefs.iterator();
             //            ReportDefinition reports = reportiterator.next();
             reportId = reports.getId();
-          //  System.out.println( "reportId is-" + reportId );
+            //  System.out.println( "reportId is-" + reportId );
             freq = reports.getPeriodType();
 
             try
@@ -115,7 +115,7 @@ public class PostToDhisTask
                         dateStr = year + "-" + "W0" + Integer.toString( (week - 1) );
                 }
 
-             //   System.out.println( "Date String-" + dateStr );
+                //   System.out.println( "Date String-" + dateStr );
 
                 urlParameters = "location=" + orgUnit + "&frequency=" + freq + "&date=" + dateStr
                     + "&resultDestination=" + resultDestination + "&reportDefinition_id=" + reportId.toString();
@@ -132,7 +132,7 @@ public class PostToDhisTask
             {
                 // TODO Auto-generated catch block
                 e.printStackTrace();
-             //   System.out.println( "Enterted Catch for report =" + reportId );
+                //   System.out.println( "Enterted Catch for report =" + reportId );
                 continue;
             }
 
@@ -198,7 +198,7 @@ public class PostToDhisTask
         wr.close();
 
         int responseCode = con.getResponseCode();
-       // System.out.println( "\nSending 'POST' request to URL : " + url );
+        // System.out.println( "\nSending 'POST' request to URL : " + url );
         //System.out.println( "Post parameters : " + urlParameters );
         //System.out.println( "Response Code : " + responseCode );
 

@@ -58,7 +58,7 @@ public class ReportSyncController
     {
         DHIS2ReportingService service = Context.getService( DHIS2ReportingService.class );
 
-        System.out.println( "Entered Sync Controller" );
+        // System.out.println( "Entered Sync Controller" );
 
         ReportSynchronizer rs = new ReportSynchronizer();
 
@@ -77,22 +77,21 @@ public class ReportSyncController
 
             List<GlobalProperty> gbl = Context.getAdministrationService().getGlobalPropertiesByPrefix( "dhisreport" );
 
-            System.out.println( "before"
-                + Context.getAdministrationService().getGlobalProperty( "dhisreport.dhis2SyncDate" ) );
+            //  System.out.println( "before"+ Context.getAdministrationService().getGlobalProperty( "dhisreport.dhis2SyncDate" ) );
 
             for ( GlobalProperty g : gbl )
             {
                 // System.out.println( g.getProperty() );
                 if ( g.getProperty().equals( "dhisreport.dhis2SyncDate" ) )
                 {
-                    System.out.println( g.getDescription() );
+                    //   System.out.println( g.getDescription() );
                     g.setPropertyValue( reportDate );
                     Context.getAdministrationService().saveGlobalProperty( g );
 
                 }
             }
 
-            System.out.println( Context.getAdministrationService().getGlobalProperty( "dhisreport.dhis2SyncDate" ) );
+            // System.out.println( Context.getAdministrationService().getGlobalProperty( "dhisreport.dhis2SyncDate" ) );
         }
         catch ( UnsupportedEncodingException e )
         {
@@ -129,7 +128,7 @@ public class ReportSyncController
                 for ( String sId : ids )
                 {
                     // reportId = Integer.parseInt( sId );
-                    System.out.println( sId );
+                    //  System.out.println( sId );
                 }
             }
         }

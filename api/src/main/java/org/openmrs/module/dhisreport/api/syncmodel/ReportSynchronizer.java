@@ -42,7 +42,7 @@ public class ReportSynchronizer
         String OpenmrsdeURL = "";
         String html = fetchURL( webPage );
         InputStream stream = new ByteArrayInputStream( html.getBytes( "UTF-8" ) );
-       // System.out.println( "Fetched the web page for OpenMRS DE" );
+        // System.out.println( "Fetched the web page for OpenMRS DE" );
         StaXParser read = new StaXParser();
         List<SyncDataElementGroup> readDEG = read.readConfig( stream );
         for ( SyncDataElementGroup item : readDEG )
@@ -52,26 +52,26 @@ public class ReportSynchronizer
             {
                 OpenmrsdeURL = item.getHref();
             }
-          //  System.out.println( "Data Element Group -" + item );
+            //  System.out.println( "Data Element Group -" + item );
         }
 
         // Fetch Openmrsde page
         OpenmrsdeURL = OpenmrsdeURL + ".xml";
         html = fetchURL( OpenmrsdeURL );
 
-       // System.out.println( "Fetched OpenMRS de url:" + OpenmrsdeURL );
+        // System.out.println( "Fetched OpenMRS de url:" + OpenmrsdeURL );
         // get the list of data elements
         List<SyncDataElement> readDE = read.readDe( html );
         for ( SyncDataElement item : readDE )
         {
-         //   System.out.println( "Reading Data Element-" + item );
+            //   System.out.println( "Reading Data Element-" + item );
 
             String DeURL = "";
             DeURL = item.getHref() + ".xml";
             // fetch every dataelement page
             html = fetchURL( DeURL );
 
-         //   System.out.println( "Fetched Data Elemnt URL-" + DeURL );
+            //   System.out.println( "Fetched Data Elemnt URL-" + DeURL );
             // fetch the set of datasets for each element
             List<SyncDataSet> datasets = read.readDS( html );
 
@@ -87,7 +87,7 @@ public class ReportSynchronizer
                 try
                 {
                     String dataSetURL = sds.getHref() + ".xml";
-                 //   System.out.println( "datasetNameURL-" + sds.getName() + dataSetURL );
+                    //   System.out.println( "datasetNameURL-" + sds.getName() + dataSetURL );
                     html = fetchURL( dataSetURL );
                 }
                 catch ( Exception e )
@@ -110,12 +110,12 @@ public class ReportSynchronizer
 
             for ( SyncCategoryOptionCombo d : disaggregations )
             {
-           //     System.out.println( "SyncCategoryOptionCombo:" + d );
+                //     System.out.println( "SyncCategoryOptionCombo:" + d );
             }
 
             for ( SyncDataSet ds : datasets )
             {
-           //     System.out.println( "DataSets:" + ds );
+                //     System.out.println( "DataSets:" + ds );
             }
 
             updateReferences( item, datasets, disaggregations );
@@ -140,16 +140,16 @@ public class ReportSynchronizer
         rtde.add( jaxde );
         List<Disaggregation> rtdisag;
         List<ReportDefinition> rtrepdef = null;
-       // System.out.println( "enteretd update refenrces" );
+        // System.out.println( "enteretd update refenrces" );
         if ( service.getDataElementByUid( jaxde.getUid() ) == null )
         {
             service.saveDataElement( jaxde );
-        //    System.out.println( "saved data elemnt -" + jaxde.getName() );
+            //    System.out.println( "saved data elemnt -" + jaxde.getName() );
         }
 
         for ( SyncCategoryOptionCombo sdisag : disaggregations )
         {
-       //     System.out.println( "saving category option combo-" + sdisag );
+            //     System.out.println( "saving category option combo-" + sdisag );
             Disaggregation disag = new Disaggregation();
             disag.setCode( sdisag.getCode() );
             disag.setName( sdisag.getName() );
@@ -158,7 +158,7 @@ public class ReportSynchronizer
             rtdisag = new ArrayList<Disaggregation>();
             rtdisag.add( disag );
             service.saveDisaggregation( disag );
-         //   System.out.println( "saved disaagregation-" + disag.getName() );
+            //   System.out.println( "saved disaagregation-" + disag.getName() );
             // JAXBContext jaxbContextDisag =
             // JAXBContext.newInstance(Disaggregation.class);
             // Marshaller jaxbDisagMarshaller =
@@ -176,13 +176,13 @@ public class ReportSynchronizer
             // System.out.println( "hello6" );
             for ( SyncDataSet syds : datasets )
             {
-          //      System.out.println( "saving data sets" );
+                //      System.out.println( "saving data sets" );
                 ReportDefinition ds = new ReportDefinition();
                 ds.setCode( syds.getCode() );
                 ds.setName( syds.getName() );
                 ds.setUid( syds.getId() );
                 ds.setPeriodType( syds.getPeriodType() );
-          //      System.out.println( "data set Period TYpe:--" + syds.getPeriodType() );
+                //      System.out.println( "data set Period TYpe:--" + syds.getPeriodType() );
                 service.saveReportDefinition( ds );
 
                 dvt = new DataValueTemplate();
@@ -195,12 +195,12 @@ public class ReportSynchronizer
                 //                ds.addDataValueTemplate( dvt );
                 //                ds.setDataValueTemplates( dvts );
                 // System.out.println( "hello8" );
-           //     System.out.println( "saved data set-" + ds.getName() );
+                //     System.out.println( "saved data set-" + ds.getName() );
                 service.saveDataValueTemplateTest( dvt );
                 ds.addDataValueTemplate( dvt );
                 rtrepdef = new ArrayList<ReportDefinition>();
                 rtrepdef.add( ds );
-           //     System.out.println( "creatting report defintion array.. just added" + ds.getName() );
+                //     System.out.println( "creatting report defintion array.. just added" + ds.getName() );
 
             }
             //            service.saveDataValueTemplateTest( dvt );
@@ -212,7 +212,7 @@ public class ReportSynchronizer
             // System.out.println( "saving report template" + rt.toString() );
         }// disag for
 
-       // System.out.println( "exiting update refernces function" );
+        // System.out.println( "exiting update refernces function" );
     }
 
     public String fetchURL( String webPage )

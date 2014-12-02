@@ -101,7 +101,7 @@ public class Dhis2ServerController
 
         List<GlobalProperty> gbl = Context.getAdministrationService().getGlobalPropertiesByPrefix( "dhisreport" );
 
-       // System.out.println( "parameters received on post request" + urlString + username + password );
+        // System.out.println( "parameters received on post request" + urlString + username + password );
 
         if ( server == null )
         {
@@ -129,13 +129,13 @@ public class Dhis2ServerController
                 }
                 if ( g.getProperty().equals( "dhisreport.dhis2UserName" ) )
                 {
-                   //System.out.println( " Setting  username as -" + g.getProperty().equals( "dhisreport.dhis2UserName" ) );
+                    //System.out.println( " Setting  username as -" + g.getProperty().equals( "dhisreport.dhis2UserName" ) );
 
                     g.setPropertyValue( username );
                 }
                 if ( g.getProperty().equals( "dhisreport.dhis2Password" ) )
                 {
-                   // System.out.println( "setting password-" + g.getProperty().equals( "dhisreport.dhis2Password" ) );
+                    // System.out.println( "setting password-" + g.getProperty().equals( "dhisreport.dhis2Password" ) );
 
                     g.setPropertyValue( password );
                 }
