@@ -28,7 +28,15 @@
 		<point>org.openmrs.gutter.tools</point>
 		<class>${project.parent.groupId}.${project.parent.artifactId}.extension.html.DhisReportHeader</class>
 	</extension>
-	
+
+	<filter>
+		<filter-name>DhisReport Web Service Authorization</filter-name>
+		<filter-class>org.openmrs.module.dhisreport.web.filter.AuthorizationFilter</filter-class>
+	</filter>
+	<filter-mapping>
+		<filter-name>DhisReport Web Service Authorization</filter-name>
+		<url-pattern>/ws/dhisreport/*</url-pattern>
+	</filter-mapping>
     <!-- Maps hibernate file's, if present -->
     <mappingFiles>
         ReportDefinition.hbm.xml
@@ -102,4 +110,5 @@
     <!-- /Internationalization -->
 
 </module>
+
 
