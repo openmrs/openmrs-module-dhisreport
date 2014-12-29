@@ -47,7 +47,7 @@
 	
 	<privilege>
 		<name>View Dhisreport</name>
-		<description>Allows user to view Dhisreporting</description>
+		<description>Allows user to view Dhisreport</description>
 	</privilege>
 	<privilege>
 		<name>Manage Dhisreport</name>

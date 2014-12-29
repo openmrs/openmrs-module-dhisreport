@@ -46,6 +46,10 @@ public class Dhis2ReportResourceController
         log.info( "Request Parameters - ReportID" + reportId );
         log.info( "Request Parameters - LocationID" + location );
         log.info( "Request Parameters - Timeperiod" + timeperiod );
+        if ( !Context.hasPrivilege( "View Dhisreport" ) )
+        {
+            return "User does not have the privilige to view the report";
+        }
         //response.setContentType( "text/xml" );
         DHIS2ReportingService service = Context.getService( DHIS2ReportingService.class );
         Period period = null;
