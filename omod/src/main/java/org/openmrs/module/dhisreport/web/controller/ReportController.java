@@ -193,12 +193,12 @@ public class ReportController
         //locationList.add( service.getLocationByOU_Code( "Gahombo" ) );
         locationList.addAll( Context.getLocationService().getAllLocations() );
 
-        //remove locations without FOSAID codes
+        //remove locations without Organization Unit codes
         for ( Location l : locationList )
         {
             for ( LocationAttribute la : l.getActiveAttributes() )
             {
-                if ( la.getAttributeType().getName().equals( "FOSAID" ) )
+                if ( la.getAttributeType().getName().equals( "CODE" ) )
                 {
                     //System.out.println( "Name-----" + la.getAttributeType().getName() + "Value---" + la.getValue() );
                     if ( !la.getValue().toString().isEmpty() && la.getValue().toString() != null )
@@ -220,7 +220,7 @@ public class ReportController
                 period, l );
             for ( LocationAttribute la : l.getActiveAttributes() )
             {
-                if ( la.getAttributeType().getName().equals( "FOSAID" ) )
+                if ( la.getAttributeType().getName().equals( "CODE" ) )
                     dvs.setOrgUnit( la.getValue().toString() );
             }
             // Set OrgUnit code into DataValueSet

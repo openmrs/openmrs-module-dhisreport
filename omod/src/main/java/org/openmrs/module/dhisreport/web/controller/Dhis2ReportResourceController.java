@@ -3,6 +3,9 @@ package org.openmrs.module.dhisreport.web.controller;
 import java.io.StringWriter;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
+import java.util.ArrayList;
+import java.util.Collection;
+import java.util.List;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
@@ -17,7 +20,13 @@ import org.openmrs.Location;
 import org.openmrs.LocationAttribute;
 import org.openmrs.api.context.Context;
 import org.openmrs.module.dhisreport.api.DHIS2ReportingService;
+import org.openmrs.module.dhisreport.api.dxf2.DataSet;
+import org.openmrs.module.dhisreport.api.dxf2.DataSets;
 import org.openmrs.module.dhisreport.api.dxf2.DataValueSet;
+import org.openmrs.module.dhisreport.api.dxf2.OrganizationUnit;
+import org.openmrs.module.dhisreport.api.dxf2.OrganizationUnits;
+import org.openmrs.module.dhisreport.api.model.ReportDefinition;
+import org.openmrs.module.dhisreport.api.model.ReportTemplates;
 import org.openmrs.module.dhisreport.api.utils.MonthlyPeriod;
 import org.openmrs.module.dhisreport.api.utils.Period;
 import org.openmrs.module.dhisreport.api.utils.WeeklyPeriod;
@@ -55,8 +64,16 @@ public class Dhis2ReportResourceController
         Period period = null;
         log.debug( "Initial Date Sent by the user: " + timeperiod );
 
+        if ( timeperiod.length() != 6
+            || (Integer.parseInt( timeperiod.substring( 4, 6 ) ) > 12 || Integer
+                .parseInt( timeperiod.substring( 4, 6 ) ) < 1)
+            || (Integer.parseInt( timeperiod.substring( 0, 4 ) ) > 9999 || Integer.parseInt( timeperiod
+                .substring( 0, 4 ) ) < 0000) )
+            return "Error: Date Format not supported. The only date format supported for this webservice is YYYYMM.";
+
         if ( !timeperiod.contains( "W" ) )
         {
+
             //if ( timeperiod.length() > 7 )
             //timeperiod = replacedateStrMonth( timeperiod );
             timeperiod = timeperiod.substring( 0, 4 ) + "-" + timeperiod.substring( 4, timeperiod.length() );
@@ -120,7 +137,7 @@ public class Dhis2ReportResourceController
 
         for ( LocationAttribute la : l.getActiveAttributes() )
         {
-            if ( la.getAttributeType().getName().equals( "FOSAID" ) )
+            if ( la.getAttributeType().getName().equals( "CODE" ) )
                 dvs.setOrgUnit( la.getValue().toString() );
         }
 
@@ -137,6 +154,112 @@ public class Dhis2ReportResourceController
         catch ( JAXBException ex )
         {
             throw new Dxf2Exception( "Problem marshalling dataValueSet", ex );
+        }
+        //System.out.println( xmlReport.toString() );
+        log.info( "Result" + xmlReport.toString() );
+        String result = xmlReport.toString();
+        //  System.out.println( result );
+        return result;
+    }
+
+    @RequestMapping( value = "/dhisreport/getReports", method = RequestMethod.GET )
+    @ResponseBody
+    public Object getReports( HttpServletRequest request, HttpServletResponse response )
+        throws Exception
+    {
+        DHIS2ReportingService service = Context.getService( DHIS2ReportingService.class );
+        Collection<ReportDefinition> rdlist = service.getAllReportDefinitions();
+        DataSets ds = new DataSets();
+        List<DataSet> datasets = new ArrayList<DataSet>();
+        for ( ReportDefinition rd : rdlist )
+        {
+            DataSet data = new DataSet();
+            data.setCode( rd.getCode() );
+            data.setName( rd.getName() );
+            datasets.add( data );
+        }
+        ds.setDataSets( datasets );
+        StringWriter xmlReport = new StringWriter();
+        try
+        {
+            JAXBContext jaxbDataSetsContext = JAXBContext.newInstance( DataSets.class );
+
+            Marshaller dataSetsMarshaller = jaxbDataSetsContext.createMarshaller();
+            // output pretty printed
+            dataSetsMarshaller.setProperty( Marshaller.JAXB_FORMATTED_OUTPUT, true );
+            dataSetsMarshaller.marshal( ds, xmlReport );
+        }
+        catch ( JAXBException ex )
+        {
+            throw new Dxf2Exception( "Problem marshalling Datasets", ex );
+        }
+        //System.out.println( xmlReport.toString() );
+        log.info( "Result" + xmlReport.toString() );
+        String result = xmlReport.toString();
+        //  System.out.println( result );
+        return result;
+    }
+
+    @RequestMapping( value = "/dhisreport/getLocations", method = RequestMethod.GET )
+    @ResponseBody
+    public Object getLocations( HttpServletRequest request, HttpServletResponse response )
+        throws Exception
+    {
+        List<Location> locationList = new ArrayList<Location>();
+        List<Location> locationListFinal = new ArrayList<Location>();
+        //locationList.add( location );
+        //locationList.add( service.getLocationByOU_Code( "Gahombo" ) );
+        locationList.addAll( Context.getLocationService().getAllLocations() );
+
+        //remove locations without Organization Unit codes
+        for ( Location l : locationList )
+        {
+            for ( LocationAttribute la : l.getActiveAttributes() )
+            {
+                if ( la.getAttributeType().getName().equals( "CODE" ) )
+                {
+                    //System.out.println( "Name-----" + la.getAttributeType().getName() + "Value---" + la.getValue() );
+                    if ( !la.getValue().toString().isEmpty() && la.getValue().toString() != null )
+                    {
+                        locationListFinal.add( l );
+                        break;
+                    }
+
+                }
+
+            }
+        }
+        OrganizationUnits ous = new OrganizationUnits();
+        List<OrganizationUnit> organizationUnits = new ArrayList<OrganizationUnit>();
+        for ( Location l : locationListFinal )
+        {
+            OrganizationUnit ou = new OrganizationUnit();
+            for ( LocationAttribute la : l.getActiveAttributes() )
+            {
+                if ( la.getAttributeType().getName().equals( "CODE" ) )
+                {
+
+                    ou.setCode( la.getValue().toString() );
+                }
+
+            }
+            ou.setName( l.getName() );
+            organizationUnits.add( ou );
+        }
+        ous.setOrganizationUnits( organizationUnits );
+        StringWriter xmlReport = new StringWriter();
+        try
+        {
+            JAXBContext jaxbOrganizationUnitsContext = JAXBContext.newInstance( OrganizationUnits.class );
+
+            Marshaller organizationUnitsMarshaller = jaxbOrganizationUnitsContext.createMarshaller();
+            // output pretty printed
+            organizationUnitsMarshaller.setProperty( Marshaller.JAXB_FORMATTED_OUTPUT, true );
+            organizationUnitsMarshaller.marshal( ous, xmlReport );
+        }
+        catch ( JAXBException ex )
+        {
+            throw new Dxf2Exception( "Problem marshalling Organization Units", ex );
         }
         //System.out.println( xmlReport.toString() );
         log.info( "Result" + xmlReport.toString() );
