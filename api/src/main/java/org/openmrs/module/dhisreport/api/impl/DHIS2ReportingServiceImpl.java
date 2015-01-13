@@ -364,7 +364,7 @@ public class DHIS2ReportingServiceImpl
         {
             for ( LocationAttribute la : l.getActiveAttributes() )
             {
-                if ( la.getAttributeType().getName().equals( "FOSAID" ) )
+                if ( la.getAttributeType().getName().equals( "CODE" ) )
                 {
                     // System.out.println( la.getValue().toString() );
                     if ( (la.getValue().toString()).equals( orgUnitCode ) )
