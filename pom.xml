@@ -11,6 +11,9 @@
     <url>https://wiki.openmrs.org/display/docs/DHIS2+Reporting+Module</url>
 	
     <developers>
+    <developer>
+            <name>Sri Maurya Kummamuru</name>
+        </developer>
         <developer>
             <name>Bob Jolliffe</name>
         </developer>
@@ -19,7 +22,6 @@
         </developer>
         <developer>
             <name>Saptarshi Purkayastha</name>
-            <email>saptarsp@idi.ntnu.no</email>
         </developer>
     </developers>
 	
