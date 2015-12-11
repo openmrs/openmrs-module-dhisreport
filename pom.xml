@@ -4,7 +4,7 @@
 
     <groupId>org.openmrs.module</groupId>
     <artifactId>dhisreport</artifactId>
-    <version>1.1-SNAPSHOT</version>
+    <version>1.1</version>
     <packaging>pom</packaging>
     <name>DHIS2 Reporting Module</name>
     <description>Posts aggregate reports to dhis2 based on dataelements bound to sql queries</description>
