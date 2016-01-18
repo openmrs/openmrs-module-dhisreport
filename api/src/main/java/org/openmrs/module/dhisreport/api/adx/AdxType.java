@@ -1,19 +1,16 @@
 package org.openmrs.module.dhisreport.api.adx;
 
+import java.io.OutputStream;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-import javax.xml.bind.annotation.XmlAccessType;
-import javax.xml.bind.annotation.XmlAccessorType;
-import javax.xml.bind.annotation.XmlAnyAttribute;
-import javax.xml.bind.annotation.XmlAttribute;
-import javax.xml.bind.annotation.XmlElement;
-import javax.xml.bind.annotation.XmlSchemaType;
-import javax.xml.bind.annotation.XmlType;
+import javax.xml.bind.JAXBContext;
+import javax.xml.bind.JAXBException;
+import javax.xml.bind.Marshaller;
+import javax.xml.bind.annotation.*;
 import javax.xml.datatype.XMLGregorianCalendar;
 import javax.xml.namespace.QName;
-
 
 /**
  * <p>Java class for adxType complex type.
@@ -36,17 +33,19 @@ import javax.xml.namespace.QName;
  * 
  * 
  */
-@XmlAccessorType(XmlAccessType.FIELD)
-@XmlType(name = "adxType", propOrder = {
-    "group"
-})
-public class AdxType {
+@XmlAccessorType( XmlAccessType.FIELD )
+@XmlType( name = "adxType", propOrder = { "group" } )
+@XmlRootElement( name = "adxType" )
+public class AdxType
+{
 
-    @XmlElement(required = true)
+    @XmlElement( required = true )
     protected List<GroupType> group;
-    @XmlAttribute(name = "exported", required = true)
-    @XmlSchemaType(name = "dateTime")
+
+    @XmlAttribute( name = "exported", required = true )
+    @XmlSchemaType( name = "dateTime" )
     protected XMLGregorianCalendar exported;
+
     @XmlAnyAttribute
     private Map<QName, String> otherAttributes = new HashMap<QName, String>();
 
@@ -72,8 +71,10 @@ public class AdxType {
      * 
      * 
      */
-    public List<GroupType> getGroup() {
-        if (group == null) {
+    public List<GroupType> getGroup()
+    {
+        if ( group == null )
+        {
             group = new ArrayList<GroupType>();
         }
         return this.group;
@@ -87,7 +88,8 @@ public class AdxType {
      *     {@link XMLGregorianCalendar }
      *     
      */
-    public XMLGregorianCalendar getExported() {
+    public XMLGregorianCalendar getExported()
+    {
         return exported;
     }
 
@@ -99,7 +101,8 @@ public class AdxType {
      *     {@link XMLGregorianCalendar }
      *     
      */
-    public void setExported(XMLGregorianCalendar value) {
+    public void setExported( XMLGregorianCalendar value )
+    {
         this.exported = value;
     }
 
@@ -117,8 +120,18 @@ public class AdxType {
      * @return
      *     always non-null
      */
-    public Map<QName, String> getOtherAttributes() {
+    public Map<QName, String> getOtherAttributes()
+    {
         return otherAttributes;
+    }
+
+    public void marshall( OutputStream outputStream )
+        throws JAXBException
+    {
+        JAXBContext jaxbContext = JAXBContext.newInstance( this.getClass() );
+        Marshaller marshaller = jaxbContext.createMarshaller();
+
+        marshaller.marshal( this, outputStream );
     }
 
 }

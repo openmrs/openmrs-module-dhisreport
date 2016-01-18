@@ -15,7 +15,6 @@ import javax.xml.bind.annotation.adapters.CollapsedStringAdapter;
 import javax.xml.bind.annotation.adapters.XmlJavaTypeAdapter;
 import javax.xml.namespace.QName;
 
-
 /**
  * <p>Java class for groupType complex type.
  * 
@@ -38,20 +37,22 @@ import javax.xml.namespace.QName;
  * 
  * 
  */
-@XmlAccessorType(XmlAccessType.FIELD)
-@XmlType(name = "groupType", propOrder = {
-    "dataValue"
-})
-public class GroupType {
+@XmlAccessorType( XmlAccessType.FIELD )
+@XmlType( name = "groupType", propOrder = { "dataValue" } )
+public class GroupType
+{
 
-    @XmlElement(required = true)
+    @XmlElement( required = true )
     protected List<DataValueType> dataValue;
-    @XmlAttribute(name = "orgUnit", required = true)
-    @XmlJavaTypeAdapter(CollapsedStringAdapter.class)
-    @XmlSchemaType(name = "token")
+
+    @XmlAttribute( name = "orgUnit", required = true )
+    @XmlJavaTypeAdapter( CollapsedStringAdapter.class )
+    @XmlSchemaType( name = "token" )
     protected String orgUnit;
-    @XmlAttribute(name = "period", required = true)
+
+    @XmlAttribute( name = "period", required = true )
     protected String period;
+
     @XmlAnyAttribute
     private Map<QName, String> otherAttributes = new HashMap<QName, String>();
 
@@ -77,8 +78,10 @@ public class GroupType {
      * 
      * 
      */
-    public List<DataValueType> getDataValue() {
-        if (dataValue == null) {
+    public List<DataValueType> getDataValue()
+    {
+        if ( dataValue == null )
+        {
             dataValue = new ArrayList<DataValueType>();
         }
         return this.dataValue;
@@ -92,7 +95,8 @@ public class GroupType {
      *     {@link String }
      *     
      */
-    public String getOrgUnit() {
+    public String getOrgUnit()
+    {
         return orgUnit;
     }
 
@@ -104,7 +108,8 @@ public class GroupType {
      *     {@link String }
      *     
      */
-    public void setOrgUnit(String value) {
+    public void setOrgUnit( String value )
+    {
         this.orgUnit = value;
     }
 
@@ -116,7 +121,8 @@ public class GroupType {
      *     {@link String }
      *     
      */
-    public String getPeriod() {
+    public String getPeriod()
+    {
         return period;
     }
 
@@ -128,7 +134,8 @@ public class GroupType {
      *     {@link String }
      *     
      */
-    public void setPeriod(String value) {
+    public void setPeriod( String value )
+    {
         this.period = value;
     }
 
@@ -146,7 +153,8 @@ public class GroupType {
      * @return
      *     always non-null
      */
-    public Map<QName, String> getOtherAttributes() {
+    public Map<QName, String> getOtherAttributes()
+    {
         return otherAttributes;
     }
 

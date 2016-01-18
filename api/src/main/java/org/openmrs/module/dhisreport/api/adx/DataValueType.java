@@ -13,7 +13,6 @@ import javax.xml.bind.annotation.adapters.CollapsedStringAdapter;
 import javax.xml.bind.annotation.adapters.XmlJavaTypeAdapter;
 import javax.xml.namespace.QName;
 
-
 /**
  * <p>Java class for dataValueType complex type.
  * 
@@ -36,19 +35,21 @@ import javax.xml.namespace.QName;
  * 
  * 
  */
-@XmlAccessorType(XmlAccessType.FIELD)
-@XmlType(name = "dataValueType", propOrder = {
-    "annotation"
-})
-public class DataValueType {
+@XmlAccessorType( XmlAccessType.FIELD )
+@XmlType( name = "dataValueType", propOrder = { "annotation" } )
+public class DataValueType
+{
 
     protected Object annotation;
-    @XmlAttribute(name = "dataElement", required = true)
-    @XmlJavaTypeAdapter(CollapsedStringAdapter.class)
-    @XmlSchemaType(name = "token")
+
+    @XmlAttribute( name = "dataElement", required = true )
+    @XmlJavaTypeAdapter( CollapsedStringAdapter.class )
+    @XmlSchemaType( name = "token" )
     protected String dataElement;
-    @XmlAttribute(name = "value", required = true)
+
+    @XmlAttribute( name = "value", required = true )
     protected BigDecimal value;
+
     @XmlAnyAttribute
     private Map<QName, String> otherAttributes = new HashMap<QName, String>();
 
@@ -60,7 +61,8 @@ public class DataValueType {
      *     {@link Object }
      *     
      */
-    public Object getAnnotation() {
+    public Object getAnnotation()
+    {
         return annotation;
     }
 
@@ -72,7 +74,8 @@ public class DataValueType {
      *     {@link Object }
      *     
      */
-    public void setAnnotation(Object value) {
+    public void setAnnotation( Object value )
+    {
         this.annotation = value;
     }
 
@@ -84,7 +87,8 @@ public class DataValueType {
      *     {@link String }
      *     
      */
-    public String getDataElement() {
+    public String getDataElement()
+    {
         return dataElement;
     }
 
@@ -96,7 +100,8 @@ public class DataValueType {
      *     {@link String }
      *     
      */
-    public void setDataElement(String value) {
+    public void setDataElement( String value )
+    {
         this.dataElement = value;
     }
 
@@ -108,7 +113,8 @@ public class DataValueType {
      *     {@link BigDecimal }
      *     
      */
-    public BigDecimal getValue() {
+    public BigDecimal getValue()
+    {
         return value;
     }
 
@@ -120,7 +126,8 @@ public class DataValueType {
      *     {@link BigDecimal }
      *     
      */
-    public void setValue(BigDecimal value) {
+    public void setValue( BigDecimal value )
+    {
         this.value = value;
     }
 
@@ -138,7 +145,8 @@ public class DataValueType {
      * @return
      *     always non-null
      */
-    public Map<QName, String> getOtherAttributes() {
+    public Map<QName, String> getOtherAttributes()
+    {
         return otherAttributes;
     }
 

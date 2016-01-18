@@ -5,7 +5,6 @@ import javax.xml.bind.annotation.XmlElementDecl;
 import javax.xml.bind.annotation.XmlRegistry;
 import javax.xml.namespace.QName;
 
-
 /**
  * This object contains factory methods for each 
  * Java content interface and Java element interface 
@@ -21,22 +20,25 @@ import javax.xml.namespace.QName;
  * 
  */
 @XmlRegistry
-public class ObjectFactory {
+public class ObjectFactory
+{
 
-    private final static QName _Adx_QNAME = new QName("urn:ihe:qrph:adx:2015", "adx");
+    private final static QName _Adx_QNAME = new QName( "urn:ihe:qrph:adx:2015", "adx" );
 
     /**
      * Create a new ObjectFactory that can be used to create new instances of schema derived classes for package: org.ihe.qrph.adx
      * 
      */
-    public ObjectFactory() {
+    public ObjectFactory()
+    {
     }
 
     /**
      * Create an instance of {@link AdxType }
      * 
      */
-    public AdxType createAdxType() {
+    public AdxType createAdxType()
+    {
         return new AdxType();
     }
 
@@ -44,7 +46,8 @@ public class ObjectFactory {
      * Create an instance of {@link DataValueType }
      * 
      */
-    public DataValueType createDataValueType() {
+    public DataValueType createDataValueType()
+    {
         return new DataValueType();
     }
 
@@ -52,7 +55,8 @@ public class ObjectFactory {
      * Create an instance of {@link GroupType }
      * 
      */
-    public GroupType createGroupType() {
+    public GroupType createGroupType()
+    {
         return new GroupType();
     }
 
@@ -60,9 +64,10 @@ public class ObjectFactory {
      * Create an instance of {@link JAXBElement }{@code <}{@link AdxType }{@code >}}
      * 
      */
-    @XmlElementDecl(namespace = "urn:ihe:qrph:adx:2015", name = "adx")
-    public JAXBElement<AdxType> createAdx(AdxType value) {
-        return new JAXBElement<AdxType>(_Adx_QNAME, AdxType.class, null, value);
+    @XmlElementDecl( namespace = "urn:ihe:qrph:adx:2015", name = "adx" )
+    public JAXBElement<AdxType> createAdx( AdxType value )
+    {
+        return new JAXBElement<AdxType>( _Adx_QNAME, AdxType.class, null, value );
     }
 
 }
