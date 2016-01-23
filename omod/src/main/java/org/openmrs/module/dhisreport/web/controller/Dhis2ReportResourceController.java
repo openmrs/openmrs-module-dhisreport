@@ -368,7 +368,7 @@ public class Dhis2ReportResourceController
                 dvs.setOrgUnit( la.getValue().toString() );
         }
 
-        AdxType adxType = getAdxType( dvs );
+        AdxType adxType = getAdxType( dvs, timeperiod );
 
         StringWriter xmlReport = new StringWriter();
         try
@@ -391,7 +391,7 @@ public class Dhis2ReportResourceController
         return result;
     }
 
-    AdxType getAdxType( DataValueSet dvs )
+    AdxType getAdxType( DataValueSet dvs, String timeperiod )
     {
         AdxType adxType = new AdxType();
         adxType.setExported( dvs.getCompleteDate() );
@@ -406,7 +406,7 @@ public class Dhis2ReportResourceController
         }
         gt.getDataValue().addAll( dvTypeList );
         gt.setOrgUnit( dvs.getOrgUnit() );
-        gt.setPeriod( dvs.getPeriod() );
+        gt.setPeriod( timeperiod + "/P1M" );
         adxType.getGroup().add( gt );
         return adxType;
     }

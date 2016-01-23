@@ -19,6 +19,7 @@
  **/
 package org.openmrs.module.dhisreport.web.controller;
 
+import java.math.BigDecimal;
 import java.net.MalformedURLException;
 import java.net.URL;
 import java.text.ParseException;
@@ -38,6 +39,9 @@ import org.openmrs.api.context.Context;
 import org.openmrs.module.dhisreport.api.AggregatedResultSet;
 import org.openmrs.module.dhisreport.api.DHIS2ReportingException;
 import org.openmrs.module.dhisreport.api.DHIS2ReportingService;
+import org.openmrs.module.dhisreport.api.adx.AdxType;
+import org.openmrs.module.dhisreport.api.adx.DataValueType;
+import org.openmrs.module.dhisreport.api.adx.GroupType;
 import org.openmrs.module.dhisreport.api.dhis.Dhis2Server;
 import org.openmrs.module.dhisreport.api.dhis.HttpDhis2Server;
 import org.openmrs.module.dhisreport.api.dxf2.DataValue;
@@ -236,6 +240,7 @@ public class ReportController
             }
             agrs.setDataValueSet( dvs );
             agrs.setDataElementMap( deset );
+            AdxType adxType = getAdxType( dvs, dateStr );
 
             if ( destination.equals( "post" ) )
             {
@@ -369,6 +374,26 @@ public class ReportController
         }
 
         return str;
+    }
+
+    AdxType getAdxType( DataValueSet dvs, String timeperiod )
+    {
+        AdxType adxType = new AdxType();
+        adxType.setExported( dvs.getCompleteDate() );
+        GroupType gt = new GroupType();
+        List<DataValueType> dvTypeList = new ArrayList<DataValueType>();
+        for ( DataValue dv : dvs.getDataValues() )
+        {
+            DataValueType dvtype = new DataValueType();
+            dvtype.setDataElement( dv.getDataElement() );
+            dvtype.setValue( new BigDecimal( dv.getValue() ) );
+            dvTypeList.add( dvtype );
+        }
+        gt.getDataValue().addAll( dvTypeList );
+        gt.setOrgUnit( dvs.getOrgUnit() );
+        gt.setPeriod( timeperiod + "/P1M" );
+        adxType.getGroup().add( gt );
+        return adxType;
     }
 
 }

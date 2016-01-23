@@ -44,6 +44,7 @@ import org.hisp.dhis.dxf2.Dxf2Exception;
 import org.hisp.dhis.dxf2.importsummary.ImportStatus;
 import org.hisp.dhis.dxf2.importsummary.ImportSummary;
 import org.openmrs.module.dhisreport.api.DHIS2ReportingException;
+import org.openmrs.module.dhisreport.api.adx.AdxType;
 import org.openmrs.module.dhisreport.api.dxf2.DataValueSet;
 import org.openmrs.module.dhisreport.api.model.ReportDefinition;
 
@@ -136,6 +137,92 @@ public class HttpDhis2Server
         catch ( JAXBException ex )
         {
             throw new Dxf2Exception( "Problem marshalling dataValueSet", ex );
+        }
+
+        //System.out.print( "URL-" + url );
+
+        String host = url.getHost();
+        int port = url.getPort();
+
+        //System.out.print( "URL-" + url + ":host-" + host + ":port-" );
+        // System.out.println( port );
+
+        HttpHost targetHost = new HttpHost( host, port, url.getProtocol() );
+        DefaultHttpClient httpclient = new DefaultHttpClient();
+        BasicHttpContext localcontext = new BasicHttpContext();
+
+        try
+        {
+            HttpPost httpPost = new HttpPost( url.getPath() + DATAVALUESET_PATH );
+            Credentials creds = new UsernamePasswordCredentials( username, password );
+            Header bs = new BasicScheme().authenticate( creds, httpPost, localcontext );
+            httpPost.addHeader( "Authorization", bs.getValue() );
+            httpPost.addHeader( "Content-Type", "application/xml" );
+            httpPost.addHeader( "Accept", "application/xml" );
+
+            httpPost.setEntity( new StringEntity( xmlReport.toString() ) );
+            HttpResponse response = httpclient.execute( targetHost, httpPost, localcontext );
+            HttpEntity entity = response.getEntity();
+
+            if ( response.getStatusLine().getStatusCode() != 200 )
+            {
+                throw new Dhis2Exception( this, response.getStatusLine().getReasonPhrase(), null );
+            }
+
+            if ( entity != null )
+            {
+                JAXBContext jaxbImportSummaryContext = JAXBContext.newInstance( ImportSummary.class );
+                Unmarshaller importSummaryUnMarshaller = jaxbImportSummaryContext.createUnmarshaller();
+                summary = (ImportSummary) importSummaryUnMarshaller.unmarshal( entity.getContent() );
+            }
+            else
+            {
+                summary = new ImportSummary();
+                summary.setStatus( ImportStatus.ERROR );
+            }
+            // EntityUtils.consume( entity );
+
+            // TODO: fix these catches ...
+        }
+        catch ( JAXBException ex )
+        {
+            throw new Dhis2Exception( this, "Problem unmarshalling ImportSummary", ex );
+        }
+        catch ( AuthenticationException ex )
+        {
+            throw new Dhis2Exception( this, "Problem authenticating to DHIS2 server", ex );
+        }
+        catch ( IOException ex )
+        {
+            throw new Dhis2Exception( this, "Problem accessing DHIS2 server", ex );
+        }
+        finally
+        {
+            httpclient.getConnectionManager().shutdown();
+        }
+        return summary;
+    }
+
+    @Override
+    public ImportSummary postAdxReport( AdxType report )
+        throws DHIS2ReportingException
+    {
+        log.debug( "Posting datavalueset report" );
+        ImportSummary summary = null;
+
+        StringWriter xmlReport = new StringWriter();
+        try
+        {
+            JAXBContext jaxbDataValueSetContext = JAXBContext.newInstance( AdxType.class );
+
+            Marshaller adxTypeMarshaller = jaxbDataValueSetContext.createMarshaller();
+            // output pretty printed
+            adxTypeMarshaller.setProperty( Marshaller.JAXB_FORMATTED_OUTPUT, true );
+            adxTypeMarshaller.marshal( report, xmlReport );
+        }
+        catch ( JAXBException ex )
+        {
+            throw new Dxf2Exception( "Problem marshalling adxtype", ex );
         }
 
         //System.out.print( "URL-" + url );

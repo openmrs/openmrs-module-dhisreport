@@ -34,8 +34,8 @@ import javax.xml.namespace.QName;
  * 
  */
 @XmlAccessorType( XmlAccessType.FIELD )
-@XmlType( name = "adxType", propOrder = { "group" } )
-@XmlRootElement( name = "adxType" )
+@XmlType( name = "adx", propOrder = { "group" } )
+@XmlRootElement( name = "adx" )
 public class AdxType
 {
 
