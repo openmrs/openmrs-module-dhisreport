@@ -391,6 +391,7 @@ public class ReportController
         }
         gt.getDataValue().addAll( dvTypeList );
         gt.setOrgUnit( dvs.getOrgUnit() );
+        gt.setIdScheme( "Code" );
         gt.setPeriod( timeperiod + "/P1M" );
         adxType.getGroup().add( gt );
         return adxType;
