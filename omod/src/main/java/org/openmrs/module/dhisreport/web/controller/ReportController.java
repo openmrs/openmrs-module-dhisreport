@@ -53,10 +53,14 @@ import org.openmrs.module.dhisreport.api.utils.WeeklyPeriod;
 import org.openmrs.web.WebConstants;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.ModelMap;
+import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.context.request.WebRequest;
+
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpSession;
 
 /**
  * The main controller.
@@ -84,13 +88,16 @@ public class ReportController
 
     @RequestMapping( value = "/module/dhisreport/setupReport", method = RequestMethod.GET )
     public void setupReport( ModelMap model, @RequestParam( value = "reportDefinition_id", required = false )
-    Integer reportDefinition_id )
+    Integer reportDefinition_id, HttpSession session )
     {
         DHIS2ReportingService service = Context.getService( DHIS2ReportingService.class );
+        String errormsg = (String) session.getAttribute( "errorMessage" );
+        session.removeAttribute( "errorMessage" );
 
         model.addAttribute( "user", Context.getAuthenticatedUser() );
         model.addAttribute( "reportDefinition", service.getReportDefinition( reportDefinition_id ) );
         model.addAttribute( "locations", Context.getLocationService().getAllLocations() );
+        model.addAttribute( "errorMessage", errormsg );
 
         String dhisurl = Context.getAdministrationService().getGlobalProperty( "dhisreport.dhis2URL" );
         String dhisusername = Context.getAdministrationService().getGlobalProperty( "dhisreport.dhis2UserName" );
@@ -119,12 +126,12 @@ public class ReportController
     }
 
     @RequestMapping( value = "/module/dhisreport/executeReport", method = RequestMethod.POST )
-    public void executeReport( ModelMap model, @RequestParam( value = "reportDefinition_id", required = true )
+    public String executeReport( ModelMap model, @RequestParam( value = "reportDefinition_id", required = true )
     Integer reportDefinition_id, @RequestParam( value = "location", required = false )
     String OU_Code, @RequestParam( value = "resultDestination", required = true )
     String destination, @RequestParam( value = "date", required = true )
     String dateStr, @RequestParam( value = "frequency", required = true )
-    String freq, WebRequest webRequest )
+    String freq, WebRequest webRequest, HttpServletRequest request )
         throws DHIS2ReportingException
     {
         DHIS2ReportingService service = Context.getService( DHIS2ReportingService.class );
@@ -148,7 +155,7 @@ public class ReportController
                 log.error( "Cannot convert passed string to date... Please check dateFormat", pex );
                 webRequest.setAttribute( WebConstants.OPENMRS_ERROR_ATTR, Context.getMessageSourceService().getMessage(
                     "Date Parsing Error" ), WebRequest.SCOPE_SESSION );
-                return;
+                return null;
             }
         }
         if ( freq.equalsIgnoreCase( "weekly" ) )
@@ -175,7 +182,7 @@ public class ReportController
                 log.error( "Cannot convert passed string to date... Please check dateFormat", ex );
                 webRequest.setAttribute( WebConstants.OPENMRS_ERROR_ATTR, Context.getMessageSourceService().getMessage(
                     "Date Parsing Error" ), WebRequest.SCOPE_SESSION );
-                return;
+                return null;
             }
         }
         if ( freq.equalsIgnoreCase( "daily" ) )
@@ -183,7 +190,7 @@ public class ReportController
 
             webRequest.setAttribute( WebConstants.OPENMRS_ERROR_ATTR, Context.getMessageSourceService().getMessage(
                 "dhisreport.dateFormatError" ), WebRequest.SCOPE_SESSION );
-            return;
+            return null;
 
         }
 
@@ -214,6 +221,15 @@ public class ReportController
                 }
 
             }
+        }
+
+        if ( locationListFinal.isEmpty() )
+        {
+            log.error( "Location attribute CODE not set" );
+            request.getSession().setAttribute( "errorMessage",
+                "Please set location attribute CODE to generate results." );
+            String referer = webRequest.getHeader( "Referer" );
+            return "redirect:" + referer;
         }
         Map<String, Map> desetList = new HashMap<String, Map>();
         List<AggregatedResultSet> aggregatedList = new ArrayList<AggregatedResultSet>();
@@ -252,6 +268,7 @@ public class ReportController
 
         model.addAttribute( "user", Context.getAuthenticatedUser() );
         model.addAttribute( "aggregatedList", aggregatedList );
+        return null;
     }
 
     // @RequestMapping(value = "/module/dhisreport/executeReport", method =
