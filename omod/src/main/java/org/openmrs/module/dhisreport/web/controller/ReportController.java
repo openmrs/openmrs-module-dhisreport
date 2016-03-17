@@ -223,7 +223,7 @@ public class ReportController
             }
         }
 
-        if ( locationListFinal.isEmpty() )
+        if ( locationListFinal.isEmpty() && !locationList.isEmpty() )
         {
             log.error( "Location attribute CODE not set" );
             request.getSession().setAttribute( "errorMessage",
