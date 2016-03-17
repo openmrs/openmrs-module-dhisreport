@@ -6,6 +6,16 @@
 
 <script type="text/javascript">
 
+    window.onload = function(){
+
+        var errormsg = '${errorMessage}';
+
+        if(errormsg) {
+            $("#menu").after("<div id='openmrs_error'>"+errormsg+"</div>");
+
+        }
+    }
+
 $(function(){ 
 
 	
