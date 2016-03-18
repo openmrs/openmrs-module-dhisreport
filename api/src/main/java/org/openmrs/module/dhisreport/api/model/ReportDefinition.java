@@ -64,6 +64,7 @@ public class ReportDefinition
     @XmlElement( name = "dataValueTemplate" )
     protected Set<DataValueTemplate> dataValueTemplates = new HashSet<DataValueTemplate>();
 
+    @XmlTransient
     protected String reportingReportId;
 
     @Override

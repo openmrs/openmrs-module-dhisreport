@@ -48,7 +48,7 @@
             <td><a href="configureDhis2.form"><spring:message code="dhisreport.Link" /></a></td>
         </tr>
         <tr>
-            <td><spring:message code="dhisreport.reports" /></td>
+            <td><spring:message code="dhisreport.reporting" /></td>
             <td><a href="listDhis2Reports.form"><spring:message code="dhisreport.Link" /></a></td>
         </tr>
         <tr>
