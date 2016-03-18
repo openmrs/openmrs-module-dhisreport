@@ -20,10 +20,10 @@
 
 package org.openmrs.module.dhisreport.extension.html;
 
-import org.openmrs.module.Extension;
+import org.openmrs.module.web.extension.LinkExt;
 
 public class DhisReportHeader
-    extends Extension
+    extends LinkExt
 {
 
     public MEDIA_TYPE getMediaType()
