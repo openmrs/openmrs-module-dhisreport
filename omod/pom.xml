@@ -26,6 +26,11 @@
                 </exclusion>
             </exclusions>
         </dependency>
+
+        <dependency>
+            <groupId>org.openmrs.module</groupId>
+            <artifactId>reporting-api</artifactId>
+        </dependency>
         <!-- End OpenMRS modules -->
         
         <!-- Begin OpenMRS core -->
@@ -63,6 +68,11 @@
         </dependency>
         
         <!-- End OpenMRS core -->
+
+        <dependency>
+            <groupId>org.openmrs.module</groupId>
+            <artifactId>reporting-api</artifactId>
+        </dependency>
 
     </dependencies>
 

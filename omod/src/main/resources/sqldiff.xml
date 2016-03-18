@@ -85,6 +85,18 @@
  				ADD `periodType` varchar(16) DEFAULT NULL;
 			</sql>
 		</diff>
+	<diff>
+		<version>1.2</version>
+		<author>Sri Maurya Kummamuru</author>
+		<date>Mar 16th 2016</date>
+		<description>
+			Added 'reportingReportUuid' to report definition table
+		</description>
+		<sql>
+			ALTER TABLE `dhisreport_report_definition`
+			ADD `reportingreportuuid` char(38) DEFAULT NULL;
+		</sql>
+	</diff>
 	
         
 </sqldiff>

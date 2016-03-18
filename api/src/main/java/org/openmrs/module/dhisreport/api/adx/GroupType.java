@@ -53,6 +53,9 @@ public class GroupType
     @XmlAttribute( name = "period", required = true )
     protected String period;
 
+    @XmlAttribute( name = "idScheme", required = false )
+    protected String idScheme;
+
     @XmlAnyAttribute
     private Map<QName, String> otherAttributes = new HashMap<QName, String>();
 
@@ -156,6 +159,16 @@ public class GroupType
     public Map<QName, String> getOtherAttributes()
     {
         return otherAttributes;
+    }
+
+    public String getIdScheme()
+    {
+        return idScheme;
+    }
+
+    public void setIdScheme( String idScheme )
+    {
+        this.idScheme = idScheme;
     }
 
 }

@@ -14,6 +14,11 @@
     <require_version>${openMRSVersion}</require_version>
     <!-- / Module Properties -->
 
+	<require_modules>
+		<require_module version="0.9.7">
+			org.openmrs.module.reporting
+		</require_module>
+	</require_modules>
 	
     <!-- Module Activator -->
     <activator>${project.parent.groupId}.${project.parent.artifactId}.DHIS2ReportingActivator</activator>

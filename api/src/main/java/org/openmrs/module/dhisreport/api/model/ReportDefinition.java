@@ -19,6 +19,8 @@
  **/
 package org.openmrs.module.dhisreport.api.model;
 
+import org.openmrs.module.reporting.definition.DefinitionSummary;
+
 import java.io.Serializable;
 import java.util.HashSet;
 import java.util.Set;
@@ -61,6 +63,8 @@ public class ReportDefinition
     @XmlElementWrapper( name = "dataValueTemplates" )
     @XmlElement( name = "dataValueTemplate" )
     protected Set<DataValueTemplate> dataValueTemplates = new HashSet<DataValueTemplate>();
+
+    protected String reportingReportId;
 
     @Override
     public Integer getId()
@@ -172,6 +176,16 @@ public class ReportDefinition
     public void setPeriodType( String periodType )
     {
         this.periodType = periodType;
+    }
+
+    public String getReportingReportId()
+    {
+        return reportingReportId;
+    }
+
+    public void setReportingReportId( String reportingReportId )
+    {
+        this.reportingReportId = reportingReportId;
     }
 
 }
