@@ -88,21 +88,13 @@
 	<diff>
 		<version>1.2</version>
 		<author>Sri Maurya Kummamuru</author>
-		<date>Feb 29th 2016</date>
+		<date>Mar 16th 2016</date>
 		<description>
-		Added 'dhisreport_report_mapping' to support reports mapping
+			Added 'reportingReportUuid' to report definition table
 		</description>
 		<sql>
-			CREATE TABLE IF NOT EXISTS `dhisreport_report_mapping` (
-			`id` int(11) NOT NULL AUTO_INCREMENT,
-			`dhisreport_definition_id` int(11) NOT NULL,
-			`reportingmodule_report_id` char(38) DEFAULT NULL,
-			PRIMARY KEY (`id`),
-			KEY `fk_dhisreport_reportdefinition` (`dhisreport_definition_id`),
-			KEY `fk_reportingmodule_report_id` (`reportingmodule_report_id`),
-			CONSTRAINT `fk_dhisreport_reportdefinition` FOREIGN KEY (`dhisreport_definition_id`) REFERENCES `dhisreport_report_definition` (`id`),
-			CONSTRAINT `fk_reportingmodule_report_id` FOREIGN KEY (`reportingmodule_report_id`) REFERENCES `serialized_object` (`uuid`)
-			) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+			ALTER TABLE `dhisreport_report_definition`
+			ADD `reportingreportuuid` char(38) DEFAULT NULL;
 		</sql>
 	</diff>
 	

@@ -15,9 +15,19 @@
         <tr>
             <td>${reportDefinition.name}</td>
             <td>
-                <select name="colour">
+                <select name="reportmoduledefinitions">
+
                 <c:forEach items="${definitionSummaries}" var="r">
-                <option value="${r.uuid}"> ${r.name}
+                    <c:choose>
+                        <c:when test="${r.uuid == correspondingReportDefinition.uuid}">
+                            <option selected value="${r.uuid}"> ${r.name}
+                            </option>
+                        </c:when>
+                        <c:otherwise>
+                            <option value="${r.uuid}"> ${r.name}
+                            </option>
+                        </c:otherwise>
+                    </c:choose>
                 </c:forEach>
                 </select>
             </td>

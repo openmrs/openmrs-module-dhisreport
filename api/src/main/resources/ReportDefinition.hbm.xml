@@ -16,5 +16,6 @@
             <key column="report_definition_id" not-null="true"/>
             <one-to-many class="DataValueTemplate"/>
         </set>
+        <property column="reportingreportuuid" name="reportingReportId"/>
     </class>
 </hibernate-mapping>
