@@ -131,7 +131,8 @@ public class ReportController
     String OU_Code, @RequestParam( value = "resultDestination", required = true )
     String destination, @RequestParam( value = "date", required = true )
     String dateStr, @RequestParam( value = "frequency", required = true )
-    String freq, WebRequest webRequest, HttpServletRequest request )
+    String freq, @RequestParam( value = "mappingType", required = true )
+    String mappingType, WebRequest webRequest, HttpServletRequest request )
         throws DHIS2ReportingException
     {
         DHIS2ReportingService service = Context.getService( DHIS2ReportingService.class );
