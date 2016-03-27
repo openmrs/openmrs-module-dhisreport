@@ -133,7 +133,7 @@ public class ReportController
     String dateStr, @RequestParam( value = "frequency", required = true )
     String freq, @RequestParam( value = "mappingType", required = true )
     String mappingType, WebRequest webRequest, HttpServletRequest request )
-        throws DHIS2ReportingException
+        throws Exception
     {
         DHIS2ReportingService service = Context.getService( DHIS2ReportingService.class );
         Period period = null;
@@ -224,6 +224,8 @@ public class ReportController
             }
         }
 
+        Map<String, Map> desetList = new HashMap<String, Map>();
+        List<AggregatedResultSet> aggregatedList = new ArrayList<AggregatedResultSet>();
         if ( locationListFinal.isEmpty() && !locationList.isEmpty() )
         {
             log.error( "Location attribute CODE not set" );
@@ -232,41 +234,70 @@ public class ReportController
             String referer = webRequest.getHeader( "Referer" );
             return "redirect:" + referer;
         }
-        Map<String, Map> desetList = new HashMap<String, Map>();
-        List<AggregatedResultSet> aggregatedList = new ArrayList<AggregatedResultSet>();
-        for ( Location l : locationListFinal )
+
+        if ( mappingType.equalsIgnoreCase( "SQL" ) )
         {
-            AggregatedResultSet agrs = new AggregatedResultSet();
-            DataValueSet dvs = service.evaluateReportDefinition( service.getReportDefinition( reportDefinition_id ),
-                period, l );
-            for ( LocationAttribute la : l.getActiveAttributes() )
+            for ( Location l : locationListFinal )
             {
-                if ( la.getAttributeType().getName().equals( "CODE" ) )
-                    dvs.setOrgUnit( la.getValue().toString() );
-            }
-            // Set OrgUnit code into DataValueSet
+                AggregatedResultSet agrs = new AggregatedResultSet();
+                DataValueSet dvs = service.evaluateReportDefinition(
+                    service.getReportDefinition( reportDefinition_id ), period, l );
+                for ( LocationAttribute la : l.getActiveAttributes() )
+                {
+                    if ( la.getAttributeType().getName().equals( "CODE" ) )
+                        dvs.setOrgUnit( la.getValue().toString() );
+                }
+                // Set OrgUnit code into DataValueSet
 
-            List<DataValue> datavalue = dvs.getDataValues();
-            Map<DataElement, String> deset = new HashMap<DataElement, String>();
-            for ( DataValue dv : datavalue )
-            {
+                List<DataValue> datavalue = dvs.getDataValues();
+                Map<DataElement, String> deset = new HashMap<DataElement, String>();
+                for ( DataValue dv : datavalue )
+                {
 
-                DataElement detrmp = service.getDataElementByCode( dv.getDataElement() );
-                // System.out.println( detrmp.getName() + detrmp.getCode() );
-                deset.put( detrmp, dv.getValue() );
-            }
-            agrs.setDataValueSet( dvs );
-            agrs.setDataElementMap( deset );
-            AdxType adxType = getAdxType( dvs, dateStr );
+                    DataElement detrmp = service.getDataElementByCode( dv.getDataElement() );
+                    // System.out.println( detrmp.getName() + detrmp.getCode() );
+                    deset.put( detrmp, dv.getValue() );
+                }
+                agrs.setDataValueSet( dvs );
+                agrs.setDataElementMap( deset );
+                AdxType adxType = getAdxType( dvs, dateStr );
 
-            if ( destination.equals( "post" ) )
-            {
-                ImportSummary importSummary = Context.getService( DHIS2ReportingService.class ).postDataValueSet( dvs );
-                agrs.setImportSummary( importSummary );
+                if ( destination.equals( "post" ) )
+                {
+                    ImportSummary importSummary = Context.getService( DHIS2ReportingService.class ).postDataValueSet(
+                        dvs );
+                    agrs.setImportSummary( importSummary );
+                }
+                aggregatedList.add( agrs );
             }
-            aggregatedList.add( agrs );
         }
 
+        if ( mappingType.equalsIgnoreCase( "Reporting" ) )
+        {
+            for ( Location l : locationListFinal )
+            {
+                AggregatedResultSet agrs = new AggregatedResultSet();
+                DataValueSet dvs = service.generateReportingReportDefinition( service
+                    .getReportDefinition( reportDefinition_id ), period, l );
+                for ( LocationAttribute la : l.getActiveAttributes() )
+                {
+                    if ( la.getAttributeType().getName().equals( "CODE" ) )
+                        dvs.setOrgUnit( la.getValue().toString() );
+                }
+                List<DataValue> datavalue = dvs.getDataValues();
+                Map<DataElement, String> deset = new HashMap<DataElement, String>();
+                for ( DataValue dv : datavalue )
+                {
+
+                    DataElement detrmp = service.getDataElementByCode( dv.getDataElement() );
+                    // System.out.println( detrmp.getName() + detrmp.getCode() );
+                    deset.put( detrmp, dv.getValue() );
+                }
+                agrs.setDataValueSet( dvs );
+                agrs.setDataElementMap( deset );
+                aggregatedList.add( agrs );
+            }
+        }
         model.addAttribute( "user", Context.getAuthenticatedUser() );
         model.addAttribute( "aggregatedList", aggregatedList );
         return null;

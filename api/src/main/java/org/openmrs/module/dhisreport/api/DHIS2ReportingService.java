@@ -223,6 +223,9 @@ public interface DHIS2ReportingService
      */
     DataValueSet evaluateReportDefinition( ReportDefinition reportDefinition, Period period, Location location );
 
+    DataValueSet generateReportingReportDefinition( ReportDefinition reportDefinition, Period period, Location location )
+        throws Exception;
+
     /**
      * @param id
      * @return
