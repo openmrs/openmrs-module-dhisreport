@@ -21,11 +21,7 @@ package org.openmrs.module.dhisreport.api.impl;
 
 import java.io.InputStream;
 import java.io.OutputStream;
-import java.util.ArrayList;
-import java.util.Collection;
-import java.util.List;
-import java.util.ListIterator;
-import java.util.Set;
+import java.util.*;
 
 import javax.xml.bind.JAXBContext;
 import javax.xml.bind.Marshaller;
@@ -46,7 +42,19 @@ import org.openmrs.module.dhisreport.api.dhis.HttpDhis2Server;
 import org.openmrs.module.dhisreport.api.model.*;
 import org.openmrs.module.dhisreport.api.dxf2.DataValue;
 import org.openmrs.module.dhisreport.api.dxf2.DataValueSet;
+import org.openmrs.module.dhisreport.api.model.ReportDefinition;
 import org.openmrs.module.dhisreport.api.utils.Period;
+import org.openmrs.module.reporting.dataset.DataSet;
+import org.openmrs.module.reporting.dataset.DataSetRow;
+import org.openmrs.module.reporting.evaluation.EvaluationContext;
+import org.openmrs.module.reporting.evaluation.MissingDependencyException;
+import org.openmrs.module.reporting.evaluation.parameter.*;
+import org.openmrs.module.reporting.report.ReportData;
+import org.openmrs.module.reporting.report.ReportRequest;
+import org.openmrs.module.reporting.report.definition.*;
+import org.openmrs.module.reporting.report.definition.service.ReportDefinitionService;
+import org.openmrs.module.reporting.report.service.ReportService;
+import org.openmrs.module.reporting.report.util.PeriodIndicatorReportUtil;
 import org.springframework.transaction.annotation.Transactional;
 
 /**
@@ -249,6 +257,91 @@ public class DHIS2ReportingServiceImpl
                 // TODO: percolate this through to UI
                 log.warn( ex.getMessage() );
             }
+        }
+
+        return dataValueSet;
+    }
+
+    @Override
+    public DataValueSet generateReportingReportDefinition( ReportDefinition reportDefinition, Period period,
+        Location location )
+        throws Exception
+    {
+        Collection<DataValueTemplate> templates = reportDefinition.getDataValueTemplates();
+        DataValueSet dataValueSet = new DataValueSet();
+        dataValueSet.setDataElementIdScheme( "code" );
+        dataValueSet.setOrgUnitIdScheme( "code" );
+        dataValueSet.setPeriod( period.getAsIsoString() );
+        dataValueSet.setDataSet( reportDefinition.getCode() );
+        List<Object> dsrlist = new ArrayList<Object>();
+        DataSetRow dsr = null;
+
+        Collection<DataValue> dataValues = dataValueSet.getDataValues();
+
+        ReportService reportService = Context.getService( ReportService.class );
+        org.openmrs.module.reporting.report.definition.ReportDefinition rrd = Context.getService(
+            ReportDefinitionService.class ).getDefinitionByUuid( reportDefinition.getReportingReportId() );
+        if ( rrd instanceof PeriodIndicatorReportDefinition )
+        {
+            PeriodIndicatorReportDefinition report = (PeriodIndicatorReportDefinition) rrd;
+            PeriodIndicatorReportUtil.ensureDataSetDefinition( report );
+        }
+        else
+        {
+            throw new RuntimeException( "This report is not of the right class" );
+        }
+
+        Parameterizable parameterizable = ParameterizableUtil.getParameterizable( reportDefinition
+            .getReportingReportId(), PeriodIndicatorReportDefinition.class );
+
+        if ( parameterizable != null )
+        {
+            ReportData results = null;
+            EvaluationContext evaluationContext = new EvaluationContext();
+
+            Map<String, Object> parameterValues = new HashMap<String, Object>();
+            if ( parameterizable != null && parameterizable.getParameters() != null )
+            {
+                for ( Parameter p : parameterizable.getParameters() )
+                {
+                    if ( p.getName().equals( "startDate" ) )
+                        parameterValues.put( p.getName(), period.getStart() );
+                    if ( p.getName().equals( "endDate" ) )
+                        parameterValues.put( p.getName(), period.getEnd() );
+                    if ( p.getName().equals( "location" ) )
+                        parameterValues.put( p.getName(), location );
+                }
+            }
+            evaluationContext.setParameterValues( parameterValues );
+
+            DataSet dataSet = null;
+
+            try
+            {
+                results = (ReportData) ParameterizableUtil.evaluateParameterizable( parameterizable, evaluationContext );
+                dataSet = results.getDataSets().entrySet().iterator().next().getValue();
+                dsr = dataSet.iterator().next();
+                dsrlist = new ArrayList<Object>( dsr.getColumnValues().values() );
+            }
+            catch ( ParameterException e )
+            {
+                log.error( "unable to evaluate report: ", e );
+            }
+            catch ( MissingDependencyException ex )
+            {
+            }
+        }
+
+
+        int count = 0;
+        for ( DataValueTemplate dvt : templates )
+        {
+            DataValue dataValue = new DataValue();
+            dataValue.setDataElement( dvt.getDataelement().getCode() );
+            dataValue.setCategoryOptionCombo( dvt.getDisaggregation().getCode() );
+            dataValue.setValue( dsrlist.get( count ).toString() );
+            dataValues.add( dataValue );
+            count++;
         }
 
         return dataValueSet;
