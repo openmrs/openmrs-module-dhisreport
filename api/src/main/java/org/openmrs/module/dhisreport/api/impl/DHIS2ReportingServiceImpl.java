@@ -332,7 +332,6 @@ public class DHIS2ReportingServiceImpl
             }
         }
 
-
         int count = 0;
         for ( DataValueTemplate dvt : templates )
         {

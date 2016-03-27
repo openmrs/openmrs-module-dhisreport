@@ -17,6 +17,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 
+import java.util.ArrayList;
 import java.util.List;
 
 @Controller
@@ -33,10 +34,17 @@ public class MapReportsController
 
         List<DefinitionSummary> definitionSummaries = Context.getService( ReportDefinitionService.class )
             .getAllDefinitionSummaries( false );
+        List<DefinitionSummary> periodicIndicatorReportDefinitionSummaries = new ArrayList<DefinitionSummary>();
+        for ( DefinitionSummary ds : definitionSummaries )
+        {
+            if ( ds.getType().equals( "org.openmrs.module.reporting.report.definition.PeriodIndicatorReportDefinition" ) )
+                periodicIndicatorReportDefinitionSummaries.add( ds );
+        }
         ReportDefinition rd = service.getReportDefinition( reportDefinition_id );
         SerializedObject so = Context.getService( SerializedDefinitionService.class ).getSerializedDefinitionByUuid(
             rd.getReportingReportId() );
-        model.put( "definitionSummaries", definitionSummaries );
+
+        model.put( "definitionSummaries", periodicIndicatorReportDefinitionSummaries );
         model.addAttribute( "user", Context.getAuthenticatedUser() );
         model.addAttribute( "reportDefinition", rd );
         if ( rd.getReportingReportId() != null )
