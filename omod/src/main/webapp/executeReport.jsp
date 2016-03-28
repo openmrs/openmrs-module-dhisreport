@@ -47,12 +47,28 @@
     
     <div>
         <table>
-            <tr><td><spring:message code="dhisreport.status" />; </td><td>${aggregatedValues.importSummary.status}</td></tr>
+            <tr><td><spring:message code="dhisreport.status" />: </td><td>${aggregatedValues.importSummary.status}</td></tr>
             <tr><td><spring:message code="dhisreport.description" />: </td><td>${aggregatedValues.importSummary.description}</td></tr>
-            <tr><td><spring:message code="dhisreport.dataValueCount" />: </td><td>${aggregatedValues.importSummary.dataValueCount}</td></tr>
+            <tr><td><spring:message code="dhisreport.dataValueCount" />: </td><td>${aggregatedValues.importSummary.importCount}</td></tr>
         </table>
     </div>
 </c:if>
+
+    <c:if test="${not empty aggregatedValues.importSummaries}">
+        <div>
+            <table>
+                <tr><td><spring:message code="dhisreport.imported" />: </td><td>${aggregatedValues.importSummaries.imported}</td></tr>
+                <tr><td><spring:message code="dhisreport.updated" />: </td><td>${aggregatedValues.importSummaries.updated}</td></tr>
+                <tr><td><spring:message code="dhisreport.deleted" />: </td><td>${aggregatedValues.importSummaries.deleted}</td></tr>
+                <tr><td><spring:message code="dhisreport.ignored" />: </td><td>${aggregatedValues.importSummaries.ignored}</td></tr>
+                <c:forEach var="importSummaryElement" items="${aggregatedValues.importSummaries.importSummaryList}">
+                    <tr><td><spring:message code="dhisreport.status" />: </td><td>${importSummaryElement.status}</td></tr>
+                    <tr><td><spring:message code="dhisreport.description" />: </td><td>${importSummaryElement.description}</td></tr>
+                    <tr><td><spring:message code="dhisreport.dataValueCount" />: </td><td>${importSummaryElement.importCount}</td></tr>
+                </c:forEach>
+            </table>
+        </div>
+    </c:if>
 </c:forEach>
 
 <%@ include file="/WEB-INF/template/footer.jsp"%>

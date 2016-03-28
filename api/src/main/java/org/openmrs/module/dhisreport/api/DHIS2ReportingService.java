@@ -22,11 +22,14 @@ package org.openmrs.module.dhisreport.api;
 import java.io.InputStream;
 import java.io.OutputStream;
 import java.util.Collection;
+
+import org.openmrs.module.dhisreport.api.adx.AdxType;
 import org.openmrs.module.dhisreport.api.dxf2.DataValueSet;
 import org.hisp.dhis.dxf2.importsummary.ImportSummary;
 import org.openmrs.Location;
 import org.openmrs.api.OpenmrsService;
 import org.openmrs.module.dhisreport.api.dhis.HttpDhis2Server;
+import org.openmrs.module.dhisreport.api.importsummary.ImportSummaries;
 import org.openmrs.module.dhisreport.api.model.*;
 import org.openmrs.module.dhisreport.api.utils.Period;
 import org.springframework.transaction.annotation.Transactional;
@@ -74,6 +77,9 @@ public interface DHIS2ReportingService
      * @throws DHIS2ReportingException
      */
     public ImportSummary postDataValueSet( DataValueSet dvset )
+        throws DHIS2ReportingException;
+
+    public ImportSummaries postAdxReport( AdxType adxReport )
         throws DHIS2ReportingException;
 
     // -----------------------------------------------------------------------

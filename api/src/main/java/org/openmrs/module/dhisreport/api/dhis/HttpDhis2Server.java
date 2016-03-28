@@ -46,6 +46,7 @@ import org.hisp.dhis.dxf2.importsummary.ImportSummary;
 import org.openmrs.module.dhisreport.api.DHIS2ReportingException;
 import org.openmrs.module.dhisreport.api.adx.AdxType;
 import org.openmrs.module.dhisreport.api.dxf2.DataValueSet;
+import org.openmrs.module.dhisreport.api.importsummary.ImportSummaries;
 import org.openmrs.module.dhisreport.api.model.ReportDefinition;
 
 /**
@@ -204,11 +205,11 @@ public class HttpDhis2Server
     }
 
     @Override
-    public ImportSummary postAdxReport( AdxType report )
+    public ImportSummaries postAdxReport( AdxType report )
         throws DHIS2ReportingException
     {
-        log.debug( "Posting datavalueset report" );
-        ImportSummary summary = null;
+        log.debug( "Posting A report" );
+        ImportSummaries summaries = null;
 
         StringWriter xmlReport = new StringWriter();
         try
@@ -243,7 +244,7 @@ public class HttpDhis2Server
             Credentials creds = new UsernamePasswordCredentials( username, password );
             Header bs = new BasicScheme().authenticate( creds, httpPost, localcontext );
             httpPost.addHeader( "Authorization", bs.getValue() );
-            httpPost.addHeader( "Content-Type", "application/xml" );
+            httpPost.addHeader( "Content-Type", "application/xml+adx" );
             httpPost.addHeader( "Accept", "application/xml" );
 
             httpPost.setEntity( new StringEntity( xmlReport.toString() ) );
@@ -257,14 +258,13 @@ public class HttpDhis2Server
 
             if ( entity != null )
             {
-                JAXBContext jaxbImportSummaryContext = JAXBContext.newInstance( ImportSummary.class );
+                JAXBContext jaxbImportSummaryContext = JAXBContext.newInstance( ImportSummaries.class );
                 Unmarshaller importSummaryUnMarshaller = jaxbImportSummaryContext.createUnmarshaller();
-                summary = (ImportSummary) importSummaryUnMarshaller.unmarshal( entity.getContent() );
+                summaries = (ImportSummaries) importSummaryUnMarshaller.unmarshal( entity.getContent() );
             }
             else
             {
-                summary = new ImportSummary();
-                summary.setStatus( ImportStatus.ERROR );
+                summaries = new ImportSummaries();
             }
             // EntityUtils.consume( entity );
 
@@ -286,7 +286,7 @@ public class HttpDhis2Server
         {
             httpclient.getConnectionManager().shutdown();
         }
-        return summary;
+        return summaries;
     }
 
     @Override

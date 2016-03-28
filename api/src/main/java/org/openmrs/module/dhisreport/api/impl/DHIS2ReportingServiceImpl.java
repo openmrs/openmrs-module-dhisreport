@@ -37,8 +37,10 @@ import org.openmrs.api.context.Context;
 import org.openmrs.api.impl.BaseOpenmrsService;
 import org.openmrs.module.dhisreport.api.DHIS2ReportingException;
 import org.openmrs.module.dhisreport.api.DHIS2ReportingService;
+import org.openmrs.module.dhisreport.api.adx.AdxType;
 import org.openmrs.module.dhisreport.api.db.DHIS2ReportingDAO;
 import org.openmrs.module.dhisreport.api.dhis.HttpDhis2Server;
+import org.openmrs.module.dhisreport.api.importsummary.ImportSummaries;
 import org.openmrs.module.dhisreport.api.model.*;
 import org.openmrs.module.dhisreport.api.dxf2.DataValue;
 import org.openmrs.module.dhisreport.api.dxf2.DataValueSet;
@@ -111,6 +113,13 @@ public class DHIS2ReportingServiceImpl
         throws DHIS2ReportingException
     {
         return dhis2Server.postReport( dvset );
+    }
+
+    @Override
+    public ImportSummaries postAdxReport( AdxType adxReport )
+        throws DHIS2ReportingException
+    {
+        return dhis2Server.postAdxReport( adxReport );
     }
 
     @Override
