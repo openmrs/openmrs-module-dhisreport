@@ -296,6 +296,14 @@ public class ReportController
                 }
                 agrs.setDataValueSet( dvs );
                 agrs.setDataElementMap( deset );
+                AdxType adxType = getAdxType( dvs, dateStr );
+
+                if ( destination.equals( "post" ) )
+                {
+                    ImportSummaries importSummaries = Context.getService( DHIS2ReportingService.class ).postAdxReport(
+                        adxType );
+                    agrs.setImportSummaries( importSummaries );
+                }
                 aggregatedList.add( agrs );
             }
         }
