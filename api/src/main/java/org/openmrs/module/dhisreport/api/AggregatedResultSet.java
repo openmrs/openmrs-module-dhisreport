@@ -4,6 +4,7 @@ import java.util.Map;
 
 import org.hisp.dhis.dxf2.importsummary.ImportSummary;
 import org.openmrs.module.dhisreport.api.dxf2.DataValueSet;
+import org.openmrs.module.dhisreport.api.importsummary.ImportSummaries;
 import org.openmrs.module.dhisreport.api.model.DataElement;
 
 /**
@@ -18,6 +19,8 @@ public class AggregatedResultSet
     private Map<DataElement, String> dataElementMap;
 
     private ImportSummary importSummary;
+
+    private ImportSummaries importSummaries;
 
     public DataValueSet getDataValueSet()
     {
@@ -47,6 +50,16 @@ public class AggregatedResultSet
     public void setImportSummary( ImportSummary importSummary )
     {
         this.importSummary = importSummary;
+    }
+
+    public ImportSummaries getImportSummaries()
+    {
+        return importSummaries;
+    }
+
+    public void setImportSummaries( ImportSummaries importSummaries )
+    {
+        this.importSummaries = importSummaries;
     }
 
 }
