@@ -5,19 +5,36 @@
                 code="admin.title.short" /></a></li>
 
     <li
-        <c:if test='<%= request.getRequestURI().contains("/manage") %>'>class="active"</c:if>>
+        <c:if test='<%= request.getRequestURI().contains("/loadReportDefinitions") %>'>class="active"</c:if>>
             <a
-                href="${pageContext.request.contextPath}/module/dhisreport/manage.form"><spring:message
-                code="dhisreport.manage" /></a>
+                href="${pageContext.request.contextPath}/module/dhisreport/loadReportDefinitions.form"><spring:message
+                code="dhisreport.importExport" /></a>
     </li>
-    
+
+    <li
+        <c:if test='<%= request.getRequestURI().contains("/configureDhis2") %>'>class="active"</c:if>>
+            <a
+                href="${pageContext.request.contextPath}/module/dhisreport/configureDhis2.form"><spring:message
+                code="dhisreport.configureDHIS2" /></a>
+    </li>
+
     <li
         <c:if test='<%= request.getRequestURI().contains("/listDhis2Reports") %>'>class="active"</c:if>>
             <a
                 href="${pageContext.request.contextPath}/module/dhisreport/listDhis2Reports.form"><spring:message
                 code="dhisreport.reporting" /></a>
     </li>
-    
+
+    <!--
+     Sync feature is currently unavailable.
+     <li
+        <c:if test='<%= request.getRequestURI().contains("/syncReports") %>'>class="active"</c:if>>
+            <a
+                href="${pageContext.request.contextPath}/module/dhisreport/syncReports.form"><spring:message
+                code="dhisreport.syncReports" /></a>
+    </li>
+     -->
+
 
     <!-- Add further links here -->
 </ul>
