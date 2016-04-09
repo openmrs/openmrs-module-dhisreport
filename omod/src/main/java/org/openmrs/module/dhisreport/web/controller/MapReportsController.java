@@ -9,8 +9,11 @@ import org.openmrs.module.dhisreport.api.DHIS2ReportingService;
 import org.openmrs.module.dhisreport.api.model.ReportDefinition;
 import org.openmrs.module.reporting.definition.DefinitionSummary;
 import org.openmrs.module.reporting.definition.service.SerializedDefinitionService;
+import org.openmrs.module.reporting.evaluation.parameter.Parameterizable;
+import org.openmrs.module.reporting.evaluation.parameter.ParameterizableUtil;
 import org.openmrs.module.reporting.report.definition.PeriodIndicatorReportDefinition;
 import org.openmrs.module.reporting.report.definition.service.ReportDefinitionService;
+import org.openmrs.module.reporting.report.util.PeriodIndicatorReportUtil;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.ModelMap;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -44,11 +47,20 @@ public class MapReportsController
         SerializedObject so = Context.getService( SerializedDefinitionService.class ).getSerializedDefinitionByUuid(
             rd.getReportingReportId() );
 
+        org.openmrs.module.reporting.report.definition.ReportDefinition rrd = Context.getService(
+            ReportDefinitionService.class ).getDefinitionByUuid( rd.getReportingReportId() );
+
         model.put( "definitionSummaries", periodicIndicatorReportDefinitionSummaries );
         model.addAttribute( "user", Context.getAuthenticatedUser() );
         model.addAttribute( "reportDefinition", rd );
-        if ( rd.getReportingReportId() != null )
+        if ( rd.getReportingReportId() != null && rrd instanceof PeriodIndicatorReportDefinition )
+        {
             model.addAttribute( "correspondingReportDefinition", so );
+            Parameterizable parameterizable = ParameterizableUtil.getParameterizable( rd.getReportingReportId(),
+                PeriodIndicatorReportDefinition.class );
+            model.addAttribute( "reportingReportDefinitionReport", (PeriodIndicatorReportDefinition) rrd );
+        }
+
     }
 
     @RequestMapping( value = "/module/dhisreport/mapReports", method = RequestMethod.POST )

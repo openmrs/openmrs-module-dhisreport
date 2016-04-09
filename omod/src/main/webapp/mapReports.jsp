@@ -7,8 +7,8 @@
     <table>
         <thead style="background-color: #1AAC9B; color: white; padding: 2px;">
         <tr>
-            <td>Dhis2 Report</td>
-            <td>OpenMRS(Reporting) Report</td>
+            <td><spring:message code="dhisreport.mappingDHISHeader" /></td>
+            <td><spring:message code="dhisreport.mappingReportingHeader" /></td>
         </tr>
         </thead>
         <tbody>
@@ -38,6 +38,69 @@
         </tr>
         </tbody>
     </table>
+    <br>
+    <br>
+<c:if test="${not empty correspondingReportDefinition}">
+    <div id="openmrs_msg"><spring:message code="dhisreport.mappingReportInformation" /> </div>
+   </c:if>
+    <br>
+    <br>
+    <div  style="float: left; width: 49%;">
+        <b class="boxHeader"><spring:message code="dhisreport.mappingDHISTableHeader" /></b>
+        <div class="box">
+    <table cellspacing="0" cellpadding="2" style="width: 100%;">
+        <tbody>
+        <tr>
+            <th>[<spring:message code="dhisreport.dataElement" />]
+            </th>
+            <th>[<spring:message code="dhisreport.dataElement" />]
+            </th>
+
+            <th>[<spring:message code="dhisreport.disaggregationName" />]
+            </th>
+        </tr>
+        <c:forEach var="dataValueTemplate" varStatus="varStatus"
+                   items="${reportDefinition.dataValueTemplates}">
+            <tr class='${varStatus.index % 2 == 0 ? "oddRow" : "evenRow" }'>
+                <td>${varStatus.index +1}</td>
+                <td>${dataValueTemplate.dataelement.name}</td>
+
+                <td>${dataValueTemplate.disaggregation.name}</td>
+
+            </tr>
+        </c:forEach>
+        </tbody>
+    </table>
+        </div>
+    </div>
+    <c:if test="${not empty correspondingReportDefinition}">
+    <div  style="float: Right; width: 49%;">
+        <b class="boxHeader"><spring:message code="dhisreport.mappingReportingTableHeader" /></b>
+        <div class="box" >
+    <table cellspacing="0" cellpadding="2" style="width: 100%;">
+        <tbody>
+        <tr>
+            <th>[<spring:message code="dhisreport.indicatorOrder" />]
+            </th>
+            <th>[<spring:message code="dhisreport.label" />]
+            </th>
+
+            <th>[<spring:message code="dhisreport.label" />]
+            </th>
+        </tr>
+        <c:forEach var="col" varStatus="varStatus"
+                   items="${reportingReportDefinitionReport.indicatorDataSetDefinition.columns}">
+            <tr class='${varStatus.index % 2 == 0 ? "oddRow" : "evenRow" }'>
+                <td>${varStatus.index +1}</td>
+                <td>${col.label}</td>
+                <td>${col.indicator.parameterizable.name}</td>
+            </tr>
+        </c:forEach>
+        </tbody>
+    </table>
+        </div>
+    </div>
+    </c:if>
 </form>
 
 
