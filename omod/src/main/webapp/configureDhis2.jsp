@@ -1,7 +1,17 @@
 <%@ include file="/WEB-INF/template/include.jsp"%>
 <%@ include file="/WEB-INF/template/header.jsp"%>
-
 <%@ include file="template/localHeader.jsp"%>
+<%@ include file="./resources/js/js_css.jsp" %>
+<script type="text/javascript">
+      
+    window.onload = function(){
+        var errormsg = '${ConnectionErrorMessage}';
+        if(errormsg=='DHIS2 Connection Not Established') {
+            $("#menu").after("<div id='openmrs_error'>"+errormsg+"</div>");
+        }
+        
+    }
+</script>
 
 <h3><spring:message code="dhisreport.dhis2" />DHIS2 Server</h3>
 
@@ -31,6 +41,11 @@
                 <td />
                 <td><input name="submit" type="submit" value="<spring:message code="dhisreport.dhis2saveButton" />" /></td>
             </tr>
+            
+            <tr>
+            <td><input value="Check Connection" name="checkConnection" type="submit" id="btnPrevious" class="submit_button"></td>
+            </tr>
+
         </tbody>
     </table>
 </form>
