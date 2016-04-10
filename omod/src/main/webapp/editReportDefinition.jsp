@@ -35,7 +35,7 @@ $(document).ready(function() {
 		id="editReportDefinitionCode" style="cursor: pointer;"><img
 			src="<c:url value='/images/edit.gif'/>" border="0"
 			title='<spring:message code="dhisreport.editReportDefinition"/>' /></a><a
-		id="saveReportDefinitionCode" style="display: none; cursor: pointer;">save</a><input
+		id="saveReportDefinitionCode" style="display: none; cursor: pointer;"><spring:message code="dhisreport.dhis2saveButton" /></a><input
 		id="reportDefinitionId" type="hidden" value="${reportDefinition.id}"></b>
 	<div class="box">
 		<table cellspacing="0" cellpadding="2">
