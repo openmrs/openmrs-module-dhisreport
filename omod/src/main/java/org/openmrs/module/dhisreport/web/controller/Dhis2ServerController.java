@@ -25,6 +25,9 @@ import java.net.URL;
 import java.text.ParseException;
 import java.util.List;
 
+import javax.servlet.RequestDispatcher;
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.apache.http.HttpHost;
@@ -34,6 +37,7 @@ import org.apache.http.client.methods.HttpGet;
 import org.apache.http.impl.auth.BasicScheme;
 import org.apache.http.impl.client.DefaultHttpClient;
 import org.apache.http.protocol.BasicHttpContext;
+
 import org.openmrs.GlobalProperty;
 import org.openmrs.api.context.Context;
 import org.openmrs.module.dhisreport.api.DHIS2ReportingService;
@@ -47,6 +51,8 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.context.request.WebRequest;
 import org.springframework.web.servlet.ModelAndView;
+import org.springframework.web.bind.annotation.ModelAttribute;
+import javax.servlet.http.HttpSession;
 
 /**
  * The main controller.
@@ -58,8 +64,10 @@ public class Dhis2ServerController
     protected final Log log = LogFactory.getLog( getClass() );
 
     @RequestMapping( value = "/module/dhisreport/configureDhis2", method = RequestMethod.GET )
-    public void showConfigForm( ModelMap model )
+    public void showConfigForm( ModelMap model, HttpSession session )
     {
+        System.out.println( "\n\n\n\n\n hello from configureDhis2 GET" );
+
         DHIS2ReportingService service = Context.getService( DHIS2ReportingService.class );
 
         HttpDhis2Server server = service.getDhis2Server();
@@ -86,8 +94,13 @@ public class Dhis2ServerController
         server.setUsername( dhisusername );
         server.setPassword( dhispassword );
 
+        String errormsg = (String) session.getAttribute( "ConnectionErrorMessage" );
+        session.removeAttribute( "ConnectionErrorMessage" );
+       
         model.addAttribute( "user", Context.getAuthenticatedUser() );
         model.addAttribute( "dhis2Server", server );
+        model.addAttribute( "ConnectionErrorMessage", errormsg );
+        
 
     }
 
@@ -99,24 +112,66 @@ public class Dhis2ServerController
 
         DHIS2ReportingService service = Context.getService( DHIS2ReportingService.class );
         ReportDefinition rd = service.getReportDefinition( reportId );
-        rd.setCode( reportCode );
-        service.saveReportDefinition( rd );
 
     }
 
-    @RequestMapping( value = "/module/dhisreport/configureDhis2", method = RequestMethod.POST )
+    @RequestMapping( value = "/module/dhisreport/configureDhis2", params = "checkConnection", method = RequestMethod.POST )
+    public String CheckConnectionWithDHIS2( ModelMap model, WebRequest webRequest, HttpServletRequest request )
+    {
+        DHIS2ReportingService service = Context.getService( DHIS2ReportingService.class );
+        HttpDhis2Server server = service.getDhis2Server();
+
+       
+
+        String dhisurl = Context.getAdministrationService().getGlobalProperty( "dhisreport.dhis2URL" );
+        String dhisusername = Context.getAdministrationService().getGlobalProperty( "dhisreport.dhis2UserName" );
+        String dhispassword = Context.getAdministrationService().getGlobalProperty( "dhisreport.dhis2Password" );
+
+        URL url = null;
+        try
+        {
+            url = new URL( dhisurl );
+        }
+        catch ( MalformedURLException e )
+        {
+            // TODO Auto-generated catch block
+            e.printStackTrace();
+        }
+
+
+        boolean val = testConnection( url, dhisusername, dhispassword, server, webRequest, model );
+
+       
+
+        if ( val == false )
+        {
+            request.getSession().setAttribute( "ConnectionErrorMessage", "DHIS2 Connection Not Established" );
+            String referer = webRequest.getHeader( "Referer" );
+            
+            return "redirect:" + referer;
+        }
+        String referer = webRequest.getHeader( "Referer" );
+
+        
+
+        return "redirect:" + referer;
+    }
+
+    @RequestMapping( value = "/module/dhisreport/configureDhis2", method = RequestMethod.POST, params = "submit" )
     public void saveConfig( ModelMap model, @RequestParam( value = "url", required = true )
     String urlString, @RequestParam( value = "username", required = true )
     String username, @RequestParam( value = "password", required = true )
-    String password, WebRequest webRequest )
-        throws ParseException, MalformedURLException
+    String password, WebRequest webRequest, HttpServletRequest request )
+        throws ParseException, IOException
     {
+        
+
         DHIS2ReportingService service = Context.getService( DHIS2ReportingService.class );
         HttpDhis2Server server = service.getDhis2Server();
 
         List<GlobalProperty> gbl = Context.getAdministrationService().getGlobalPropertiesByPrefix( "dhisreport" );
 
-        // System.out.println( "parameters received on post request" + urlString + username + password );
+        
 
         if ( server == null )
         {
@@ -156,6 +211,7 @@ public class Dhis2ServerController
                 }
             }
         }
+
     }
 
     /*
@@ -200,8 +256,9 @@ public class Dhis2ServerController
 
                 model.addAttribute( "dhis2Server", server );
                 model.addAttribute( "user", Context.getAuthenticatedUser() );
-                webRequest.setAttribute( WebConstants.OPENMRS_MSG_ATTR, Context.getMessageSourceService().getMessage(
-                    "dhisreport.saveConfigFailure" ), WebRequest.SCOPE_SESSION );
+                /*webRequest.setAttribute( WebConstants.OPENMRS_MSG_ATTR, Context.getMessageSourceService().getMessage(
+                     "dhisreport.saveConfigFailure" ), WebRequest.SCOPE_SESSION );
+                 */
                 return false;
             }
         }
