@@ -74,7 +74,7 @@
             <table cellspacing="0" cellpadding="2" style="width: 100%;">
                 <tbody>
                 <tr>
-                    <th>[<spring:message code="dhisreport.dataElement" />]
+                    <th>[<spring:message code="dhisreport.dataElementOrder" />]
                     </th>
                     <th>[<spring:message code="dhisreport.dataElement" />]
                     </th>
@@ -108,7 +108,7 @@
                         <th>[<spring:message code="dhisreport.label" />]
                         </th>
 
-                        <th>[<spring:message code="dhisreport.label" />]
+                        <th>[<spring:message code="dhisreport.indicator" />]
                         </th>
                     </tr>
                     <c:forEach var="col" varStatus="varStatus"
