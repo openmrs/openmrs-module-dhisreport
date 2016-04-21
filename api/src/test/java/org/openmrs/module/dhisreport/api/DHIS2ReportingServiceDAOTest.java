@@ -33,7 +33,6 @@ import org.springframework.core.io.ClassPathResource;
  * Tests {@link $ DHIS2ReportingService} .
  */
 public class DHIS2ReportingServiceDAOTest
-    extends BaseModuleContextSensitiveTest
 {
 
     private DHIS2ReportingService service;
@@ -64,6 +63,7 @@ public class DHIS2ReportingServiceDAOTest
         service.unMarshallandSaveReportTemplates( resource.getInputStream() );
     }
 
+    @Ignore
     @Test
     public void dataElementDAOTest()
     {
@@ -88,6 +88,7 @@ public class DHIS2ReportingServiceDAOTest
 
     }
 
+    @Ignore
     @Test
     public void disAggregationDAOTest()
     {
@@ -96,6 +97,7 @@ public class DHIS2ReportingServiceDAOTest
         assertEquals( 2, service.getAllReportDefinitions().size() );
     }
 
+    @Ignore
     @Test
     public void dataValueSetDAOTest()
     {
@@ -118,6 +120,7 @@ public class DHIS2ReportingServiceDAOTest
     {
     }
 
+    @Ignore
     @Test
     public void unMarshallandSaveReportTemplates()
         throws Exception
@@ -126,6 +129,7 @@ public class DHIS2ReportingServiceDAOTest
         service.unMarshallandSaveReportTemplates( resource.getInputStream() );
     }
 
+    @Ignore
     @Test
     public void marshallerTest()
         throws Exception
