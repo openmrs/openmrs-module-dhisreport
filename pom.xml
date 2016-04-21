@@ -38,8 +38,8 @@
 	</licenses>
 
 	<scm>
-		<connection>scm:https://github.com/openmrs/openmrs-module-dhisreport</connection>
-		<developerConnection>scm:https://github.com/openmrs/openmrs-module-dhisreport</developerConnection>
+		<connection>scm:git:https://github.com/openmrs/openmrs-module-dhisreport</connection>
+		<developerConnection>scm:git:https://github.com/openmrs/openmrs-module-dhisreport</developerConnection>
 		<url>https://github.com/openmrs/openmrs-module-dhisreport</url>
 	  <tag>HEAD</tag>
   </scm>
