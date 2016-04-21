@@ -7,13 +7,10 @@
 	<version>1.2-SNAPSHOT</version>
 	<packaging>pom</packaging>
 	<name>DHIS2 Reporting Module</name>
-	<description>Posts aggregate reports to dhis2 based on dataelements bound to sql queries</description>
+	<description>Posts aggregate ADX[standard] reports to dhis2 leveraing OpenMRS reporting module</description>
 	<url>https://wiki.openmrs.org/display/docs/DHIS2+Reporting+Module</url>
 
 	<developers>
-		<developer>
-			<name>Sri Maurya Kummamuru</name>
-		</developer>
 		<developer>
 			<name>Bob Jolliffe</name>
 		</developer>
@@ -23,11 +20,14 @@
 		<developer>
 			<name>Saptarshi Purkayastha</name>
 		</developer>
+		<developer>
+			<name>Sri Maurya Kummamuru</name>
+		</developer>
 	</developers>
 
 	<organization>
-		<name>HISP India</name>
-		<url>http://www.hispindia.org</url>
+		<name>OpenMRS,HISP India</name>
+		<url>http://www.openmrs.org, http://www.hispindia.org</url>
 	</organization>
 
 	<licenses>
@@ -38,9 +38,9 @@
 	</licenses>
 
 	<scm>
-		<connection>scm:git:git@github.com:hispindia/dhisreport.git</connection>
-		<developerConnection>scm:git:git@github.com:hispindia/dhisreport.git</developerConnection>
-		<url>https://github.com/hispindia/dhisreport</url>
+		<connection>scm:https://github.com/openmrs/openmrs-module-dhisreport</connection>
+		<developerConnection>scm:https://github.com/openmrs/openmrs-module-dhisreport</developerConnection>
+		<url>https://github.com/openmrs/openmrs-module-dhisreport</url>
 	  <tag>HEAD</tag>
   </scm>
 
