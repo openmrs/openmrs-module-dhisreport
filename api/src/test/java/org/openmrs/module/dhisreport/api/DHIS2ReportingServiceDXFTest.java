@@ -38,11 +38,11 @@ import org.springframework.core.io.ClassPathResource;
  * Tests {@link $ DHIS2ReportingService} .
  */
 public class DHIS2ReportingServiceDXFTest
-    extends BaseModuleContextSensitiveTest
 {
 
     private DHIS2ReportingService service;
 
+    @Ignore
     @Before
     public void before()
         throws Exception
@@ -52,6 +52,7 @@ public class DHIS2ReportingServiceDXFTest
         service = Context.getService( DHIS2ReportingService.class );
     }
 
+    @Ignore
     @Test
     public void setServerParamsTest()
         throws MalformedURLException
