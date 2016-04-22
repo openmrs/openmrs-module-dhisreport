@@ -61,7 +61,7 @@ public class HttpDhis2Server
 
     public static final String REPORTS_METADATA_PATH = "/api/forms.xml";
 
-    public static final String DATAVALUESET_PATH = "/api/dataValueSets?dataElementIdScheme=code&orgUnitIdScheme=uid";
+    public static final String DATAVALUESET_PATH = "/api/dataValueSets?dataElementIdScheme=CODE&orgUnitIdScheme=CODE&idScheme=CODE";
 
     private URL url;
 
@@ -158,7 +158,7 @@ public class HttpDhis2Server
             Credentials creds = new UsernamePasswordCredentials( username, password );
             Header bs = new BasicScheme().authenticate( creds, httpPost, localcontext );
             httpPost.addHeader( "Authorization", bs.getValue() );
-            httpPost.addHeader( "Content-Type", "application/xml" );
+            httpPost.addHeader( "Content-Type", "application/xml+adx" );
             httpPost.addHeader( "Accept", "application/xml" );
 
             httpPost.setEntity( new StringEntity( xmlReport.toString() ) );

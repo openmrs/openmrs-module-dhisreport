@@ -45,16 +45,16 @@ public class GroupType
     @XmlElement( required = true )
     protected List<DataValueType> dataValue;
 
-    @XmlAttribute( name = "orgUnit", required = true )
-    @XmlJavaTypeAdapter( CollapsedStringAdapter.class )
-    @XmlSchemaType( name = "token" )
-    protected String orgUnit;
+    @XmlAttribute( name = "datSet", required = true )
+    protected String dataSet;
 
     @XmlAttribute( name = "period", required = true )
     protected String period;
 
-    @XmlAttribute( name = "idScheme", required = false )
-    protected String idScheme;
+    @XmlAttribute( name = "orgUnit", required = true )
+    @XmlJavaTypeAdapter( CollapsedStringAdapter.class )
+    @XmlSchemaType( name = "token" )
+    protected String orgUnit;
 
     @XmlAnyAttribute
     private Map<QName, String> otherAttributes = new HashMap<QName, String>();
@@ -161,14 +161,14 @@ public class GroupType
         return otherAttributes;
     }
 
-    public String getIdScheme()
+    public String getDataSet()
     {
-        return idScheme;
+        return dataSet;
     }
 
-    public void setIdScheme( String idScheme )
+    public void setDataSet( String dataSet )
     {
-        this.idScheme = idScheme;
+        this.dataSet = dataSet;
     }
 
 }
