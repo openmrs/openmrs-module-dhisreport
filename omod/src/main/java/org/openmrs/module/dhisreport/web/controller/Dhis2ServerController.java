@@ -23,8 +23,6 @@ import java.io.IOException;
 import java.net.MalformedURLException;
 import java.net.URL;
 import java.text.ParseException;
-import java.util.List;
-
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.apache.http.HttpHost;
@@ -46,7 +44,6 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.context.request.WebRequest;
-import org.springframework.web.servlet.ModelAndView;
 
 /**
  * The main controller.
@@ -114,8 +111,6 @@ public class Dhis2ServerController
         DHIS2ReportingService service = Context.getService( DHIS2ReportingService.class );
         HttpDhis2Server server = service.getDhis2Server();
 
-        List<GlobalProperty> gbl = Context.getAdministrationService().getGlobalPropertiesByPrefix( "dhisreport" );
-
         // System.out.println( "parameters received on post request" + urlString + username + password );
 
         if ( server == null )
@@ -134,27 +129,17 @@ public class Dhis2ServerController
 
         if ( val == true )
         {
-            for ( GlobalProperty g : gbl )
-            {
-                if ( g.getProperty().equals( "dhisreport.dhis2URL" ) )
-                {
-                    //System.out.println( "Setting URL" + g.getProperty().equals( "dhisreport.dhis2URL" ) );
-                    g.setPropertyValue( urlString );
+            GlobalProperty globalProperty = new GlobalProperty();
+            globalProperty.setProperty( "dhisreport.dhis2URL" );
+            globalProperty.setPropertyValue( urlString );
+            Context.getAdministrationService().saveGlobalProperty( globalProperty );
+            globalProperty.setProperty( "dhisreport.dhis2UserName" );
+            globalProperty.setPropertyValue( username );
+            Context.getAdministrationService().saveGlobalProperty( globalProperty );
+            globalProperty.setProperty( "dhisreport.dhis2Password" );
+            globalProperty.setPropertyValue( password );
+            Context.getAdministrationService().saveGlobalProperty( globalProperty );
 
-                }
-                if ( g.getProperty().equals( "dhisreport.dhis2UserName" ) )
-                {
-                    //System.out.println( " Setting  username as -" + g.getProperty().equals( "dhisreport.dhis2UserName" ) );
-
-                    g.setPropertyValue( username );
-                }
-                if ( g.getProperty().equals( "dhisreport.dhis2Password" ) )
-                {
-                    // System.out.println( "setting password-" + g.getProperty().equals( "dhisreport.dhis2Password" ) );
-
-                    g.setPropertyValue( password );
-                }
-            }
         }
     }
 
