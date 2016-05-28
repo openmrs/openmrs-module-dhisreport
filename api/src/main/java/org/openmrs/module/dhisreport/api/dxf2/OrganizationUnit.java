@@ -1,21 +1,17 @@
 package org.openmrs.module.dhisreport.api.dxf2;
 
-import javax.xml.bind.annotation.XmlAccessType;
-import javax.xml.bind.annotation.XmlAccessorType;
 import javax.xml.bind.annotation.XmlAttribute;
+import javax.xml.bind.annotation.XmlElement;
 import javax.xml.bind.annotation.XmlRootElement;
 
-@XmlRootElement( name = "organizationUnit" )
-@XmlAccessorType( XmlAccessType.FIELD )
+@XmlRootElement( name = "organisationUnit" )
 public class OrganizationUnit
 {
-
-    @XmlAttribute
     private String name;
 
-    @XmlAttribute
     private String code;
 
+    @XmlElement( name = "displayName" )
     public String getName()
     {
         return name;
@@ -26,6 +22,7 @@ public class OrganizationUnit
         this.name = name;
     }
 
+    @XmlAttribute( name = "id" )
     public String getCode()
     {
         return code;
