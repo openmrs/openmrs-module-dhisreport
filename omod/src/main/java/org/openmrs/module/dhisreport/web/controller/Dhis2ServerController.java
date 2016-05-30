@@ -20,24 +20,34 @@
 package org.openmrs.module.dhisreport.web.controller;
 
 import java.io.IOException;
+import java.io.InputStream;
 import java.net.MalformedURLException;
 import java.net.URL;
 import java.text.ParseException;
+import java.util.ArrayList;
 import java.util.List;
+
+import javax.xml.bind.JAXBContext;
 
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.apache.http.HttpHost;
 import org.apache.http.HttpResponse;
 import org.apache.http.auth.UsernamePasswordCredentials;
+import org.apache.http.client.ClientProtocolException;
 import org.apache.http.client.methods.HttpGet;
 import org.apache.http.impl.auth.BasicScheme;
 import org.apache.http.impl.client.DefaultHttpClient;
 import org.apache.http.protocol.BasicHttpContext;
 import org.openmrs.GlobalProperty;
+import org.openmrs.Location;
+import org.openmrs.LocationAttribute;
+import org.openmrs.LocationAttributeType;
 import org.openmrs.api.context.Context;
 import org.openmrs.module.dhisreport.api.DHIS2ReportingService;
 import org.openmrs.module.dhisreport.api.dhis.HttpDhis2Server;
+import org.openmrs.module.dhisreport.api.dxf2.Metadata;
+import org.openmrs.module.dhisreport.api.dxf2.OrganizationUnit;
 import org.openmrs.module.dhisreport.api.model.ReportDefinition;
 import org.openmrs.web.WebConstants;
 import org.springframework.stereotype.Controller;
@@ -46,7 +56,6 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.context.request.WebRequest;
-import org.springframework.web.servlet.ModelAndView;
 
 /**
  * The main controller.
@@ -58,7 +67,7 @@ public class Dhis2ServerController
     protected final Log log = LogFactory.getLog( getClass() );
 
     @RequestMapping( value = "/module/dhisreport/configureDhis2", method = RequestMethod.GET )
-    public void showConfigForm( ModelMap model )
+    public void showConfigForm( ModelMap model, WebRequest webRequest )
     {
         DHIS2ReportingService service = Context.getService( DHIS2ReportingService.class );
 
@@ -89,7 +98,29 @@ public class Dhis2ServerController
         model.addAttribute( "user", Context.getAuthenticatedUser() );
         model.addAttribute( "dhis2Server", server );
 
-    }
+		model.addAttribute("locationList", Context.getLocationService().getAllLocations());
+		Metadata metadata = null;
+		List<OrganizationUnit> ou = null;
+		boolean val = testConnection(url, dhisusername, dhispassword, server, webRequest, model);
+		if (val == true) {
+			try {
+				metadata = getDHIS2OrganizationUnits();
+			} catch (Exception e) {
+				log.debug("Error in Unmarshalling");
+				e.printStackTrace();
+			}
+			if (metadata != null) {
+				ou = metadata.getOrganizationUnits().getOrganizationUnits();
+				model.addAttribute("orgunits", ou);
+				return;
+			}
+
+		}
+		webRequest.setAttribute(WebConstants.OPENMRS_MSG_ATTR,
+				Context.getMessageSourceService().getMessage("dhisreport.currentConnectionFail"),
+				WebRequest.SCOPE_SESSION);
+		model.addAttribute("orgunits", ou);
+	}
 
     @RequestMapping( "/module/dhisreport/editReportCode" )
     public void editReportCode( @RequestParam( required = false, value = "reportCode" )
@@ -134,6 +165,11 @@ public class Dhis2ServerController
 
         if ( val == true )
         {
+            model.addAttribute( "dhis2Server", server );
+            model.addAttribute( "user", Context.getAuthenticatedUser() );
+            webRequest.setAttribute( WebConstants.OPENMRS_MSG_ATTR, Context.getMessageSourceService().getMessage(
+                "dhisreport.saveConfigSuccess" ), WebRequest.SCOPE_SESSION );
+
             for ( GlobalProperty g : gbl )
             {
                 if ( g.getProperty().equals( "dhisreport.dhis2URL" ) )
@@ -156,7 +192,64 @@ public class Dhis2ServerController
                 }
             }
         }
+        else
+        {
+            model.addAttribute( "dhis2Server", server );
+            model.addAttribute( "user", Context.getAuthenticatedUser() );
+            webRequest.setAttribute( WebConstants.OPENMRS_MSG_ATTR, Context.getMessageSourceService().getMessage(
+                "dhisreport.saveConfigFailure" ), WebRequest.SCOPE_SESSION );
+        }
     }
+
+	@RequestMapping(value = "/module/dhisreport/mapLocations", method = RequestMethod.POST)
+	public String mapLocations(ModelMap model,
+			@RequestParam(value = "DHIS2OrgUnits", required = true) String dhis2OrgUnitCode,
+			@RequestParam(value = "openmrsLocations", required = true) String openmrsLocationName,
+			WebRequest webRequest) {
+		String referer = webRequest.getHeader("Referer");
+		List<Location> locationList = new ArrayList<Location>();
+		locationList.addAll(Context.getLocationService().getAllLocations());
+		Location loc = Context.getLocationService().getLocation(openmrsLocationName);
+		if (loc == null) {
+			webRequest.setAttribute(WebConstants.OPENMRS_MSG_ATTR,
+					Context.getMessageSourceService().getMessage("dhisreport.openMRSLocationDoesNotExist"),
+					WebRequest.SCOPE_SESSION);
+			return "redirect:" + referer;
+		}
+
+		List<LocationAttributeType> attributeTypes = Context.getLocationService().getAllLocationAttributeTypes();
+		for (LocationAttributeType lat : attributeTypes) {
+			if (lat.getName().equals("CODE")) {
+				LocationAttribute locationAttribute = new LocationAttribute();
+				locationAttribute.setAttributeType(lat);
+				locationAttribute.setValue(dhis2OrgUnitCode);
+				loc.setAttribute(locationAttribute);
+				Context.getLocationService().saveLocation(loc);
+				webRequest.setAttribute(WebConstants.OPENMRS_MSG_ATTR,
+						Context.getMessageSourceService().getMessage("dhisreport.openMRSLocationMapped"),
+						WebRequest.SCOPE_SESSION);
+				return "redirect:" + referer;
+			}
+		}
+		LocationAttributeType attributetype = new LocationAttributeType();
+		attributetype.setName("CODE");
+		attributetype.setDescription("Corresponding Value of ORG UNITS for DHIS");
+		attributetype.setMinOccurs(0);
+		attributetype.setMaxOccurs(1);
+		attributetype.setDatatypeClassname("org.openmrs.customdatatype.datatype.FreeTextDatatype");
+		Context.getLocationService().saveLocationAttributeType(attributetype);
+
+		LocationAttribute locationAttribute = new LocationAttribute();
+		locationAttribute.setAttributeType(attributetype);
+		locationAttribute.setValue(dhis2OrgUnitCode);
+		loc.setAttribute(locationAttribute);
+		Context.getLocationService().saveLocation(loc);
+		webRequest.setAttribute(WebConstants.OPENMRS_MSG_ATTR,
+				Context.getMessageSourceService().getMessage("dhisreport.openMRSLocationMapped"),
+				WebRequest.SCOPE_SESSION);
+		return "redirect:" + referer;
+
+	}
 
     /*
      * To test the http connection
@@ -186,22 +279,12 @@ public class Dhis2ServerController
             if ( response.getStatusLine().getStatusCode() == 200 )
             {
                 log.debug( "Dhis2 server configured: " + username + ":xxxxxx  " + url.toExternalForm() );
-
-                model.addAttribute( "dhis2Server", server );
-                model.addAttribute( "user", Context.getAuthenticatedUser() );
-                webRequest.setAttribute( WebConstants.OPENMRS_MSG_ATTR, Context.getMessageSourceService().getMessage(
-                    "dhisreport.saveConfigSuccess" ), WebRequest.SCOPE_SESSION );
                 return true;
             }
 
             else
             {
                 log.debug( "Dhis2 server not configured" );
-
-                model.addAttribute( "dhis2Server", server );
-                model.addAttribute( "user", Context.getAuthenticatedUser() );
-                webRequest.setAttribute( WebConstants.OPENMRS_MSG_ATTR, Context.getMessageSourceService().getMessage(
-                    "dhisreport.saveConfigFailure" ), WebRequest.SCOPE_SESSION );
                 return false;
             }
         }
@@ -215,4 +298,45 @@ public class Dhis2ServerController
             httpclient.getConnectionManager().shutdown();
         }
     }
+
+    public Metadata getDHIS2OrganizationUnits()
+        throws Exception
+    {
+        String username = Context.getAdministrationService().getGlobalProperty( "dhisreport.dhis2UserName" );
+        String password = Context.getAdministrationService().getGlobalProperty( "dhisreport.dhis2Password" );
+        String dhisurl = Context.getAdministrationService().getGlobalProperty( "dhisreport.dhis2URL" );
+        String url = dhisurl + "/api/organisationUnits";
+        // String url = "https://play.dhis2.org/demo/api/dataSets";
+        // String referer = webRequest.getHeader( "Referer" );
+
+        DefaultHttpClient httpClient = new DefaultHttpClient();
+        HttpGet getRequest = new HttpGet( url );
+        getRequest.addHeader( "accept", "application/xml" );
+        getRequest.addHeader( BasicScheme.authenticate( new UsernamePasswordCredentials( username, password ), "UTF-8",
+            false ) );
+        HttpResponse response;
+        InputStream is = null;
+        Metadata metadata = null;
+        try
+        {
+            response = httpClient.execute( getRequest );
+            is = response.getEntity().getContent();
+            JAXBContext jaxbContext = JAXBContext.newInstance( Metadata.class );
+            javax.xml.bind.Unmarshaller jaxbUnmarshaller = jaxbContext.createUnmarshaller();
+            metadata = (Metadata) jaxbUnmarshaller.unmarshal( is );
+            return metadata;
+        }
+        catch ( ClientProtocolException e )
+        {
+            log.debug( "ClientProtocolException occured : " + e.toString() );
+            e.printStackTrace();
+        }
+        finally
+        {
+            is.close();
+        }
+        return metadata;
+
+    }
+
 }
