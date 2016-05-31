@@ -46,7 +46,6 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.context.request.WebRequest;
-import org.springframework.web.servlet.ModelAndView;
 
 /**
  * The main controller.
@@ -102,6 +101,40 @@ public class Dhis2ServerController
         rd.setCode( reportCode );
         service.saveReportDefinition( rd );
 
+    }
+
+    @RequestMapping( value = "/module/dhisreport/testconnection", method = RequestMethod.POST )
+    public String CheckConnectionWithDHIS2( ModelMap model, WebRequest webRequest )
+    {
+        DHIS2ReportingService service = Context.getService( DHIS2ReportingService.class );
+        HttpDhis2Server server = service.getDhis2Server();
+        String dhisurl = Context.getAdministrationService().getGlobalProperty( "dhisreport.dhis2URL" );
+        String dhisusername = Context.getAdministrationService().getGlobalProperty( "dhisreport.dhis2UserName" );
+        String dhispassword = Context.getAdministrationService().getGlobalProperty( "dhisreport.dhis2Password" );
+
+        URL url = null;
+        try
+        {
+            url = new URL( dhisurl );
+        }
+        catch ( MalformedURLException e )
+        {
+            // TODO Auto-generated catch block
+            e.printStackTrace();
+        }
+        boolean val = testConnection( url, dhisusername, dhispassword, server, webRequest, model );
+
+        String referer = webRequest.getHeader( "Referer" );
+
+        if ( val == false )
+        {
+            webRequest.setAttribute( WebConstants.OPENMRS_ERROR_ATTR, Context.getMessageSourceService().getMessage(
+                "dhisreport.dhis2ConnectionFailure" ), WebRequest.SCOPE_SESSION );
+            return "redirect:" + referer;
+        }
+        webRequest.setAttribute( WebConstants.OPENMRS_MSG_ATTR, Context.getMessageSourceService().getMessage(
+            "dhisreport.dhis2ConnectionSuccess" ), WebRequest.SCOPE_SESSION );
+        return "redirect:" + referer;
     }
 
     @RequestMapping( value = "/module/dhisreport/configureDhis2", method = RequestMethod.POST )
@@ -200,8 +233,9 @@ public class Dhis2ServerController
 
                 model.addAttribute( "dhis2Server", server );
                 model.addAttribute( "user", Context.getAuthenticatedUser() );
-                webRequest.setAttribute( WebConstants.OPENMRS_MSG_ATTR, Context.getMessageSourceService().getMessage(
+                webRequest.setAttribute( WebConstants.OPENMRS_ERROR_ATTR, Context.getMessageSourceService().getMessage(
                     "dhisreport.saveConfigFailure" ), WebRequest.SCOPE_SESSION );
+
                 return false;
             }
         }

@@ -35,4 +35,14 @@
     </table>
 </form>
 
+<form action="testconnection.form" method="post">
+	<table>
+		<tr>
+		<thead style="background-color: #1AAC9B; color: white; padding: 2px;">
+			<td><spring:message code="dhisreport.checkConnection" /></td>
+		</thead>
+		<td><input value="Check Connection" name="submit" type="submit"></td>
+		</tr>
+	</table>
+</form>
 <%@ include file="/WEB-INF/template/footer.jsp"%>
