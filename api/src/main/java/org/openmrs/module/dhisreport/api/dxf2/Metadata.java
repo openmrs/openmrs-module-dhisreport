@@ -1,26 +1,26 @@
 package org.openmrs.module.dhisreport.api.dxf2;
 
-import java.util.List;
-
 import javax.xml.bind.annotation.XmlAccessType;
 import javax.xml.bind.annotation.XmlAccessorType;
 import javax.xml.bind.annotation.XmlElement;
 import javax.xml.bind.annotation.XmlRootElement;
 
-@XmlRootElement( name = "organisationUnits" )
+@XmlRootElement( name = "metadata" )
 @XmlAccessorType( XmlAccessType.FIELD )
-public class OrganizationUnits
+public class Metadata
 {
-    @XmlElement( name = "organisationUnit", type = OrganizationUnit.class )
-    private List<OrganizationUnit> organizationUnits;
 
-    public List<OrganizationUnit> getOrganizationUnits()
+    @XmlElement( name = "organisationUnits", type = OrganizationUnits.class )
+    private OrganizationUnits organizationUnits;
+
+    public OrganizationUnits getOrganizationUnits()
     {
         return organizationUnits;
     }
 
-    public void setOrganizationUnits( List<OrganizationUnit> organizationUnits )
+    public void setOrganizationUnits( OrganizationUnits organizationUnits )
     {
         this.organizationUnits = organizationUnits;
     }
+
 }
