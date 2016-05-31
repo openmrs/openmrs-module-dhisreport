@@ -19,12 +19,19 @@
  **/
 package org.openmrs.module.dhisreport.web.controller;
 
+import java.io.IOException;
 import java.io.InputStream;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
+import org.apache.http.HttpResponse;
+import org.apache.http.auth.UsernamePasswordCredentials;
+import org.apache.http.client.ClientProtocolException;
+import org.apache.http.client.methods.HttpGet;
+import org.apache.http.impl.auth.BasicScheme;
+import org.apache.http.impl.client.DefaultHttpClient;
 import org.openmrs.api.context.Context;
 import org.openmrs.module.dhisreport.api.DHIS2ReportingService;
 import org.openmrs.module.dhisreport.api.model.DataValueTemplate;
@@ -143,4 +150,62 @@ public class ReportDefinitionController
             + dvt.getReportDefinition().getId();
     }
 
+    @RequestMapping( value = "/module/dhisreport/getReportDefinitions", method = RequestMethod.POST )
+    public String getReportDefinitions( WebRequest webRequest, HttpServletRequest request )
+    {
+        String username = Context.getAdministrationService().getGlobalProperty( "dhisreport.dhis2UserName" );
+        String password = Context.getAdministrationService().getGlobalProperty( "dhisreport.dhis2Password" );
+        String dhisurl = Context.getAdministrationService().getGlobalProperty( "dhisreport.dhis2URL" );
+        String url = dhisurl + "/api/dataSets";
+        //String url = "https://play.dhis2.org/demo/api/dataSets";
+        String referer = webRequest.getHeader( "Referer" );
+        HttpSession session = request.getSession();
+        
+        try
+        {
+            DefaultHttpClient httpClient = new DefaultHttpClient();
+            HttpGet getRequest = new HttpGet( url );
+            getRequest.addHeader( "accept", "application/dsd+xml" );
+            getRequest.addHeader( BasicScheme.authenticate( new UsernamePasswordCredentials( username, password ),
+                "UTF-8", false ) );
+            HttpResponse response = httpClient.execute( getRequest );
+
+            if ( response.getStatusLine().getStatusCode() != 200 )
+            {
+                log.error( "Failed : HTTP error code : " + response.getStatusLine().getStatusCode() );
+            }
+
+            InputStream is = response.getEntity().getContent();
+            try
+            {	DHIS2ReportingService service = Context.getService( DHIS2ReportingService.class );
+                service.unMarshallandSaveReportTemplates( is );
+                session.setAttribute( WebConstants.OPENMRS_MSG_ATTR, Context.getMessageSourceService().getMessage(
+                    "dhisreport.uploadSuccess" ) );
+            }
+            catch ( Exception ex )
+            {
+                log.error( "Error loading file: " + ex );
+                session.setAttribute( WebConstants.OPENMRS_ERROR_ATTR, Context.getMessageSourceService().getMessage(
+                    "dhisreport.uploadError" ) );
+            }
+            finally
+            {
+                is.close();
+            }
+            httpClient.getConnectionManager().shutdown();
+            return "redirect:" + referer;
+        }
+        catch ( ClientProtocolException ee )
+        {
+            log.debug( "An error occured in the HTTP protocol." + ee.toString() );
+            ee.printStackTrace();
+        }
+        catch ( IOException ee )
+        {
+            log.debug( "Problem accessing DHIS2 server: " + ee.toString() );
+            session.setAttribute( WebConstants.OPENMRS_ERROR_ATTR, Context.getMessageSourceService().getMessage(
+                "dhisreport.checkConnectionWithDHIS2" ) );
+        }
+        return "redirect:" + referer;
+    }
 }

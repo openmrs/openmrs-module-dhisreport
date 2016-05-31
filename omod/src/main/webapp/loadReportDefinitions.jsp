@@ -33,4 +33,15 @@
     </div>
 </form>
 
+<form action="getReportDefinitions.form" method="post">
+	    <div>
+        <b class="boxHeader"><spring:message code="dhisreport.importReportDefinition" /></b>
+        <div class="box">
+            <span style="white-space: nowrap">
+                <span><spring:message code="dhisreport.importReportDefinition" /> as XML:</span>
+                <td><input value="GET REPORT DEFINITIONS" name="submit" type="submit"></td>
+            </span>
+        </div>
+    </div>
+</form>
 <%@ include file="/WEB-INF/template/footer.jsp"%>
