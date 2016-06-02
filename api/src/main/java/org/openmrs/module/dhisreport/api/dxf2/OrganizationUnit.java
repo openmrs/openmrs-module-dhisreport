@@ -5,11 +5,10 @@ import javax.xml.bind.annotation.XmlAccessorType;
 import javax.xml.bind.annotation.XmlAttribute;
 import javax.xml.bind.annotation.XmlRootElement;
 
-@XmlRootElement( name = "organizationUnit" )
+@XmlRootElement( name = "organisationUnit" )
 @XmlAccessorType( XmlAccessType.FIELD )
 public class OrganizationUnit
-{
-
+{   
     @XmlAttribute
     private String name;
 

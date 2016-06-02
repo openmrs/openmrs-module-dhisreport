@@ -44,6 +44,16 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.context.request.WebRequest;
+import org.openmrs.module.dhisreport.api.dxf2.Metadata;
+import org.openmrs.module.dhisreport.api.dxf2.OrganizationUnit;
+import org.openmrs.Location;
+import org.openmrs.LocationAttribute;
+import org.openmrs.LocationAttributeType;
+import org.apache.http.client.ClientProtocolException;
+import javax.xml.bind.JAXBContext;
+import java.io.InputStream;
+import java.util.ArrayList;
+import java.util.List;
 
 /**
  * The main controller.
@@ -55,7 +65,7 @@ public class Dhis2ServerController
     protected final Log log = LogFactory.getLog( getClass() );
 
     @RequestMapping( value = "/module/dhisreport/configureDhis2", method = RequestMethod.GET )
-    public void showConfigForm( ModelMap model )
+    public void showConfigForm( ModelMap model, WebRequest webRequest )
     {
         DHIS2ReportingService service = Context.getService( DHIS2ReportingService.class );
 
@@ -163,6 +173,11 @@ public class Dhis2ServerController
 
         if ( val == true )
         {
+            model.addAttribute( "dhis2Server", server );
+            model.addAttribute( "user", Context.getAuthenticatedUser() );
+            webRequest.setAttribute( WebConstants.OPENMRS_MSG_ATTR, Context.getMessageSourceService().getMessage(
+                "dhisreport.saveConfigSuccess" ), WebRequest.SCOPE_SESSION );
+
             GlobalProperty globalProperty = new GlobalProperty();
             globalProperty.setProperty( "dhisreport.dhis2URL" );
             globalProperty.setPropertyValue( urlString );
@@ -173,6 +188,15 @@ public class Dhis2ServerController
             globalProperty.setProperty( "dhisreport.dhis2Password" );
             globalProperty.setPropertyValue( password );
             Context.getAdministrationService().saveGlobalProperty( globalProperty );
+
+        }
+        else
+        {
+
+            model.addAttribute( "dhis2Server", server );
+            model.addAttribute( "user", Context.getAuthenticatedUser() );
+            webRequest.setAttribute( WebConstants.OPENMRS_MSG_ATTR, Context.getMessageSourceService().getMessage(
+                "dhisreport.saveConfigFailure" ), WebRequest.SCOPE_SESSION );
 
         }
     }
@@ -205,23 +229,12 @@ public class Dhis2ServerController
             if ( response.getStatusLine().getStatusCode() == 200 )
             {
                 log.debug( "Dhis2 server configured: " + username + ":xxxxxx  " + url.toExternalForm() );
-
-                model.addAttribute( "dhis2Server", server );
-                model.addAttribute( "user", Context.getAuthenticatedUser() );
-                webRequest.setAttribute( WebConstants.OPENMRS_MSG_ATTR, Context.getMessageSourceService().getMessage(
-                    "dhisreport.saveConfigSuccess" ), WebRequest.SCOPE_SESSION );
                 return true;
             }
 
             else
             {
                 log.debug( "Dhis2 server not configured" );
-
-                model.addAttribute( "dhis2Server", server );
-                model.addAttribute( "user", Context.getAuthenticatedUser() );
-                webRequest.setAttribute( WebConstants.OPENMRS_ERROR_ATTR, Context.getMessageSourceService().getMessage(
-                    "dhisreport.saveConfigFailure" ), WebRequest.SCOPE_SESSION );
-
                 return false;
             }
         }

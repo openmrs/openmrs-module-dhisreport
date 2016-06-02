@@ -18,8 +18,15 @@
                 code="dhisreport.configureDHIS2" /></a>
     </li>
 
-    <li
-        <c:if test='<%= request.getRequestURI().contains("/listDhis2Reports") %>'>class="active"</c:if>>
+	<li
+		<c:if test='<%=request.getRequestURI().contains("/mapLocations")%>'>class="active"</c:if>>
+		<a
+		href="${pageContext.request.contextPath}/module/dhisreport/mapLocations.form"><spring:message
+				code="dhisreport.mapLocations" /></a>
+	</li>
+
+	<li
+        <c:if test='<%=request.getRequestURI().contains("/listDhis2Reports")%>'>class="active"</c:if>>
             <a
                 href="${pageContext.request.contextPath}/module/dhisreport/listDhis2Reports.form"><spring:message
                 code="dhisreport.reporting" /></a>
