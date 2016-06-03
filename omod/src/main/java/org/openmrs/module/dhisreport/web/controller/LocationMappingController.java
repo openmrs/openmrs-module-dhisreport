@@ -23,6 +23,7 @@ import java.io.InputStream;
 import java.net.MalformedURLException;
 import java.net.URL;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 
 import javax.xml.bind.JAXBContext;
@@ -87,9 +88,28 @@ public class LocationMappingController {
 			if (metadata != null) {
 				ou = metadata.getOrganizationUnits().getOrganizationUnits();
 				model.addAttribute("orgunits", ou);
+
+				HashMap<String, String> hm = new HashMap<String, String>();
+				List<Location> locationList = new ArrayList<Location>();
+				locationList.addAll(Context.getLocationService().getAllLocations());
+
+				for (Location l : locationList) {
+					for (LocationAttribute la : l.getActiveAttributes()) {
+						if (la.getAttributeType().getName().equals("CODE")) {
+							if (la.getValue() != null) {
+
+								for (OrganizationUnit o : ou) {
+									if (la.getValue().equals(o.getCode())) {
+										hm.put(l.getName(), o.getName());
+									}
+								}
+							}
+						}
+					}
+				}
+				model.addAttribute("map", hm);
 				return;
 			}
-
 		}
 		webRequest.setAttribute(WebConstants.OPENMRS_MSG_ATTR,
 				Context.getMessageSourceService().getMessage("dhisreport.currentConnectionFail"),
