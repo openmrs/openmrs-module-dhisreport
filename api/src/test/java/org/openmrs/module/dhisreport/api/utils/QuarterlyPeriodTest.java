@@ -41,7 +41,7 @@ public class QuarterlyPeriodTest
     {
         QuarterlyPeriod instance = new QuarterlyPeriod( new SimpleDateFormat( "yyyy-MM-dd" ).parse( "2012-08-19" ) );
         Date expResult = new SimpleDateFormat( "yyyy-MM-dd'T'HH:mm:ss" ).parse( "2012-07-01T00:00:00" );
-        Date result = instance.getStart();
+        Date result = instance.getStartDate();
         assertEquals( expResult, result );
     }
 
@@ -54,7 +54,7 @@ public class QuarterlyPeriodTest
     {
         QuarterlyPeriod instance = new QuarterlyPeriod( new SimpleDateFormat( "yyyy-MM-dd" ).parse( "2012-10-19" ) );
         Date expResult = new SimpleDateFormat( "yyyy-MM-dd'T'HH:mm:ss" ).parse( "2012-10-01T00:00:00" );
-        Date result = instance.getStart();
+        Date result = instance.getStartDate();
         assertEquals( expResult, result );
     }
 
@@ -70,7 +70,7 @@ public class QuarterlyPeriodTest
         long time = expResult.getTime() - 1;
         expResult.setTime( time );
 
-        Date result = instance.getEnd();
+        Date result = instance.getEndDate();
         assertEquals( expResult, result );
     }
 
@@ -86,7 +86,7 @@ public class QuarterlyPeriodTest
         long time = expResult.getTime() - 1;
         expResult.setTime( time );
 
-        Date result = instance.getEnd();
+        Date result = instance.getEndDate();
         assertEquals( expResult, result );
     }
 

@@ -38,13 +38,25 @@ public class MonthlyPeriod
     protected Date endDate;
 
     @Override
-    public Date getStart()
+    public void setStartDate( Date startDate )
+    {
+        this.startDate = startDate;
+    }
+
+    @Override
+    public void setEndDate( Date endDate )
+    {
+        this.endDate = endDate;
+    }
+
+    @Override
+    public Date getStartDate()
     {
         return startDate;
     }
 
     @Override
-    public Date getEnd()
+    public Date getEndDate()
     {
         return endDate;
     }
@@ -59,7 +71,7 @@ public class MonthlyPeriod
     @Override
     public String getAsIsoString()
     {
-        return new SimpleDateFormat( ISO_FORMAT ).format( getStart() );
+        return new SimpleDateFormat( ISO_FORMAT ).format( getStartDate() );
     }
 
 }

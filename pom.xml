@@ -65,6 +65,9 @@
 	<properties>
 		<openMRSVersion>1.9.7</openMRSVersion>
 		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
+		
+		<calculationVersion>1.1</calculationVersion>
+		<serialization.xstreamVersion>0.2.10</serialization.xstreamVersion>
 	</properties>
 
 	<dependencyManagement>
@@ -113,6 +116,13 @@
 			</dependency>
 
 			<!-- End OpenMRS core -->
+			
+			<dependency>
+				<groupId>org.openmrs.module</groupId>
+				<artifactId>calculation-api</artifactId>
+				<version>${calculationVersion}</version>
+				<scope>test</scope>
+			</dependency>
 
 			<dependency>
 				<groupId>org.openmrs.module</groupId>
@@ -125,6 +135,13 @@
 				<groupId>joda-time</groupId>
 				<artifactId>joda-time</artifactId>
 				<version>2.1</version>
+			</dependency>
+			
+			<dependency>
+				<groupId>org.openmrs.module</groupId>
+				<artifactId>serialization.xstream-api</artifactId>
+				<version>${serialization.xstreamVersion}</version>
+				<scope>test</scope>
 			</dependency>
 
 		</dependencies>

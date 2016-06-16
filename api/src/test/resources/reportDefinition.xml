@@ -1,0 +1,42 @@
+<?xml version="1.0"?>
+<reportTemplates xmlns:d2="http://dhis2.org/schema/dxf/2.0">
+	<dataElements>
+		<dataElement uid="nvVDDkfbbhf" code="ANC1" name="ANC1"
+			type="int" />
+		<dataElement uid="OWeOBFxrvrv" code="ANC4" name="ANC4"
+			type="int" />
+		<dataElement uid="xX6RDH6AZTK" code="POP" name="Population"
+			type="int" />
+	</dataElements>
+	<disaggregations>
+		<disaggregation uid="YtbnZipIBx3" code="YtbnZipIBx3"
+			name="(default)" />
+		<disaggregation uid="HgRodT2oZlq" code="HgRodT2oZlq"
+			name="(Male)" />
+		<disaggregation uid="PfaFHAfpd2X" code="PfaFHAfpd2X"
+			name="(Female)" />
+	</disaggregations>
+	<reportTemplate>
+		<name>Maternal and Child Health</name>
+		<uid>sI82CctvS1A</uid>
+		<code>MNCH</code>
+		<periodType>Monthly</periodType>
+		<reportingReportId>id123</reportingReportId>
+		<dataValueTemplates>
+			<dataValueTemplate dataElement="ANC4"
+				disaggregation="YtbnZipIBx3">
+				<annotation>
+					select count(distinct p.person_id)
+					from person p
+					inner join obs o on o.person_id = p.person_id
+					where p.voided = 0 and o.voided = 0
+					and o.concept_id = 1425
+					and o.value_numeric = 4
+					and o.obs_datetime >= :startOfPeriod
+					and o.obs_datetime &lt;= :endOfPeriod
+					and o.location_id = :locationId
+				</annotation>
+			</dataValueTemplate>
+		</dataValueTemplates>
+	</reportTemplate>
+</reportTemplates>
