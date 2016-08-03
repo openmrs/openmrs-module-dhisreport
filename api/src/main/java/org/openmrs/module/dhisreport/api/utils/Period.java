@@ -27,10 +27,13 @@ import java.util.Date;
  */
 public interface Period
 {
+    public void setStartDate( Date startDate );
 
-    public Date getStart();
+    public void setEndDate( Date endDate );
 
-    public Date getEnd();
+    public Date getStartDate();
+
+    public Date getEndDate();
 
     public String getAsIsoString();
 

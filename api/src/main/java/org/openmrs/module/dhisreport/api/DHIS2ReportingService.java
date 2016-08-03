@@ -24,6 +24,7 @@ import java.io.OutputStream;
 import java.util.Collection;
 
 import org.openmrs.module.dhisreport.api.adx.AdxType;
+import org.openmrs.module.dhisreport.api.db.DHIS2ReportingDAO;
 import org.openmrs.module.dhisreport.api.dxf2.DataValueSet;
 import org.hisp.dhis.dxf2.importsummary.ImportSummary;
 import org.openmrs.Location;
@@ -254,4 +255,7 @@ public interface DHIS2ReportingService
     public void saveDataValueTemplateTest( DataValueTemplate dvt );
 
     public Location getLocationByOrgUnitCode( String orgUnitCode );
+
+    public DHIS2ReportingDAO getDao();
+
 }
