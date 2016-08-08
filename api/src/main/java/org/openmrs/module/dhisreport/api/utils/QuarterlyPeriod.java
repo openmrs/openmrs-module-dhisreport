@@ -38,13 +38,25 @@ public class QuarterlyPeriod
     protected Date endDate;
 
     @Override
-    public Date getStart()
+    public void setStartDate( Date startDate )
+    {
+        this.startDate = startDate;
+    }
+
+    @Override
+    public void setEndDate( Date endDate )
+    {
+        this.endDate = endDate;
+    }
+
+    @Override
+    public Date getStartDate()
     {
         return startDate;
     }
 
     @Override
-    public Date getEnd()
+    public Date getEndDate()
     {
         return endDate;
     }
@@ -87,7 +99,7 @@ public class QuarterlyPeriod
     @Override
     public String getAsIsoString()
     {
-        DateTime dt = new DateTime( getStart() );
+        DateTime dt = new DateTime( getStartDate() );
         return dt.getYear() + "Q" + ((dt.getMonthOfYear() / 3) + 1);
     }
 
