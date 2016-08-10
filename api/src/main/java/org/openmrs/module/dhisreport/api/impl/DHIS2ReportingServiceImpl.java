@@ -314,9 +314,9 @@ public class DHIS2ReportingServiceImpl
                 for ( Parameter p : parameterizable.getParameters() )
                 {
                     if ( p.getName().equals( "startDate" ) )
-                        parameterValues.put( p.getName(), period.getStart() );
+                        parameterValues.put( p.getName(), period.getStartDate() );
                     if ( p.getName().equals( "endDate" ) )
-                        parameterValues.put( p.getName(), period.getEnd() );
+                        parameterValues.put( p.getName(), period.getEndDate() );
                     if ( p.getName().equals( "location" ) )
                         parameterValues.put( p.getName(), location );
                 }

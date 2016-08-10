@@ -41,7 +41,7 @@ public class MonthlyPeriodTest
     {
         MonthlyPeriod instance = new MonthlyPeriod( new SimpleDateFormat( "yyyy-MM-dd" ).parse( "2012-10-19" ) );
         Date expResult = new SimpleDateFormat( "yyyy-MM-dd'T'HH:mm:ss" ).parse( "2012-10-01T00:00:00" );
-        Date result = instance.getStart();
+        Date result = instance.getStartDate();
         assertEquals( expResult, result );
     }
 
@@ -57,7 +57,7 @@ public class MonthlyPeriodTest
         long time = expResult.getTime() - 1;
         expResult.setTime( time );
 
-        Date result = instance.getEnd();
+        Date result = instance.getEndDate();
         assertEquals( expResult, result );
     }
 

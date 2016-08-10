@@ -42,7 +42,7 @@ public class WeeklyPeriodTest
     {
         WeeklyPeriod instance = new WeeklyPeriod( new SimpleDateFormat( "yyyy-MM-dd" ).parse( "2012-11-20" ) );
         Date expResult = new SimpleDateFormat( "yyyy-MM-dd'T'HH:mm:ss.SSS" ).parse( "2012-11-19T00:00:00.000" );
-        Date result = instance.getStart();
+        Date result = instance.getStartDate();
         assertEquals( expResult, result );
     }
 
@@ -55,7 +55,7 @@ public class WeeklyPeriodTest
     {
         WeeklyPeriod instance = new WeeklyPeriod( new SimpleDateFormat( "yyyy-MM-dd" ).parse( "2012-11-20" ) );
         Date expResult = new SimpleDateFormat( "yyyy-MM-dd'T'HH:mm:ss.SSS" ).parse( "2012-11-25T23:59:59.999" );
-        Date result = instance.getEnd();
+        Date result = instance.getEndDate();
         assertEquals( expResult, result );
     }
 
@@ -68,7 +68,7 @@ public class WeeklyPeriodTest
     {
         WeeklyPeriod instance = new WeeklyPeriod( new SimpleDateFormat( "yyyy-MM-dd" ).parse( "2012-11-20" ) );
         Date expResult = new SimpleDateFormat( "yyyy-MM-dd'T'HH:mm:ss" ).parse( "2012-11-25T00:00:00" );
-        Date result = instance.getEnd();
+        Date result = instance.getEndDate();
         assertThat( expResult, not( equalTo( result ) ) );
     }
 

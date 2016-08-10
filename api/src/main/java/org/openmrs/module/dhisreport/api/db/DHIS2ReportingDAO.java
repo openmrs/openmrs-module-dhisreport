@@ -20,12 +20,15 @@
 package org.openmrs.module.dhisreport.api.db;
 
 import java.util.Collection;
+
+import org.hibernate.SessionFactory;
 import org.openmrs.Location;
 import org.openmrs.module.dhisreport.api.DHIS2ReportingException;
 import org.openmrs.module.dhisreport.api.DHIS2ReportingService;
 import org.openmrs.module.dhisreport.api.model.DataElement;
 import org.openmrs.module.dhisreport.api.model.DataValueTemplate;
 import org.openmrs.module.dhisreport.api.model.Disaggregation;
+import org.openmrs.module.dhisreport.api.model.Identifiable;
 import org.openmrs.module.dhisreport.api.model.ReportDefinition;
 import org.openmrs.module.dhisreport.api.utils.Period;
 
@@ -79,4 +82,13 @@ public interface DHIS2ReportingDAO
     public Location getLocationByOU_Code( String OU_Code );
 
     public DataValueTemplate saveDataValueTemplateTest( DataValueTemplate dvt );
+
+    public SessionFactory getSessionFactory();
+
+    public Identifiable saveReportDefinitionObject( ReportDefinition rd );
+
+    public Identifiable saveDataElementObject( DataElement de );
+
+    public Identifiable saveObject( Identifiable object );
+
 }

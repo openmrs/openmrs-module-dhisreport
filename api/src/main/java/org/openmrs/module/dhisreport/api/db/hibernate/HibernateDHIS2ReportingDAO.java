@@ -30,7 +30,6 @@ import org.hibernate.Criteria;
 import org.hibernate.Query;
 import org.hibernate.Session;
 import org.hibernate.SessionFactory;
-import org.hibernate.Transaction;
 import org.hibernate.criterion.Restrictions;
 import org.openmrs.Location;
 import org.openmrs.module.dhisreport.api.DHIS2ReportingException;
@@ -152,6 +151,10 @@ public class HibernateDHIS2ReportingDAO
         sessionFactory.getCurrentSession().delete( rd );
     }
 
+    /*
+     * Should evaluateDataValueTemplates
+     * return String
+     * */
     @Override
     public String evaluateDataValueTemplate( DataValueTemplate dvt, Period period, Location location )
         throws DHIS2ReportingException
@@ -180,9 +183,8 @@ public class HibernateDHIS2ReportingDAO
         {
             query.setParameter( "locationId", location.getId().toString() );
         }
-        query.setParameter( "startOfPeriod", period.getStart() );
-        query.setParameter( "endOfPeriod", period.getEnd() );
-
+        query.setParameter( "startOfPeriod", period.getStartDate() );
+        query.setParameter( "endOfPeriod", period.getEndDate() );
         return query.uniqueResult().toString();
     }
 
@@ -199,23 +201,16 @@ public class HibernateDHIS2ReportingDAO
     @Transactional
     public Identifiable saveReportDefinitionObject( ReportDefinition object )
     {
-        //        System.out.println( "inside save object==============" + object.getUid() );
         Session session = sessionFactory.getCurrentSession();
 
         // force merge if uid already exists
         Criteria criteria = session.createCriteria( object.getClass() );
         criteria.add( Restrictions.eq( "uid", object.getUid() ) );
-        //        ReportDefinition existingObject = (ReportDefinition) getObjectByUid( object.getUid(), object.getClass() );
         ReportDefinition existingObject = (ReportDefinition) criteria.uniqueResult();
 
         if ( existingObject != null )
         {
-            //            System.out.println( "existing oject :--" + existingObject.getUid() + "====" + existingObject.toString() );
             session.evict( existingObject );
-            //            System.out.println( "existing object====" + existingObject.getId() );
-            // session.delete( existingObject );
-            // object.setId( existingObject.getId() );
-            // session.load( object, object.getId() );
             existingObject.setPeriodType( object.getPeriodType() );
             existingObject.setName( object.getName() );
             existingObject.setCode( object.getCode() );
@@ -225,16 +220,13 @@ public class HibernateDHIS2ReportingDAO
             return existingObject;
 
         }
-        //        sessionFactory.getCurrentSession().saveOrUpdate( object );
         session.saveOrUpdate( object );
-
         return object;
     }
 
     @Transactional
     public Identifiable saveDataElementObject( DataElement object )
     {
-        //        System.out.println( "inside save object==============" + object.getUid() );
         Session session = sessionFactory.getCurrentSession();
         // force merge if uid already exists
 
@@ -242,12 +234,6 @@ public class HibernateDHIS2ReportingDAO
 
         if ( existingObject != null )
         {
-            //            System.out.println( "existing oject :--" + existingObject.getUid() + "====" + existingObject.toString() );
-            // session.evict( existingObject );
-            //            System.out.println( "existing object====" + existingObject.getId() );
-            // session.delete( existingObject );
-            // object.setId( existingObject.getId() );
-            // session.load( object, object.getId() );
             existingObject.setName( object.getName() );
             existingObject.setCode( object.getCode() );
 
@@ -325,29 +311,20 @@ public class HibernateDHIS2ReportingDAO
         dvt.setDataelement( de );
         dvt.setDisaggregation( dis );
         dvt.setReportDefinition( rd );
-        //  System.out.println( "Saving dvt de:" + de.getId() + de.getName() + ":diag:" + dis.getId() + dis.getName() + ":rd:" + rd.getId() + rd.getName() );
 
         Criteria criteria = sessionFactory.getCurrentSession().createCriteria( DataValueTemplate.class );
         criteria.add( Restrictions.eq( "reportDefinition", rd ) ).add( Restrictions.eq( "dataelement", de ) ).add(
             Restrictions.eq( "disaggregation", dis ) );
 
         DataValueTemplate dvt_db = (DataValueTemplate) criteria.uniqueResult();
-        Collection<DataValueTemplate> dvtlist = criteria.list();
-
-        for ( DataValueTemplate dv : dvtlist )
-        {
-            // System.out.println( "---" + dv.getId() + "," + dv.getReportDefinition().getId() + "," + dv.getDataelement().getId() + "," + dv.getQuery() );
-        }
 
         if ( dvt_db == null )
         {
-            // System.out.println( "null case" );
             sessionFactory.getCurrentSession().save( dvt );
             return dvt;
         }
         else
         {
-            // System.out.println( "not null case:" + dvt_db.getId() );
             sessionFactory.getCurrentSession().saveOrUpdate( dvt );
             return dvt_db;
         }
