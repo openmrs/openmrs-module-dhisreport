@@ -22,6 +22,7 @@ package org.openmrs.module.dhisreport.api.impl;
 import java.io.InputStream;
 import java.io.OutputStream;
 import java.util.*;
+import java.util.Map.Entry;
 
 import javax.xml.bind.JAXBContext;
 import javax.xml.bind.Marshaller;
@@ -328,9 +329,17 @@ public class DHIS2ReportingServiceImpl
             try
             {
                 results = (ReportData) ParameterizableUtil.evaluateParameterizable( parameterizable, evaluationContext );
-                dataSet = results.getDataSets().entrySet().iterator().next().getValue();
-                dsr = dataSet.iterator().next();
-                dsrlist = new ArrayList<Object>( dsr.getColumnValues().values() );
+                Iterator<Entry<String, DataSet>> iterator = results.getDataSets().entrySet().iterator();
+                while ( iterator.hasNext() )
+                {
+                    dataSet = iterator.next().getValue();
+                    if ( dataSet.iterator().hasNext() )
+                    {
+                        dsr = dataSet.iterator().next();
+                        dsrlist = new ArrayList( dsr.getColumnValues().values() );
+                        break;
+                    }
+                }
             }
             catch ( ParameterException e )
             {
