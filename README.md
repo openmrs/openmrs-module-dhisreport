@@ -104,3 +104,6 @@ TODO:
  -  [ ] Support Multiple DHIS2 Instances
  -  [ ] Support Disaggregation with Reporting Module Reports 
 
+## License
+
+[MPL 2.0 w/ HD](http://openmrs.org/license/) © [OpenMRS Inc.](http://www.openmrs.org/)
