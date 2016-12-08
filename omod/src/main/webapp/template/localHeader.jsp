@@ -4,11 +4,6 @@
             href="${pageContext.request.contextPath}/admin"><spring:message
                 code="admin.title.short" /></a></li>
 
-    <li
-        <c:if test='<%= request.getRequestURI().contains("/loadReportDefinitions") %>'>class="active"</c:if>>
-            <a
-                href="${pageContext.request.contextPath}/module/dhisreport/loadReportDefinitions.form"><spring:message
-                code="dhisreport.importExport" /></a>
     </li>
 
     <li
@@ -17,6 +12,12 @@
                 href="${pageContext.request.contextPath}/module/dhisreport/configureDhis2.form"><spring:message
                 code="dhisreport.configureDHIS2" /></a>
     </li>
+
+    <li
+            <c:if test='<%= request.getRequestURI().contains("/loadReportDefinitions") %>'>class="active"</c:if>>
+        <a
+                href="${pageContext.request.contextPath}/module/dhisreport/loadReportDefinitions.form"><spring:message
+                code="dhisreport.importExport" /></a>
 
 	<li
 		<c:if test='<%=request.getRequestURI().contains("/mapLocations")%>'>class="active"</c:if>>
