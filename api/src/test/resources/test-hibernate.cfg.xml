@@ -9,5 +9,7 @@
         <mapping resource="DataElement.hbm.xml" />
         <mapping resource="Disaggregation.hbm.xml" />
         <mapping resource="DataValueTemplate.hbm.xml" />
+
+        <mapping resource="ReportRequest.hbm.xml"/>
     </session-factory>
 </hibernate-configuration>

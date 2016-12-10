@@ -49,15 +49,16 @@ import org.openmrs.module.dhisreport.api.model.ReportDefinition;
 import org.openmrs.module.dhisreport.api.utils.Period;
 import org.openmrs.module.reporting.dataset.DataSet;
 import org.openmrs.module.reporting.dataset.DataSetRow;
-import org.openmrs.module.reporting.evaluation.EvaluationContext;
-import org.openmrs.module.reporting.evaluation.MissingDependencyException;
 import org.openmrs.module.reporting.evaluation.parameter.*;
+import org.openmrs.module.reporting.report.Report;
 import org.openmrs.module.reporting.report.ReportData;
 import org.openmrs.module.reporting.report.ReportRequest;
 import org.openmrs.module.reporting.report.definition.*;
 import org.openmrs.module.reporting.report.definition.service.ReportDefinitionService;
+import org.openmrs.module.reporting.report.renderer.RenderingMode;
 import org.openmrs.module.reporting.report.service.ReportService;
 import org.openmrs.module.reporting.report.util.PeriodIndicatorReportUtil;
+import org.openmrs.module.reporting.web.renderers.DefaultWebRenderer;
 import org.springframework.transaction.annotation.Transactional;
 
 /**
@@ -301,13 +302,12 @@ public class DHIS2ReportingServiceImpl
             throw new RuntimeException( "This report is not of the right class" );
         }
 
-        Parameterizable parameterizable = ParameterizableUtil.getParameterizable( reportDefinition
-            .getReportingReportId(), PeriodIndicatorReportDefinition.class );
+        PeriodIndicatorReportDefinition parameterizable = (PeriodIndicatorReportDefinition) ParameterizableUtil
+            .getParameterizable( reportDefinition.getReportingReportId(), PeriodIndicatorReportDefinition.class );
 
         if ( parameterizable != null )
         {
             ReportData results = null;
-            EvaluationContext evaluationContext = new EvaluationContext();
 
             Map<String, Object> parameterValues = new HashMap<String, Object>();
             if ( parameterizable != null && parameterizable.getParameters() != null )
@@ -322,14 +322,18 @@ public class DHIS2ReportingServiceImpl
                         parameterValues.put( p.getName(), location );
                 }
             }
-            evaluationContext.setParameterValues( parameterValues );
 
             DataSet dataSet = null;
 
             try
             {
-                results = (ReportData) ParameterizableUtil.evaluateParameterizable( parameterizable, evaluationContext );
-                Iterator<Entry<String, DataSet>> iterator = results.getDataSets().entrySet().iterator();
+                ReportRequest rr = new ReportRequest();
+                rr.setReportDefinition( new Mapped<org.openmrs.module.reporting.report.definition.ReportDefinition>(
+                    parameterizable, parameterValues ) );
+                rr.setRenderingMode( new RenderingMode( new DefaultWebRenderer(), "Web", null, 100 ) );
+                Report report = Context.getService( ReportService.class ).runReport( rr );
+
+                Iterator<Entry<String, DataSet>> iterator = report.getReportData().getDataSets().entrySet().iterator();
                 while ( iterator.hasNext() )
                 {
                     dataSet = iterator.next().getValue();
@@ -344,9 +348,6 @@ public class DHIS2ReportingServiceImpl
             catch ( ParameterException e )
             {
                 log.error( "unable to evaluate report: ", e );
-            }
-            catch ( MissingDependencyException ex )
-            {
             }
         }
 

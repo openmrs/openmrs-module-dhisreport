@@ -121,7 +121,7 @@
 				<groupId>org.openmrs.module</groupId>
 				<artifactId>calculation-api</artifactId>
 				<version>${calculationVersion}</version>
-				<scope>test</scope>
+				<scope>provided</scope>
 			</dependency>
 
 			<dependency>
@@ -143,6 +143,14 @@
 				<version>${serialization.xstreamVersion}</version>
 				<scope>test</scope>
 			</dependency>
+
+            <dependency>
+                <groupId>org.codehaus.groovy</groupId>
+                <artifactId>groovy-all</artifactId>
+                <version>1.8.7</version>
+                <type>jar</type>
+                <scope>provided</scope>
+            </dependency>
 
 		</dependencies>
 	</dependencyManagement>
