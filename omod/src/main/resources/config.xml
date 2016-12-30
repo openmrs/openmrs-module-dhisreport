@@ -20,6 +20,10 @@
 		</require_module>
 	</require_modules>
 	
+	<aware_of_modules>
+	    <aware_of_module>org.openmrs.module.legacyui</aware_of_module>
+	</aware_of_modules>
+	
     <!-- Module Activator -->
     <activator>${project.parent.groupId}.${project.parent.artifactId}.DHIS2ReportingActivator</activator>
 	

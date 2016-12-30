@@ -78,7 +78,7 @@ public class DHIS2ReportingServiceImplTest
         location.setName( "County General" );
         location.setDescription( "desc" );
         location.setAddress1( "address1" );
-        location.setId( 123 );
+        location.setId( 3 );
         Period period = new MonthlyPeriod( new SimpleDateFormat( "yyyy-MM-dd" ).parse( timeperiod ) );
         SimpleDateFormat dateformat = new SimpleDateFormat( "yyyy-MM-dd" );
         String start = "2016-06-28";
