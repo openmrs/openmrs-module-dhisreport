@@ -121,7 +121,7 @@
 				<groupId>org.openmrs.module</groupId>
 				<artifactId>calculation-api</artifactId>
 				<version>${calculationVersion}</version>
-				<scope>test</scope>
+				<scope>provided</scope>
 			</dependency>
 
 			<dependency>
