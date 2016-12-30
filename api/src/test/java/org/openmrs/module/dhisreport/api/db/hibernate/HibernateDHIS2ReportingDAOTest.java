@@ -66,7 +66,7 @@ public class HibernateDHIS2ReportingDAOTest extends BaseModuleContextSensitiveTe
 		location.setName("County General");
 		location.setDescription("desc");
 		location.setAddress1("address1");
-		location.setId(123);
+		location.setId(3);
 
 		Period period = new MonthlyPeriod(new SimpleDateFormat("yyyy-MM-dd").parse(timeperiod));
 		SimpleDateFormat dateformat = new SimpleDateFormat("yyyy-MM-dd");

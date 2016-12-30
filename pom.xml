@@ -63,11 +63,11 @@
 	</modules>
 
 	<properties>
-		<openMRSVersion>1.9.7</openMRSVersion>
+		<openMRSVersion>1.9.9</openMRSVersion>
 		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
 		
 		<calculationVersion>1.1</calculationVersion>
-		<serialization.xstreamVersion>0.2.10</serialization.xstreamVersion>
+		<serialization.xstreamVersion>0.2.12</serialization.xstreamVersion>
 	</properties>
 
 	<dependencyManagement>
@@ -127,7 +127,35 @@
 			<dependency>
 				<groupId>org.openmrs.module</groupId>
 				<artifactId>reporting-api</artifactId>
-				<version>0.9.7</version>
+				<version>0.10.6</version>
+				<scope>provided</scope>
+			</dependency>
+			
+			<dependency>
+				<groupId>org.openmrs.module</groupId>
+				<artifactId>serialization.xstream-api</artifactId>
+				<version>${serialization.xstreamVersion}</version>
+				<scope>provided</scope>
+			</dependency>
+			
+			<dependency>
+				<groupId>org.openmrs.module</groupId>
+				<artifactId>serialization.xstream-api-1.9</artifactId>
+				<version>${serialization.xstreamVersion}</version>
+				<scope>provided</scope>
+			</dependency>
+			
+			<dependency>
+				<groupId>org.openmrs.module</groupId>
+				<artifactId>serialization.xstream-api-1.10</artifactId>
+				<version>${serialization.xstreamVersion}</version>
+				<scope>provided</scope>
+			</dependency>
+			
+			<dependency>
+				<groupId>org.openmrs.module</groupId>
+				<artifactId>serialization.xstream-api-2.0</artifactId>
+				<version>${serialization.xstreamVersion}</version>
 				<scope>provided</scope>
 			</dependency>
 
@@ -135,13 +163,6 @@
 				<groupId>joda-time</groupId>
 				<artifactId>joda-time</artifactId>
 				<version>2.1</version>
-			</dependency>
-			
-			<dependency>
-				<groupId>org.openmrs.module</groupId>
-				<artifactId>serialization.xstream-api</artifactId>
-				<version>${serialization.xstreamVersion}</version>
-				<scope>test</scope>
 			</dependency>
 
 		</dependencies>
