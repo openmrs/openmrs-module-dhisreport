@@ -1,21 +1,21 @@
 ﻿The DHIS2 Reporting Module
 =========
 
-##Overview
-An OpenMRS module that posts aggregate reports to DHIS2 based on dataelements bound to sql queries. The module works with OpenMRS 1.8.2 and higher. It is licensed under GNU GPL License, details of which can be found in the LICENSE.txt file.
+## Overview
+An OpenMRS module that posts aggregate reports to DHIS2 based on dataelements bound to sql queries. The module works with OpenMRS 1.8.2 and higher. It is licensed under the Mozilla Public License Version 2.0, details of which can be found in the [LICENSE](http://openmrs.org/license/) file.
 
-###Module requirements:
+### Module requirements:
 * Able to support multiple DHIS2 instances
 * Integrated with DHIS2 WebAPI
 * Able to Sync new changes (of datasets and organization units) in the Dhis2 Instance
 * Support [ADX](http://wiki.ihe.net/index.php/Aggregate_Data_Exchange)
 
-##DHIS2 Model
+## DHIS2 Model
 
 <img src="https://github.com/maurya/openmrs-module-dhis2reporter/blob/master/omod/src/main/resources/images/dhis2core_diagram.jpg" alt="DHIS2 Model"/>
 
 
-##Module Model
+## Module Model
 
 * DHIS2 Server - id, url, username, password
 * DataSet - id, dhis2server, uid, name, code, period
@@ -24,11 +24,12 @@ An OpenMRS module that posts aggregate reports to DHIS2 based on dataelements bo
 * Disaggregation - id, name, uid, dhis2server
 * DataValueTemplate - id, DataSet, DataElement, Disaggregation
 
-####Input:
+#### Input:
 -
 
 The dataElements tag encompasses all the dataElements and their unique codes that are used in the report to be sent. Similarly, the disaggregations tag encompasses all the categoryOptionsCombo code and uid that are part of the dataElements to be reported.
 
+```xml
     <?xml version="1.0"?>
     <reportTemplates xmlns:d2="http://dhis2.org/schema/dxf/2.0">
          <dataElements>
@@ -51,12 +52,12 @@ The dataElements tag encompasses all the dataElements and their unique codes tha
              </dataValueTemplates>
         </reportTemplate>
     </reportTemplates>
-    
+```    
     
 #### ADX Data Output
 
-[ADX](http://wiki.ihe.net/index.php/Aggregate_Data_Exchange)Sample has been taken from https://github.com/dhis2/adx/tree/master/IHE/samples
-```
+[ADX](http://wiki.ihe.net/index.php/Aggregate_Data_Exchange) Sample has been taken from https://github.com/dhis2/adx/tree/master/IHE/samples
+```xml
 <?xml version="1.0" encoding="UTF-8"?>
 <adx xmlns="urn:ihe:qrph:adx:2015"
      xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
@@ -86,12 +87,12 @@ The dataElements tag encompasses all the dataElements and their unique codes tha
 ```
 
 
-#DHIS2 instance information
+# DHIS2 instance information
 -
 
 The DHIS2 instance to which data is being reported should support ADX - DHIS2 2.21 or later. The data is sent to the [dataValueSets](http://dhis2.org/doc/snapshot/en/user/html/ch23s05.html) resource.
 
-##Work Status:
+## Work Status:
 
 Implemented:
 
