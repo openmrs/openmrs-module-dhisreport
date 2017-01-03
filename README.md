@@ -2,7 +2,7 @@
 =========
 
 ##Overview
-An OpenMRS module that posts aggregate reports to DHIS2 based on dataelements bound to sql queries. The module works with OpenMRS 1.8.2 and higher. It is licensed under GNU GPL License, details of which can be found in the LICENSE.txt file.
+An OpenMRS module that posts aggregate reports to DHIS2 based on dataelements bound to sql queries. The module works with OpenMRS 1.8.2 and higher. It is licensed under the Mozilla Public License, Version 2.0 details of which can be found in the [LICENSE](https://github.com/openmrs/openmrs-module-dhisreport/blob/master/LICENSE) file.
 
 ###Module requirements:
 * Able to support multiple DHIS2 instances
@@ -29,6 +29,7 @@ An OpenMRS module that posts aggregate reports to DHIS2 based on dataelements bo
 
 The dataElements tag encompasses all the dataElements and their unique codes that are used in the report to be sent. Similarly, the disaggregations tag encompasses all the categoryOptionsCombo code and uid that are part of the dataElements to be reported.
 
+  ```xml
     <?xml version="1.0"?>
     <reportTemplates xmlns:d2="http://dhis2.org/schema/dxf/2.0">
          <dataElements>
@@ -51,12 +52,12 @@ The dataElements tag encompasses all the dataElements and their unique codes tha
              </dataValueTemplates>
         </reportTemplate>
     </reportTemplates>
-    
+ ```   
     
 #### ADX Data Output
 
 [ADX](http://wiki.ihe.net/index.php/Aggregate_Data_Exchange)Sample has been taken from https://github.com/dhis2/adx/tree/master/IHE/samples
-```
+```xml
 <?xml version="1.0" encoding="UTF-8"?>
 <adx xmlns="urn:ihe:qrph:adx:2015"
      xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
