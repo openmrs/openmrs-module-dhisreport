@@ -7,7 +7,7 @@
 	<version>2.1-SNAPSHOT</version>
 	<packaging>pom</packaging>
 	<name>DHIS2 Reporting Module</name>
-	<description>Posts aggregate ADX[standard] reports to dhis2 leveraing OpenMRS reporting module</description>
+	<description>Posts aggregate data reports using ADX Profile specification to DHIS2 leveraging OpenMRS reporting module</description>
 	<url>https://wiki.openmrs.org/display/docs/DHIS2+Reporting+Module</url>
 
 	<developers>
