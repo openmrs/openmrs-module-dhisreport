@@ -85,7 +85,7 @@ public class LocationMappingController {
 				log.debug("Error in Unmarshalling");
 				e.printStackTrace();
 			}
-			if (metadata != null) {
+			if (metadata != null && metadata.getOrganizationUnits() != null) {
 				ou = metadata.getOrganizationUnits().getOrganizationUnits();
 				model.addAttribute("orgunits", ou);
 
