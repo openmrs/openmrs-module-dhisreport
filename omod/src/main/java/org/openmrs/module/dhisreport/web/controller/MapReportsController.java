@@ -72,4 +72,11 @@ public class MapReportsController
         reportDefinition.setReportingReportId( reportmoduleDefinitionID );
         service.saveReportDefinition( reportDefinition );
     }
+
+    @RequestMapping( value = "/module/dhisreport/confirmReports", method = RequestMethod.POST )
+    public void confirmReports( ModelMap model, @RequestParam( value = "report", required = true )
+    String reportIndex )
+    {
+        System.out.println( "*************" + reportIndex );
+    }
 }
