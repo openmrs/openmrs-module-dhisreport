@@ -15,16 +15,17 @@
             setTimeout(function(){
                 window.location.reload();
             }, 1000);
-        });  
-//        $.(".mapper").click(function(){
-//            var $row = $(this).closest("tr");
-//            var $val = $row.find(".rep-list").value;
-//            alert($val);
-//            $.post("${pageContext.request.contextPath}/module/dhisreport/confirmReports.form",{report: 2});
-//            setTimeout(function(){
-//                window.location.reload();
-//            }, 1000);
-//        });
+        }); 
+        $(".mapper").click(function(){
+            alert("Clicked");
+            var $row = $(this).closest("tr");
+            var $val = $row.find(".rep-list").val(); 
+            console.log($val);
+            $.post("${pageContext.request.contextPath}/module/dhisreport/confirmReports.form",{report: $val}); 
+            setTimeout(function(){ 
+                window.location.reload();
+            }, 1000);
+        });
     });
 </script>
 
@@ -97,18 +98,19 @@
                         <td>${dataValueTemplate.dataelement.name}</td>
 
                         <td>${dataValueTemplate.disaggregation.name}</td>
+                        
                         <td>
-                            <select style="width: 80px" class="rep-list">
-                            <c:if test="${not empty correspondingReportDefinition}">
-                                <option value="<spring:message code="dhisreport.defaultSelection" />"><spring:message code="dhisreport.defaultSelection" /></option>
-                                <c:forEach var="rDef"
-                                   items="${reportingReportDefinitionReport.indicatorDataSetDefinition.columns}">
-                                    <option value="${rDef.label}">${rDef.indicator.parameterizable.name}</option>
-                                </c:forEach>
-                            </c:if>        
-                            </select>  
+                            <select style="width: 100px" class="rep-list">
+                            <option value="Default"></option>
+                        <c:forEach var="def" items="${reportingReportDefinitionReport.indicatorDataSetDefinition.columns}">
+                            <option value="${def.label}">${def.label}</option>   
+                        </c:forEach>
+                        </select>
                         </td>
-                        <td><button class="mapper" onclick="trigger(event,this);">Confirm</button></td>
+                        
+                        <td>
+                            <a class="mapper">Link</a>
+                        </td>
                     </tr>
                 </c:forEach>
                 </tbody>
@@ -144,12 +146,3 @@
         </div>
     </c:if>
 </form>
-<script type="text/javascript">
-    function trigger(e,x){
-        e.preventDefault();
-        var td = x.parentElement;
-        var tr = td.parentElement;
-        var tds = tr.getElementsByTagName('td');
-        alert(tds.length+" "+tds[1]+" "+tds[1].innerHTML+" "+tds[3].getElementsByTagName('select')[0].value);
-    }
-</script>    
