@@ -113,9 +113,8 @@
                         
                         <td>
                             <a class="mapper">Link</a>
-                        </td>
-                        
-                        <input class="report_id" value="${dataValueTemplate.id}" hidden>
+                            <input class="report_id" value="${dataValueTemplate.id}" hidden>
+                        </td>                       
                     </tr>
                 </c:forEach>
                 </tbody>
