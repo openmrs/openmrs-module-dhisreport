@@ -87,7 +87,7 @@ public class MapReportsController
         int index = 0;
         for ( DataValueTemplate temp : rd.getDataValueTemplates() )
         {
-            if ( index == (reportIndex-1) )
+            if ( index == (reportIndex - 1) )
             {
                 dvt = temp;
             }
