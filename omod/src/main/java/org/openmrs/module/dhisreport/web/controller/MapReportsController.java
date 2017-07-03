@@ -20,10 +20,13 @@ import org.springframework.web.bind.annotation.RequestParam;
 
 import java.util.ArrayList;
 import java.util.List;
+import org.openmrs.module.dhisreport.api.model.DataValueTemplate;
 
 @Controller
 public class MapReportsController
 {
+
+    private ReportDefinition rd;
 
     protected final Log log = LogFactory.getLog( getClass() );
 
@@ -41,7 +44,7 @@ public class MapReportsController
             if ( ds.getType().equals( "org.openmrs.module.reporting.report.definition.PeriodIndicatorReportDefinition" ) )
                 periodicIndicatorReportDefinitionSummaries.add( ds );
         }
-        ReportDefinition rd = service.getReportDefinition( reportDefinition_id );
+        rd = service.getReportDefinition( reportDefinition_id );
         SerializedObject so = Context.getService( SerializedDefinitionService.class ).getSerializedDefinitionByUuid(
             rd.getReportingReportId() );
 
@@ -74,9 +77,22 @@ public class MapReportsController
     }
 
     @RequestMapping( value = "/module/dhisreport/confirmReports", method = RequestMethod.POST )
-    public void confirmReports( ModelMap model, @RequestParam( value = "report", required = true )
-    String reportIndex )
+    public void confirmReports( ModelMap model, @RequestParam( value = "reporting_report", required = true )
+    int reportIndex, @RequestParam( value = "dhis_report_id", required = true )
+    int dhisReportId )
     {
         System.out.println( "*************" + reportIndex );
+        System.out.println( "@@@@@@@@@@@@@@" + dhisReportId );
+        DataValueTemplate dvt = null;
+        int index = 0;
+        for ( DataValueTemplate temp : rd.getDataValueTemplates() )
+        {
+            if ( index == (reportIndex-1) )
+            {
+                dvt = temp;
+            }
+            index++;
+        }
+        System.out.println( "Data Value Template : " + dvt.getQuery() );
     }
 }

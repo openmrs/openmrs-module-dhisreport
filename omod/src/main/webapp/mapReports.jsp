@@ -20,8 +20,9 @@
             alert("Clicked");
             var $row = $(this).closest("tr");
             var $val = $row.find(".rep-list").val(); 
+            var $repId = $row.find(".report_id").val();
             console.log($val);
-            $.post("${pageContext.request.contextPath}/module/dhisreport/confirmReports.form",{report: $val}); 
+            $.post("${pageContext.request.contextPath}/module/dhisreport/confirmReports.form",{reporting_report: $val,dhis_report_id: $repId}); 
             setTimeout(function(){ 
                 window.location.reload();
             }, 1000);
@@ -93,6 +94,7 @@
                 </tr>
                 <c:forEach var="dataValueTemplate" varStatus="varStatus"
                            items="${reportDefinition.dataValueTemplates}">
+                    <c:set var="count" value="0" scope="page"/>
                     <tr class='${varStatus.index % 2 == 0 ? "oddRow" : "evenRow" }'>
                         <td>${varStatus.index +1}</td>
                         <td>${dataValueTemplate.dataelement.name}</td>
@@ -101,9 +103,10 @@
                         
                         <td>
                             <select style="width: 100px" class="rep-list">
-                            <option value="Default"></option>
+                            <option value="${count}">Default</option>
                         <c:forEach var="def" items="${reportingReportDefinitionReport.indicatorDataSetDefinition.columns}">
-                            <option value="${def.label}">${def.label}</option>   
+                            <c:set var="count" value="${count+1}" scope="page"/>
+                            <option value="${count}">${def.label}</option>   
                         </c:forEach>
                         </select>
                         </td>
@@ -111,6 +114,8 @@
                         <td>
                             <a class="mapper">Link</a>
                         </td>
+                        
+                        <input class="report_id" value="${dataValueTemplate.id}" hidden>
                     </tr>
                 </c:forEach>
                 </tbody>
