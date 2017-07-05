@@ -21,6 +21,15 @@ import org.springframework.web.bind.annotation.RequestParam;
 import java.util.ArrayList;
 import java.util.List;
 import org.openmrs.module.dhisreport.api.model.DataValueTemplate;
+import org.openmrs.module.reporting.cohort.definition.SqlCohortDefinition;
+import org.openmrs.module.reporting.dataset.definition.CohortIndicatorDataSetDefinition;
+import org.openmrs.module.reporting.dataset.definition.CohortIndicatorDataSetDefinition.CohortIndicatorAndDimensionColumn;
+import org.openmrs.module.reporting.dataset.definition.DataSetDefinition;
+import org.openmrs.module.reporting.evaluation.parameter.Mapped;
+import org.openmrs.module.reporting.indicator.CohortIndicator;
+import org.openmrs.module.reporting.indicator.dimension.CohortDefinitionDimension;
+import org.openmrs.report.CohortDataSet;
+import org.openmrs.report.CohortDataSetDefinition;
 
 @Controller
 public class MapReportsController
@@ -61,7 +70,6 @@ public class MapReportsController
                 PeriodIndicatorReportDefinition.class );
             model.addAttribute( "reportingReportDefinitionReport", (PeriodIndicatorReportDefinition) rrd );
         }
-
     }
 
     @RequestMapping( value = "/module/dhisreport/mapReports", method = RequestMethod.POST )
@@ -81,18 +89,61 @@ public class MapReportsController
     int reportIndex, @RequestParam( value = "dhis_report_id", required = true )
     int dhisReportId )
     {
+        DHIS2ReportingService service = Context.getService( DHIS2ReportingService.class );
+
+        DataValueTemplate selected = service.getDataValueTemplate( dhisReportId );
         System.out.println( "*************" + reportIndex );
         System.out.println( "@@@@@@@@@@@@@@" + dhisReportId );
-        DataValueTemplate dvt = null;
+        System.out.println( "DHIS Query : " + selected.getQuery() );
         int index = 0;
-        for ( DataValueTemplate temp : rd.getDataValueTemplates() )
+        //        for ( DataValueTemplate temp : rd.getDataValueTemplates() )
+        //        {
+        //            if ( index == (reportIndex - 1) )
+        //            {
+        //                dvt = temp;
+        //            }
+        //            index++;
+        //        }
+        //        System.out.println( "Data Value Template : " + dvt.getQuery() );
+
+        org.openmrs.module.reporting.report.definition.ReportDefinition rrd = Context.getService(
+            ReportDefinitionService.class ).getDefinitionByUuid( rd.getReportingReportId() );
+        System.out.println( "ReportID : " + rd.getReportingReportId() );
+        System.out.println( "RRD : " + rrd.toString() );
+        PeriodIndicatorReportDefinition pird = (PeriodIndicatorReportDefinition) rrd;
+        CohortIndicatorDataSetDefinition cidsd = pird.getIndicatorDataSetDefinition();
+        System.out.println( "Label : " + cidsd.getColumns().get( reportIndex - 1 ).getLabel() );
+        System.out.println( "Name : " + cidsd.getColumns().get( reportIndex - 1 ).getName() );
+        System.out.println( "Indicator : " + cidsd.getColumns().get( reportIndex - 1 ).getIndicator().toString() );
+        System.out.println( "Param : "
+            + cidsd.getColumns().get( reportIndex - 1 ).getIndicator().getParameterizable().toString() );
+        System.out.println( "CohortD : "
+            + cidsd.getColumns().get( reportIndex - 1 ).getIndicator().getParameterizable().getCohortDefinition()
+                .toString() );
+        SqlCohortDefinition scd = (SqlCohortDefinition) cidsd.getColumns().get( reportIndex - 1 ).getIndicator()
+            .getParameterizable().getCohortDefinition().getParameterizable();
+
+        System.out.println( "Report Query : " + scd.getQuery() );
+
+        if ( selected.getDefaultreportquery() != null )
         {
-            if ( index == (reportIndex - 1) )
+            if ( reportIndex == 0 )
             {
-                dvt = temp;
+                selected.setDefaultreportquery( null );
+                selected.setMappeddefinitionuuid( null );
+                selected.setQuery( selected.getQuery() );
             }
-            index++;
+            else
+            {
+                selected.setQuery( scd.getQuery() );
+            }
         }
-        System.out.println( "Data Value Template : " + dvt.getQuery() );
+        else
+        {
+            selected.setDefaultreportquery( selected.getQuery() );
+            selected.setMappeddefinitionuuid( rd.getReportingReportId() );
+            selected.setQuery( scd.getQuery() );
+        }
+        service.saveDataValueTemplate( selected );
     }
 }
