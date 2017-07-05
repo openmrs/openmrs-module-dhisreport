@@ -26,7 +26,8 @@ import javax.xml.bind.annotation.*;
  * 
  * @author bobj
  */
-@XmlType( name = "dataValueTemplate", propOrder = { "dataelement", "disaggregation", "query" } )
+@XmlType( name = "dataValueTemplate", propOrder = { "dataelement", "disaggregation", "query", "defaultreportquery",
+    "mappeddefinitionuuid" } )
 @XmlRootElement( name = "dataValueTemplate" )
 public class DataValueTemplate
     implements Serializable
@@ -48,6 +49,10 @@ public class DataValueTemplate
     protected Disaggregation disaggregation;
 
     protected String query;
+
+    protected String default_report_query;
+
+    protected String mapped_definition_uuid;
 
     @XmlTransient
     public ReportDefinition getReportDefinition()
@@ -106,6 +111,28 @@ public class DataValueTemplate
         this.query = query;
     }
 
+    @XmlElement( name = "defaultreportquery", required = false )
+    public String getDefaultreportquery()
+    {
+        return default_report_query;
+    }
+
+    public void setDefaultreportquery( String default_report_query )
+    {
+        this.default_report_query = default_report_query;
+    }
+
+    @XmlElement( name = "mappeddefinitionuuid", required = false )
+    public String getMappeddefinitionuuid()
+    {
+        return mapped_definition_uuid;
+    }
+
+    public void setMappeddefinitionuuid( String mapped_definition_uuid )
+    {
+        this.mapped_definition_uuid = mapped_definition_uuid;
+    }
+
     public boolean potentialUpdateDelete()
     {
         return query.matches( SQL_SANITY_CHECK );
@@ -152,5 +179,4 @@ public class DataValueTemplate
         return "DVT: " + this.getId() + " : " + this.getDataelement().getName() + " : "
             + this.getDisaggregation().getName();
     }
-
 }
