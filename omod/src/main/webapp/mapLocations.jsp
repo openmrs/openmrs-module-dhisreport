@@ -23,15 +23,25 @@
 							<option value="${item.name}">${item.name }</option>
 						</c:forEach>
 				</select></td>
-				<td><select name="DHIS2OrgUnits">
+				<td>
+                                    <c:if test="${not empty orgunits}">
+                                    <select name="DHIS2OrgUnits">
 						<c:forEach items="${orgunits}" var="item">
-
 							<option value="${item.code}">${item.name }</option>
 						</c:forEach>
-				</select></td>
-			<tr>
+                                    </select>
+                                </td>
+                                <tr>
 				<td />
 				<td><input value="Map Locations" name="submit" type="submit"></td>
+                                    </c:if>
+                                    <c:if test="${empty orgunits}">
+                                        <div id="openmrs_msg"><spring:message code="dhisreport.orgUnitCodeDoesNotExist" /> </div>
+                                        </td>
+                                <tr>
+				<td />
+                                <td><input value="Map Locations" name="submit" type="submit" disabled></td>
+                                    </c:if>
 			</tr>
 		</tbody>
 	</table>
