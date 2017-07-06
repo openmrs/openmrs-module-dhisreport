@@ -63,6 +63,7 @@ public class MapReportsController
         model.put( "definitionSummaries", periodicIndicatorReportDefinitionSummaries );
         model.addAttribute( "user", Context.getAuthenticatedUser() );
         model.addAttribute( "reportDefinition", rd );
+
         if ( rd.getReportingReportId() != null && rrd instanceof PeriodIndicatorReportDefinition )
         {
             model.addAttribute( "correspondingReportDefinition", so );
@@ -92,45 +93,20 @@ public class MapReportsController
         DHIS2ReportingService service = Context.getService( DHIS2ReportingService.class );
 
         DataValueTemplate selected = service.getDataValueTemplate( dhisReportId );
-        System.out.println( "*************" + reportIndex );
-        System.out.println( "@@@@@@@@@@@@@@" + dhisReportId );
-        System.out.println( "DHIS Query : " + selected.getQuery() );
-        int index = 0;
-        //        for ( DataValueTemplate temp : rd.getDataValueTemplates() )
-        //        {
-        //            if ( index == (reportIndex - 1) )
-        //            {
-        //                dvt = temp;
-        //            }
-        //            index++;
-        //        }
-        //        System.out.println( "Data Value Template : " + dvt.getQuery() );
 
         org.openmrs.module.reporting.report.definition.ReportDefinition rrd = Context.getService(
             ReportDefinitionService.class ).getDefinitionByUuid( rd.getReportingReportId() );
-        System.out.println( "ReportID : " + rd.getReportingReportId() );
-        System.out.println( "RRD : " + rrd.toString() );
         PeriodIndicatorReportDefinition pird = (PeriodIndicatorReportDefinition) rrd;
         CohortIndicatorDataSetDefinition cidsd = pird.getIndicatorDataSetDefinition();
-        System.out.println( "Label : " + cidsd.getColumns().get( reportIndex - 1 ).getLabel() );
-        System.out.println( "Name : " + cidsd.getColumns().get( reportIndex - 1 ).getName() );
-        System.out.println( "Indicator : " + cidsd.getColumns().get( reportIndex - 1 ).getIndicator().toString() );
-        System.out.println( "Param : "
-            + cidsd.getColumns().get( reportIndex - 1 ).getIndicator().getParameterizable().toString() );
-        System.out.println( "CohortD : "
-            + cidsd.getColumns().get( reportIndex - 1 ).getIndicator().getParameterizable().getCohortDefinition()
-                .toString() );
         SqlCohortDefinition scd = (SqlCohortDefinition) cidsd.getColumns().get( reportIndex - 1 ).getIndicator()
             .getParameterizable().getCohortDefinition().getParameterizable();
-
-        System.out.println( "Report Query : " + scd.getQuery() );
 
         if ( selected.getDefaultreportquery() != null )
         {
             if ( reportIndex == 0 )
             {
-                selected.setDefaultreportquery( null );
-                selected.setMappeddefinitionuuid( null );
+                selected.setDefaultreportquery( "" );
+                selected.setMappeddefinitionlabel( "" );
                 selected.setQuery( selected.getQuery() );
             }
             else
@@ -140,9 +116,18 @@ public class MapReportsController
         }
         else
         {
-            selected.setDefaultreportquery( selected.getQuery() );
-            selected.setMappeddefinitionuuid( rd.getReportingReportId() );
-            selected.setQuery( scd.getQuery() );
+            if ( reportIndex == 0 )
+            {
+                selected.setDefaultreportquery( "" );
+                selected.setMappeddefinitionlabel( "" );
+                selected.setQuery( selected.getQuery() );
+            }
+            else
+            {
+                selected.setDefaultreportquery( selected.getQuery() );
+                selected.setMappeddefinitionlabel( scd.getName() );
+                selected.setQuery( scd.getQuery() );
+            }
         }
         service.saveDataValueTemplate( selected );
     }

@@ -25,6 +25,7 @@
             $.post("${pageContext.request.contextPath}/module/dhisreport/confirmReports.form",{reporting_report: $val,dhis_report_id: $repId}); 
             setTimeout(function(){ 
                 window.location.reload();
+                $("#openmrs_msg").show();
             }, 1000);
         });
     });
@@ -74,7 +75,7 @@
     <br>
     <br>
     <c:if test="${not empty correspondingReportDefinition}">
-        <div id="openmrs_msg"><spring:message code="dhisreport.mappingReportInformation" /> </div>
+        <div id="openmrs_msg" hidden><spring:message code="dhisreport.mappingReportMapping" /> </div>
     </c:if>
     <br>
     <br>
@@ -106,7 +107,14 @@
                             <option value="${count}">Default</option>
                         <c:forEach var="def" items="${reportingReportDefinitionReport.indicatorDataSetDefinition.columns}">
                             <c:set var="count" value="${count+1}" scope="page"/>
-                            <option value="${count}">${def.label}</option>   
+                            <c:choose>
+                                <c:when test="${dataValueTemplate.mappeddefinitionlabel != def.label}">
+                                    <option value="${count}">${def.label}</option> 
+                                </c:when>
+                                <c:otherwise>
+                                    <option value="${count}" selected>${def.label}</option> 
+                                </c:otherwise>
+                            </c:choose>  
                         </c:forEach>
                         </select>
                         </td>
