@@ -15,8 +15,19 @@
             setTimeout(function(){
                 window.location.reload();
             }, 1000);
+        }); 
+        $(".mapper").click(function(){
+            alert("Clicked");
+            var $row = $(this).closest("tr");
+            var $val = $row.find(".rep-list").val(); 
+            var $repId = $row.find(".report_id").val();
+            console.log($val);
+            $.post("${pageContext.request.contextPath}/module/dhisreport/confirmReports.form",{reporting_report: $val,dhis_report_id: $repId}); 
+            setTimeout(function(){ 
+                window.location.reload();
+                $("#openmrs_msg").show();
+            }, 1000);
         });
-
     });
 </script>
 
@@ -64,7 +75,7 @@
     <br>
     <br>
     <c:if test="${not empty correspondingReportDefinition}">
-        <div id="openmrs_msg"><spring:message code="dhisreport.mappingReportInformation" /> </div>
+        <div id="openmrs_msg" hidden><spring:message code="dhisreport.mappingReportMapping" /> </div>
     </c:if>
     <br>
     <br>
@@ -84,12 +95,34 @@
                 </tr>
                 <c:forEach var="dataValueTemplate" varStatus="varStatus"
                            items="${reportDefinition.dataValueTemplates}">
+                    <c:set var="count" value="0" scope="page"/>
                     <tr class='${varStatus.index % 2 == 0 ? "oddRow" : "evenRow" }'>
                         <td>${varStatus.index +1}</td>
                         <td>${dataValueTemplate.dataelement.name}</td>
 
                         <td>${dataValueTemplate.disaggregation.name}</td>
-
+                        
+                        <td>
+                            <select style="width: 100px" class="rep-list">
+                            <option value="${count}">Default</option>
+                        <c:forEach var="def" items="${reportingReportDefinitionReport.indicatorDataSetDefinition.columns}">
+                            <c:set var="count" value="${count+1}" scope="page"/>
+                            <c:choose>
+                                <c:when test="${dataValueTemplate.mappeddefinitionlabel != def.label}">
+                                    <option value="${count}">${def.label}</option> 
+                                </c:when>
+                                <c:otherwise>
+                                    <option value="${count}" selected>${def.label}</option> 
+                                </c:otherwise>
+                            </c:choose>  
+                        </c:forEach>
+                        </select>
+                        </td>
+                        
+                        <td>
+                            <a class="mapper">Link</a>
+                            <input class="report_id" value="${dataValueTemplate.id}" hidden>
+                        </td>                       
                     </tr>
                 </c:forEach>
                 </tbody>
@@ -125,6 +158,3 @@
         </div>
     </c:if>
 </form>
-
-
-<%@ include file="/WEB-INF/template/footer.jsp" %>

@@ -20,10 +20,22 @@ import org.springframework.web.bind.annotation.RequestParam;
 
 import java.util.ArrayList;
 import java.util.List;
+import org.openmrs.module.dhisreport.api.model.DataValueTemplate;
+import org.openmrs.module.reporting.cohort.definition.SqlCohortDefinition;
+import org.openmrs.module.reporting.dataset.definition.CohortIndicatorDataSetDefinition;
+import org.openmrs.module.reporting.dataset.definition.CohortIndicatorDataSetDefinition.CohortIndicatorAndDimensionColumn;
+import org.openmrs.module.reporting.dataset.definition.DataSetDefinition;
+import org.openmrs.module.reporting.evaluation.parameter.Mapped;
+import org.openmrs.module.reporting.indicator.CohortIndicator;
+import org.openmrs.module.reporting.indicator.dimension.CohortDefinitionDimension;
+import org.openmrs.report.CohortDataSet;
+import org.openmrs.report.CohortDataSetDefinition;
 
 @Controller
 public class MapReportsController
 {
+
+    private ReportDefinition rd;
 
     protected final Log log = LogFactory.getLog( getClass() );
 
@@ -41,7 +53,7 @@ public class MapReportsController
             if ( ds.getType().equals( "org.openmrs.module.reporting.report.definition.PeriodIndicatorReportDefinition" ) )
                 periodicIndicatorReportDefinitionSummaries.add( ds );
         }
-        ReportDefinition rd = service.getReportDefinition( reportDefinition_id );
+        rd = service.getReportDefinition( reportDefinition_id );
         SerializedObject so = Context.getService( SerializedDefinitionService.class ).getSerializedDefinitionByUuid(
             rd.getReportingReportId() );
 
@@ -51,6 +63,7 @@ public class MapReportsController
         model.put( "definitionSummaries", periodicIndicatorReportDefinitionSummaries );
         model.addAttribute( "user", Context.getAuthenticatedUser() );
         model.addAttribute( "reportDefinition", rd );
+
         if ( rd.getReportingReportId() != null && rrd instanceof PeriodIndicatorReportDefinition )
         {
             model.addAttribute( "correspondingReportDefinition", so );
@@ -58,7 +71,6 @@ public class MapReportsController
                 PeriodIndicatorReportDefinition.class );
             model.addAttribute( "reportingReportDefinitionReport", (PeriodIndicatorReportDefinition) rrd );
         }
-
     }
 
     @RequestMapping( value = "/module/dhisreport/mapReports", method = RequestMethod.POST )
@@ -71,5 +83,52 @@ public class MapReportsController
         ReportDefinition reportDefinition = service.getReportDefinition( reportDefinition_id );
         reportDefinition.setReportingReportId( reportmoduleDefinitionID );
         service.saveReportDefinition( reportDefinition );
+    }
+
+    @RequestMapping( value = "/module/dhisreport/confirmReports", method = RequestMethod.POST )
+    public void confirmReports( ModelMap model, @RequestParam( value = "reporting_report", required = true )
+    int reportIndex, @RequestParam( value = "dhis_report_id", required = true )
+    int dhisReportId )
+    {
+        DHIS2ReportingService service = Context.getService( DHIS2ReportingService.class );
+
+        DataValueTemplate selected = service.getDataValueTemplate( dhisReportId );
+
+        org.openmrs.module.reporting.report.definition.ReportDefinition rrd = Context.getService(
+            ReportDefinitionService.class ).getDefinitionByUuid( rd.getReportingReportId() );
+        PeriodIndicatorReportDefinition pird = (PeriodIndicatorReportDefinition) rrd;
+        CohortIndicatorDataSetDefinition cidsd = pird.getIndicatorDataSetDefinition();
+        SqlCohortDefinition scd = (SqlCohortDefinition) cidsd.getColumns().get( reportIndex - 1 ).getIndicator()
+            .getParameterizable().getCohortDefinition().getParameterizable();
+
+        if ( selected.getDefaultreportquery() != null )
+        {
+            if ( reportIndex == 0 )
+            {
+                selected.setDefaultreportquery( "" );
+                selected.setMappeddefinitionlabel( "" );
+                selected.setQuery( selected.getQuery() );
+            }
+            else
+            {
+                selected.setQuery( scd.getQuery() );
+            }
+        }
+        else
+        {
+            if ( reportIndex == 0 )
+            {
+                selected.setDefaultreportquery( "" );
+                selected.setMappeddefinitionlabel( "" );
+                selected.setQuery( selected.getQuery() );
+            }
+            else
+            {
+                selected.setDefaultreportquery( selected.getQuery() );
+                selected.setMappeddefinitionlabel( scd.getName() );
+                selected.setQuery( scd.getQuery() );
+            }
+        }
+        service.saveDataValueTemplate( selected );
     }
 }
