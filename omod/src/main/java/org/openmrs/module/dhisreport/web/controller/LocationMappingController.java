@@ -78,39 +78,58 @@ public class LocationMappingController {
 		List<OrganizationUnit> ou = null;
 		Dhis2ServerController connection = new Dhis2ServerController();
 		boolean val = connection.testConnection(url, dhisusername, dhispassword, server, webRequest, model);
-		if (val == true) {
-			try {
-				metadata = getDHIS2OrganizationUnits();
-			} catch (Exception e) {
-				log.debug("Error in Unmarshalling");
-				e.printStackTrace();
-			}
-			if (metadata != null) {
-				ou = metadata.getOrganizationUnits().getOrganizationUnits();
-				model.addAttribute("orgunits", ou);
+		if ( val == true )
+        {
+            try
+            {
+                metadata = getDHIS2OrganizationUnits();
+            }
+            catch ( Exception e )
+            {
+                log.debug( "Error in Unmarshalling" );
+                e.printStackTrace();
+            }
+            if ( metadata != null )
+            {
 
-				HashMap<String, String> hm = new HashMap<String, String>();
-				List<Location> locationList = new ArrayList<Location>();
-				locationList.addAll(Context.getLocationService().getAllLocations());
+                HashMap<String, String> hm = new HashMap<String, String>();
+                if ( metadata.getOrganizationUnits() != null )
+                {
+                    ou = metadata.getOrganizationUnits().getOrganizationUnits();
+                    model.addAttribute( "orgunits", ou );
+                    List<Location> locationList = new ArrayList<Location>();
+                    locationList.addAll( Context.getLocationService().getAllLocations() );
 
-				for (Location l : locationList) {
-					for (LocationAttribute la : l.getActiveAttributes()) {
-						if (la.getAttributeType().getName().equals("CODE")) {
-							if (la.getValue() != null) {
+                    for ( Location l : locationList )
+                    {
+                        for ( LocationAttribute la : l.getActiveAttributes() )
+                        {
+                            if ( la.getAttributeType().getName().equals( "CODE" ) )
+                            {
+                                if ( la.getValue() != null )
+                                {
 
-								for (OrganizationUnit o : ou) {
-									if (la.getValue().equals(o.getCode())) {
-										hm.put(l.getName(), o.getName());
-									}
-								}
-							}
-						}
-					}
-				}
-				model.addAttribute("map", hm);
-				return;
-			}
-		}
+                                    for ( OrganizationUnit o : ou )
+                                    {
+                                        if ( la.getValue().equals( o.getCode() ) )
+                                        {
+                                            hm.put( l.getName(), o.getName() );
+                                        }
+                                    }
+                                }
+                            }
+                        }
+                    }
+                    model.addAttribute( "map", hm );
+                }
+                else
+                {
+                    model.addAttribute( "orgunits", ou );
+                    model.addAttribute( "map", hm );
+                }
+                return;
+            }
+        }
 		webRequest.setAttribute(WebConstants.OPENMRS_MSG_ATTR,
 				Context.getMessageSourceService().getMessage("dhisreport.currentConnectionFail"),
 				WebRequest.SCOPE_SESSION);
