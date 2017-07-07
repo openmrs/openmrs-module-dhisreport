@@ -36,7 +36,12 @@
     <tr>
   		<td>${dvm.key.name}</td>
   		<td>${dvm.key.code}</td>		
+  		<c:if test="${dvm.value!='NoParam'}">
   		<td>${dvm.value}</td>
+                </c:if>
+                <c:if test="${dvm.value=='NoParam'}">
+                <td><div id="openmrs_msg"><spring:message code="dhisreport.missingParameters" /> </div></td>
+                </c:if>
   	</tr>
 	<tr>
   	</c:forEach>
