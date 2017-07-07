@@ -444,8 +444,15 @@ public class ReportController
         {
             DataValueType dvtype = new DataValueType();
             dvtype.setDataElement( dv.getDataElement() );
-            dvtype.setValue( new BigDecimal( dv.getValue() ) );
-            dvTypeList.add( dvtype );
+            try
+            {
+                BigDecimal bd = new BigDecimal( dv.getValue() );
+                dvtype.setValue( bd );
+                dvTypeList.add( dvtype );
+            }
+            catch ( NumberFormatException e )
+            {
+            }
         }
         gt.getDataValue().addAll( dvTypeList );
         gt.setOrgUnit( dvs.getOrgUnit() );
