@@ -85,7 +85,7 @@ public class LocationMappingController {
 				log.debug("Error in Unmarshalling");
 				e.printStackTrace();
 			}
-			if (metadata != null) {
+			if (metadata != null && metadata.getOrganizationUnits() != null) {
 				ou = metadata.getOrganizationUnits().getOrganizationUnits();
 				model.addAttribute("orgunits", ou);
 
@@ -109,7 +109,10 @@ public class LocationMappingController {
 				}
 				model.addAttribute("map", hm);
 				return;
-			}
+			}else{
+                            model.addAttribute( "orgunits", ou );
+                            model.addAttribute( "map", hm );
+                        }
 		}
 		webRequest.setAttribute(WebConstants.OPENMRS_MSG_ATTR,
 				Context.getMessageSourceService().getMessage("dhisreport.currentConnectionFail"),
