@@ -86,6 +86,18 @@ public class HibernateDHIS2ReportingDAOTest extends BaseModuleContextSensitiveTe
 				assertEquals("3", dvs);
 			}
 		}
+		
+		for ( ReportDefinition rd : rds )
+		{
+		    for ( DataValueTemplate r : rd.getDataValueTemplates() )
+		    {
+			String query = "select count(distinct p.person_id) from person p inner join obs o on o.person_id = p.person_id\n"
+			    + "where p.voided = 0 and o.voided = 0 and o.concept_id = 1425 and o.value_numeric = 4";
+			r.setQuery( query );
+			String dvs = dao.evaluateDataValueTemplate( r, period, location );
+			assertEquals( "NoParam", dvs );
+		    }
+		}
 	}
 
 	@Test

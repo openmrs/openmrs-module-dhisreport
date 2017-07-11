@@ -184,8 +184,18 @@ public class HibernateDHIS2ReportingDAO
         {
             query.setParameter( "locationId", location.getId().toString() );
         }
-        query.setParameter( "startOfPeriod", period.getStartDate() );
-        query.setParameter( "endOfPeriod", period.getEndDate() );
+        if ( parameters.contains( "startOfPeriod" ) )
+        {
+            query.setParameter( "startOfPeriod", period.getStartDate() );
+        }
+        if ( parameters.contains( "endOfPeriod" ) )
+        {
+            query.setParameter( "endOfPeriod", period.getEndDate() );
+        }
+        if ( !parameters.contains( "startOfPeriod" ) && !parameters.contains( "endOfPeriod" ) )
+        {
+            return "NoParam";
+        }
         return query.uniqueResult().toString();
     }
 
