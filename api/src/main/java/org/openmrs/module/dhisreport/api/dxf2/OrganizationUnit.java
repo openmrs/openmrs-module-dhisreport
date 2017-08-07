@@ -8,7 +8,7 @@ import javax.xml.bind.annotation.XmlRootElement;
 @XmlRootElement( name = "organisationUnit" )
 @XmlAccessorType( XmlAccessType.FIELD )
 public class OrganizationUnit
-{   
+{
     @XmlAttribute
     private String name;
 

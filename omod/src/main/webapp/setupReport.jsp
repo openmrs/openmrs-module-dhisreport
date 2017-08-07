@@ -14,6 +14,13 @@
             $("#menu").after("<div id='openmrs_error'>"+errormsg+"</div>");
 
         }
+        
+        var nullPoint = '${nullPointer}';
+        
+        if(nullPoint){
+            $("#menu").after("<div id='openmrs_error'>"+nullPoint+"</div>");
+            $("#gen").hide();
+        }
     }
 
 $(function(){ 
@@ -159,6 +166,7 @@ function applyWeeklyHighlight() {
 <h3><spring:message code="dhisreport.reportDefinitionFor" /> ${reportDefinition.name}</h3>
 
 <form action="executeReport.form" method="post">
+    <div style="float: left; width: 49%;">
     <table>
        <%--  <tr>
             <td><spring:message code="dhisreport.Location" /></td>
@@ -183,13 +191,13 @@ function applyWeeklyHighlight() {
             <td><spring:message code="dhisreport.Date" /></td>
             <td><input type="text" name="date" id="monthpicker"/></td>
         </tr>
-           <tr>
-               <td><spring:message code="dhisreport.selectMapping" /></td>
-               <td>
-                   <input type="radio" name="mappingType" value="Reporting">Reporting
-                   <input type="radio" name="mappingType" value="SQL">SQL
-               </td>
-           </tr>
+        <tr>
+            <td><spring:message code="dhisreport.Prior" /></td>
+            <td>
+            <input type="radio" name="prior" value="sql" checked="checked">SQL
+            <input type="radio" name="prior" value="report">Reporting
+            </td>
+        </tr>
         <tr>                   
             <td /><td><select name="resultDestination">
                     <option value="preview"><spring:message code="dhisreport.Preview" /></option>
@@ -202,12 +210,50 @@ function applyWeeklyHighlight() {
         <tr>
             <td />
             <td>
-                <input type="submit" value="<spring:message code="dhisreport.Generate" />" />
+                <input type="submit" id="gen" value="<spring:message code="dhisreport.Generate" />" />
             </td>
         </tr>
 
     </table>
+    </div>
     <input type="hidden" name="reportDefinition_id" value="${reportDefinition.id}" />
-</form>
+    <div  style="float: right; width: 49%;">
+        <b class="boxHeader"><spring:message code="dhisreport.mappingDHISTableHeader" /></b>
+        <div class="box">
+            <table cellspacing="0" cellpadding="2" style="width: 100%;">
+                <tbody>
+                <tr>
+                    <th>[<spring:message code="dhisreport.dataElementOrder" />]
+                    </th>
+                    <th>[<spring:message code="dhisreport.dataElement" />]
+                    </th>
 
-<%@ include file="/WEB-INF/template/footer.jsp"%>
+                    <th>[<spring:message code="dhisreport.disaggregationName" />]
+                    </th>
+                </tr>
+                <c:forEach var="dataValueTemplate" varStatus="varStatus"
+                           items="${reportDefinition.dataValueTemplates}">
+                    <c:set var="count" value="0" scope="page"/>
+                    <tr class='${varStatus.index % 2 == 0 ? "oddRow" : "evenRow" }'>
+                        <td>${varStatus.index +1}</td>
+                        <td>${dataValueTemplate.dataelement.name}</td>
+
+                        <td>${dataValueTemplate.disaggregation.name}</td>
+                        
+                        <td>
+                            <c:if test="${empty dataValueTemplate.mappeddefinitionlabel}">
+                                <c:if test="${empty dataValueTemplate.query}">
+                                    <div id="openmrs_error"><spring:message code="Not Mapped" /> </div>
+                                </c:if>
+                            </c:if>
+                            <c:if test="${not empty dataValueTemplate.mappeddefinitionlabel}">
+                                <div id="openmrs_msg"><spring:message code="Mapped with ${dataValueTemplate.mappeddefinitionlabel}" /> </div>
+                            </c:if>
+                        </td>                 
+                    </tr>
+                </c:forEach>
+                </tbody>
+            </table>
+        </div>
+    </div>
+</form>
