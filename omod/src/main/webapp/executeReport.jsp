@@ -12,6 +12,7 @@
             <tr><td><spring:message code="dhisreport.dataSet" />: </td><td>${aggregatedValues.dataValueSet.dataSet}</td></tr>
             <tr><td><spring:message code="dhisreport.orgUnit" />: </td><td>${aggregatedValues.dataValueSet.orgUnit}</td></tr>
             <tr><td><spring:message code="dhisreport.period" />: </td><td>${aggregatedValues.dataValueSet.period}</td></tr>
+            <tr><td><spring:message code="dhisreport.reportName" />: </td><td><a href="${pageContext.request.contextPath}/module/reporting/reports/viewReport.form?uuid=${resultUuid}">View Report</a></td></tr>
         </table>
     </div>
     

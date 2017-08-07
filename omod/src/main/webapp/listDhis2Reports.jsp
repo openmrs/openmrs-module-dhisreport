@@ -62,7 +62,7 @@ $(document).ready(function(){
         	<td id ="serial"></td>
             <td ><a  href="editReportDefinition.form?reportDefinition_id=${reportDefinition.id}" style="color:white" >${reportDefinition.name}</a>
          <td ><a href="setupReport.form?reportDefinition_id=${reportDefinition.id}" style="color:white"><spring:message code="dhisreport.Export" /></a> </td>
-           <td><a onclick="mapReports.form?reportDefinition_id=${reportDefinition.id}" style="color:white"><spring:message code="dhisreport.MapReport" /></a>
+           <td><a href="mapReports.form?reportDefinition_id=${reportDefinition.id}" style="color:white"><spring:message code="dhisreport.MapReport" /></a>
            <td><a onclick="REPORTDEFINITION.deleteReportDefinition(${reportDefinition.id})" style="color:white"><spring:message code="dhisreport.Delete" /></a>
         </tr>
         </c:when>

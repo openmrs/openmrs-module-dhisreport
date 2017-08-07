@@ -107,8 +107,9 @@
 		</description>
 		<sql>
 			ALTER TABLE `dhisreport_datavalue_template`
-			ADD `default_report_query` text DEFAULT NULL,
-                        ADD `mapped_definition_uuid` char(38) DEFAULT NULL;
+			ADD `defaultreportquery` text DEFAULT NULL,
+                        ADD `mappeddefinitionlabel` text DEFAULT NULL,
+                        ADD `mappeddefinitionuuid` text DEFAULT NULL;
 		</sql>
 	</diff>
 </sqldiff>

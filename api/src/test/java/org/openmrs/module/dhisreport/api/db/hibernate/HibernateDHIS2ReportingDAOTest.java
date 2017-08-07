@@ -89,7 +89,7 @@ public class HibernateDHIS2ReportingDAOTest
             for ( DataValueTemplate r : rd.getDataValueTemplates() )
             {
 
-                String dvs = dao.evaluateDataValueTemplate( r, period, location );
+                String dvs = dao.evaluateDataValueTemplate( r, period, location, false );
                 assertEquals( "3", dvs );
             }
         }

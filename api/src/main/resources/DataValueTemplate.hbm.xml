@@ -11,6 +11,7 @@
         <property column="query" length="2048" name="query"/>
         <many-to-one name="reportDefinition" column="report_definition_id" not-null="true" fetch="select"/>
         <property column="defaultreportquery" length="2048" name="defaultreportquery"/>
-        <property column="mappeddefinitionlabel" length="2048" name="mappeddefinitionlabel"/> 
+        <property column="mappeddefinitionlabel" length="2048" name="mappeddefinitionlabel"/>
+        <property column="mappeddefinitionuuid" length="2048" name="mappeddefinitionuuid"/> 
     </class>
 </hibernate-mapping>

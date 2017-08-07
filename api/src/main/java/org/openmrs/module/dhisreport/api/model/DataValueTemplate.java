@@ -27,7 +27,7 @@ import javax.xml.bind.annotation.*;
  * @author bobj
  */
 @XmlType( name = "dataValueTemplate", propOrder = { "dataelement", "disaggregation", "query", "defaultreportquery",
-    "mappeddefinitionlabel" } )
+    "mappeddefinitionlabel", "mappeddefinitionuuid" } )
 @XmlRootElement( name = "dataValueTemplate" )
 public class DataValueTemplate
     implements Serializable
@@ -53,6 +53,8 @@ public class DataValueTemplate
     protected String default_report_query;
 
     protected String mapped_definition_label;
+
+    protected String mapped_definition_uuid;
 
     @XmlTransient
     public ReportDefinition getReportDefinition()
@@ -131,6 +133,17 @@ public class DataValueTemplate
     public void setMappeddefinitionlabel( String mapped_definition_label )
     {
         this.mapped_definition_label = mapped_definition_label;
+    }
+
+    @XmlElement( name = "mappeddefinitionuuid", required = false )
+    public String getMappeddefinitionuuid()
+    {
+        return mapped_definition_uuid;
+    }
+
+    public void setMappeddefinitionuuid( String mapped_definition_uuid )
+    {
+        this.mapped_definition_uuid = mapped_definition_uuid;
     }
 
     public boolean potentialUpdateDelete()

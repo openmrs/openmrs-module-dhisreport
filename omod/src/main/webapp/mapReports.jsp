@@ -17,11 +17,9 @@
             }, 1000);
         }); 
         $(".mapper").click(function(){
-            alert("Clicked");
             var $row = $(this).closest("tr");
             var $val = $row.find(".rep-list").val(); 
             var $repId = $row.find(".report_id").val();
-            console.log($val);
             $.post("${pageContext.request.contextPath}/module/dhisreport/confirmReports.form",{reporting_report: $val,dhis_report_id: $repId}); 
             setTimeout(function(){ 
                 window.location.reload();
@@ -103,8 +101,16 @@
                         <td>${dataValueTemplate.disaggregation.name}</td>
                         
                         <td>
-                            <select style="width: 100px" class="rep-list">
-                            <option value="${count}">Default</option>
+                            <c:choose>
+                                <c:when test="${empty dataValueTemplate.query and empty dataValueTemplate.mappeddefinitionlabel}">
+                                    <select style="width: 100px;background-color:#FE2E2E" class="rep-list">
+                                </c:when>
+                                <c:otherwise>
+                                    <select style="width: 100px" class="rep-list">
+                                </c:otherwise>
+                            </c:choose>
+                                <option value="${0}" selected>Default</option>
+                            <c:set var="count" value="${0}" scope="page"/>
                         <c:forEach var="def" items="${reportingReportDefinitionReport.indicatorDataSetDefinition.columns}">
                             <c:set var="count" value="${count+1}" scope="page"/>
                             <c:choose>
@@ -120,7 +126,7 @@
                         </td>
                         
                         <td>
-                            <a class="mapper">Link</a>
+                            <a class="mapper">Map</a>
                             <input class="report_id" value="${dataValueTemplate.id}" hidden>
                         </td>                       
                     </tr>
