@@ -23,7 +23,10 @@ import java.lang.reflect.Method;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collection;
+import java.util.HashMap;
+import java.util.Iterator;
 import java.util.List;
+import java.util.Map;
 
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
@@ -33,11 +36,25 @@ import org.hibernate.Session;
 import org.hibernate.SessionFactory;
 import org.hibernate.criterion.Restrictions;
 import org.openmrs.Location;
+import org.openmrs.api.context.Context;
 import org.openmrs.module.dhisreport.api.DHIS2ReportingException;
 import org.openmrs.module.dhisreport.api.db.DHIS2ReportingDAO;
 import org.openmrs.module.dhisreport.api.model.*;
 import org.openmrs.module.dhisreport.api.utils.Period;
+import org.openmrs.module.reporting.dataset.DataSet;
+import org.openmrs.module.reporting.dataset.DataSetColumn;
+import org.openmrs.module.reporting.dataset.DataSetRow;
+import org.openmrs.module.reporting.evaluation.EvaluationContext;
+import org.openmrs.module.reporting.evaluation.EvaluationException;
+import org.openmrs.module.reporting.evaluation.parameter.Mapped;
+import org.openmrs.module.reporting.report.ReportData;
+import org.openmrs.module.reporting.report.ReportRequest;
+import org.openmrs.module.reporting.report.definition.service.ReportDefinitionService;
 import org.springframework.transaction.annotation.Transactional;
+import org.openmrs.module.reporting.report.renderer.RenderingMode;
+import org.openmrs.module.reporting.report.Report;
+import org.openmrs.module.reporting.web.renderers.DefaultWebRenderer;
+import org.openmrs.module.reporting.report.service.ReportService;
 
 /**
  * It is a default implementation of {@link DHIS2ReportingDAO}.
@@ -157,17 +174,26 @@ public class HibernateDHIS2ReportingDAO
      * return String
      * */
     @Override
-    public String evaluateDataValueTemplate( DataValueTemplate dvt, Period period, Location location )
+    public String evaluateDataValueTemplate( DataValueTemplate dvt, Period period, Location location, boolean priority )
         throws DHIS2ReportingException
     {
         String queryString = dvt.getQuery();
         queryString = queryString.replaceAll( "\t", " " );
         queryString = queryString.replaceAll( "\n", " " );
         queryString = queryString.trim();
-        if ( queryString == null || queryString.isEmpty() )
+        String mappedUuid = dvt.getMappeddefinitionuuid();
+        if ( queryString == null || queryString.isEmpty() || (priority && mappedUuid != null) )
         {
-            log.debug( "Empty query for " + dvt.getDataelement().getName() + " : " + dvt.getDisaggregation().getName() );
-            return null;
+            org.openmrs.module.reporting.report.definition.ReportDefinition rrd = Context.getService(
+                ReportDefinitionService.class ).getDefinitionByUuid( dvt.getMappeddefinitionuuid() );
+            try
+            {
+                return getReport( rrd, dvt.getMappeddefinitionlabel(), location, period ).toString();
+            }
+            catch ( EvaluationException ex )
+            {
+                log.debug( "Evaluation Exception : " + ex.getMessage() );
+            }
         }
 
         if ( dvt.potentialUpdateDelete() )
@@ -373,5 +399,45 @@ public class HibernateDHIS2ReportingDAO
                 throw new RuntimeException( "Failed to get the current hibernate session", e );
             }
         }
+    }
+
+    private Object getReport( org.openmrs.module.reporting.report.definition.ReportDefinition repD, String label,
+        Location location, Period period )
+        throws EvaluationException
+    {
+        EvaluationContext context = new EvaluationContext();
+        ReportRequest reportRequest = new ReportRequest();
+        Map<String, Object> param = new HashMap<String, Object>();
+        param.put( "startDate", period.getStartDate() );
+        param.put( "endDate", period.getEndDate() );
+        if ( location.getId() != null )
+        {
+            param.put( "location", location );
+        }
+        context.setParameterValues( param );
+
+        reportRequest.setReportDefinition( new Mapped<org.openmrs.module.reporting.report.definition.ReportDefinition>(
+            repD, context.getParameterValues() ) );
+        ReportDefinitionService rds = Context.getService( ReportDefinitionService.class );
+
+        ReportData reportData = rds.evaluate( reportRequest.getReportDefinition(), context );
+        Object resObj = null;
+        for ( Map.Entry<String, DataSet> entry : reportData.getDataSets().entrySet() )
+        {
+            DataSet map = entry.getValue();
+            Iterator<DataSetRow> mapit = map.iterator();
+            while ( mapit.hasNext() )
+            {
+                DataSetRow dsr = mapit.next();
+                for ( Map.Entry<DataSetColumn, Object> mp : dsr.getColumnValues().entrySet() )
+                {
+                    if ( mp.getKey().getLabel().equals( label ) )
+                    {
+                        resObj = mp.getValue();
+                    }
+                }
+            }
+        }
+        return resObj;
     }
 }

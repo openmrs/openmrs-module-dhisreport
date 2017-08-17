@@ -98,5 +98,18 @@
 		</sql>
 	</diff>
 	
-        
+        <diff>
+		<version>1.3</version>
+		<author>Choxmi Sathsara</author>
+		<date>June 26th 2017</date>
+		<description>
+			Added 'default_report_query' and 'mapped_definition_id' to datavalue_template table
+		</description>
+		<sql>
+			ALTER TABLE `dhisreport_datavalue_template`
+			ADD `defaultreportquery` text DEFAULT NULL,
+                        ADD `mappeddefinitionlabel` text DEFAULT NULL,
+                        ADD `mappeddefinitionuuid` text DEFAULT NULL;
+		</sql>
+	</diff>
 </sqldiff>

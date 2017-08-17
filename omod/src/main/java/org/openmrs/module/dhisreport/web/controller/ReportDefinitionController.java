@@ -140,6 +140,13 @@ public class ReportDefinitionController
         DHIS2ReportingService service = Context.getService( DHIS2ReportingService.class );
 
         DataValueTemplate dvt = service.getDataValueTemplate( dataValueTemplate_id );
+        if ( dataValueTemplate_query.trim().equals( "" ) )
+        {
+            dvt.setDefaultreportquery( dvt.getQuery() );
+            dvt.setMappeddefinitionlabel( null );
+            dvt.setMappeddefinitionuuid( null );
+            dataValueTemplate_query = null;
+        }
         dvt.setQuery( dataValueTemplate_query );
 
         service.saveDataValueTemplate( dvt );
@@ -160,7 +167,7 @@ public class ReportDefinitionController
         //String url = "https://play.dhis2.org/demo/api/dataSets";
         String referer = webRequest.getHeader( "Referer" );
         HttpSession session = request.getSession();
-        
+
         try
         {
             DefaultHttpClient httpClient = new DefaultHttpClient();
@@ -177,7 +184,8 @@ public class ReportDefinitionController
 
             InputStream is = response.getEntity().getContent();
             try
-            {	DHIS2ReportingService service = Context.getService( DHIS2ReportingService.class );
+            {
+                DHIS2ReportingService service = Context.getService( DHIS2ReportingService.class );
                 service.unMarshallandSaveReportTemplates( is );
                 session.setAttribute( WebConstants.OPENMRS_MSG_ATTR, Context.getMessageSourceService().getMessage(
                     "dhisreport.uploadSuccess" ) );

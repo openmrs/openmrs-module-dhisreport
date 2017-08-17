@@ -12,6 +12,14 @@
             <tr><td><spring:message code="dhisreport.dataSet" />: </td><td>${aggregatedValues.dataValueSet.dataSet}</td></tr>
             <tr><td><spring:message code="dhisreport.orgUnit" />: </td><td>${aggregatedValues.dataValueSet.orgUnit}</td></tr>
             <tr><td><spring:message code="dhisreport.period" />: </td><td>${aggregatedValues.dataValueSet.period}</td></tr>
+            <tr><td><spring:message code="dhisreport.reportName" />: </td>
+                <c:if test="${empty resultUuid}">
+                <td><div id='openmrs_error'><spring:message code="dhisreport.unmappedReport" /></div></td>
+                </c:if>
+                <c:if test="${not empty resultUuid}">
+                <td><a href="${pageContext.request.contextPath}/module/reporting/reports/viewReport.form?uuid=${resultUuid}">View Report</a></td>
+                </c:if>
+            </tr>
         </table>
     </div>
     

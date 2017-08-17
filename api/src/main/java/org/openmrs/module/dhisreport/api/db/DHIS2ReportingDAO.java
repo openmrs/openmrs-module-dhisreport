@@ -72,7 +72,7 @@ public interface DHIS2ReportingDAO
 
     public void deleteReportDefinition( ReportDefinition rd );
 
-    public String evaluateDataValueTemplate( DataValueTemplate dvt, Period period, Location location )
+    public String evaluateDataValueTemplate( DataValueTemplate dvt, Period period, Location location, boolean priority )
         throws DHIS2ReportingException;
 
     public DataValueTemplate getDataValueTemplate( Integer id );
