@@ -93,7 +93,7 @@ public class DHIS2ReportingServiceImplTest
         period.setEndDate( endDate );
         for ( ReportDefinition rd : rds )
         {
-            DataValueSet dvs = dhis2ReportingService.evaluateReportDefinition( rd, period, location );
+            DataValueSet dvs = dhis2ReportingService.evaluateReportDefinition( rd, period, location, false );
             List<DataValue> datavalues = dvs.getDataValues();
             for ( DataValue dv : datavalues )
             {
@@ -106,7 +106,7 @@ public class DHIS2ReportingServiceImplTest
 
         for ( ReportDefinition rd : rds )
         {
-            DataValueSet dvs = dhis2ReportingService.evaluateReportDefinition( rd, period, location );
+            DataValueSet dvs = dhis2ReportingService.evaluateReportDefinition( rd, period, location, false );
             List<DataValue> datavalues = dvs.getDataValues();
             for ( DataValue dv : datavalues )
             {

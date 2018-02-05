@@ -29,20 +29,16 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-import org.apache.commons.lang.StringUtils;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
-import org.hisp.dhis.dxf2.importsummary.ImportSummary;
 import org.openmrs.Location;
 import org.openmrs.LocationAttribute;
 import org.openmrs.api.context.Context;
 import org.openmrs.module.dhisreport.api.AggregatedResultSet;
-import org.openmrs.module.dhisreport.api.DHIS2ReportingException;
 import org.openmrs.module.dhisreport.api.DHIS2ReportingService;
 import org.openmrs.module.dhisreport.api.adx.AdxType;
 import org.openmrs.module.dhisreport.api.adx.DataValueType;
 import org.openmrs.module.dhisreport.api.adx.GroupType;
-import org.openmrs.module.dhisreport.api.dhis.Dhis2Server;
 import org.openmrs.module.dhisreport.api.dhis.HttpDhis2Server;
 import org.openmrs.module.dhisreport.api.dxf2.DataValue;
 import org.openmrs.module.dhisreport.api.dxf2.DataValueSet;
@@ -54,7 +50,6 @@ import org.openmrs.module.dhisreport.api.utils.WeeklyPeriod;
 import org.openmrs.web.WebConstants;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.ModelMap;
-import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
@@ -62,6 +57,15 @@ import org.springframework.web.context.request.WebRequest;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpSession;
+import org.openmrs.module.dhisreport.api.model.DataValueTemplate;
+import org.openmrs.module.dhisreport.api.model.ReportDefinition;
+import org.openmrs.module.reporting.evaluation.parameter.Mapped;
+import org.openmrs.module.reporting.report.Report;
+import org.openmrs.module.reporting.report.ReportRequest;
+import org.openmrs.module.reporting.report.definition.service.ReportDefinitionService;
+import org.openmrs.module.reporting.report.renderer.RenderingMode;
+import org.openmrs.module.reporting.report.service.ReportService;
+import org.openmrs.module.reporting.web.renderers.DefaultWebRenderer;
 
 /**
  * The main controller.
@@ -124,6 +128,21 @@ public class ReportController
         {
             model.addAttribute( "dhis2Server", server );
         }
+        ReportDefinition rd = service.getReportDefinition( reportDefinition_id );
+        boolean trigger = false;
+        for ( DataValueTemplate dvt : rd.getDataValueTemplates() )
+        {
+            if ( (dvt.getQuery() == null || dvt.getQuery().equals( "" ) || dvt.getQuery().equals( " " ))
+                && dvt.getMappeddefinitionlabel() == null )
+            {
+                trigger = true;
+            }
+        }
+        if ( trigger )
+        {
+            String msg = "Report contains unmapped definitions";
+            model.addAttribute( "nullPointer", msg );
+        }
     }
 
     @RequestMapping( value = "/module/dhisreport/executeReport", method = RequestMethod.POST )
@@ -132,8 +151,8 @@ public class ReportController
     String OU_Code, @RequestParam( value = "resultDestination", required = true )
     String destination, @RequestParam( value = "date", required = true )
     String dateStr, @RequestParam( value = "frequency", required = true )
-    String freq, @RequestParam( value = "mappingType", required = true )
-    String mappingType, WebRequest webRequest, HttpServletRequest request )
+    String freq, @RequestParam( value = "prior", required = true )
+    String prior, WebRequest webRequest, HttpServletRequest request )
         throws Exception
     {
         DHIS2ReportingService service = Context.getService( DHIS2ReportingService.class );
@@ -236,76 +255,65 @@ public class ReportController
             return "redirect:" + referer;
         }
 
-        if ( mappingType.equalsIgnoreCase( "SQL" ) )
+        boolean priority = false;
+        if ( prior.equals( "report" ) )
         {
-            for ( Location l : locationListFinal )
-            {
-                AggregatedResultSet agrs = new AggregatedResultSet();
-                DataValueSet dvs = service.evaluateReportDefinition(
-                    service.getReportDefinition( reportDefinition_id ), period, l );
-                for ( LocationAttribute la : l.getActiveAttributes() )
-                {
-                    if ( la.getAttributeType().getName().equals( "CODE" ) )
-                        dvs.setOrgUnit( la.getValue().toString() );
-                }
-                // Set OrgUnit code into DataValueSet
-
-                List<DataValue> datavalue = dvs.getDataValues();
-                Map<DataElement, String> deset = new HashMap<DataElement, String>();
-                for ( DataValue dv : datavalue )
-                {
-
-                    DataElement detrmp = service.getDataElementByCode( dv.getDataElement() );
-                    // System.out.println( detrmp.getName() + detrmp.getCode() );
-                    deset.put( detrmp, dv.getValue() );
-                }
-                agrs.setDataValueSet( dvs );
-                agrs.setDataElementMap( deset );
-                AdxType adxType = getAdxType( dvs, dateStr );
-
-                if ( destination.equals( "post" ) )
-                {
-                    ImportSummaries importSummaries = Context.getService( DHIS2ReportingService.class ).postAdxReport(
-                        adxType );
-                    agrs.setImportSummaries( importSummaries );
-                }
-                aggregatedList.add( agrs );
-            }
+            priority = true;
         }
 
-        if ( mappingType.equalsIgnoreCase( "Reporting" ) )
+        for ( Location l : locationListFinal )
         {
-            for ( Location l : locationListFinal )
+            AggregatedResultSet agrs = new AggregatedResultSet();
+            DataValueSet dvs = service.evaluateReportDefinition( service.getReportDefinition( reportDefinition_id ),
+                period, l, priority );
+            for ( LocationAttribute la : l.getActiveAttributes() )
             {
-                AggregatedResultSet agrs = new AggregatedResultSet();
-                DataValueSet dvs = service.generateReportingReportDefinition( service
-                    .getReportDefinition( reportDefinition_id ), period, l );
-                for ( LocationAttribute la : l.getActiveAttributes() )
-                {
-                    if ( la.getAttributeType().getName().equals( "CODE" ) )
-                        dvs.setOrgUnit( la.getValue().toString() );
-                }
-                List<DataValue> datavalue = dvs.getDataValues();
-                Map<DataElement, String> deset = new HashMap<DataElement, String>();
-                for ( DataValue dv : datavalue )
-                {
-
-                    DataElement detrmp = service.getDataElementByCode( dv.getDataElement() );
-                    // System.out.println( detrmp.getName() + detrmp.getCode() );
-                    deset.put( detrmp, dv.getValue() );
-                }
-                agrs.setDataValueSet( dvs );
-                agrs.setDataElementMap( deset );
-                AdxType adxType = getAdxType( dvs, dateStr );
-
-                if ( destination.equals( "post" ) )
-                {
-                    ImportSummaries importSummaries = Context.getService( DHIS2ReportingService.class ).postAdxReport(
-                        adxType );
-                    agrs.setImportSummaries( importSummaries );
-                }
-                aggregatedList.add( agrs );
+                if ( la.getAttributeType().getName().equals( "CODE" ) )
+                    dvs.setOrgUnit( la.getValue().toString() );
             }
+            // Set OrgUnit code into DataValueSet
+
+            List<DataValue> datavalue = dvs.getDataValues();
+            Map<DataElement, String> deset = new HashMap<DataElement, String>();
+            for ( DataValue dv : datavalue )
+            {
+
+                DataElement detrmp = service.getDataElementByCode( dv.getDataElement() );
+                // System.out.println( detrmp.getName() + detrmp.getCode() );
+                deset.put( detrmp, dv.getValue() );
+            }
+            agrs.setDataValueSet( dvs );
+            agrs.setDataElementMap( deset );
+            AdxType adxType = getAdxType( dvs, dateStr );
+
+            if ( destination.equals( "post" ) )
+            {
+                ImportSummaries importSummaries = Context.getService( DHIS2ReportingService.class ).postAdxReport(
+                    adxType );
+                agrs.setImportSummaries( importSummaries );
+            }
+            aggregatedList.add( agrs );
+        }
+
+        org.openmrs.module.reporting.report.definition.ReportDefinition rrd = Context.getService(
+            ReportDefinitionService.class ).getDefinitionByUuid(
+            service.getReportDefinition( reportDefinition_id ).getReportingReportId() );
+
+        Map<String, Object> param = new HashMap<String, Object>();
+        param.put( "startDate", period.getStartDate() );
+        param.put( "endDate", period.getEndDate() );
+        if ( rrd != null )
+        {
+            ReportRequest rq = new ReportRequest();
+            rq.setReportDefinition( new Mapped<org.openmrs.module.reporting.report.definition.ReportDefinition>( rrd,
+                param ) );
+            rq.setRenderingMode( new RenderingMode( new DefaultWebRenderer(), "Web", null, 100 ) );
+            Report report = Context.getService( ReportService.class ).runReport( rq );
+            model.addAttribute( "resultUuid", rq.getUuid() );
+        }
+        else
+        {
+            model.addAttribute( "resultUuid", null );
         }
         model.addAttribute( "user", Context.getAuthenticatedUser() );
         model.addAttribute( "aggregatedList", aggregatedList );

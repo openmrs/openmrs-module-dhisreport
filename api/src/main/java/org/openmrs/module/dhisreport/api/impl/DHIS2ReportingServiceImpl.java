@@ -221,7 +221,7 @@ public class DHIS2ReportingServiceImpl
     public String evaluateDataValueTemplate( DataValueTemplate dv, Period period, Location location )
         throws DHIS2ReportingException
     {
-        return dao.evaluateDataValueTemplate( dv, period, location );
+        return dao.evaluateDataValueTemplate( dv, period, location, false );
     }
 
     /**
@@ -234,7 +234,8 @@ public class DHIS2ReportingServiceImpl
      * @return
      */
     @Override
-    public DataValueSet evaluateReportDefinition( ReportDefinition reportDefinition, Period period, Location location )
+    public DataValueSet evaluateReportDefinition( ReportDefinition reportDefinition, Period period, Location location,
+        boolean priority )
     {
         Collection<DataValueTemplate> templates = reportDefinition.getDataValueTemplates();
         DataValueSet dataValueSet = new DataValueSet();
@@ -255,7 +256,7 @@ public class DHIS2ReportingServiceImpl
 
             try
             {
-                String value = dao.evaluateDataValueTemplate( dvt, period, location );
+                String value = dao.evaluateDataValueTemplate( dvt, period, location, priority );
                 if ( value != null )
                 {
                     dataValue.setValue( value );

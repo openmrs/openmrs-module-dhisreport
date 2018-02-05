@@ -66,6 +66,8 @@ $(document).ready(function() {
 						<!--
                         <td><b><u>${dataValueTemplate.disaggregation.code}</u></b></td>
                         -->
+                                        <c:choose>
+                                            <c:when test="${dataValueTemplate.query != ' '}">
 						<td><i><pre class="sh_sql"
 									id="reportDefinition_query${dataValueTemplate.id }">${dataValueTemplate.query}</pre></i></td>
 
@@ -74,6 +76,14 @@ $(document).ready(function() {
 							id="reportDefinition_edit${dataValueTemplate.id }"><spring:message
 									code="dhisreport.Edit" /></a> <span
 							id="reportDefinition_save${dataValueTemplate.id }"></span></td>
+                                            </c:when>
+                                            <c:otherwise>
+                                                <td><i><pre class="sh_sql"
+									id="reportDefinition_query${dataValueTemplate.id }"><div id="openmrs_msg"><spring:message code="Mapped with ${dataValueTemplate.mappeddefinitionlabel}" /> </div></pre></i></td>
+
+						<td></td>
+                                            </c:otherwise>
+                                        </c:choose>
 					</tr>
 				</c:forEach>
 			</tbody>
