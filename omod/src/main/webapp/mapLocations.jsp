@@ -31,7 +31,10 @@
 				</select></td>
 			<tr>
 				<td />
-				<td><input value="Map Locations" name="submit" type="submit"></td>
+					<c:if test="${orgunits.size() > 0}">
+						<td><input value="Map Locations" name="submit" type="submit"></td>
+					</c:if>
+
 			</tr>
 		</tbody>
 	</table>
