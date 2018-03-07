@@ -135,7 +135,8 @@ public class Dhis2ReportResourceController
         }
 
         period = new MonthlyPeriod( new SimpleDateFormat( "yyyy-MM-dd" ).parse( timeperiod ) );
-        DataValueSet dvs = service.evaluateReportDefinition( service.getReportDefinitionByCode( reportId ), period, l, false );
+        DataValueSet dvs = service.evaluateReportDefinition( service.getReportDefinitionByCode( reportId ), period, l,
+            false );
 
         for ( LocationAttribute la : l.getActiveAttributes() )
         {
@@ -360,7 +361,8 @@ public class Dhis2ReportResourceController
         }
 
         period = new MonthlyPeriod( new SimpleDateFormat( "yyyy-MM-dd" ).parse( timeperiod ) );
-        DataValueSet dvs = service.evaluateReportDefinition( service.getReportDefinitionByCode( reportId ), period, l, false );
+        DataValueSet dvs = service.evaluateReportDefinition( service.getReportDefinitionByCode( reportId ), period, l,
+            false );
 
         for ( LocationAttribute la : l.getActiveAttributes() )
         {
