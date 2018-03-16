@@ -9,23 +9,7 @@
  */
 package org.openmrs.module.dhisreport.api.adx2;
 
-import javax.xml.bind.annotation.XmlElement;
-
-public class DataStructure
-    extends BaseNamedType
+public class ConceptIdentity
+    extends BaseType
 {
-
-    @XmlElement( name = "DataStructureComponents" )
-    private DataStructureComponents components;
-
-    public DataStructureComponents getComponents()
-    {
-        return components;
-    }
-
-    public void setComponents( DataStructureComponents components )
-    {
-        this.components = components;
-    }
-
 }

@@ -10,22 +10,25 @@
 package org.openmrs.module.dhisreport.api.adx2;
 
 import javax.xml.bind.annotation.XmlElement;
+import javax.xml.bind.annotation.XmlElementWrapper;
+import javax.xml.bind.annotation.XmlElements;
+import java.util.List;
 
-public class DataStructure
-    extends BaseNamedType
+public class DataStructureComponents
+    extends BaseType
 {
 
-    @XmlElement( name = "DataStructureComponents" )
-    private DataStructureComponents components;
+    @XmlElementWrapper( name = "DimensionList" )
+    @XmlElements( { @XmlElement( name = "Dimension" ), @XmlElement( name = "TimeDimension" ) } )
+    private List<Dimension> dimensions;
 
-    public DataStructureComponents getComponents()
+    public List<Dimension> getDimensions()
     {
-        return components;
+        return dimensions;
     }
 
-    public void setComponents( DataStructureComponents components )
+    public void setDimensions( List<Dimension> dimensions )
     {
-        this.components = components;
+        this.dimensions = dimensions;
     }
-
 }

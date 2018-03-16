@@ -11,21 +11,21 @@ package org.openmrs.module.dhisreport.api.adx2;
 
 import javax.xml.bind.annotation.XmlElement;
 
-public class DataStructure
-    extends BaseNamedType
+public class DataStructures
+    extends BaseType
 {
 
-    @XmlElement( name = "DataStructureComponents" )
-    private DataStructureComponents components;
+    @XmlElement( name = "DataStructure" )
+    private DataStructure dataStructure;
 
-    public DataStructureComponents getComponents()
+    public DataStructure getDataStructure()
     {
-        return components;
+        return dataStructure;
     }
 
-    public void setComponents( DataStructureComponents components )
+    public void setDataStructure( DataStructure dataStructure )
     {
-        this.components = components;
+        this.dataStructure = dataStructure;
     }
 
 }

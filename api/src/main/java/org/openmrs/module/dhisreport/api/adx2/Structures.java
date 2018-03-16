@@ -17,17 +17,16 @@ public class Structures
     extends BaseType
 {
 
-    @XmlElementWrapper( name = "Codelists", required = true )
+    @XmlElementWrapper( name = "Codelists" )
     @XmlElement( name = "Codelist" )
     private List<CodeList> codeLists;
 
-    @XmlElementWrapper( name = "Concepts", required = true )
+    @XmlElementWrapper( name = "Concepts" )
     @XmlElement( name = "ConceptScheme" )
     private List<ConceptScheme> conceptSchemes;
 
-    @XmlElementWrapper( name = "DataStructures", required = true )
-    @XmlElement( name = "DataStructure" )
-    private List<DataStructure> dataStructures;
+    @XmlElement( name = "DataStructures" )
+    private DataStructures dataStructures;
 
     public List<CodeList> getCodeLists()
     {
@@ -49,12 +48,12 @@ public class Structures
         this.conceptSchemes = conceptSchemes;
     }
 
-    public List<DataStructure> getDataStructures()
+    public DataStructures getDataStructures()
     {
         return dataStructures;
     }
 
-    public void setDataStructures( List<DataStructure> dataStructures )
+    public void setDataStructures( DataStructures dataStructures )
     {
         this.dataStructures = dataStructures;
     }

@@ -11,21 +11,21 @@ package org.openmrs.module.dhisreport.api.adx2;
 
 import javax.xml.bind.annotation.XmlElement;
 
-public class DataStructure
-    extends BaseNamedType
+public class TimeDimension
+    extends Dimension
 {
 
-    @XmlElement( name = "DataStructureComponents" )
-    private DataStructureComponents components;
+    @XmlElement( name = "LocalRepresentation" )
+    private LocalRepresentation representation;
 
-    public DataStructureComponents getComponents()
+    public LocalRepresentation getRepresentation()
     {
-        return components;
+        return representation;
     }
 
-    public void setComponents( DataStructureComponents components )
+    public void setRepresentation( LocalRepresentation representation )
     {
-        this.components = components;
+        this.representation = representation;
     }
 
 }
