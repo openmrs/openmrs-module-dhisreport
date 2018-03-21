@@ -4,6 +4,7 @@ import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertTrue;
 
 import java.text.SimpleDateFormat;
+import java.util.Collection;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
@@ -12,6 +13,7 @@ import java.util.Map;
 import javax.xml.bind.JAXBContext;
 import javax.xml.bind.Unmarshaller;
 
+import org.apache.commons.collections.CollectionUtils;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.apache.log4j.BasicConfigurator;
@@ -20,6 +22,7 @@ import org.junit.Test;
 import org.openmrs.Location;
 import org.openmrs.LocationAttribute;
 import org.openmrs.LocationAttributeType;
+import org.openmrs.api.context.Context;
 import org.openmrs.module.dhisreport.api.DHIS2ReportingService;
 import org.openmrs.module.dhisreport.api.dxf2.DataValue;
 import org.openmrs.module.dhisreport.api.dxf2.DataValueSet;
@@ -36,7 +39,6 @@ import org.openmrs.module.reporting.report.definition.PeriodIndicatorReportDefin
 import org.openmrs.module.reporting.report.definition.service.ReportDefinitionService;
 import org.openmrs.test.BaseModuleContextSensitiveTest;
 import org.springframework.core.io.ClassPathResource;
-import org.openmrs.api.context.Context;
 
 /**
  * Tests {@link $DHIS2ReportingService} .
@@ -203,6 +205,30 @@ public class DHIS2ReportingServiceImplTest
         assertEquals( "Maternal and Child Health", rd.get( 0 ).getName() );
         assertEquals( "Monthly", rd.get( 0 ).getPeriodType() );
         assertEquals( "sI82CctvS1A", rd.get( 0 ).getUid() );
+    }
+
+    @Test
+    public void shouldunMarshallandSaveAdxReportTemplates()
+        throws Exception
+    {
+
+        ReportTemplates rt = dhis2ReportingService.getReportTemplates();
+        final int countDataElements = rt.getDataElements().size();
+        final int countDisaggregations = rt.getDisaggregations().size();
+        final List<ReportDefinition> initialReportDefs = rt.getReportDefinitions();
+        ClassPathResource resource = new ClassPathResource( "adxReportDefinition.xml" );
+        dhis2ReportingService.unMarshallAdxAndSaveReportTemplates( resource.getInputStream() );
+
+        rt = dhis2ReportingService.getReportTemplates();
+        assertEquals( countDataElements + 3, rt.getDataElements().size() );
+        assertEquals( countDisaggregations + 12, rt.getDisaggregations().size() );
+        List<ReportDefinition> newReportDefs = rt.getReportDefinitions();
+        assertEquals( initialReportDefs.size() + 1, newReportDefs.size() );
+        Collection<ReportDefinition> createdReports = CollectionUtils.subtract( newReportDefs, initialReportDefs );
+        assertEquals( 1, createdReports.size() );
+        ReportDefinition createdReport = createdReports.iterator().next();
+        assertEquals( 14, createdReport.getDataValueTemplates().size() );
+
     }
 
     @Test

@@ -1,34 +1,38 @@
 /**
- *  Copyright 2012 Society for Health Information Systems Programmes, India (HISP India)
+ * Copyright 2012 Society for Health Information Systems Programmes, India (HISP India)
  *
- *  This file is part of DHIS2 Reporting module.
+ * This file is part of DHIS2 Reporting module.
  *
- *  DHIS2 Reporting module is free software: you can redistribute it and/or modify
- *  it under the terms of the GNU General Public License as published by
- *  the Free Software Foundation, either version 3 of the License, or
- *  (at your option) any later version.
-
- *  DHIS2 Reporting module is distributed in the hope that it will be useful,
- *  but WITHOUT ANY WARRANTY; without even the implied warranty of
- *  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- *  GNU General Public License for more details.
+ * DHIS2 Reporting module is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation, either version 3 of the License, or
+ * (at your option) any later version.
  *
- *  You should have received a copy of the GNU General Public License
- *  along with DHIS2 Reporting module.  If not, see <http://www.gnu.org/licenses/>.
+ * DHIS2 Reporting module is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
  *
+ * You should have received a copy of the GNU General Public License
+ * along with DHIS2 Reporting module.  If not, see <http://www.gnu.org/licenses/>.
  **/
 package org.openmrs.module.dhisreport.api.impl;
 
 import java.io.InputStream;
 import java.io.OutputStream;
-import java.util.*;
+import java.util.ArrayList;
+import java.util.Collection;
+import java.util.HashMap;
+import java.util.Iterator;
+import java.util.List;
+import java.util.Map;
 import java.util.Map.Entry;
+import java.util.Set;
 
 import javax.xml.bind.JAXBContext;
 import javax.xml.bind.Marshaller;
 import javax.xml.bind.Unmarshaller;
 
-import org.apache.commons.lang.StringUtils;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.hisp.dhis.dxf2.importsummary.ImportSummary;
@@ -39,26 +43,31 @@ import org.openmrs.api.impl.BaseOpenmrsService;
 import org.openmrs.module.dhisreport.api.DHIS2ReportingException;
 import org.openmrs.module.dhisreport.api.DHIS2ReportingService;
 import org.openmrs.module.dhisreport.api.adx.AdxType;
+import org.openmrs.module.dhisreport.api.adx.ContentDataStructureConsumer;
 import org.openmrs.module.dhisreport.api.db.DHIS2ReportingDAO;
 import org.openmrs.module.dhisreport.api.dhis.HttpDhis2Server;
-import org.openmrs.module.dhisreport.api.importsummary.ImportSummaries;
-import org.openmrs.module.dhisreport.api.model.*;
 import org.openmrs.module.dhisreport.api.dxf2.DataValue;
 import org.openmrs.module.dhisreport.api.dxf2.DataValueSet;
+import org.openmrs.module.dhisreport.api.importsummary.ImportSummaries;
+import org.openmrs.module.dhisreport.api.model.DataElement;
+import org.openmrs.module.dhisreport.api.model.DataValueTemplate;
+import org.openmrs.module.dhisreport.api.model.Disaggregation;
 import org.openmrs.module.dhisreport.api.model.ReportDefinition;
+import org.openmrs.module.dhisreport.api.model.ReportTemplates;
 import org.openmrs.module.dhisreport.api.utils.Period;
 import org.openmrs.module.reporting.dataset.DataSet;
 import org.openmrs.module.reporting.dataset.DataSetRow;
 import org.openmrs.module.reporting.evaluation.EvaluationContext;
 import org.openmrs.module.reporting.evaluation.MissingDependencyException;
-import org.openmrs.module.reporting.evaluation.parameter.*;
+import org.openmrs.module.reporting.evaluation.parameter.Parameter;
+import org.openmrs.module.reporting.evaluation.parameter.ParameterException;
+import org.openmrs.module.reporting.evaluation.parameter.Parameterizable;
+import org.openmrs.module.reporting.evaluation.parameter.ParameterizableUtil;
 import org.openmrs.module.reporting.report.ReportData;
-import org.openmrs.module.reporting.report.ReportRequest;
-import org.openmrs.module.reporting.report.definition.*;
+import org.openmrs.module.reporting.report.definition.PeriodIndicatorReportDefinition;
 import org.openmrs.module.reporting.report.definition.service.ReportDefinitionService;
 import org.openmrs.module.reporting.report.service.ReportService;
 import org.openmrs.module.reporting.report.util.PeriodIndicatorReportUtil;
-import org.springframework.transaction.annotation.Transactional;
 
 /**
  * It is a default implementation of {@link DHIS2ReportingService}.
@@ -225,9 +234,9 @@ public class DHIS2ReportingServiceImpl
     }
 
     /**
-     * Create a datavalueset report TODO: handle the sql query exceptions which
-     * are bound to happen
-     * 
+     * Create a datavalueset report TODO: handle the sql query exceptions which are
+     * bound to happen
+     *
      * @param reportDefinition
      * @param period
      * @param location
@@ -387,6 +396,35 @@ public class DHIS2ReportingServiceImpl
         }
     }
 
+    /**
+     *
+     * @see DHIS2ReportingService#unMarshallAdxAndSaveReportTemplates(InputStream)
+     */
+    public void unMarshallAdxAndSaveReportTemplates( InputStream is )
+        throws Exception
+    {
+        ContentDataStructureConsumer dsdConsumer = Context.getRegisteredComponent( "dsdConsumer",
+            ContentDataStructureConsumer.class );
+        ReportTemplates reportTemplates = dsdConsumer.consume( is );
+
+        for ( DataElement de : reportTemplates.getDataElements() )
+        {
+            saveDataElement( de );
+        }
+        for ( Disaggregation disagg : reportTemplates.getDisaggregations() )
+        {
+            saveDisaggregation( disagg );
+        }
+        for ( ReportDefinition rd : reportTemplates.getReportDefinitions() )
+        {
+            for ( DataValueTemplate dvt : rd.getDataValueTemplates() )
+            {
+                dvt.setReportDefinition( rd );
+            }
+            saveReportDefinition( rd );
+        }
+    }
+
     public void unMarshallandSaveReportTemplates( InputStream is )
         throws Exception
     {
@@ -404,15 +442,16 @@ public class DHIS2ReportingServiceImpl
         }
         for ( ReportDefinition rd : reportTemplates.getReportDefinitions() )
         {
-            //            System.out.println( "entered my choice loop------------------------------------" );
-            //            System.out.println( rd.getName() );
+            // System.out.println( "entered my choice
+            // loop------------------------------------" );
+            // System.out.println( rd.getName() );
             for ( DataValueTemplate dvt : rd.getDataValueTemplates() )
             {
-                //                System.out.println( "davt--------------------------" );
+                // System.out.println( "davt--------------------------" );
                 dvt.setReportDefinition( rd );
 
-                //                saveDataValueTemplate( dvt );
-                //                System.out.println( dvt.getId() );
+                // saveDataValueTemplate( dvt );
+                // System.out.println( dvt.getId() );
             }
             saveReportDefinition( rd );
         }

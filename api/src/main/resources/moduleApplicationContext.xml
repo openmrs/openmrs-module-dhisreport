@@ -19,7 +19,7 @@
 
     <!-- Add here beans related to the API context -->
 
-	
+
     <!-- Services accessible via Context.getService() -->
     <bean parent="serviceContext">
         <property name="moduleService">
@@ -54,5 +54,11 @@
             </list>
         </property>
     </bean>
+
+    <context:spring-configured />
+
+    <context:component-scan base-package="org.sdmxsource" />
+
+    <bean id="rdlf" class="org.sdmxsource.util.factory.SdmxSourceReadableDataLocationFactory" />
 	
 </beans>

@@ -1,0 +1,55 @@
+<mes:Structure xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+               xmlns:com="http://www.sdmx.org/resources/sdmxml/schemas/v2_1/common"
+               xmlns:str="http://www.sdmx.org/resources/sdmxml/schemas/v2_1/structure"
+               xmlns:mes="http://www.sdmx.org/resources/sdmxml/schemas/v2_1/message"
+               xsi:schemaLocation="http://www.sdmx.org/resources/sdmxml/schemas/v2_1/message ../schema/sdmx/SDMXMessage.xsd">
+
+    <mes:Header>
+        <mes:ID>ADX_STRUCTURES</mes:ID>
+        <mes:Test>false</mes:Test>
+        <mes:Prepared>2015-05-01T14:30:47.000Z</mes:Prepared>
+        <mes:Sender id="IHE_QRPH">
+            <com:Name xml:lang="en">QRPH Technical Committee</com:Name>
+        </mes:Sender>
+    </mes:Header>
+    <mes:Structures>
+        <str:OrganisationSchemes>
+            <str:AgencyScheme id="AGENCIES" agencyID="IHE_QRPH">
+                <com:Name>List of AGENCY identifiers maintained by IHE QRPH</com:Name>
+                <str:Agency id="IHE_QRPH">
+                    <com:Name>
+                        IHE Quality Research and Public Health Technical Committee
+                    </com:Name>
+                </str:Agency>
+            </str:AgencyScheme>
+        </str:OrganisationSchemes>
+        <str:Concepts>
+            <!--  ADX Mandatory concepts  -->
+            <str:ConceptScheme id="ADX_MANDATORY_CONCEPTS" agencyID="IHE_QRPH" version="1.0">
+                <com:Name xml:lang="en">Mandatory concepts defined by IHE ADX profile</com:Name>
+                <!--
+                  There is no default representation for these concepts.  An Agency which makes
+                                      use of these to construct an ADX DataStructure has to provide a local representation
+                -->
+                <str:Concept id="dataElement">
+                    <com:Name xml:lang="en">Subject of the data measure</com:Name>
+                </str:Concept>
+                <str:Concept id="orgUnit">
+                    <com:Name xml:lang="en">Spatial dimension of the measure</com:Name>
+                </str:Concept>
+                <str:Concept id="period">
+                    <com:Name xml:lang="en">Temporal dimension of the measure</com:Name>
+                </str:Concept>
+                <!--
+                 The value concept is represented by an integer or real number (xsd:decimal)
+                -->
+                <str:Concept id="value">
+                    <com:Name xml:lang="en">Value of the data measure</com:Name>
+                    <str:CoreRepresentation>
+                        <str:TextFormat textType="Decimal"/>
+                    </str:CoreRepresentation>
+                </str:Concept>
+            </str:ConceptScheme>
+        </str:Concepts>
+    </mes:Structures>
+</mes:Structure>

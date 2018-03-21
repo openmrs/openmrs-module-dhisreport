@@ -1,39 +1,42 @@
 /**
- *  Copyright 2012 Society for Health Information Systems Programmes, India (HISP India)
+ * Copyright 2012 Society for Health Information Systems Programmes, India (HISP India)
  *
- *  This file is part of DHIS2 Reporting module.
+ * This file is part of DHIS2 Reporting module.
  *
- *  DHIS2 Reporting module is free software: you can redistribute it and/or modify
- *  it under the terms of the GNU General Public License as published by
- *  the Free Software Foundation, either version 3 of the License, or
- *  (at your option) any later version.
-
- *  DHIS2 Reporting module is distributed in the hope that it will be useful,
- *  but WITHOUT ANY WARRANTY; without even the implied warranty of
- *  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- *  GNU General Public License for more details.
+ * DHIS2 Reporting module is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation, either version 3 of the License, or
+ * (at your option) any later version.
  *
- *  You should have received a copy of the GNU General Public License
- *  along with DHIS2 Reporting module.  If not, see <http://www.gnu.org/licenses/>.
+ * DHIS2 Reporting module is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
  *
+ * You should have received a copy of the GNU General Public License
+ * along with DHIS2 Reporting module.  If not, see <http://www.gnu.org/licenses/>.
  **/
 package org.openmrs.module.dhisreport.api;
+
+import org.hisp.dhis.dxf2.importsummary.ImportSummary;
+import org.openmrs.Location;
+import org.openmrs.api.OpenmrsService;
+import org.openmrs.module.dhisreport.api.adx.AdxType;
+import org.openmrs.module.dhisreport.api.db.DHIS2ReportingDAO;
+import org.openmrs.module.dhisreport.api.dhis.HttpDhis2Server;
+import org.openmrs.module.dhisreport.api.dxf2.DataValueSet;
+import org.openmrs.module.dhisreport.api.importsummary.ImportSummaries;
+import org.openmrs.module.dhisreport.api.model.DataElement;
+import org.openmrs.module.dhisreport.api.model.DataValueTemplate;
+import org.openmrs.module.dhisreport.api.model.Disaggregation;
+import org.openmrs.module.dhisreport.api.model.ReportDefinition;
+import org.openmrs.module.dhisreport.api.model.ReportTemplates;
+import org.openmrs.module.dhisreport.api.utils.Period;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.io.InputStream;
 import java.io.OutputStream;
 import java.util.Collection;
-
-import org.openmrs.module.dhisreport.api.adx.AdxType;
-import org.openmrs.module.dhisreport.api.db.DHIS2ReportingDAO;
-import org.openmrs.module.dhisreport.api.dxf2.DataValueSet;
-import org.hisp.dhis.dxf2.importsummary.ImportSummary;
-import org.openmrs.Location;
-import org.openmrs.api.OpenmrsService;
-import org.openmrs.module.dhisreport.api.dhis.HttpDhis2Server;
-import org.openmrs.module.dhisreport.api.importsummary.ImportSummaries;
-import org.openmrs.module.dhisreport.api.model.*;
-import org.openmrs.module.dhisreport.api.utils.Period;
-import org.springframework.transaction.annotation.Transactional;
 
 /**
  * This service exposes module's core functionality. It is a Spring managed bean
@@ -43,7 +46,7 @@ import org.springframework.transaction.annotation.Transactional;
  * <code>
  * Context.getService(DHIS2ReportingService.class).someMethod();
  * </code>
- * 
+ *
  * @see org.openmrs.api.context.Context
  */
 @Transactional
@@ -54,9 +57,10 @@ public interface DHIS2ReportingService
     // -----------------------------------------------------------------------
     // DHIS Rest API calls
     // -----------------------------------------------------------------------
+
     /**
      * Initialize url and credentials for DHIS server
-     * 
+     *
      * @param server
      */
     public void setDhis2Server( HttpDhis2Server server );
@@ -86,6 +90,7 @@ public interface DHIS2ReportingService
     // -----------------------------------------------------------------------
     // Data access methods
     // -----------------------------------------------------------------------
+
     /**
      * @param id
      * @return
@@ -187,11 +192,21 @@ public interface DHIS2ReportingService
     // -----------------------------------------------------------------------
     // ReportTemplates (DHIS2 Data Structure Definition)
     // -----------------------------------------------------------------------
+
     /**
      * @param rt
      */
     @Transactional
     public void saveReportTemplates( ReportTemplates rt );
+
+    /**
+     * Reads the ADX contents of the specified InputStream to generate and save report templates
+     *
+     * @param is the {@link InputStream}
+     * @throws Exception
+     */
+    void unMarshallAdxAndSaveReportTemplates( InputStream is )
+        throws Exception;
 
     /**
      * @param is
@@ -213,6 +228,7 @@ public interface DHIS2ReportingService
     // -----------------------------------------------------------------------
     // ReportEvaluation
     // -----------------------------------------------------------------------
+
     /**
      * @param dv
      * @param period

@@ -27,7 +27,6 @@
             <Codelist xmlns="http://www.sdmx.org/resources/sdmxml/schemas/v2_1/structure" id="CL_DATAELEMENT" agencyID="ZW_MOHCC" version="1.0">
                 <Name xmlns="http://www.sdmx.org/resources/sdmxml/schemas/v2_1/common" xml:lang="en">DataElement code list</Name>
                 <Code id="ATB_005_D38">
-                    <Annotations />
                     <Name xmlns="http://www.sdmx.org/resources/sdmxml/schemas/v2_1/common" xml:lang="en">
                         ATB - D PLHIV in care who stopped treatment whilst on Second line regimen
                     </Name>
@@ -66,20 +65,20 @@
                 </Code>
             </Codelist>
             <Codelist xmlns="http://www.sdmx.org/resources/sdmxml/schemas/v2_1/structure" id="CL_ATB_SUMMARY_AGEGRP" agencyID="ZW_MOHCC" version="1.0">
-                <Name xmlns="http://www.sdmx.org/resources/sdmxml/schemas/v2_1/common" xml:lang="en">&lt;=5 3-17 18+</Name>
-                <Code id="P0M/P3M">
+                <Name xmlns="http://www.sdmx.org/resources/sdmxml/schemas/v2_1/common" xml:lang="en">&lt;=5 6-17 18+</Name>
+                <Code id="P0Y-P6Y">
                     <Name xmlns="http://www.sdmx.org/resources/sdmxml/schemas/v2_1/common" xml:lang="en">&lt;= 5 Years</Name>
                 </Code>
-                <Code id="P3M/P10M">
-                    <Name xmlns="http://www.sdmx.org/resources/sdmxml/schemas/v2_1/common" xml:lang="en">3-17 Years</Name>
+                <Code id="P6Y-P12Y">
+                    <Name xmlns="http://www.sdmx.org/resources/sdmxml/schemas/v2_1/common" xml:lang="en">6-17 Years</Name>
                 </Code>
-                <Code id="P13M/P12M">
+                <Code id="P18Y-P9999Y">
                     <Name xmlns="http://www.sdmx.org/resources/sdmxml/schemas/v2_1/common" xml:lang="en">Over 18 Years</Name>
                 </Code>
             </Codelist>
         </str:Codelists>
         <str:Concepts>
-            <str:ConceptScheme id="ADX_MANDATORY_CONCEPTS" agencyID="IHE_QRPH" version="1.0" isExternalReference="true" structureURL="qrph_structures.xml">
+            <str:ConceptScheme id="ADX_MANDATORY_CONCEPTS" agencyID="IHE_QRPH" version="1.0" isExternalReference="false" >
                 <com:Name xml:lang="en">Mandatory concepts defined by IHE ADX profile</com:Name>
             </str:ConceptScheme>
             <ConceptScheme xmlns="http://www.sdmx.org/resources/sdmxml/schemas/v2_1/structure" id="ZW_MOHCC_CONCEPTS" agencyID="ZW_MOHCC" version="1.0">
@@ -161,7 +160,7 @@
                     <str:MeasureList>
                         <str:PrimaryMeasure>
                             <str:ConceptIdentity>
-                                <Ref id="value" maintainableParentID="ADX_MANDATORY_CONCEPTS" maintainableParentVersion="1.0" agencyID="IHE"/>
+                                <Ref id="value" maintainableParentID="ADX_MANDATORY_CONCEPTS" maintainableParentVersion="1.0" agencyID="IHE_QRPH"/>
                             </str:ConceptIdentity>
                         </str:PrimaryMeasure>
                     </str:MeasureList>
