@@ -115,8 +115,8 @@ public class ContentDataStructureConsumer
             }
             else
             {
-                Set<String> disAggNames = generateDisaggregationNames( dataStructure, annotations );
-                dataElementDisAggMap.get( dataElement ).addAll( disAggNames );
+                Set<String> disAggIds = generateDisaggregationIds( dataStructure, annotations );
+                dataElementDisAggMap.get( dataElement ).addAll( disAggIds );
             }
         }
 
@@ -127,9 +127,9 @@ public class ContentDataStructureConsumer
         }
 
         Map<String, Disaggregation> disAggIdObjectMap = new HashMap<String, Disaggregation>();
-        for ( String dName : uniqueDisAggs )
+        for ( String disAggId : uniqueDisAggs )
         {
-            disAggIdObjectMap.put( dName, getDisaggregation( dName ) );
+            disAggIdObjectMap.put( disAggId, getDisaggregation( disAggId ) );
         }
 
         Set<DataValueTemplate> dataValueElements = new HashSet<DataValueTemplate>();
@@ -178,8 +178,7 @@ public class ContentDataStructureConsumer
         return parser.parseStructures( core, rs, imrm );
     }
 
-    private Set<String> generateDisaggregationNames( DataStructureSuperBean dataStructure,
-        Set<AnnotationBean> annotations )
+    private Set<String> generateDisaggregationIds( DataStructureSuperBean dataStructure, Set<AnnotationBean> annotations )
     {
         Set<String> disaggregations = new HashSet<String>();
         Iterator<AnnotationBean> it = annotations.iterator();
@@ -254,14 +253,15 @@ public class ContentDataStructureConsumer
         return text;
     }
 
-    private Disaggregation getDisaggregation( String name )
+    private Disaggregation getDisaggregation( String id )
     {
-        Disaggregation d = getExistingDisaggregation( name );
+        Disaggregation d = getExistingDisaggregation( id );
         if ( d == null )
         {
             d = new Disaggregation();
-            d.setName( name );
-            d.setCode( name );
+            d.setCode( id );
+            // TODO should be the name instead
+            d.setName( id );
         }
 
         return d;
@@ -276,12 +276,12 @@ public class ContentDataStructureConsumer
         return de;
     }
 
-    private Disaggregation getExistingDisaggregation( String disaggregationName )
+    private Disaggregation getExistingDisaggregation( String disAggId )
     {
         DHIS2ReportingService dhis2ReportingService = Context.getService( DHIS2ReportingService.class );
         for ( Disaggregation d : dhis2ReportingService.getAllDisaggregations() )
         {
-            if ( d.getName().equalsIgnoreCase( disaggregationName ) )
+            if ( d.getName().equalsIgnoreCase( disAggId ) )
             {
                 return d;
             }
