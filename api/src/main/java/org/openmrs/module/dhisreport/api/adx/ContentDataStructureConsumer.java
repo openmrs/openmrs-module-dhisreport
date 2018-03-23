@@ -60,7 +60,6 @@ import org.springframework.core.io.ClassPathResource;
 import org.springframework.stereotype.Component;
 
 @Component( "dsdConsumer" )
-@DependsOn
 public class ContentDataStructureConsumer
 {
 

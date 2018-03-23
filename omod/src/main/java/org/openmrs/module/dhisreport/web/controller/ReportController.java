@@ -19,6 +19,7 @@
  **/
 package org.openmrs.module.dhisreport.web.controller;
 
+import java.io.StringWriter;
 import java.math.BigDecimal;
 import java.net.MalformedURLException;
 import java.net.URL;
@@ -28,6 +29,11 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpSession;
+import javax.xml.bind.JAXBContext;
+import javax.xml.bind.Marshaller;
 
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
@@ -44,21 +50,11 @@ import org.openmrs.module.dhisreport.api.dxf2.DataValue;
 import org.openmrs.module.dhisreport.api.dxf2.DataValueSet;
 import org.openmrs.module.dhisreport.api.importsummary.ImportSummaries;
 import org.openmrs.module.dhisreport.api.model.DataElement;
+import org.openmrs.module.dhisreport.api.model.DataValueTemplate;
+import org.openmrs.module.dhisreport.api.model.ReportDefinition;
 import org.openmrs.module.dhisreport.api.utils.MonthlyPeriod;
 import org.openmrs.module.dhisreport.api.utils.Period;
 import org.openmrs.module.dhisreport.api.utils.WeeklyPeriod;
-import org.openmrs.web.WebConstants;
-import org.springframework.stereotype.Controller;
-import org.springframework.ui.ModelMap;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestMethod;
-import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.context.request.WebRequest;
-
-import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpSession;
-import org.openmrs.module.dhisreport.api.model.DataValueTemplate;
-import org.openmrs.module.dhisreport.api.model.ReportDefinition;
 import org.openmrs.module.reporting.evaluation.parameter.Mapped;
 import org.openmrs.module.reporting.report.Report;
 import org.openmrs.module.reporting.report.ReportRequest;
@@ -66,6 +62,13 @@ import org.openmrs.module.reporting.report.definition.service.ReportDefinitionSe
 import org.openmrs.module.reporting.report.renderer.RenderingMode;
 import org.openmrs.module.reporting.report.service.ReportService;
 import org.openmrs.module.reporting.web.renderers.DefaultWebRenderer;
+import org.openmrs.web.WebConstants;
+import org.springframework.stereotype.Controller;
+import org.springframework.ui.ModelMap;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestMethod;
+import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.context.request.WebRequest;
 
 /**
  * The main controller.
@@ -92,8 +95,9 @@ public class ReportController
     }
 
     @RequestMapping( value = "/module/dhisreport/setupReport", method = RequestMethod.GET )
-    public void setupReport( ModelMap model, @RequestParam( value = "reportDefinition_id", required = false )
-    Integer reportDefinition_id, HttpSession session )
+    public void setupReport( ModelMap model,
+        @RequestParam( value = "reportDefinition_id", required = false ) Integer reportDefinition_id,
+        HttpSession session )
     {
         DHIS2ReportingService service = Context.getService( DHIS2ReportingService.class );
         String errormsg = (String) session.getAttribute( "errorMessage" );
@@ -146,19 +150,21 @@ public class ReportController
     }
 
     @RequestMapping( value = "/module/dhisreport/executeReport", method = RequestMethod.POST )
-    public String executeReport( ModelMap model, @RequestParam( value = "reportDefinition_id", required = true )
-    Integer reportDefinition_id, @RequestParam( value = "location", required = false )
-    String OU_Code, @RequestParam( value = "resultDestination", required = true )
-    String destination, @RequestParam( value = "date", required = true )
-    String dateStr, @RequestParam( value = "frequency", required = true )
-    String freq, @RequestParam( value = "prior", required = true )
-    String prior, WebRequest webRequest, HttpServletRequest request )
+    public String executeReport( ModelMap model,
+        @RequestParam( value = "reportDefinition_id", required = true ) Integer reportDefinition_id,
+        @RequestParam( value = "location", required = false ) String OU_Code,
+        @RequestParam( value = "resultDestination", required = true ) String destination,
+        @RequestParam( value = "date", required = true ) String dateStr,
+        @RequestParam( value = "frequency", required = true ) String freq,
+        @RequestParam( value = "prior", required = true ) String prior, WebRequest webRequest,
+        HttpServletRequest request )
         throws Exception
     {
         DHIS2ReportingService service = Context.getService( DHIS2ReportingService.class );
         Period period = null;
-        //System.out.println( "freeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeee" + freq );
-        //System.out.println( "dasdasssssssssssssssssssss" + dateStr );
+        // System.out.println( "freeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeee" + freq
+        // );
+        // System.out.println( "dasdasssssssssssssssssssss" + dateStr );
 
         if ( freq.equalsIgnoreCase( "monthly" ) )
         {
@@ -167,15 +173,15 @@ public class ReportController
             dateStr = dateStr.concat( "-01" );
             try
             {
-                //System.out.println( "helloooooooooo1=====" + dateStr );
+                // System.out.println( "helloooooooooo1=====" + dateStr );
                 period = new MonthlyPeriod( new SimpleDateFormat( "yyyy-MM-dd" ).parse( dateStr ) );
                 // System.out.println( "helloooooooooo2=====" + period );
             }
             catch ( ParseException pex )
             {
                 log.error( "Cannot convert passed string to date... Please check dateFormat", pex );
-                webRequest.setAttribute( WebConstants.OPENMRS_ERROR_ATTR, Context.getMessageSourceService().getMessage(
-                    "Date Parsing Error" ), WebRequest.SCOPE_SESSION );
+                webRequest.setAttribute( WebConstants.OPENMRS_ERROR_ATTR,
+                    Context.getMessageSourceService().getMessage( "Date Parsing Error" ), WebRequest.SCOPE_SESSION );
                 return null;
             }
         }
@@ -201,38 +207,40 @@ public class ReportController
             catch ( ParseException ex )
             {
                 log.error( "Cannot convert passed string to date... Please check dateFormat", ex );
-                webRequest.setAttribute( WebConstants.OPENMRS_ERROR_ATTR, Context.getMessageSourceService().getMessage(
-                    "Date Parsing Error" ), WebRequest.SCOPE_SESSION );
+                webRequest.setAttribute( WebConstants.OPENMRS_ERROR_ATTR,
+                    Context.getMessageSourceService().getMessage( "Date Parsing Error" ), WebRequest.SCOPE_SESSION );
                 return null;
             }
         }
         if ( freq.equalsIgnoreCase( "daily" ) )
         {
 
-            webRequest.setAttribute( WebConstants.OPENMRS_ERROR_ATTR, Context.getMessageSourceService().getMessage(
-                "dhisreport.dateFormatError" ), WebRequest.SCOPE_SESSION );
+            webRequest.setAttribute( WebConstants.OPENMRS_ERROR_ATTR,
+                Context.getMessageSourceService().getMessage( "dhisreport.dateFormatError" ),
+                WebRequest.SCOPE_SESSION );
             return null;
 
         }
 
         // Get Location by OrgUnit Code
-        //Location location = service.getLocationByOU_Code( OU_Code );
+        // Location location = service.getLocationByOU_Code( OU_Code );
         // System.out.println( "helloooooooooo3=====" + period );
         List<DataValueSet> dvsList = new ArrayList<DataValueSet>();
         List<Location> locationList = new ArrayList<Location>();
         List<Location> locationListFinal = new ArrayList<Location>();
-        //locationList.add( location );
-        //locationList.add( service.getLocationByOU_Code( "Gahombo" ) );
+        // locationList.add( location );
+        // locationList.add( service.getLocationByOU_Code( "Gahombo" ) );
         locationList.addAll( Context.getLocationService().getAllLocations() );
 
-        //remove locations without Organization Unit codes
+        // remove locations without Organization Unit codes
         for ( Location l : locationList )
         {
             for ( LocationAttribute la : l.getActiveAttributes() )
             {
                 if ( la.getAttributeType().getName().equals( "CODE" ) )
                 {
-                    //System.out.println( "Name-----" + la.getAttributeType().getName() + "Value---" + la.getValue() );
+                    // System.out.println( "Name-----" + la.getAttributeType().getName() +
+                    // "Value---" + la.getValue() );
                     if ( !la.getValue().toString().isEmpty() && la.getValue().toString() != null )
                     {
                         locationListFinal.add( l );
@@ -285,19 +293,24 @@ public class ReportController
             agrs.setDataValueSet( dvs );
             agrs.setDataElementMap( deset );
             AdxType adxType = getAdxType( dvs, dateStr );
-
+            JAXBContext jxb = JAXBContext.newInstance( AdxType.class );
+            Marshaller m = jxb.createMarshaller();
+            StringWriter writer = new StringWriter();
+            m.marshal( adxType, writer );
+            log.warn( "\n\n" + writer.toString() + "\n\n" );
+            log.warn( "ABOUT TO POST: " + destination.equals( "post" ) );
             if ( destination.equals( "post" ) )
             {
-                ImportSummaries importSummaries = Context.getService( DHIS2ReportingService.class ).postAdxReport(
-                    adxType );
+                ImportSummaries importSummaries = Context.getService( DHIS2ReportingService.class )
+                    .postAdxReport( adxType );
                 agrs.setImportSummaries( importSummaries );
             }
             aggregatedList.add( agrs );
         }
 
-        org.openmrs.module.reporting.report.definition.ReportDefinition rrd = Context.getService(
-            ReportDefinitionService.class ).getDefinitionByUuid(
-            service.getReportDefinition( reportDefinition_id ).getReportingReportId() );
+        org.openmrs.module.reporting.report.definition.ReportDefinition rrd = Context
+            .getService( ReportDefinitionService.class )
+            .getDefinitionByUuid( service.getReportDefinition( reportDefinition_id ).getReportingReportId() );
 
         Map<String, Object> param = new HashMap<String, Object>();
         param.put( "startDate", period.getStartDate() );
@@ -305,8 +318,8 @@ public class ReportController
         if ( rrd != null )
         {
             ReportRequest rq = new ReportRequest();
-            rq.setReportDefinition( new Mapped<org.openmrs.module.reporting.report.definition.ReportDefinition>( rrd,
-                param ) );
+            rq.setReportDefinition(
+                new Mapped<org.openmrs.module.reporting.report.definition.ReportDefinition>( rrd, param ) );
             rq.setRenderingMode( new RenderingMode( new DefaultWebRenderer(), "Web", null, 100 ) );
             Report report = Context.getService( ReportService.class ).runReport( rq );
             model.addAttribute( "resultUuid", rq.getUuid() );
@@ -369,15 +382,15 @@ public class ReportController
 
         if ( dateStr.substring( 5, 8 ).equalsIgnoreCase( "Jan" ) )
         {
-            //System.out.println( "converting date" );
+            // System.out.println( "converting date" );
             str = dateStr.replaceFirst( "Jan", "01" );
             // System.out.println( "converting date" + str );
         }
         else if ( dateStr.substring( 5, 8 ).equalsIgnoreCase( "Feb" ) )
         {
-            //  System.out.println( "converting date" );
+            // System.out.println( "converting date" );
             str = dateStr.replaceFirst( "Feb", "02" );
-            //  System.out.println( "converting date" + str );
+            // System.out.println( "converting date" + str );
         }
         else if ( dateStr.substring( 5, 8 ).equalsIgnoreCase( "Mar" ) )
         {
@@ -401,11 +414,11 @@ public class ReportController
         {
             // System.out.println( "converting date" );
             str = dateStr.replaceFirst( "Jun", "06" );
-            //  System.out.println( "converting date" + str );
+            // System.out.println( "converting date" + str );
         }
         if ( dateStr.substring( 5, 8 ).equalsIgnoreCase( "Jul" ) )
         {
-            //  System.out.println( "converting date" );
+            // System.out.println( "converting date" );
             str = dateStr.replaceFirst( "Jul", "07" );
         }
         if ( dateStr.substring( 5, 8 ).equalsIgnoreCase( "Aug" ) )
@@ -416,7 +429,7 @@ public class ReportController
         }
         if ( dateStr.substring( 5, 8 ).equalsIgnoreCase( "Sep" ) )
         {
-            //  System.out.println( "converting date" );
+            // System.out.println( "converting date" );
             str = dateStr.replaceFirst( "Sep", "09" );
             // System.out.println( "converting date" + str );
         }
@@ -436,7 +449,7 @@ public class ReportController
         {
             // System.out.println( "converting date" );
             str = dateStr.replaceFirst( "Dec", "12" );
-            //  System.out.println( "converting date" + str );
+            // System.out.println( "converting date" + str );
         }
 
         return str;
