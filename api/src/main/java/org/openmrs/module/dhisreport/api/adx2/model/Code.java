@@ -33,9 +33,4 @@ public class Code
         return annotations;
     }
 
-    public void setAnnotations( List<Annotation> annotations )
-    {
-        this.annotations = annotations;
-    }
-
 }

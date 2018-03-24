@@ -24,9 +24,4 @@ public class ConceptScheme
     {
         return concepts;
     }
-
-    public void setConcepts( List<AdxConcept> concepts )
-    {
-        this.concepts = concepts;
-    }
 }

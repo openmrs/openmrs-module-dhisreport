@@ -16,16 +16,11 @@ public class Dimension
 {
 
     @XmlElement( name = "ConceptIdentity" )
-    private ConceptIdentity conceptIdentity;
+    private ObjectType conceptIdentity;
 
-    public ConceptIdentity getConceptIdentity()
+    public ObjectType getConceptIdentity()
     {
         return conceptIdentity;
-    }
-
-    public void setConceptIdentity( ConceptIdentity conceptIdentity )
-    {
-        this.conceptIdentity = conceptIdentity;
     }
 
 }

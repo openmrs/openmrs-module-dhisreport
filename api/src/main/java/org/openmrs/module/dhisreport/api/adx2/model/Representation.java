@@ -11,34 +11,16 @@ package org.openmrs.module.dhisreport.api.adx2.model;
 
 import javax.xml.bind.annotation.XmlElement;
 
-public abstract class Representation
+public class Representation
     extends BaseType
 {
 
     @XmlElement( name = "Enumeration" )
-    private Enumeration numeration;
+    private ObjectType numeration;
 
-    @XmlElement( name = "TextFormat" )
-    private TextFormat format;
-
-    public Enumeration getNumeration()
+    public ObjectType getNumeration()
     {
         return numeration;
-    }
-
-    public void setNumeration( Enumeration numeration )
-    {
-        this.numeration = numeration;
-    }
-
-    public TextFormat getFormat()
-    {
-        return format;
-    }
-
-    public void setFormat( TextFormat format )
-    {
-        this.format = format;
     }
 
 }

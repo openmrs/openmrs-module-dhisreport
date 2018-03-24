@@ -25,9 +25,4 @@ public class CodeList
         return codes;
     }
 
-    public void setCodes( List<Code> codes )
-    {
-        this.codes = codes;
-    }
-
 }

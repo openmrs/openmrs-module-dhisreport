@@ -16,10 +16,10 @@ public class BaseRepresentableType
 {
 
     @XmlElement( name = "LocalRepresentation" )
-    private LocalRepresentation localRepresentation;
+    private Representation localRepresentation;
 
     @XmlElement( name = "CoreRepresentation" )
-    private CoreRepresentation coreRepresentation;
+    private Representation coreRepresentation;
 
     public Representation getRepresentation()
     {

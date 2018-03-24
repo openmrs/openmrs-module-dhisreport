@@ -23,8 +23,4 @@ public class DataStructure
         return components;
     }
 
-    public void setComponents( DataStructureComponents components )
-    {
-        this.components = components;
-    }
 }

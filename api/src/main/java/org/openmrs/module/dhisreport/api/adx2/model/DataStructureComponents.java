@@ -28,8 +28,4 @@ public class DataStructureComponents
         return dimensions;
     }
 
-    public void setDimensions( List<Dimension> dimensions )
-    {
-        this.dimensions = dimensions;
-    }
 }
