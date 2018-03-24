@@ -7,26 +7,27 @@
  * Copyright (C) OpenMRS Inc. OpenMRS is a registered trademark and the OpenMRS
  * graphic logo is a trademark of OpenMRS Inc.
  */
-package org.openmrs.module.dhisreport.api.adx2;
+package org.openmrs.module.dhisreport.api.adx2.model;
 
 import java.util.List;
 
 import javax.xml.bind.annotation.XmlElement;
 
-public class ConceptScheme
+public class CodeList
     extends BaseNamedType
 {
 
-    @XmlElement( name = "Concept" )
-    private List<AdxConcept> concepts;
+    @XmlElement( name = "Code" )
+    private List<Code> codes;
 
-    public List<AdxConcept> getConcepts()
+    public List<Code> getCodes()
     {
-        return concepts;
+        return codes;
     }
 
-    public void setConcepts( List<AdxConcept> concepts )
+    public void setCodes( List<Code> codes )
     {
-        this.concepts = concepts;
+        this.codes = codes;
     }
+
 }

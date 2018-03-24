@@ -3,31 +3,31 @@
  * v. 2.0. If a copy of the MPL was not distributed with this file, You can
  * obtain one at http://mozilla.org/MPL/2.0/. OpenMRS is also distributed under
  * the terms of the Healthcare Disclaimer located at http://openmrs.org/license.
- *
+ * 
  * Copyright (C) OpenMRS Inc. OpenMRS is a registered trademark and the OpenMRS
  * graphic logo is a trademark of OpenMRS Inc.
  */
-package org.openmrs.module.dhisreport.api.adx2;
+package org.openmrs.module.dhisreport.api.adx2.model;
 
 import javax.xml.bind.annotation.XmlElement;
+import javax.xml.bind.annotation.XmlType;
 
-public class BaseRepresentableType
+@XmlType
+public class Annotation
     extends BaseType
 {
 
-    @XmlElement( name = "LocalRepresentation" )
-    private LocalRepresentation localRepresentation;
+    @XmlElement( name = "AnnotationText" )
+    private String text;
 
-    @XmlElement( name = "CoreRepresentation" )
-    private CoreRepresentation coreRepresentation;
-
-    public Representation getRepresentation()
+    public String getText()
     {
-        if ( localRepresentation != null )
-        {
-            return localRepresentation;
-        }
-
-        return coreRepresentation;
+        return text;
     }
+
+    public void setText( String text )
+    {
+        this.text = text;
+    }
+
 }

@@ -7,35 +7,29 @@
  * Copyright (C) OpenMRS Inc. OpenMRS is a registered trademark and the OpenMRS
  * graphic logo is a trademark of OpenMRS Inc.
  */
-package org.openmrs.module.dhisreport.api.adx2;
+package org.openmrs.module.dhisreport.api.adx2.model;
 
-import java.util.ArrayList;
 import java.util.List;
 
 import javax.xml.bind.annotation.XmlElement;
 import javax.xml.bind.annotation.XmlElementWrapper;
+import javax.xml.bind.annotation.XmlElements;
 
-public class Code
-    extends BaseNamedType
+public class DataStructureComponents
+    extends BaseType
 {
 
-    @XmlElementWrapper( name = "Annotations" )
-    @XmlElement( name = "Annotation" )
-    private List<Annotation> annotations;
+    @XmlElementWrapper( name = "DimensionList" )
+    @XmlElements( { @XmlElement( name = "Dimension" ), @XmlElement( name = "TimeDimension" ) } )
+    private List<Dimension> dimensions;
 
-    public List<Annotation> getAnnotations()
+    public List<Dimension> getDimensions()
     {
-        if ( annotations == null )
-        {
-            annotations = new ArrayList<Annotation>();
-        }
-
-        return annotations;
+        return dimensions;
     }
 
-    public void setAnnotations( List<Annotation> annotations )
+    public void setDimensions( List<Dimension> dimensions )
     {
-        this.annotations = annotations;
+        this.dimensions = dimensions;
     }
-
 }

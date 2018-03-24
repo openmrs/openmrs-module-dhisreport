@@ -7,25 +7,27 @@
  * Copyright (C) OpenMRS Inc. OpenMRS is a registered trademark and the OpenMRS
  * graphic logo is a trademark of OpenMRS Inc.
  */
-package org.openmrs.module.dhisreport.api.adx2;
+package org.openmrs.module.dhisreport.api.adx2.model;
 
-import javax.xml.bind.annotation.XmlElement;
+import javax.xml.bind.annotation.XmlAccessType;
+import javax.xml.bind.annotation.XmlAccessorType;
+import javax.xml.bind.annotation.XmlAttribute;
 
-public class Dimension
-    extends BaseRepresentableType
+@XmlAccessorType( XmlAccessType.NONE )
+public class Ref
 {
 
-    @XmlElement( name = "ConceptIdentity" )
-    private ConceptIdentity conceptIdentity;
+    @XmlAttribute
+    private String id;
 
-    public ConceptIdentity getConceptIdentity()
+    public String getId()
     {
-        return conceptIdentity;
+        return id;
     }
 
-    public void setConceptIdentity( ConceptIdentity conceptIdentity )
+    public void setId( String id )
     {
-        this.conceptIdentity = conceptIdentity;
+        this.id = id;
     }
 
 }

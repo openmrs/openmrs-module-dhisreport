@@ -7,27 +7,30 @@
  * Copyright (C) OpenMRS Inc. OpenMRS is a registered trademark and the OpenMRS
  * graphic logo is a trademark of OpenMRS Inc.
  */
-package org.openmrs.module.dhisreport.api.adx2;
+package org.openmrs.module.dhisreport.api.adx2.model;
 
-import java.util.List;
-
+import javax.xml.bind.annotation.XmlAccessType;
+import javax.xml.bind.annotation.XmlAccessorType;
+import javax.xml.bind.annotation.XmlAttribute;
 import javax.xml.bind.annotation.XmlElement;
 
-public class CodeList
-    extends BaseNamedType
+@XmlAccessorType( XmlAccessType.NONE )
+public abstract class BaseType
 {
 
-    @XmlElement( name = "Code" )
-    private List<Code> codes;
+    @XmlAttribute
+    private String id;
 
-    public List<Code> getCodes()
+    @XmlElement( name = "Ref" )
+    private Ref ref;
+
+    public String getId()
     {
-        return codes;
+        return id;
     }
 
-    public void setCodes( List<Code> codes )
+    public Ref getRef()
     {
-        this.codes = codes;
+        return ref;
     }
-
 }

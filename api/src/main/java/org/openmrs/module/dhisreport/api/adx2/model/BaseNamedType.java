@@ -7,10 +7,25 @@
  * Copyright (C) OpenMRS Inc. OpenMRS is a registered trademark and the OpenMRS
  * graphic logo is a trademark of OpenMRS Inc.
  */
-package org.openmrs.module.dhisreport.api.adx2;
+package org.openmrs.module.dhisreport.api.adx2.model;
 
-public class CoreRepresentation
-    extends Representation
+import javax.xml.bind.annotation.XmlElement;
+
+public abstract class BaseNamedType
+    extends BaseType
 {
+
+    @XmlElement( name = "Name" )
+    private String name;
+
+    public String getName()
+    {
+        return name;
+    }
+
+    public void setName( String name )
+    {
+        this.name = name;
+    }
 
 }

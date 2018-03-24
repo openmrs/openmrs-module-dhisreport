@@ -7,25 +7,9 @@
  * Copyright (C) OpenMRS Inc. OpenMRS is a registered trademark and the OpenMRS
  * graphic logo is a trademark of OpenMRS Inc.
  */
-package org.openmrs.module.dhisreport.api.adx2;
+package org.openmrs.module.dhisreport.api.adx2.model;
 
-import javax.xml.bind.annotation.XmlAttribute;
-
-public class TextFormat
-    extends BaseType
+public class LocalRepresentation
+    extends Representation
 {
-
-    @XmlAttribute( name = "textType", required = true )
-    private String type;
-
-    public String getType()
-    {
-        return type;
-    }
-
-    public void setType( String type )
-    {
-        this.type = type;
-    }
-
 }

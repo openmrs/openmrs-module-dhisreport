@@ -7,24 +7,10 @@
  * Copyright (C) OpenMRS Inc. OpenMRS is a registered trademark and the OpenMRS
  * graphic logo is a trademark of OpenMRS Inc.
  */
-package org.openmrs.module.dhisreport.api.adx2;
+package org.openmrs.module.dhisreport.api.adx2.model;
 
-import javax.xml.bind.annotation.XmlElement;
-
-public class DataStructure
-    extends BaseNamedType
+public class TimeDimension
+    extends Dimension
 {
 
-    @XmlElement( name = "DataStructureComponents" )
-    private DataStructureComponents components;
-
-    public DataStructureComponents getComponents()
-    {
-        return components;
-    }
-
-    public void setComponents( DataStructureComponents components )
-    {
-        this.components = components;
-    }
 }

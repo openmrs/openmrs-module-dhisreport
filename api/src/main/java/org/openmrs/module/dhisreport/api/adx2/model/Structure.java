@@ -7,14 +7,14 @@
  * Copyright (C) OpenMRS Inc. OpenMRS is a registered trademark and the OpenMRS
  * graphic logo is a trademark of OpenMRS Inc.
  */
-package org.openmrs.module.dhisreport.api.adx2;
+package org.openmrs.module.dhisreport.api.adx2.model;
 
 import java.util.List;
 
 import javax.xml.bind.annotation.XmlElement;
 import javax.xml.bind.annotation.XmlRootElement;
 
-import org.openmrs.module.dhisreport.api.adx2.util.StructureUtils;
+import org.openmrs.module.dhisreport.api.adx2.StructureUtils;
 
 @XmlRootElement( name = "Structure" )
 public class Structure
