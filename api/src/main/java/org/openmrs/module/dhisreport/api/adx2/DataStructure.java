@@ -27,5 +27,4 @@ public class DataStructure
     {
         this.components = components;
     }
-
 }

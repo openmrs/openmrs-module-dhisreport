@@ -12,6 +12,7 @@ package org.openmrs.module.dhisreport.api.adx2;
 import javax.xml.bind.annotation.XmlAccessType;
 import javax.xml.bind.annotation.XmlAccessorType;
 import javax.xml.bind.annotation.XmlAttribute;
+import javax.xml.bind.annotation.XmlElement;
 
 @XmlAccessorType( XmlAccessType.NONE )
 public abstract class BaseType
@@ -20,14 +21,16 @@ public abstract class BaseType
     @XmlAttribute
     private String id;
 
+    @XmlElement( name = "Ref" )
+    private Ref ref;
+
     public String getId()
     {
         return id;
     }
 
-    public void setId( String id )
+    public Ref getRef()
     {
-        this.id = id;
+        return ref;
     }
-
 }

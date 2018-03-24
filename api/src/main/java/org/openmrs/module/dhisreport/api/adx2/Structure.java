@@ -9,24 +9,73 @@
  */
 package org.openmrs.module.dhisreport.api.adx2;
 
+import java.util.List;
+
 import javax.xml.bind.annotation.XmlElement;
 import javax.xml.bind.annotation.XmlRootElement;
+
+import org.openmrs.module.dhisreport.api.adx2.util.StructureUtils;
 
 @XmlRootElement( name = "Structure" )
 public class Structure
     extends BaseType
 {
+    @XmlElement( name = "Header" )
+    private Header header;
 
-    @XmlElement( name = "Structures", required = true )
+    public Header getHeader()
+    {
+        return header;
+    }
+
+    @XmlElement( name = "Structures" )
     private Structures structures;
 
-    public Structures getStructures()
+    private List<Dimension> getDimensions()
     {
-        return structures;
+        return structures.getDataStructure().getComponents().getDimensions();
     }
 
-    public void setStructures( Structures structures )
+    public Dimension getDimensionById( String id )
     {
-        this.structures = structures;
+        return StructureUtils.getElementById( id, getDimensions() );
     }
+
+    public CodeList getCodeList( Dimension d )
+    {
+        if ( d.getRepresentation() != null )
+        {
+            return getCodeList( d.getRepresentation() );
+        }
+
+        String id = d.getConceptIdentity().getRef().getId();
+        AdxConcept concept = null;
+        for ( ConceptScheme scheme : getConceptSchemes() )
+        {
+            concept = StructureUtils.getElementById( id, scheme.getConcepts() );
+            if ( concept != null )
+            {
+                break;
+            }
+        }
+
+        return getCodeList( concept.getRepresentation() );
+    }
+
+    private CodeList getCodeList( Representation rep )
+    {
+        String id = rep.getNumeration().getRef().getId();
+        return StructureUtils.getElementById( id, getCodeLists() );
+    }
+
+    private List<CodeList> getCodeLists()
+    {
+        return structures.getCodeLists();
+    }
+
+    private List<ConceptScheme> getConceptSchemes()
+    {
+        return structures.getConceptSchemes();
+    }
+
 }

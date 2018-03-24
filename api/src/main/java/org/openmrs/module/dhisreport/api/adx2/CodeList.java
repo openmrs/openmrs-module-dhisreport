@@ -9,8 +9,9 @@
  */
 package org.openmrs.module.dhisreport.api.adx2;
 
-import javax.xml.bind.annotation.XmlElement;
 import java.util.List;
+
+import javax.xml.bind.annotation.XmlElement;
 
 public class CodeList
     extends BaseNamedType
@@ -28,4 +29,5 @@ public class CodeList
     {
         this.codes = codes;
     }
+
 }

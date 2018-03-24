@@ -9,9 +9,6 @@
  */
 package org.openmrs.module.dhisreport.api.adx;
 
-import static org.sdmxsource.sdmx.api.model.ResolutionSettings.RESOLVE_CROSS_REFERENCES.RESOLVE_EXCLUDE_AGENCIES;
-import static org.sdmxsource.sdmx.api.model.ResolutionSettings.RESOLVE_EXTERNAL_SETTING.RESOLVE;
-
 import java.io.IOException;
 import java.io.InputStream;
 import java.util.Arrays;
@@ -19,45 +16,36 @@ import java.util.Collections;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Iterator;
-import java.util.List;
-import java.util.Locale;
 import java.util.Map;
 import java.util.Set;
 
+import javax.xml.bind.JAXBContext;
 import javax.xml.bind.JAXBException;
+import javax.xml.bind.Unmarshaller;
+import javax.xml.transform.sax.SAXSource;
 
-import org.apache.commons.collections.CollectionUtils;
 import org.apache.commons.lang.StringUtils;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.openmrs.api.APIException;
 import org.openmrs.api.context.Context;
 import org.openmrs.module.dhisreport.api.DHIS2ReportingService;
+import org.openmrs.module.dhisreport.api.adx2.Annotation;
+import org.openmrs.module.dhisreport.api.adx2.Code;
+import org.openmrs.module.dhisreport.api.adx2.CodeList;
+import org.openmrs.module.dhisreport.api.adx2.Dimension;
+import org.openmrs.module.dhisreport.api.adx2.Header;
+import org.openmrs.module.dhisreport.api.adx2.Structure;
 import org.openmrs.module.dhisreport.api.model.DataElement;
 import org.openmrs.module.dhisreport.api.model.DataValueTemplate;
 import org.openmrs.module.dhisreport.api.model.Disaggregation;
 import org.openmrs.module.dhisreport.api.model.ReportDefinition;
 import org.openmrs.module.dhisreport.api.model.ReportTemplates;
-import org.openmrs.util.LocaleUtility;
-import org.sdmxsource.sdmx.api.factory.ReadableDataLocationFactory;
-import org.sdmxsource.sdmx.api.manager.parse.StructureParsingManager;
-import org.sdmxsource.sdmx.api.model.ResolutionSettings;
-import org.sdmxsource.sdmx.api.model.StructureWorkspace;
-import org.sdmxsource.sdmx.api.model.beans.base.AnnotationBean;
-import org.sdmxsource.sdmx.api.model.beans.base.TextTypeWrapper;
-import org.sdmxsource.sdmx.api.model.header.HeaderBean;
-import org.sdmxsource.sdmx.api.model.superbeans.SuperBeans;
-import org.sdmxsource.sdmx.api.model.superbeans.codelist.CodeSuperBean;
-import org.sdmxsource.sdmx.api.model.superbeans.codelist.CodelistSuperBean;
-import org.sdmxsource.sdmx.api.model.superbeans.datastructure.DataStructureSuperBean;
-import org.sdmxsource.sdmx.api.model.superbeans.datastructure.DimensionSuperBean;
-import org.sdmxsource.sdmx.api.util.ReadableDataLocation;
-import org.sdmxsource.sdmx.structureretrieval.manager.InMemoryRetrievalManager;
-import org.sdmxsource.sdmx.util.beans.LocaleUtil;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.context.annotation.DependsOn;
-import org.springframework.core.io.ClassPathResource;
+import org.openmrs.module.dhisreport.api.utils.NamepaceStrippingXmlFilter;
 import org.springframework.stereotype.Component;
+import org.xml.sax.InputSource;
+import org.xml.sax.SAXException;
+import org.xml.sax.helpers.XMLFilterImpl;
 
 @Component( "dsdConsumer" )
 public class ContentDataStructureConsumer
@@ -65,35 +53,25 @@ public class ContentDataStructureConsumer
 
     protected final Log log = LogFactory.getLog( this.getClass() );
 
-    private static final ClassPathResource QRPH_STRUCTURES_RESOURCE = new ClassPathResource( "qrph_structures.xml" );
-
     private static final String ID_DATAELEMENT = "dataElement";
 
     private static final String ID_DISAGGREGATION = "Disaggregation";
 
     private static final String DISAGGREGATION_DEFAULT = "Default";
 
-    @Autowired
-    private StructureParsingManager parser;
-
-    @Autowired
-    private ReadableDataLocationFactory dataLocationFactory;
-
     public ReportTemplates consume( InputStream is )
-        throws JAXBException, IOException
+        throws JAXBException, SAXException, IOException
     {
 
-        StructureWorkspace workspace = parseDSD( is );
-        SuperBeans superBeans = workspace.getSuperBeans();
-        DataStructureSuperBean dataStructure = superBeans.getDataStructures().iterator().next();
-        DimensionSuperBean dataElementBean = dataStructure.getDimensionById( ID_DATAELEMENT );
+        Structure structure = parseDSD( is );
+        Dimension dataElemDimension = structure.getDimensionById( ID_DATAELEMENT );
         Map<DataElement, Set<String>> dataElementDisAggMap = new HashMap<DataElement, Set<String>>();
 
-        for ( CodeSuperBean code : dataElementBean.getCodelist( true ).getCodes() )
+        for ( Code code : structure.getCodeList( dataElemDimension ).getCodes() )
         {
             DataElement dataElement = createDataElement( code );
-            Set<AnnotationBean> annotations = new HashSet<AnnotationBean>();
-            for ( AnnotationBean ann : code.getBuiltFrom().getAnnotations() )
+            Set<Annotation> annotations = new HashSet<Annotation>();
+            for ( Annotation ann : code.getAnnotations() )
             {
                 if ( ID_DISAGGREGATION.equals( ann.getId() ) )
                 {
@@ -114,7 +92,7 @@ public class ContentDataStructureConsumer
             }
             else
             {
-                Set<String> disAggIds = generateDisaggregationIds( dataStructure, annotations );
+                Set<String> disAggIds = generateDisaggregationIds( structure, annotations );
                 dataElementDisAggMap.get( dataElement ).addAll( disAggIds );
             }
         }
@@ -145,15 +123,15 @@ public class ContentDataStructureConsumer
         }
 
         ReportDefinition reportDef = new ReportDefinition();
-        HeaderBean headerBean = workspace.getStructureBeans( false ).getHeader();
-        reportDef.setCode( headerBean.getId() );
-        if ( CollectionUtils.isNotEmpty( headerBean.getName() ) )
+        Header header = structure.getHeader();
+        reportDef.setCode( header.getId() );
+        if ( StringUtils.isNotBlank( header.getName() ) )
         {
-            reportDef.setName( getLocalizedText( headerBean.getName() ) );
+            reportDef.setName( header.getName() );
         }
         else
         {
-            reportDef.setName( headerBean.getId() );
+            reportDef.setName( header.getId() );
         }
         reportDef.setDataValueTemplates( dataValueElements );
 
@@ -165,91 +143,17 @@ public class ContentDataStructureConsumer
         return reportTemplates;
     }
 
-    private StructureWorkspace parseDSD( InputStream is )
-        throws JAXBException, IOException
+    private Structure parseDSD( InputStream is )
+        throws JAXBException, IOException, SAXException
     {
-        ResolutionSettings rs = new ResolutionSettings( RESOLVE, RESOLVE_EXCLUDE_AGENCIES );
-        ReadableDataLocation other = dataLocationFactory.getReadableDataLocation( QRPH_STRUCTURES_RESOURCE
-            .getInputStream() );
-        InMemoryRetrievalManager imrm = new InMemoryRetrievalManager( other );
-        ReadableDataLocation core = dataLocationFactory.getReadableDataLocation( is );
 
-        return parser.parseStructures( core, rs, imrm );
-    }
+        XMLFilterImpl xmlFilter = new NamepaceStrippingXmlFilter();
+        SAXSource source = new SAXSource( xmlFilter, new InputSource( is ) );
 
-    private Set<String> generateDisaggregationIds( DataStructureSuperBean dataStructure, Set<AnnotationBean> annotations )
-    {
-        Set<String> disaggregations = new HashSet<String>();
-        Iterator<AnnotationBean> it = annotations.iterator();
-        String firstDimensionId = getLocalizedText( it.next().getText() );
-        DimensionSuperBean firstDimension = dataStructure.getDimensionById( firstDimensionId );
-        CodelistSuperBean firstCL = firstDimension.getConcept().getCoreRepresentation();
-        for ( CodeSuperBean c : firstCL.getCodes() )
-        {
-            disaggregations.add( c.getId() );
-        }
+        JAXBContext jaxbContext = JAXBContext.newInstance( Structure.class );
+        Unmarshaller um = jaxbContext.createUnmarshaller();
 
-        if ( it.hasNext() )
-        {
-            String secondDimensionId = getLocalizedText( it.next().getText() );
-            DimensionSuperBean secDimension = dataStructure.getDimensionById( secondDimensionId );
-            CodelistSuperBean secondCL = secDimension.getConcept().getCoreRepresentation();
-
-            for ( CodeSuperBean c : secondCL.getCodes() )
-            {
-                disaggregations.add( c.getId() );
-            }
-            // Do the various disaggregation combos between the 2 sets of disaggregations
-            for ( CodeSuperBean outerCode : firstCL.getCodes() )
-            {
-                for ( CodeSuperBean innerCode : secondCL.getCodes() )
-                {
-                    // Hack to ensure the order of the annotations for a given code doesn't matter
-                    // so that like Males P6Y-P12Y is the same as P6Y-P12Y Males
-                    String[] ids = new String[] { outerCode.getId(), innerCode.getId() };
-                    Arrays.sort( ids );
-                    disaggregations.add( ids[0] + ":" + ids[1] );
-
-                }
-            }
-        }
-
-        return disaggregations;
-    }
-
-    private String getLocalizedText( List<TextTypeWrapper> texts )
-    {
-        Map<Locale, String> localeTextMap = LocaleUtil.buildLocalMap( texts );
-        String text = null;
-
-        for ( Locale l : LocaleUtility.getLocalesInOrder() )
-        {
-            text = localeTextMap.get( l );
-            if ( StringUtils.isNotBlank( text ) )
-            {
-                break;
-            }
-        }
-
-        // Pick the first one we come across
-        if ( StringUtils.isBlank( text ) )
-        {
-            for ( String l : localeTextMap.values() )
-            {
-                if ( StringUtils.isNotBlank( l ) )
-                {
-                    text = l;
-                    break;
-                }
-            }
-        }
-
-        if ( StringUtils.isBlank( text ) )
-        {
-            throw new APIException( "No next specified" );
-        }
-
-        return text;
+        return (Structure) um.unmarshal( source );
     }
 
     private Disaggregation getDisaggregation( String id )
@@ -266,7 +170,7 @@ public class ContentDataStructureConsumer
         return d;
     }
 
-    private DataElement createDataElement( CodeSuperBean code )
+    private DataElement createDataElement( Code code )
     {
         DataElement de = new DataElement();
         de.setCode( code.getId() );
@@ -287,6 +191,46 @@ public class ContentDataStructureConsumer
         }
 
         return null;
+    }
+
+    private Set<String> generateDisaggregationIds( Structure structure, Set<Annotation> annotations )
+    {
+        Set<String> disaggregations = new HashSet<String>();
+        Iterator<Annotation> it = annotations.iterator();
+        String firstDimensionId = it.next().getText();
+        Dimension firstDimension = structure.getDimensionById( firstDimensionId );
+        CodeList firstCL = structure.getCodeList( firstDimension );
+        for ( Code c : firstCL.getCodes() )
+        {
+            disaggregations.add( c.getId() );
+        }
+
+        if ( it.hasNext() )
+        {
+            String secondDimensionId = it.next().getText();
+            Dimension secDimension = structure.getDimensionById( secondDimensionId );
+            CodeList secondCL = structure.getCodeList( secDimension );
+
+            for ( Code c : secondCL.getCodes() )
+            {
+                disaggregations.add( c.getId() );
+            }
+            // Do the various disaggregation combos between the 2 sets of disaggregations
+            for ( Code outerCode : firstCL.getCodes() )
+            {
+                for ( Code innerCode : secondCL.getCodes() )
+                {
+                    // Hack to ensure the order of the annotations for a given code doesn't matter
+                    // so that like Males P6Y-P12Y is the same as P6Y-P12Y Males
+                    String[] ids = new String[] { outerCode.getId(), innerCode.getId() };
+                    Arrays.sort( ids );
+                    disaggregations.add( ids[0] + ":" + ids[1] );
+
+                }
+            }
+        }
+
+        return disaggregations;
     }
 
 }

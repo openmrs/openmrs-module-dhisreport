@@ -9,19 +9,27 @@
  */
 package org.openmrs.module.dhisreport.api.adx2;
 
+import java.util.ArrayList;
+import java.util.List;
+
 import javax.xml.bind.annotation.XmlElement;
 import javax.xml.bind.annotation.XmlElementWrapper;
-import java.util.List;
 
 public class Code
     extends BaseNamedType
 {
 
     @XmlElementWrapper( name = "Annotations" )
+    @XmlElement( name = "Annotation" )
     private List<Annotation> annotations;
 
     public List<Annotation> getAnnotations()
     {
+        if ( annotations == null )
+        {
+            annotations = new ArrayList<Annotation>();
+        }
+
         return annotations;
     }
 
@@ -29,4 +37,5 @@ public class Code
     {
         this.annotations = annotations;
     }
+
 }

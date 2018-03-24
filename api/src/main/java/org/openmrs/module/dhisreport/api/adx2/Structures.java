@@ -9,9 +9,10 @@
  */
 package org.openmrs.module.dhisreport.api.adx2;
 
+import java.util.List;
+
 import javax.xml.bind.annotation.XmlElement;
 import javax.xml.bind.annotation.XmlElementWrapper;
-import java.util.List;
 
 public class Structures
     extends BaseType
@@ -25,37 +26,22 @@ public class Structures
     @XmlElement( name = "ConceptScheme" )
     private List<ConceptScheme> conceptSchemes;
 
-    @XmlElement( name = "DataStructures" )
-    private DataStructures dataStructures;
+    @XmlElementWrapper( name = "DataStructures" )
+    @XmlElement( name = "DataStructure" )
+    private List<DataStructure> dataStructures;
 
-    public List<CodeList> getCodeLists()
+    protected List<CodeList> getCodeLists()
     {
         return codeLists;
     }
 
-    public void setCodeLists( List<CodeList> codeLists )
-    {
-        this.codeLists = codeLists;
-    }
-
-    public List<ConceptScheme> getConceptSchemes()
+    protected List<ConceptScheme> getConceptSchemes()
     {
         return conceptSchemes;
     }
 
-    public void setConceptSchemes( List<ConceptScheme> conceptSchemes )
+    protected DataStructure getDataStructure()
     {
-        this.conceptSchemes = conceptSchemes;
+        return dataStructures.get( 0 );
     }
-
-    public DataStructures getDataStructures()
-    {
-        return dataStructures;
-    }
-
-    public void setDataStructures( DataStructures dataStructures )
-    {
-        this.dataStructures = dataStructures;
-    }
-
 }

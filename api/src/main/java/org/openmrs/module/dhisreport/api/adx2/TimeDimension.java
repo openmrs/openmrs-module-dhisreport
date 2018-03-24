@@ -9,23 +9,8 @@
  */
 package org.openmrs.module.dhisreport.api.adx2;
 
-import javax.xml.bind.annotation.XmlElement;
-
 public class TimeDimension
     extends Dimension
 {
-
-    @XmlElement( name = "LocalRepresentation" )
-    private LocalRepresentation representation;
-
-    public LocalRepresentation getRepresentation()
-    {
-        return representation;
-    }
-
-    public void setRepresentation( LocalRepresentation representation )
-    {
-        this.representation = representation;
-    }
 
 }

@@ -9,35 +9,8 @@
  */
 package org.openmrs.module.dhisreport.api.adx2;
 
-import javax.xml.bind.annotation.XmlElement;
-
 public class AdxConcept
-    extends BaseNamedType
+    extends BaseRepresentableType
 {
 
-    @XmlElement( name = "CoreRepresentation" )
-    CoreRepresentation coreRepresentation;
-
-    @XmlElement( name = "LocalRepresentation" )
-    LocalRepresentation localRepresentation;
-
-    public CoreRepresentation getCoreRepresentation()
-    {
-        return coreRepresentation;
-    }
-
-    public void setCoreRepresentation( CoreRepresentation coreRepresentation )
-    {
-        this.coreRepresentation = coreRepresentation;
-    }
-
-    public LocalRepresentation getLocalRepresentation()
-    {
-        return localRepresentation;
-    }
-
-    public void setLocalRepresentation( LocalRepresentation localRepresentation )
-    {
-        this.localRepresentation = localRepresentation;
-    }
 }

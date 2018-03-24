@@ -9,10 +9,11 @@
  */
 package org.openmrs.module.dhisreport.api.adx2;
 
+import java.util.List;
+
 import javax.xml.bind.annotation.XmlElement;
 import javax.xml.bind.annotation.XmlElementWrapper;
 import javax.xml.bind.annotation.XmlElements;
-import java.util.List;
 
 public class DataStructureComponents
     extends BaseType

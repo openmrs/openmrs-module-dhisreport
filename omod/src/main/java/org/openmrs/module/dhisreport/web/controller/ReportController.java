@@ -95,9 +95,8 @@ public class ReportController
     }
 
     @RequestMapping( value = "/module/dhisreport/setupReport", method = RequestMethod.GET )
-    public void setupReport( ModelMap model,
-        @RequestParam( value = "reportDefinition_id", required = false ) Integer reportDefinition_id,
-        HttpSession session )
+    public void setupReport( ModelMap model, @RequestParam( value = "reportDefinition_id", required = false )
+    Integer reportDefinition_id, HttpSession session )
     {
         DHIS2ReportingService service = Context.getService( DHIS2ReportingService.class );
         String errormsg = (String) session.getAttribute( "errorMessage" );
@@ -150,14 +149,13 @@ public class ReportController
     }
 
     @RequestMapping( value = "/module/dhisreport/executeReport", method = RequestMethod.POST )
-    public String executeReport( ModelMap model,
-        @RequestParam( value = "reportDefinition_id", required = true ) Integer reportDefinition_id,
-        @RequestParam( value = "location", required = false ) String OU_Code,
-        @RequestParam( value = "resultDestination", required = true ) String destination,
-        @RequestParam( value = "date", required = true ) String dateStr,
-        @RequestParam( value = "frequency", required = true ) String freq,
-        @RequestParam( value = "prior", required = true ) String prior, WebRequest webRequest,
-        HttpServletRequest request )
+    public String executeReport( ModelMap model, @RequestParam( value = "reportDefinition_id", required = true )
+    Integer reportDefinition_id, @RequestParam( value = "location", required = false )
+    String OU_Code, @RequestParam( value = "resultDestination", required = true )
+    String destination, @RequestParam( value = "date", required = true )
+    String dateStr, @RequestParam( value = "frequency", required = true )
+    String freq, @RequestParam( value = "prior", required = true )
+    String prior, WebRequest webRequest, HttpServletRequest request )
         throws Exception
     {
         DHIS2ReportingService service = Context.getService( DHIS2ReportingService.class );
@@ -180,8 +178,8 @@ public class ReportController
             catch ( ParseException pex )
             {
                 log.error( "Cannot convert passed string to date... Please check dateFormat", pex );
-                webRequest.setAttribute( WebConstants.OPENMRS_ERROR_ATTR,
-                    Context.getMessageSourceService().getMessage( "Date Parsing Error" ), WebRequest.SCOPE_SESSION );
+                webRequest.setAttribute( WebConstants.OPENMRS_ERROR_ATTR, Context.getMessageSourceService().getMessage(
+                    "Date Parsing Error" ), WebRequest.SCOPE_SESSION );
                 return null;
             }
         }
@@ -207,17 +205,16 @@ public class ReportController
             catch ( ParseException ex )
             {
                 log.error( "Cannot convert passed string to date... Please check dateFormat", ex );
-                webRequest.setAttribute( WebConstants.OPENMRS_ERROR_ATTR,
-                    Context.getMessageSourceService().getMessage( "Date Parsing Error" ), WebRequest.SCOPE_SESSION );
+                webRequest.setAttribute( WebConstants.OPENMRS_ERROR_ATTR, Context.getMessageSourceService().getMessage(
+                    "Date Parsing Error" ), WebRequest.SCOPE_SESSION );
                 return null;
             }
         }
         if ( freq.equalsIgnoreCase( "daily" ) )
         {
 
-            webRequest.setAttribute( WebConstants.OPENMRS_ERROR_ATTR,
-                Context.getMessageSourceService().getMessage( "dhisreport.dateFormatError" ),
-                WebRequest.SCOPE_SESSION );
+            webRequest.setAttribute( WebConstants.OPENMRS_ERROR_ATTR, Context.getMessageSourceService().getMessage(
+                "dhisreport.dateFormatError" ), WebRequest.SCOPE_SESSION );
             return null;
 
         }
@@ -298,19 +295,18 @@ public class ReportController
             StringWriter writer = new StringWriter();
             m.marshal( adxType, writer );
             log.warn( "\n\n" + writer.toString() + "\n\n" );
-            log.warn( "ABOUT TO POST: " + destination.equals( "post" ) );
             if ( destination.equals( "post" ) )
             {
-                ImportSummaries importSummaries = Context.getService( DHIS2ReportingService.class )
-                    .postAdxReport( adxType );
+                ImportSummaries importSummaries = Context.getService( DHIS2ReportingService.class ).postAdxReport(
+                    adxType );
                 agrs.setImportSummaries( importSummaries );
             }
             aggregatedList.add( agrs );
         }
 
-        org.openmrs.module.reporting.report.definition.ReportDefinition rrd = Context
-            .getService( ReportDefinitionService.class )
-            .getDefinitionByUuid( service.getReportDefinition( reportDefinition_id ).getReportingReportId() );
+        org.openmrs.module.reporting.report.definition.ReportDefinition rrd = Context.getService(
+            ReportDefinitionService.class ).getDefinitionByUuid(
+            service.getReportDefinition( reportDefinition_id ).getReportingReportId() );
 
         Map<String, Object> param = new HashMap<String, Object>();
         param.put( "startDate", period.getStartDate() );
@@ -318,8 +314,8 @@ public class ReportController
         if ( rrd != null )
         {
             ReportRequest rq = new ReportRequest();
-            rq.setReportDefinition(
-                new Mapped<org.openmrs.module.reporting.report.definition.ReportDefinition>( rrd, param ) );
+            rq.setReportDefinition( new Mapped<org.openmrs.module.reporting.report.definition.ReportDefinition>( rrd,
+                param ) );
             rq.setRenderingMode( new RenderingMode( new DefaultWebRenderer(), "Web", null, 100 ) );
             Report report = Context.getService( ReportService.class ).runReport( rq );
             model.addAttribute( "resultUuid", rq.getUuid() );

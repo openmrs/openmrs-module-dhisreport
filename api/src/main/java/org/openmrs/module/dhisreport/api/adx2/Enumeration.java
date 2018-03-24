@@ -9,22 +9,8 @@
  */
 package org.openmrs.module.dhisreport.api.adx2;
 
-import javax.xml.bind.annotation.XmlElement;
-
 public class Enumeration
     extends BaseType
 {
 
-    @XmlElement( name = "Ref" )
-    private Ref ref;
-
-    public Ref getRef()
-    {
-        return ref;
-    }
-
-    public void setRef( Ref ref )
-    {
-        this.ref = ref;
-    }
 }

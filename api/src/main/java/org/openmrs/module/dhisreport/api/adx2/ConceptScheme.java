@@ -9,8 +9,9 @@
  */
 package org.openmrs.module.dhisreport.api.adx2;
 
-import javax.xml.bind.annotation.XmlElement;
 import java.util.List;
+
+import javax.xml.bind.annotation.XmlElement;
 
 public class ConceptScheme
     extends BaseNamedType
@@ -19,4 +20,13 @@ public class ConceptScheme
     @XmlElement( name = "Concept" )
     private List<AdxConcept> concepts;
 
+    public List<AdxConcept> getConcepts()
+    {
+        return concepts;
+    }
+
+    public void setConcepts( List<AdxConcept> concepts )
+    {
+        this.concepts = concepts;
+    }
 }
