@@ -30,6 +30,7 @@ import org.apache.commons.logging.LogFactory;
 import org.openmrs.api.APIException;
 import org.openmrs.api.context.Context;
 import org.openmrs.module.dhisreport.api.DHIS2ReportingService;
+import org.openmrs.module.dhisreport.api.adx2.AdxConstants;
 import org.openmrs.module.dhisreport.api.adx2.model.Annotation;
 import org.openmrs.module.dhisreport.api.adx2.model.Code;
 import org.openmrs.module.dhisreport.api.adx2.model.CodeList;
@@ -202,7 +203,8 @@ public class ContentDataStructureConsumer
         CodeList firstCL = structure.getCodeList( firstDimension );
         for ( Code c : firstCL.getCodes() )
         {
-            disaggregations.add( c.getId() );
+            String disaggId = generateDisaggregationId( firstDimensionId, c.getId() );
+            disaggregations.add( disaggId );
         }
 
         if ( it.hasNext() )
@@ -213,24 +215,32 @@ public class ContentDataStructureConsumer
 
             for ( Code c : secondCL.getCodes() )
             {
-                disaggregations.add( c.getId() );
+                String disaggId = generateDisaggregationId( secondDimensionId, c.getId() );
+                disaggregations.add( disaggId );
             }
             // Do the various disaggregation combos between the 2 sets of disaggregations
             for ( Code outerCode : firstCL.getCodes() )
             {
                 for ( Code innerCode : secondCL.getCodes() )
                 {
+                    String outerId = generateDisaggregationId( firstDimensionId, outerCode.getId() );
+                    String innerId = generateDisaggregationId( secondDimensionId, innerCode.getId() );
                     // Hack to ensure the order of the annotations for a given code doesn't matter
                     // so that like Males P6Y-P12Y is the same as P6Y-P12Y Males
-                    String[] ids = new String[] { outerCode.getId(), innerCode.getId() };
+                    String[] ids = new String[] { outerId, innerId };
                     Arrays.sort( ids );
-                    disaggregations.add( ids[0] + ":" + ids[1] );
+                    disaggregations.add( ids[0] + AdxConstants.DISSAGGREGATION_SEPARATOR + ids[1] );
 
                 }
             }
         }
 
         return disaggregations;
+    }
+
+    private String generateDisaggregationId( String disaggregation, String option )
+    {
+        return disaggregation + AdxConstants.DISSAGGREGATION_OPTION_SEPARATOR + option;
     }
 
 }

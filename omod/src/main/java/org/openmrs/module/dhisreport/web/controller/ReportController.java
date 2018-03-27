@@ -34,7 +34,9 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpSession;
 import javax.xml.bind.JAXBContext;
 import javax.xml.bind.Marshaller;
+import javax.xml.namespace.QName;
 
+import org.apache.commons.lang.StringUtils;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.openmrs.Location;
@@ -45,6 +47,7 @@ import org.openmrs.module.dhisreport.api.DHIS2ReportingService;
 import org.openmrs.module.dhisreport.api.adx.AdxType;
 import org.openmrs.module.dhisreport.api.adx.DataValueType;
 import org.openmrs.module.dhisreport.api.adx.GroupType;
+import org.openmrs.module.dhisreport.api.adx2.AdxConstants;
 import org.openmrs.module.dhisreport.api.dhis.HttpDhis2Server;
 import org.openmrs.module.dhisreport.api.dxf2.DataValue;
 import org.openmrs.module.dhisreport.api.dxf2.DataValueSet;
@@ -462,6 +465,12 @@ public class ReportController
             DataValueType dvtype = new DataValueType();
             dvtype.setDataElement( dv.getDataElement() );
             dvtype.setValue( new BigDecimal( dv.getValue() ) );
+            String[] aggs = StringUtils.split( dv.getCategoryOptionCombo(), AdxConstants.DISSAGGREGATION_SEPARATOR );
+            for ( String agg : aggs )
+            {
+                String[] nameAndValue = StringUtils.split( agg, AdxConstants.DISSAGGREGATION_OPTION_SEPARATOR );
+                dvtype.getOtherAttributes().put( new QName( nameAndValue[0] ), nameAndValue[1] );
+            }
             dvTypeList.add( dvtype );
         }
         gt.getDataValue().addAll( dvTypeList );
