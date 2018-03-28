@@ -24,7 +24,6 @@ import javax.xml.bind.JAXBException;
 import javax.xml.bind.Unmarshaller;
 import javax.xml.transform.sax.SAXSource;
 
-import org.apache.commons.lang.StringUtils;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.openmrs.api.APIException;
@@ -35,7 +34,6 @@ import org.openmrs.module.dhisreport.api.adx2.model.Annotation;
 import org.openmrs.module.dhisreport.api.adx2.model.Code;
 import org.openmrs.module.dhisreport.api.adx2.model.CodeList;
 import org.openmrs.module.dhisreport.api.adx2.model.Dimension;
-import org.openmrs.module.dhisreport.api.adx2.model.Header;
 import org.openmrs.module.dhisreport.api.adx2.model.Structure;
 import org.openmrs.module.dhisreport.api.model.DataElement;
 import org.openmrs.module.dhisreport.api.model.DataValueTemplate;
@@ -61,7 +59,9 @@ public class ContentDataStructureConsumer
     private static final String DISAGGREGATION_DEFAULT = "Default";
 
     public ReportTemplates consume( InputStream is )
-        throws JAXBException, SAXException, IOException
+        throws JAXBException,
+        SAXException,
+        IOException
     {
 
         Structure structure = parseDSD( is );
@@ -124,16 +124,8 @@ public class ContentDataStructureConsumer
         }
 
         ReportDefinition reportDef = new ReportDefinition();
-        Header header = structure.getHeader();
-        reportDef.setCode( header.getId() );
-        if ( StringUtils.isNotBlank( header.getName() ) )
-        {
-            reportDef.setName( header.getName() );
-        }
-        else
-        {
-            reportDef.setName( header.getId() );
-        }
+        reportDef.setCode( structure.getCode() );
+        reportDef.setName( structure.getName() );
         reportDef.setDataValueTemplates( dataValueElements );
 
         ReportTemplates reportTemplates = new ReportTemplates();
@@ -145,7 +137,9 @@ public class ContentDataStructureConsumer
     }
 
     private Structure parseDSD( InputStream is )
-        throws JAXBException, IOException, SAXException
+        throws JAXBException,
+        IOException,
+        SAXException
     {
 
         XMLFilterImpl xmlFilter = new NamepaceStrippingXmlFilter();

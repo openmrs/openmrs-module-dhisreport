@@ -18,7 +18,8 @@ import org.openmrs.module.dhisreport.api.adx2.StructureUtils;
 
 @XmlRootElement( name = "Structure" )
 public class Structure
-    extends BaseType
+    extends
+    BaseType
 {
     @XmlElement( name = "Header" )
     private Header header;
@@ -30,6 +31,16 @@ public class Structure
 
     @XmlElement( name = "Structures" )
     private Structures structures;
+
+    public String getCode()
+    {
+        return structures.getDataStructure().getId();
+    }
+
+    public String getName()
+    {
+        return structures.getDataStructure().getName();
+    }
 
     private List<Dimension> getDimensions()
     {

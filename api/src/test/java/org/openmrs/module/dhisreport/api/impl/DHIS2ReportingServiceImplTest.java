@@ -44,7 +44,8 @@ import org.springframework.core.io.ClassPathResource;
  * Tests {@link $DHIS2ReportingService} .
  */
 public class DHIS2ReportingServiceImplTest
-    extends BaseModuleContextSensitiveTest
+    extends
+    BaseModuleContextSensitiveTest
 {
 
     protected static final String INITIAL_OBS_XML = "db/ObsServiceTest-initial.xml";
@@ -220,6 +221,9 @@ public class DHIS2ReportingServiceImplTest
         dhis2ReportingService.unMarshallAdxAndSaveReportTemplates( resource.getInputStream() );
 
         rt = dhis2ReportingService.getReportTemplates();
+        ReportDefinition reportDef = rt.getReportDefinitions().get( 0 );
+        assertEquals( "DSD_ATB_005", reportDef.getCode() );
+        assertEquals( "{name {ATB - 005 ART SUMMARY}}", reportDef.getName() );
         assertEquals( countDataElements + 3, rt.getDataElements().size() );
         assertEquals( countDisaggregations + 12, rt.getDisaggregations().size() );
         List<ReportDefinition> newReportDefs = rt.getReportDefinitions();
