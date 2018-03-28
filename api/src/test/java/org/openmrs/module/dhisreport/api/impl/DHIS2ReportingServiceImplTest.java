@@ -44,8 +44,7 @@ import org.springframework.core.io.ClassPathResource;
  * Tests {@link $DHIS2ReportingService} .
  */
 public class DHIS2ReportingServiceImplTest
-    extends
-    BaseModuleContextSensitiveTest
+    extends BaseModuleContextSensitiveTest
 {
 
     protected static final String INITIAL_OBS_XML = "db/ObsServiceTest-initial.xml";

@@ -59,9 +59,7 @@ public class ContentDataStructureConsumer
     private static final String DISAGGREGATION_DEFAULT = "Default";
 
     public ReportTemplates consume( InputStream is )
-        throws JAXBException,
-        SAXException,
-        IOException
+        throws JAXBException, SAXException, IOException
     {
 
         Structure structure = parseDSD( is );
@@ -137,9 +135,7 @@ public class ContentDataStructureConsumer
     }
 
     private Structure parseDSD( InputStream is )
-        throws JAXBException,
-        IOException,
-        SAXException
+        throws JAXBException, IOException, SAXException
     {
 
         XMLFilterImpl xmlFilter = new NamepaceStrippingXmlFilter();

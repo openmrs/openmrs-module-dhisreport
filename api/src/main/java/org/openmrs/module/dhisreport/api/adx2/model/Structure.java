@@ -18,8 +18,7 @@ import org.openmrs.module.dhisreport.api.adx2.StructureUtils;
 
 @XmlRootElement( name = "Structure" )
 public class Structure
-    extends
-    BaseType
+    extends BaseType
 {
     @XmlElement( name = "Header" )
     private Header header;
