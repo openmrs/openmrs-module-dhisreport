@@ -76,7 +76,7 @@ public class ReportDefinitionController
         InputStream is = multipartFile.getInputStream();
         try
         {
-            service.unMarshallandSaveReportTemplates( is );
+            service.unMarshallAdxAndSaveReportTemplates( is );
             session.setAttribute( WebConstants.OPENMRS_MSG_ATTR, Context.getMessageSourceService().getMessage(
                 "dhisreport.uploadSuccess" ) );
         }

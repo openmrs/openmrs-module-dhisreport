@@ -123,6 +123,7 @@ public class ContentDataStructureConsumer
 
         ReportDefinition reportDef = new ReportDefinition();
         reportDef.setCode( structure.getCode() );
+        reportDef.setUid( reportDef.getCode() );
         reportDef.setName( structure.getName() );
         reportDef.setDataValueTemplates( dataValueElements );
 
@@ -154,6 +155,7 @@ public class ContentDataStructureConsumer
         {
             d = new Disaggregation();
             d.setCode( id );
+            d.setUid( d.getCode() );
             // TODO should be the name instead
             d.setName( id );
         }
@@ -165,6 +167,7 @@ public class ContentDataStructureConsumer
     {
         DataElement de = new DataElement();
         de.setCode( code.getId() );
+        de.setUid( de.getCode() );
         de.setName( code.getName() );
 
         return de;
