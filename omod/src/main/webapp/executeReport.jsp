@@ -22,61 +22,74 @@
             </tr>
         </table>
     </div>
-    
+
     <!-- <c:forEach var="dv" items="${dataValueSet.dataValues}">
         <p><spring:message code="dhisreport.dataElement" />: Code: ${dv.dataElement}, Value: ${dv.value}</p>
     </c:forEach>
-    
+
     <c:forEach var="dvm" items="${dataElementMap}">
         <p><spring:message code="dhisreport.dataElement" />: Name: ${dvm.key.name} Code: ${dvm.key.code} Value: ${dvm.value}</p>
     </c:forEach>
      -->
      <br>
-<div>
-	<table style="width:600px">
-	<tr>
-	<th>DataElement Name</th>
-	<th>DataElement Code</th>		
-	<th>Value</th>
-	</tr>
-	<tr>
-    <c:forEach var="dvm" items="${aggregatedValues.dataElementMap}">
-    <tr>
-  		<td>${dvm.key.name}</td>
-  		<td>${dvm.key.code}</td>		
-  		<td>${dvm.value}</td>
-  	</tr>
-	<tr>
-  	</c:forEach>
-	</table>
-	</div>
 </c:if>
 <c:if test="${not empty aggregatedValues.importSummary}">
-    
+    <h3>Import Summary</h3>
     <div>
         <table>
             <tr><td><spring:message code="dhisreport.status" />: </td><td>${aggregatedValues.importSummary.status}</td></tr>
             <tr><td><spring:message code="dhisreport.description" />: </td><td>${aggregatedValues.importSummary.description}</td></tr>
-            <tr><td><spring:message code="dhisreport.dataValueCount" />: </td><td>${aggregatedValues.importSummary.importCount}</td></tr>
+            <tr><td><spring:message code="dhisreport.dataValueCount" />: </td><td>${fn:length(aggregatedValues.dataValueSet.dataValues)}</td></tr>
+        </table>
+    </div>
+    <br />
+    <div>
+        <table>
+            <tr><td><spring:message code="dhisreport.imported" />: </td><td>${aggregatedValues.importSummary.importCount.imported}</td></tr>
+            <tr><td><spring:message code="dhisreport.updated" />: </td><td>${aggregatedValues.importSummary.importCount.updated}</td></tr>
+            <tr><td><spring:message code="dhisreport.deleted" />: </td><td>${aggregatedValues.importSummary.importCount.deleted}</td></tr>
+            <tr><td><spring:message code="dhisreport.ignored" />: </td><td>${aggregatedValues.importSummary.importCount.ignored}</td></tr>
+        </table>
+    </div>
+    <br />
+    <h3>Data Elements</h3>
+    <div>
+        <table style="width:600px" border="1" cellspacing="0">
+            <tr>
+                <th style="text-align: center">Name</th>
+                <th style="text-align: center">Code</th>
+            </tr>
+            <tr>
+                <c:forEach var="de" items="${aggregatedValues.dataElements}">
+            <tr>
+                <td style="text-align: center">${de.name}</td>
+                <td style="text-align: center">${de.code}</td>
+            </tr>
+            <tr>
+                </c:forEach>
+        </table>
+    </div>
+    <br />
+    <h3>Data Values</h3>
+    <div>
+        <table style="width:600px" border="1" cellspacing="0">
+            <tr>
+                <th style="text-align: center">Data Element</th>
+                <th style="text-align: center">Disaggregation(s)</th>
+                <th style="text-align: center">Value</th>
+            </tr>
+            <tr>
+                <c:forEach var="dv" items="${aggregatedValues.dataValueSet.dataValues}">
+            <tr>
+                <td style="text-align: center">${dv.dataElement}</td>
+                <td style="text-align: center">${dv.categoryOptionCombo}</td>
+                <td style="text-align: center">${dv.value}</td>
+            </tr>
+            <tr>
+                </c:forEach>
         </table>
     </div>
 </c:if>
-
-    <c:if test="${not empty aggregatedValues.importSummaries}">
-        <div>
-            <table>
-                <tr><td><spring:message code="dhisreport.imported" />: </td><td>${aggregatedValues.importSummaries.imported}</td></tr>
-                <tr><td><spring:message code="dhisreport.updated" />: </td><td>${aggregatedValues.importSummaries.updated}</td></tr>
-                <tr><td><spring:message code="dhisreport.deleted" />: </td><td>${aggregatedValues.importSummaries.deleted}</td></tr>
-                <tr><td><spring:message code="dhisreport.ignored" />: </td><td>${aggregatedValues.importSummaries.ignored}</td></tr>
-                <c:forEach var="importSummaryElement" items="${aggregatedValues.importSummaries.importSummaryList}">
-                    <tr><td><spring:message code="dhisreport.status" />: </td><td>${importSummaryElement.status}</td></tr>
-                    <tr><td><spring:message code="dhisreport.description" />: </td><td>${importSummaryElement.description}</td></tr>
-                    <tr><td><spring:message code="dhisreport.dataValueCount" />: </td><td>${importSummaryElement.importCount}</td></tr>
-                </c:forEach>
-            </table>
-        </div>
-    </c:if>
 </c:forEach>
 
 <%@ include file="/WEB-INF/template/footer.jsp"%>

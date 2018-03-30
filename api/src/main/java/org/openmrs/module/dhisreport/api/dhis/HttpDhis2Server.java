@@ -22,10 +22,12 @@ package org.openmrs.module.dhisreport.api.dhis;
 import java.io.IOException;
 import java.io.StringWriter;
 import java.net.URL;
+
 import javax.xml.bind.JAXBContext;
 import javax.xml.bind.JAXBException;
 import javax.xml.bind.Marshaller;
 import javax.xml.bind.Unmarshaller;
+
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.apache.http.Header;
@@ -42,11 +44,10 @@ import org.apache.http.impl.client.DefaultHttpClient;
 import org.apache.http.protocol.BasicHttpContext;
 import org.hisp.dhis.dxf2.Dxf2Exception;
 import org.hisp.dhis.dxf2.importsummary.ImportStatus;
-import org.hisp.dhis.dxf2.importsummary.ImportSummary;
 import org.openmrs.module.dhisreport.api.DHIS2ReportingException;
 import org.openmrs.module.dhisreport.api.adx.AdxType;
 import org.openmrs.module.dhisreport.api.dxf2.DataValueSet;
-import org.openmrs.module.dhisreport.api.importsummary.ImportSummaries;
+import org.openmrs.module.dhisreport.api.importsummary.ImportSummary;
 import org.openmrs.module.dhisreport.api.model.ReportDefinition;
 
 /**
@@ -61,7 +62,7 @@ public class HttpDhis2Server
 
     public static final String REPORTS_METADATA_PATH = "/api/forms.xml";
 
-    public static final String DATAVALUESET_PATH = "/api/dataValueSets?dataElementIdScheme=CODE&orgUnitIdScheme=CODE&idScheme=CODE";
+    public static final String DATAVALUESET_PATH = "/api/dataValueSets?dataElementIdScheme=code&orgUnitIdScheme=code";
 
     private URL url;
 
@@ -140,12 +141,12 @@ public class HttpDhis2Server
             throw new Dxf2Exception( "Problem marshalling dataValueSet", ex );
         }
 
-        //System.out.print( "URL-" + url );
+        // System.out.print( "URL-" + url );
 
         String host = url.getHost();
         int port = url.getPort();
 
-        //System.out.print( "URL-" + url + ":host-" + host + ":port-" );
+        // System.out.print( "URL-" + url + ":host-" + host + ":port-" );
         // System.out.println( port );
 
         HttpHost targetHost = new HttpHost( host, port, url.getProtocol() );
@@ -179,7 +180,7 @@ public class HttpDhis2Server
             else
             {
                 summary = new ImportSummary();
-                summary.setStatus( ImportStatus.ERROR );
+                summary.setStatus( ImportStatus.ERROR.name() );
             }
             // EntityUtils.consume( entity );
 
@@ -205,11 +206,11 @@ public class HttpDhis2Server
     }
 
     @Override
-    public ImportSummaries postAdxReport( AdxType report )
+    public ImportSummary postAdxReport( AdxType report )
         throws DHIS2ReportingException
     {
         log.debug( "Posting A report" );
-        ImportSummaries summaries = null;
+        ImportSummary summary = null;
 
         StringWriter xmlReport = new StringWriter();
         try
@@ -226,12 +227,12 @@ public class HttpDhis2Server
             throw new Dxf2Exception( "Problem marshalling adxtype", ex );
         }
 
-        //System.out.print( "URL-" + url );
+        // System.out.print( "URL-" + url );
 
         String host = url.getHost();
         int port = url.getPort();
 
-        //System.out.print( "URL-" + url + ":host-" + host + ":port-" );
+        // System.out.print( "URL-" + url + ":host-" + host + ":port-" );
         // System.out.println( port );
 
         HttpHost targetHost = new HttpHost( host, port, url.getProtocol() );
@@ -258,13 +259,13 @@ public class HttpDhis2Server
 
             if ( entity != null )
             {
-                JAXBContext jaxbImportSummaryContext = JAXBContext.newInstance( ImportSummaries.class );
+                JAXBContext jaxbImportSummaryContext = JAXBContext.newInstance( ImportSummary.class );
                 Unmarshaller importSummaryUnMarshaller = jaxbImportSummaryContext.createUnmarshaller();
-                summaries = (ImportSummaries) importSummaryUnMarshaller.unmarshal( entity.getContent() );
+                summary = (ImportSummary) importSummaryUnMarshaller.unmarshal( entity.getContent() );
             }
             else
             {
-                summaries = new ImportSummaries();
+                summary = new ImportSummary();
             }
             // EntityUtils.consume( entity );
 
@@ -286,7 +287,7 @@ public class HttpDhis2Server
         {
             httpclient.getConnectionManager().shutdown();
         }
-        return summaries;
+        return summary;
     }
 
     @Override

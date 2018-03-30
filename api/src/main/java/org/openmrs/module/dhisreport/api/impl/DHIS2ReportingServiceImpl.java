@@ -35,7 +35,6 @@ import javax.xml.bind.Unmarshaller;
 
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
-import org.hisp.dhis.dxf2.importsummary.ImportSummary;
 import org.openmrs.Location;
 import org.openmrs.LocationAttribute;
 import org.openmrs.api.context.Context;
@@ -48,7 +47,7 @@ import org.openmrs.module.dhisreport.api.db.DHIS2ReportingDAO;
 import org.openmrs.module.dhisreport.api.dhis.HttpDhis2Server;
 import org.openmrs.module.dhisreport.api.dxf2.DataValue;
 import org.openmrs.module.dhisreport.api.dxf2.DataValueSet;
-import org.openmrs.module.dhisreport.api.importsummary.ImportSummaries;
+import org.openmrs.module.dhisreport.api.importsummary.ImportSummary;
 import org.openmrs.module.dhisreport.api.model.DataElement;
 import org.openmrs.module.dhisreport.api.model.DataValueTemplate;
 import org.openmrs.module.dhisreport.api.model.Disaggregation;
@@ -126,7 +125,7 @@ public class DHIS2ReportingServiceImpl
     }
 
     @Override
-    public ImportSummaries postAdxReport( AdxType adxReport )
+    public ImportSummary postAdxReport( AdxType adxReport )
         throws DHIS2ReportingException
     {
         return dhis2Server.postAdxReport( adxReport );

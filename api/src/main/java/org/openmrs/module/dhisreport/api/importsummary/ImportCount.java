@@ -27,6 +27,9 @@ public class ImportCount
     @XmlAttribute( required = true )
     private int ignored;
 
+    @XmlAttribute( required = true )
+    private int deleted;
+
     public int getImported()
     {
         return imported;
@@ -57,10 +60,20 @@ public class ImportCount
         this.ignored = ignored;
     }
 
+    public int getDeleted()
+    {
+        return deleted;
+    }
+
+    public void setDeleted( int deleted )
+    {
+        this.deleted = deleted;
+    }
+
     @Override
     public String toString()
     {
-        return "[imports=" + imported + ", updates=" + updated + ", ignores=" + ignored + "]";
+        return "[imports=" + imported + ", updates=" + updated + ", ignores=" + ignored + ", deletes=" + deleted + "]";
     }
 
     public void incrementImported()
@@ -91,5 +104,10 @@ public class ImportCount
     public void incrementIgnored( int n )
     {
         ignored += n;
+    }
+
+    public void incrementDeleted( int n )
+    {
+        deleted += n;
     }
 }

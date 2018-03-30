@@ -18,14 +18,17 @@
  **/
 package org.openmrs.module.dhisreport.api;
 
-import org.hisp.dhis.dxf2.importsummary.ImportSummary;
+import java.io.InputStream;
+import java.io.OutputStream;
+import java.util.Collection;
+
 import org.openmrs.Location;
 import org.openmrs.api.OpenmrsService;
 import org.openmrs.module.dhisreport.api.adx.AdxType;
 import org.openmrs.module.dhisreport.api.db.DHIS2ReportingDAO;
 import org.openmrs.module.dhisreport.api.dhis.HttpDhis2Server;
 import org.openmrs.module.dhisreport.api.dxf2.DataValueSet;
-import org.openmrs.module.dhisreport.api.importsummary.ImportSummaries;
+import org.openmrs.module.dhisreport.api.importsummary.ImportSummary;
 import org.openmrs.module.dhisreport.api.model.DataElement;
 import org.openmrs.module.dhisreport.api.model.DataValueTemplate;
 import org.openmrs.module.dhisreport.api.model.Disaggregation;
@@ -33,10 +36,6 @@ import org.openmrs.module.dhisreport.api.model.ReportDefinition;
 import org.openmrs.module.dhisreport.api.model.ReportTemplates;
 import org.openmrs.module.dhisreport.api.utils.Period;
 import org.springframework.transaction.annotation.Transactional;
-
-import java.io.InputStream;
-import java.io.OutputStream;
-import java.util.Collection;
 
 /**
  * This service exposes module's core functionality. It is a Spring managed bean
@@ -84,7 +83,7 @@ public interface DHIS2ReportingService
     public ImportSummary postDataValueSet( DataValueSet dvset )
         throws DHIS2ReportingException;
 
-    public ImportSummaries postAdxReport( AdxType adxReport )
+    public ImportSummary postAdxReport( AdxType adxReport )
         throws DHIS2ReportingException;
 
     // -----------------------------------------------------------------------
@@ -200,7 +199,8 @@ public interface DHIS2ReportingService
     public void saveReportTemplates( ReportTemplates rt );
 
     /**
-     * Reads the ADX contents of the specified InputStream to generate and save report templates
+     * Reads the ADX contents of the specified InputStream to generate and save
+     * report templates
      *
      * @param is the {@link InputStream}
      * @throws Exception
@@ -219,7 +219,7 @@ public interface DHIS2ReportingService
     public ReportTemplates getReportTemplates();
 
     /**
-     * @param is
+     * @param os
      * @throws Exception
      */
     public void marshallReportTemplates( OutputStream os, ReportTemplates rt )

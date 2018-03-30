@@ -45,7 +45,7 @@ public class GroupType
     @XmlElement( required = true )
     protected List<DataValueType> dataValue;
 
-    @XmlAttribute( name = "datSet", required = true )
+    @XmlAttribute( name = "dataSet", required = true )
     protected String dataSet;
 
     @XmlAttribute( name = "period", required = true )

@@ -27,8 +27,10 @@ import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
+import java.util.Set;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpSession;
@@ -51,7 +53,7 @@ import org.openmrs.module.dhisreport.api.adx2.AdxConstants;
 import org.openmrs.module.dhisreport.api.dhis.HttpDhis2Server;
 import org.openmrs.module.dhisreport.api.dxf2.DataValue;
 import org.openmrs.module.dhisreport.api.dxf2.DataValueSet;
-import org.openmrs.module.dhisreport.api.importsummary.ImportSummaries;
+import org.openmrs.module.dhisreport.api.importsummary.ImportSummary;
 import org.openmrs.module.dhisreport.api.model.DataElement;
 import org.openmrs.module.dhisreport.api.model.DataValueTemplate;
 import org.openmrs.module.dhisreport.api.model.ReportDefinition;
@@ -282,27 +284,25 @@ public class ReportController
             // Set OrgUnit code into DataValueSet
 
             List<DataValue> datavalue = dvs.getDataValues();
-            Map<DataElement, String> deset = new HashMap<DataElement, String>();
+            Set<DataElement> dataElements = new HashSet<DataElement>();
             for ( DataValue dv : datavalue )
             {
 
                 DataElement detrmp = service.getDataElementByCode( dv.getDataElement() );
                 // System.out.println( detrmp.getName() + detrmp.getCode() );
-                deset.put( detrmp, dv.getValue() );
+                dataElements.add( detrmp );
             }
             agrs.setDataValueSet( dvs );
-            agrs.setDataElementMap( deset );
+            agrs.setDataElements( dataElements );
             AdxType adxType = getAdxType( dvs, dateStr );
             JAXBContext jxb = JAXBContext.newInstance( AdxType.class );
             Marshaller m = jxb.createMarshaller();
             StringWriter writer = new StringWriter();
             m.marshal( adxType, writer );
-            log.warn( "\n\n" + writer.toString() + "\n\n" );
             if ( destination.equals( "post" ) )
             {
-                ImportSummaries importSummaries = Context.getService( DHIS2ReportingService.class ).postAdxReport(
-                    adxType );
-                agrs.setImportSummaries( importSummaries );
+                ImportSummary importSummary = Context.getService( DHIS2ReportingService.class ).postAdxReport( adxType );
+                agrs.setImportSummary( importSummary );
             }
             aggregatedList.add( agrs );
         }

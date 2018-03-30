@@ -15,6 +15,7 @@ import javax.xml.bind.annotation.*;
 import java.util.List;
 
 @XmlAccessorType( XmlAccessType.FIELD )
+@XmlRootElement
 public class ImportSummary
 {
     @XmlElement( required = true )

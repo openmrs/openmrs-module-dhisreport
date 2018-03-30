@@ -25,17 +25,16 @@ import javax.xml.bind.JAXBContext;
 import javax.xml.bind.Marshaller;
 import javax.xml.bind.Unmarshaller;
 import org.openmrs.module.dhisreport.api.dxf2.DataValueSet;
-import org.hisp.dhis.dxf2.importsummary.ImportSummary;
 import org.junit.Before;
 import org.junit.Ignore;
 import org.junit.Test;
 import org.openmrs.api.context.Context;
 import org.openmrs.module.dhisreport.api.dhis.HttpDhis2Server;
-import org.openmrs.test.BaseModuleContextSensitiveTest;
+import org.openmrs.module.dhisreport.api.importsummary.ImportSummary;
 import org.springframework.core.io.ClassPathResource;
 
 /**
- * Tests {@link $ DHIS2ReportingService} .
+ * Tests {@link DHIS2ReportingService} .
  */
 public class DHIS2ReportingServiceDXFTest
 {

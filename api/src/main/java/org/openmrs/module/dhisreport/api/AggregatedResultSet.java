@@ -1,10 +1,9 @@
 package org.openmrs.module.dhisreport.api;
 
-import java.util.Map;
+import java.util.Set;
 
-import org.hisp.dhis.dxf2.importsummary.ImportSummary;
 import org.openmrs.module.dhisreport.api.dxf2.DataValueSet;
-import org.openmrs.module.dhisreport.api.importsummary.ImportSummaries;
+import org.openmrs.module.dhisreport.api.importsummary.ImportSummary;
 import org.openmrs.module.dhisreport.api.model.DataElement;
 
 /**
@@ -16,11 +15,9 @@ public class AggregatedResultSet
 
     private DataValueSet dataValueSet;
 
-    private Map<DataElement, String> dataElementMap;
+    private Set<DataElement> dataElements;
 
     private ImportSummary importSummary;
-
-    private ImportSummaries importSummaries;
 
     public DataValueSet getDataValueSet()
     {
@@ -32,14 +29,14 @@ public class AggregatedResultSet
         this.dataValueSet = dataValueSet;
     }
 
-    public Map<DataElement, String> getDataElementMap()
+    public Set<DataElement> getDataElements()
     {
-        return dataElementMap;
+        return dataElements;
     }
 
-    public void setDataElementMap( Map<DataElement, String> dataElementMap )
+    public void setDataElements( Set<DataElement> dataElements )
     {
-        this.dataElementMap = dataElementMap;
+        this.dataElements = dataElements;
     }
 
     public ImportSummary getImportSummary()
@@ -50,16 +47,6 @@ public class AggregatedResultSet
     public void setImportSummary( ImportSummary importSummary )
     {
         this.importSummary = importSummary;
-    }
-
-    public ImportSummaries getImportSummaries()
-    {
-        return importSummaries;
-    }
-
-    public void setImportSummaries( ImportSummaries importSummaries )
-    {
-        this.importSummaries = importSummaries;
     }
 
 }

@@ -7,7 +7,6 @@ import static org.mockito.Mockito.when;
 import java.math.BigDecimal;
 import java.net.MalformedURLException;
 import java.net.URL;
-import java.util.ArrayList;
 import java.util.GregorianCalendar;
 import java.util.List;
 import java.util.Map;
@@ -23,7 +22,6 @@ import org.openmrs.module.dhisreport.api.adx.AdxType;
 import org.openmrs.module.dhisreport.api.adx.DataValueType;
 import org.openmrs.module.dhisreport.api.adx.GroupType;
 import org.openmrs.module.dhisreport.api.adx.ObjectFactory;
-import org.openmrs.module.dhisreport.api.importsummary.ImportSummaries;
 import org.openmrs.module.dhisreport.api.importsummary.ImportSummary;
 import org.openmrs.test.BaseModuleContextSensitiveTest;
 
@@ -66,16 +64,12 @@ public class HttpDhis2ServerTest
         server.setPassword( "district" );
         server.setUsername( "admin2" );
 
-        ImportSummaries summary = new ImportSummaries();
-        List<ImportSummary> importSummaryList = new ArrayList<ImportSummary>();
-        ImportSummary is = new ImportSummary();
-        is.setStatus( "SUCCESS" );
-        importSummaryList.add( is );
-        summary.setImportSummaryList( importSummaryList );
+        ImportSummary summary = new ImportSummary();
+        summary.setStatus( "SUCCESS" );
         when( server.postAdxReport( adxt ) ).thenReturn( summary );
-        ImportSummaries summaries = server.postAdxReport( adxt );
+        summary = server.postAdxReport( adxt );
 
-        assertEquals( summaries.getImportSummaryList().get( 0 ).getStatus(), "SUCCESS" );
+        assertEquals( summary.getStatus(), "SUCCESS" );
     }
 
 }
