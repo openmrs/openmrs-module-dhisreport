@@ -194,10 +194,13 @@ public class ContentDataStructureConsumer
         String firstDimensionId = it.next().getText();
         Dimension firstDimension = structure.getDimensionById( firstDimensionId );
         CodeList firstCL = structure.getCodeList( firstDimension );
-        for ( Code c : firstCL.getCodes() )
+        if ( !it.hasNext() )
         {
-            String disaggId = generateDisaggregationId( firstDimensionId, c.getId() );
-            disaggregations.add( disaggId );
+            for ( Code c : firstCL.getCodes() )
+            {
+                String disaggId = generateDisaggregationId( firstDimensionId, c.getId() );
+                disaggregations.add( disaggId );
+            }
         }
 
         if ( it.hasNext() )
@@ -206,11 +209,6 @@ public class ContentDataStructureConsumer
             Dimension secDimension = structure.getDimensionById( secondDimensionId );
             CodeList secondCL = structure.getCodeList( secDimension );
 
-            for ( Code c : secondCL.getCodes() )
-            {
-                String disaggId = generateDisaggregationId( secondDimensionId, c.getId() );
-                disaggregations.add( disaggId );
-            }
             // Do the various disaggregation combos between the 2 sets of disaggregations
             for ( Code outerCode : firstCL.getCodes() )
             {
