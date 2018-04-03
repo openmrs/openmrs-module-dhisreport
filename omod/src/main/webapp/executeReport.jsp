@@ -12,6 +12,7 @@
             <tr><td><spring:message code="dhisreport.dataSet" />: </td><td>${aggregatedValues.dataValueSet.dataSet}</td></tr>
             <tr><td><spring:message code="dhisreport.orgUnit" />: </td><td>${aggregatedValues.dataValueSet.orgUnit}</td></tr>
             <tr><td><spring:message code="dhisreport.period" />: </td><td>${aggregatedValues.dataValueSet.period}</td></tr>
+            <tr><td><spring:message code="dhisreport.dataValueCount" />: </td><td>${fn:length(aggregatedValues.dataValueSet.dataValues)}</td></tr>
             <tr><td><spring:message code="dhisreport.reportName" />: </td>
                 <c:if test="${empty resultUuid}">
                 <td><div id='openmrs_error'><spring:message code="dhisreport.unmappedReport" /></div></td>
@@ -39,18 +40,25 @@
         <table>
             <tr><td><spring:message code="dhisreport.status" />: </td><td>${aggregatedValues.importSummary.status}</td></tr>
             <tr><td><spring:message code="dhisreport.description" />: </td><td>${aggregatedValues.importSummary.description}</td></tr>
-            <tr><td><spring:message code="dhisreport.dataValueCount" />: </td><td>${fn:length(aggregatedValues.dataValueSet.dataValues)}</td></tr>
         </table>
     </div>
     <br />
     <div>
-        <table>
-            <tr><td><spring:message code="dhisreport.imported" />: </td><td>${aggregatedValues.importSummary.importCount.imported}</td></tr>
-            <tr><td><spring:message code="dhisreport.updated" />: </td><td>${aggregatedValues.importSummary.importCount.updated}</td></tr>
-            <tr><td><spring:message code="dhisreport.deleted" />: </td><td>${aggregatedValues.importSummary.importCount.deleted}</td></tr>
-            <tr><td><spring:message code="dhisreport.ignored" />: </td><td>${aggregatedValues.importSummary.importCount.ignored}</td></tr>
-        </table>
+        <spring:message code="dhisreport.imported" /> ${aggregatedValues.importSummary.importCount.imported},
+        <spring:message code="dhisreport.updated" /> ${aggregatedValues.importSummary.importCount.updated},
+        <spring:message code="dhisreport.deleted" /> ${aggregatedValues.importSummary.importCount.deleted},
+        <spring:message code="dhisreport.ignored" /> ${aggregatedValues.importSummary.importCount.ignored}
     </div>
+    <c:if test="${not empty aggregatedValues.importSummary.conflicts}">
+    <br />
+    <b><spring:message code="dhisreport.conflicts" />:</b>
+    <br />
+    <ul>
+    <c:forEach var="conflict" items="${aggregatedValues.importSummary.conflicts}">
+        <li>${conflict.object != null ? "[" : ""}${conflict.object}${conflict.object != null ? "] " : ""} ${conflict.value}</li>
+    </c:forEach>
+    </ul>
+    </c:if>
     <br />
     <h3>Data Elements</h3>
     <div>
