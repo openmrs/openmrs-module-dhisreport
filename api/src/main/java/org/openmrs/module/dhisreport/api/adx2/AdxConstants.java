@@ -16,4 +16,6 @@ public class AdxConstants
 
     public static final String DISSAGGREGATION_OPTION_SEPARATOR = "=";
 
+    public static final String DISAGGREGATION_DEFAULT = "Default";
+
 }

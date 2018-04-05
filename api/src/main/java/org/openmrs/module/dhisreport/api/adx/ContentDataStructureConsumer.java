@@ -56,8 +56,6 @@ public class ContentDataStructureConsumer
 
     private static final String ID_DISAGGREGATION = "Disaggregation";
 
-    private static final String DISAGGREGATION_DEFAULT = "Default";
-
     public ReportTemplates consume( InputStream is )
         throws JAXBException, SAXException, IOException
     {
@@ -87,7 +85,8 @@ public class ContentDataStructureConsumer
             dataElementDisAggMap.put( dataElement, new HashSet<String>() );
             if ( annotations.size() == 0 )
             {
-                dataElementDisAggMap.get( dataElement ).addAll( Collections.singleton( DISAGGREGATION_DEFAULT ) );
+                dataElementDisAggMap.get( dataElement ).addAll(
+                    Collections.singleton( AdxConstants.DISAGGREGATION_DEFAULT ) );
             }
             else
             {

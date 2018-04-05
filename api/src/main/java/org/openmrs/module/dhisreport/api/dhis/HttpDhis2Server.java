@@ -62,7 +62,7 @@ public class HttpDhis2Server
 
     public static final String REPORTS_METADATA_PATH = "/api/forms.xml";
 
-    public static final String DATAVALUESET_PATH = "/api/dataValueSets?idScheme=code&dataElementIdScheme=code&orgUnitIdScheme=code";
+    public static final String DATAVALUESET_PATH = "/api/dataValueSets";
 
     private URL url;
 

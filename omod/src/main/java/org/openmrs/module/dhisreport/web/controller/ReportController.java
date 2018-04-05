@@ -468,6 +468,10 @@ public class ReportController
             String[] aggs = StringUtils.split( dv.getCategoryOptionCombo(), AdxConstants.DISSAGGREGATION_SEPARATOR );
             for ( String agg : aggs )
             {
+                if ( AdxConstants.DISAGGREGATION_DEFAULT.equals( agg ) )
+                {
+                    continue;
+                }
                 String[] nameAndValue = StringUtils.split( agg, AdxConstants.DISSAGGREGATION_OPTION_SEPARATOR );
                 dvtype.getOtherAttributes().put( new QName( nameAndValue[0] ), nameAndValue[1] );
             }
