@@ -241,7 +241,8 @@ public class HttpDhis2Server
 
         try
         {
-            HttpPost httpPost = new HttpPost( url.getPath() + DATAVALUESET_PATH );
+            String fullUrl = url.getPath() + DATAVALUESET_PATH + "?idScheme=code&categoryOptionComboIdScheme=uid";
+            HttpPost httpPost = new HttpPost( fullUrl );
             Credentials creds = new UsernamePasswordCredentials( username, password );
             Header bs = new BasicScheme().authenticate( creds, httpPost, localcontext );
             httpPost.addHeader( "Authorization", bs.getValue() );
