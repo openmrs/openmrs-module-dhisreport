@@ -54,6 +54,22 @@
                         ATB - D PLHIV lost to follow up whilst on Second line regimen
                     </Name>
                 </Code>
+                <Code id="ATB_005_D39">
+                    <Annotations xmlns="http://www.sdmx.org/resources/sdmxml/schemas/v2_1/common">
+                        <Annotation xmlns="http://www.sdmx.org/resources/sdmxml/schemas/v2_1/common" id="Disaggregation">
+                            <AnnotationText xmlns="http://www.sdmx.org/resources/sdmxml/schemas/v2_1/common">SEX</AnnotationText>
+                        </Annotation>
+                        <Annotation xmlns="http://www.sdmx.org/resources/sdmxml/schemas/v2_1/common" id="Disaggregation">
+                            <AnnotationText xmlns="http://www.sdmx.org/resources/sdmxml/schemas/v2_1/common">ATB_SUMMARY_AGEGRP</AnnotationText>
+                        </Annotation>
+                        <Annotation xmlns="http://www.sdmx.org/resources/sdmxml/schemas/v2_1/common" id="Disaggregation">
+                            <AnnotationText xmlns="http://www.sdmx.org/resources/sdmxml/schemas/v2_1/common">HIV_TEST_RESULTS</AnnotationText>
+                        </Annotation>
+                    </Annotations>
+                    <Name xml:lang="en">
+                        Number of individuals who received HIV Testing Services (HTS) and received their test results
+                    </Name>
+                </Code>
             </Codelist>
             <Codelist xmlns="http://www.sdmx.org/resources/sdmxml/schemas/v2_1/structure" id="CL_SEX" agencyID="ZW_MOHCC" version="1.0">
                 <Name xmlns="http://www.sdmx.org/resources/sdmxml/schemas/v2_1/common" xml:lang="en">Male and Female</Name>
@@ -65,7 +81,7 @@
                 </Code>
             </Codelist>
             <Codelist xmlns="http://www.sdmx.org/resources/sdmxml/schemas/v2_1/structure" id="CL_ATB_SUMMARY_AGEGRP" agencyID="ZW_MOHCC" version="1.0">
-                <Name xmlns="http://www.sdmx.org/resources/sdmxml/schemas/v2_1/common" xml:lang="en">&lt;=5 6-17 18+</Name>
+                <Name xmlns="http://www.sdmx.org/resources/sdmxml/schemas/v2_1/structure" xml:lang="en">&lt;=5 6-17 18+</Name>
                 <Code id="P0Y-P6Y">
                     <Name xmlns="http://www.sdmx.org/resources/sdmxml/schemas/v2_1/common" xml:lang="en">&lt;= 5 Years</Name>
                 </Code>
@@ -76,6 +92,15 @@
                     <Name xmlns="http://www.sdmx.org/resources/sdmxml/schemas/v2_1/common" xml:lang="en">Over 18 Years</Name>
                 </Code>
             </Codelist>
+            <Codelist xmlns="http://www.sdmx.org/resources/sdmxml/schemas/v2_1/structure" id="CL_HIV_TEST_RESULTS" agencyID="IHE_QRPH" version="1.0">
+                <Name xmlns="http://www.sdmx.org/resources/sdmxml/schemas/v2_1/common" xml:lang="en">HIV test results</Name>
+                <Code id="HIV-">
+                    <Name xmlns="http://www.sdmx.org/resources/sdmxml/schemas/v2_1/common" xml:lang="en">HIV Negative</Name>
+                </Code>
+                <Code id="HIV+">
+                    <Name xmlns="http://www.sdmx.org/resources/sdmxml/schemas/v2_1/common" xml:lang="en">HIV Positive</Name>
+                </Code>
+            </Codelist>
         </str:Codelists>
         <str:Concepts>
             <str:ConceptScheme id="ADX_MANDATORY_CONCEPTS" agencyID="IHE_QRPH" version="1.0" isExternalReference="false" >
@@ -84,7 +109,9 @@
             <ConceptScheme xmlns="http://www.sdmx.org/resources/sdmxml/schemas/v2_1/structure" id="ZW_MOHCC_CONCEPTS" agencyID="ZW_MOHCC" version="1.0">
                 <Name xmlns="http://www.sdmx.org/resources/sdmxml/schemas/v2_1/common" xml:lang="en">ZW_MOHCC concepts</Name>
                 <Concept id="SEX">
-                    <Name xmlns="http://www.sdmx.org/resources/sdmxml/schemas/v2_1/common" xml:lang="en">Male and Female</Name>
+                    <Name xmlns="http://www.sdmx.org/resources/sdmxml/schemas/v2_1/common" xml:lang="en">
+                        Male and Female
+                    </Name>
                     <CoreRepresentation xmlns="http://www.sdmx.org/resources/sdmxml/schemas/v2_1/structure">
                         <Enumeration xmlns="http://www.sdmx.org/resources/sdmxml/schemas/v2_1/structure">
                             <Ref xmlns="" agencyID="ZW_MOHCC" version="1.0" id="CL_SEX"/>
@@ -92,10 +119,22 @@
                     </CoreRepresentation>
                 </Concept>
                 <Concept id="ATB_SUMMARY_AGEGRP">
-                    <Name xmlns="http://www.sdmx.org/resources/sdmxml/schemas/v2_1/common" xml:lang="en">&lt;=2 3-12 13-24 25-59 months 5-9 10-14 15-19 20-24 25-29 30-49 50+</Name>
+                    <Name xmlns="http://www.sdmx.org/resources/sdmxml/schemas/v2_1/common" xml:lang="en">
+                        &lt;=2 3-12 13-24 25-59 months 5-9 10-14 15-19 20-24 25-29 30-49 50+
+                    </Name>
                     <CoreRepresentation xmlns="http://www.sdmx.org/resources/sdmxml/schemas/v2_1/structure">
                         <Enumeration xmlns="http://www.sdmx.org/resources/sdmxml/schemas/v2_1/structure">
                             <Ref xmlns="" agencyID="ZW_MOHCC" version="1.0" id="CL_ATB_SUMMARY_AGEGRP"/>
+                        </Enumeration>
+                    </CoreRepresentation>
+                </Concept>
+                <Concept id="HIV_TEST_RESULTS">
+                    <Name xmlns="http://www.sdmx.org/resources/sdmxml/schemas/v2_1/common" xml:lang="en">
+                        HIV test results
+                    </Name>
+                    <CoreRepresentation xmlns="http://www.sdmx.org/resources/sdmxml/schemas/v2_1/structure">
+                        <Enumeration xmlns="http://www.sdmx.org/resources/sdmxml/schemas/v2_1/structure">
+                            <Ref xmlns="" agencyID="ZW_MOHCC" version="1.0" id="CL_HIV_TEST_RESULTS"/>
                         </Enumeration>
                     </CoreRepresentation>
                 </Concept>
@@ -134,6 +173,11 @@
                         <str:Dimension xmlns:str="http://www.sdmx.org/resources/sdmxml/schemas/v2_1/structure" id="ATB_SUMMARY_AGEGRP">
                             <str:ConceptIdentity>
                                 <Ref id="ATB_SUMMARY_AGEGRP" maintainableParentID="ZW_MOHCC_CONCEPTS" maintainableParentVersion="1.0" agencyID="ZW_MOHCC"/>
+                            </str:ConceptIdentity>
+                        </str:Dimension>
+                        <str:Dimension xmlns:str="http://www.sdmx.org/resources/sdmxml/schemas/v2_1/structure" id="HIV_TEST_RESULTS">
+                            <str:ConceptIdentity>
+                                <Ref id="HIV_TEST_RESULTS" maintainableParentID="ZW_MOHCC_CONCEPTS" maintainableParentVersion="1.0" agencyID="ZW_MOHCC"/>
                             </str:ConceptIdentity>
                         </str:Dimension>
                         <str:TimeDimension id="TIME_PERIOD">

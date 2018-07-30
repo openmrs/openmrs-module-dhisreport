@@ -11,11 +11,11 @@ package org.openmrs.module.dhisreport.api.adx;
 
 import java.io.IOException;
 import java.io.InputStream;
-import java.util.Arrays;
+import java.util.ArrayList;
 import java.util.Collections;
 import java.util.HashMap;
 import java.util.HashSet;
-import java.util.Iterator;
+import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
@@ -26,13 +26,11 @@ import javax.xml.transform.sax.SAXSource;
 
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
-import org.openmrs.api.APIException;
 import org.openmrs.api.context.Context;
 import org.openmrs.module.dhisreport.api.DHIS2ReportingService;
 import org.openmrs.module.dhisreport.api.adx2.AdxConstants;
 import org.openmrs.module.dhisreport.api.adx2.model.Annotation;
 import org.openmrs.module.dhisreport.api.adx2.model.Code;
-import org.openmrs.module.dhisreport.api.adx2.model.CodeList;
 import org.openmrs.module.dhisreport.api.adx2.model.Dimension;
 import org.openmrs.module.dhisreport.api.adx2.model.Structure;
 import org.openmrs.module.dhisreport.api.model.DataElement;
@@ -74,12 +72,6 @@ public class ContentDataStructureConsumer
                 {
                     annotations.add( ann );
                 }
-            }
-
-            if ( annotations.size() > 2 )
-            {
-                // TODO Add this support
-                throw new APIException( "More than 2 disaggregations per data element isn't currently supported" );
             }
 
             dataElementDisAggMap.put( dataElement, new HashSet<String>() );
@@ -189,41 +181,20 @@ public class ContentDataStructureConsumer
     private Set<String> generateDisaggregationIds( Structure structure, Set<Annotation> annotations )
     {
         Set<String> disaggregations = new HashSet<String>();
-        Iterator<Annotation> it = annotations.iterator();
-        String firstDimensionId = it.next().getText();
-        Dimension firstDimension = structure.getDimensionById( firstDimensionId );
-        CodeList firstCL = structure.getCodeList( firstDimension );
-        if ( !it.hasNext() )
+        List<List<String>> optionLists = new ArrayList<List<String>>();
+        for ( Annotation ann : annotations )
         {
-            for ( Code c : firstCL.getCodes() )
+            String dimensionId = ann.getText();
+            Dimension dimension = structure.getDimensionById( dimensionId );
+            List<String> options = new ArrayList<String>();
+            for ( Code c : structure.getCodeList( dimension ).getCodes() )
             {
-                String disaggId = generateDisaggregationId( firstDimensionId, c.getId() );
-                disaggregations.add( disaggId );
+                options.add( generateDisaggregationId( dimensionId, c.getId() ) );
             }
+            optionLists.add( options );
         }
 
-        if ( it.hasNext() )
-        {
-            String secondDimensionId = it.next().getText();
-            Dimension secDimension = structure.getDimensionById( secondDimensionId );
-            CodeList secondCL = structure.getCodeList( secDimension );
-
-            // Do the various disaggregation combos between the 2 sets of disaggregations
-            for ( Code outerCode : firstCL.getCodes() )
-            {
-                for ( Code innerCode : secondCL.getCodes() )
-                {
-                    String outerId = generateDisaggregationId( firstDimensionId, outerCode.getId() );
-                    String innerId = generateDisaggregationId( secondDimensionId, innerCode.getId() );
-                    // Hack to ensure the order of the annotations for a given code doesn't matter
-                    // so that like Males P6Y-P12Y is the same as P6Y-P12Y Males
-                    String[] ids = new String[] { outerId, innerId };
-                    Arrays.sort( ids );
-                    disaggregations.add( ids[0] + AdxConstants.DISSAGGREGATION_SEPARATOR + ids[1] );
-
-                }
-            }
-        }
+        generateOptionCombos( optionLists, disaggregations, 0, null );
 
         return disaggregations;
     }
@@ -231,6 +202,25 @@ public class ContentDataStructureConsumer
     private String generateDisaggregationId( String disaggregation, String option )
     {
         return disaggregation + AdxConstants.DISSAGGREGATION_OPTION_SEPARATOR + option;
+    }
+
+    private void generateOptionCombos( List<List<String>> optionLists, Set<String> result, int depth,
+        String currentCombo )
+    {
+        if ( depth == optionLists.size() )
+        {
+            result.add( currentCombo );
+            return;
+        }
+
+        for ( int i = 0; i < optionLists.get( depth ).size(); ++i )
+        {
+            String otherOption = optionLists.get( depth ).get( i );
+            String internalCombo = (currentCombo == null) ? otherOption : currentCombo
+                + AdxConstants.DISSAGGREGATION_SEPARATOR + otherOption;
+
+            generateOptionCombos( optionLists, result, depth + 1, internalCombo );
+        }
     }
 
 }

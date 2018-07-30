@@ -223,14 +223,15 @@ public class DHIS2ReportingServiceImplTest
         ReportDefinition reportDef = rt.getReportDefinitions().get( 0 );
         assertEquals( "DSD_ATB_005", reportDef.getCode() );
         assertEquals( "{name {ATB - 005 ART SUMMARY}}", reportDef.getName() );
-        assertEquals( countDataElements + 3, rt.getDataElements().size() );
-        assertEquals( countDisaggregations + 9, rt.getDisaggregations().size() );
+        assertEquals( countDataElements + 4, rt.getDataElements().size() );
+        final int disaggAccount = 21;
+        assertEquals( countDisaggregations + disaggAccount, rt.getDisaggregations().size() );
         List<ReportDefinition> newReportDefs = rt.getReportDefinitions();
         assertEquals( initialReportDefs.size() + 1, newReportDefs.size() );
         Collection<ReportDefinition> createdReports = CollectionUtils.subtract( newReportDefs, initialReportDefs );
         assertEquals( 1, createdReports.size() );
         ReportDefinition createdReport = createdReports.iterator().next();
-        assertEquals( 9, createdReport.getDataValueTemplates().size() );
+        assertEquals( disaggAccount, createdReport.getDataValueTemplates().size() );
 
     }
 
