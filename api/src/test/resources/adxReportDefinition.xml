@@ -41,6 +41,16 @@
                         ATB - D PLHIV in care who have died whilst on First line regimen
                     </Name>
                 </Code>
+                <Code id="ATB_005_D28">
+                    <Annotations xmlns="http://www.sdmx.org/resources/sdmxml/schemas/v2_1/common">
+                        <Annotation xmlns="http://www.sdmx.org/resources/sdmxml/schemas/v2_1/common" id="Disaggregation">
+                            <AnnotationText xmlns="http://www.sdmx.org/resources/sdmxml/schemas/v2_1/common">SEX</AnnotationText>
+                        </Annotation>
+                    </Annotations>
+                    <Name xmlns="http://www.sdmx.org/resources/sdmxml/schemas/v2_1/common" xml:lang="en">
+                        Some other piece of data to be collected
+                    </Name>
+                </Code>
                 <Code id="ATB_005_D37">
                     <Annotations xmlns="http://www.sdmx.org/resources/sdmxml/schemas/v2_1/common">
                         <Annotation xmlns="http://www.sdmx.org/resources/sdmxml/schemas/v2_1/common" id="Disaggregation">
