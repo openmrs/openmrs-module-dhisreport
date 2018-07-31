@@ -12,6 +12,7 @@ package org.openmrs.module.dhisreport.api.adx;
 import java.io.IOException;
 import java.io.InputStream;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Collections;
 import java.util.HashMap;
 import java.util.HashSet;
@@ -24,6 +25,8 @@ import javax.xml.bind.JAXBException;
 import javax.xml.bind.Unmarshaller;
 import javax.xml.transform.sax.SAXSource;
 
+import org.apache.commons.lang3.ArrayUtils;
+import org.apache.commons.lang3.StringUtils;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.openmrs.api.context.Context;
@@ -205,21 +208,33 @@ public class ContentDataStructureConsumer
     }
 
     private void generateOptionCombos( List<List<String>> optionLists, Set<String> result, int depth,
-        String currentCombo )
+        String[] currentComboOptions )
     {
         if ( depth == optionLists.size() )
         {
-            result.add( currentCombo );
+            // Hack to ensure the order of the annotations for a given code doesn't matter
+            // so that like Males P6Y-P12Y is the same as P6Y-P12Y Males
+            Arrays.sort( currentComboOptions );
+            String toAdd = StringUtils.join( currentComboOptions, AdxConstants.DISSAGGREGATION_SEPARATOR );
+            result.add( toAdd );
             return;
         }
 
         for ( int i = 0; i < optionLists.get( depth ).size(); ++i )
         {
             String otherOption = optionLists.get( depth ).get( i );
-            String internalCombo = (currentCombo == null) ? otherOption : currentCombo
-                + AdxConstants.DISSAGGREGATION_SEPARATOR + otherOption;
+            String[] options;
+            if ( currentComboOptions == null )
+            {
+                options = new String[] {};
+            }
+            else
+            {
+                options = Arrays.copyOf( currentComboOptions, currentComboOptions.length );
+            }
+            options = ArrayUtils.add( options, otherOption );
 
-            generateOptionCombos( optionLists, result, depth + 1, internalCombo );
+            generateOptionCombos( optionLists, result, depth + 1, options );
         }
     }
 
