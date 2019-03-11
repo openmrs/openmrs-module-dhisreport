@@ -119,13 +119,13 @@ public class LocationMappingController {
 
 	@RequestMapping(value = "/module/dhisreport/mapLocations", method = RequestMethod.POST)
 	public String mapLocations(ModelMap model,
-			@RequestParam(value = "DHIS2OrgUnits", required = true) String dhis2OrgUnitCode,
+			@RequestParam(value = "DHIS2OrgUnits", required = false) String dhis2OrgUnitCode,
 			@RequestParam(value = "openmrsLocations", required = true) String openmrsLocationName,
 			WebRequest webRequest) {
 		System.out.println("org unit does not  exits and it is : " + dhis2OrgUnitCode);
 		String referer = webRequest.getHeader("Referer");
 
-		if (dhis2OrgUnitCode.equals("")) {
+		if (dhis2OrgUnitCode == null || dhis2OrgUnitCode.isEmpty()) {
 			System.out.println("org unit does not  exits");
 			webRequest.setAttribute(WebConstants.OPENMRS_MSG_ATTR,
 					Context.getMessageSourceService().getMessage("dhisreport.orgUnitCodeDoesNotExist"),
