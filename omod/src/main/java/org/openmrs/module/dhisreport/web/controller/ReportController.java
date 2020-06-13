@@ -42,7 +42,7 @@ import org.openmrs.module.dhisreport.api.adx.GroupType;
 import org.openmrs.module.dhisreport.api.dhis.HttpDhis2Server;
 import org.openmrs.module.dhisreport.api.dxf2.DataValue;
 import org.openmrs.module.dhisreport.api.dxf2.DataValueSet;
-import org.openmrs.module.dhisreport.api.importsummary.ImportSummaries;
+import org.openmrs.module.dhisreport.api.importsummary.AdxImportSummary;
 import org.openmrs.module.dhisreport.api.model.DataElement;
 import org.openmrs.module.dhisreport.api.utils.MonthlyPeriod;
 import org.openmrs.module.dhisreport.api.utils.Period;
@@ -288,9 +288,9 @@ public class ReportController
 
             if ( destination.equals( "post" ) )
             {
-                ImportSummaries importSummaries = Context.getService( DHIS2ReportingService.class ).postAdxReport(
+                AdxImportSummary adxImportSummary = Context.getService( DHIS2ReportingService.class ).postAdxReport(
                     adxType );
-                agrs.setImportSummaries( importSummaries );
+                agrs.setAdxImportSummary(adxImportSummary);
             }
             aggregatedList.add( agrs );
         }

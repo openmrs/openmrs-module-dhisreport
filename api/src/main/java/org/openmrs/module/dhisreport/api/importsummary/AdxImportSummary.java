@@ -15,7 +15,8 @@ import javax.xml.bind.annotation.*;
 import java.util.List;
 
 @XmlAccessorType( XmlAccessType.FIELD )
-public class ImportSummary
+@XmlRootElement( name = "importSummary" )
+public class AdxImportSummary
 {
     @XmlElement( required = true )
     private String status;
@@ -26,12 +27,12 @@ public class ImportSummary
     @XmlElement( required = true )
     private ImportCount importCount;
 
-    @XmlElementWrapper( name = "conflicts", required = false )
+    @XmlElement( required = true )
+    private boolean dataSetComplete;
+
+    @XmlElementWrapper( name = "conflicts" )
     @XmlElement( name = "conflict" )
     private List<ImportConflict> conflicts;
-
-    @XmlElement( required = true )
-    private String dataSetComplete;
 
     public String getStatus()
     {
@@ -63,6 +64,16 @@ public class ImportSummary
         this.importCount = importCount;
     }
 
+    public boolean isDataSetComplete()
+    {
+        return dataSetComplete;
+    }
+
+    public void setDataSetComplete( boolean dataSetComplete )
+    {
+        this.dataSetComplete = dataSetComplete;
+    }
+
     public List<ImportConflict> getConflicts()
     {
         return conflicts;
@@ -71,15 +82,5 @@ public class ImportSummary
     public void setConflicts( List<ImportConflict> conflicts )
     {
         this.conflicts = conflicts;
-    }
-
-    public String getDataSetComplete()
-    {
-        return dataSetComplete;
-    }
-
-    public void setDataSetComplete( String dataSetComplete )
-    {
-        this.dataSetComplete = dataSetComplete;
     }
 }

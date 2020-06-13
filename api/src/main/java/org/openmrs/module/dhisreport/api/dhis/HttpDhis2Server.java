@@ -46,11 +46,11 @@ import org.hisp.dhis.dxf2.importsummary.ImportSummary;
 import org.openmrs.module.dhisreport.api.DHIS2ReportingException;
 import org.openmrs.module.dhisreport.api.adx.AdxType;
 import org.openmrs.module.dhisreport.api.dxf2.DataValueSet;
-import org.openmrs.module.dhisreport.api.importsummary.ImportSummaries;
+import org.openmrs.module.dhisreport.api.importsummary.AdxImportSummary;
 import org.openmrs.module.dhisreport.api.model.ReportDefinition;
 
 /**
- * 
+ *
  * @author bobj
  */
 public class HttpDhis2Server
@@ -187,7 +187,7 @@ public class HttpDhis2Server
         }
         catch ( JAXBException ex )
         {
-            throw new Dhis2Exception( this, "Problem unmarshalling ImportSummary", ex );
+            throw new Dhis2Exception( this, "Problem unmarshalling AdxImportSummary", ex );
         }
         catch ( AuthenticationException ex )
         {
@@ -205,11 +205,11 @@ public class HttpDhis2Server
     }
 
     @Override
-    public ImportSummaries postAdxReport( AdxType report )
+    public AdxImportSummary postAdxReport(AdxType report )
         throws DHIS2ReportingException
     {
         log.debug( "Posting A report" );
-        ImportSummaries summaries = null;
+        AdxImportSummary summaries = null;
 
         StringWriter xmlReport = new StringWriter();
         try
@@ -244,7 +244,7 @@ public class HttpDhis2Server
             Credentials creds = new UsernamePasswordCredentials( username, password );
             Header bs = new BasicScheme().authenticate( creds, httpPost, localcontext );
             httpPost.addHeader( "Authorization", bs.getValue() );
-            httpPost.addHeader( "Content-Type", "application/xml+adx" );
+            httpPost.addHeader( "Content-Type", "application/adx+xml" );
             httpPost.addHeader( "Accept", "application/xml" );
 
             httpPost.setEntity( new StringEntity( xmlReport.toString() ) );
@@ -258,13 +258,13 @@ public class HttpDhis2Server
 
             if ( entity != null )
             {
-                JAXBContext jaxbImportSummaryContext = JAXBContext.newInstance( ImportSummaries.class );
+                JAXBContext jaxbImportSummaryContext = JAXBContext.newInstance( AdxImportSummary.class );
                 Unmarshaller importSummaryUnMarshaller = jaxbImportSummaryContext.createUnmarshaller();
-                summaries = (ImportSummaries) importSummaryUnMarshaller.unmarshal( entity.getContent() );
+                summaries = (AdxImportSummary) importSummaryUnMarshaller.unmarshal( entity.getContent() );
             }
             else
             {
-                summaries = new ImportSummaries();
+                summaries = new AdxImportSummary();
             }
             // EntityUtils.consume( entity );
 
@@ -272,7 +272,7 @@ public class HttpDhis2Server
         }
         catch ( JAXBException ex )
         {
-            throw new Dhis2Exception( this, "Problem unmarshalling ImportSummary", ex );
+            throw new Dhis2Exception( this, "Problem unmarshalling AdxImportSummary", ex );
         }
         catch ( AuthenticationException ex )
         {

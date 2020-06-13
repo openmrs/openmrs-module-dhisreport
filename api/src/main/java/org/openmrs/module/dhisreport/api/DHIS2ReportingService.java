@@ -30,7 +30,7 @@ import org.hisp.dhis.dxf2.importsummary.ImportSummary;
 import org.openmrs.Location;
 import org.openmrs.api.OpenmrsService;
 import org.openmrs.module.dhisreport.api.dhis.HttpDhis2Server;
-import org.openmrs.module.dhisreport.api.importsummary.ImportSummaries;
+import org.openmrs.module.dhisreport.api.importsummary.AdxImportSummary;
 import org.openmrs.module.dhisreport.api.model.*;
 import org.openmrs.module.dhisreport.api.utils.Period;
 import org.springframework.transaction.annotation.Transactional;
@@ -43,7 +43,7 @@ import org.springframework.transaction.annotation.Transactional;
  * <code>
  * Context.getService(DHIS2ReportingService.class).someMethod();
  * </code>
- * 
+ *
  * @see org.openmrs.api.context.Context
  */
 @Transactional
@@ -56,7 +56,7 @@ public interface DHIS2ReportingService
     // -----------------------------------------------------------------------
     /**
      * Initialize url and credentials for DHIS server
-     * 
+     *
      * @param server
      */
     public void setDhis2Server( HttpDhis2Server server );
@@ -80,7 +80,7 @@ public interface DHIS2ReportingService
     public ImportSummary postDataValueSet( DataValueSet dvset )
         throws DHIS2ReportingException;
 
-    public ImportSummaries postAdxReport( AdxType adxReport )
+    public AdxImportSummary postAdxReport(AdxType adxReport )
         throws DHIS2ReportingException;
 
     // -----------------------------------------------------------------------
