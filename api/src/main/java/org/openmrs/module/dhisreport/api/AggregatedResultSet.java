@@ -4,11 +4,11 @@ import java.util.Map;
 
 import org.hisp.dhis.dxf2.importsummary.ImportSummary;
 import org.openmrs.module.dhisreport.api.dxf2.DataValueSet;
-import org.openmrs.module.dhisreport.api.importsummary.ImportSummaries;
+import org.openmrs.module.dhisreport.api.importsummary.AdxImportSummary;
 import org.openmrs.module.dhisreport.api.model.DataElement;
 
 /**
- * 
+ *
  * @author maurya
  */
 public class AggregatedResultSet
@@ -20,7 +20,7 @@ public class AggregatedResultSet
 
     private ImportSummary importSummary;
 
-    private ImportSummaries importSummaries;
+    private AdxImportSummary adxImportSummary;
 
     public DataValueSet getDataValueSet()
     {
@@ -52,14 +52,14 @@ public class AggregatedResultSet
         this.importSummary = importSummary;
     }
 
-    public ImportSummaries getImportSummaries()
+    public AdxImportSummary getAdxImportSummary()
     {
-        return importSummaries;
+        return adxImportSummary;
     }
 
-    public void setImportSummaries( ImportSummaries importSummaries )
+    public void setAdxImportSummary( AdxImportSummary adxImportSummary )
     {
-        this.importSummaries = importSummaries;
+        this.adxImportSummary = adxImportSummary;
     }
 
 }

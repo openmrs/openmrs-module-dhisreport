@@ -41,7 +41,7 @@ import org.openmrs.module.dhisreport.api.DHIS2ReportingService;
 import org.openmrs.module.dhisreport.api.adx.AdxType;
 import org.openmrs.module.dhisreport.api.db.DHIS2ReportingDAO;
 import org.openmrs.module.dhisreport.api.dhis.HttpDhis2Server;
-import org.openmrs.module.dhisreport.api.importsummary.ImportSummaries;
+import org.openmrs.module.dhisreport.api.importsummary.AdxImportSummary;
 import org.openmrs.module.dhisreport.api.model.*;
 import org.openmrs.module.dhisreport.api.dxf2.DataValue;
 import org.openmrs.module.dhisreport.api.dxf2.DataValueSet;
@@ -117,7 +117,7 @@ public class DHIS2ReportingServiceImpl
     }
 
     @Override
-    public ImportSummaries postAdxReport( AdxType adxReport )
+    public AdxImportSummary postAdxReport(AdxType adxReport )
         throws DHIS2ReportingException
     {
         return dhis2Server.postAdxReport( adxReport );
@@ -227,7 +227,7 @@ public class DHIS2ReportingServiceImpl
     /**
      * Create a datavalueset report TODO: handle the sql query exceptions which
      * are bound to happen
-     * 
+     *
      * @param reportDefinition
      * @param period
      * @param location
