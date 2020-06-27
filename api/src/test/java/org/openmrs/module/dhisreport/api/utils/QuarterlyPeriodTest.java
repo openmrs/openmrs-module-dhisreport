@@ -25,89 +25,87 @@ import java.util.Date;
 import org.junit.Test;
 import static org.junit.Assert.*;
 
-public class QuarterlyPeriodTest
-{
+public class QuarterlyPeriodTest {
 
-    public QuarterlyPeriodTest()
-    {
-    }
+	public QuarterlyPeriodTest() {
+	}
 
-    /**
-     * Test of getStart method, of class QuarterlyPeriod.
-     */
-    @Test
-    public void testGetStart()
-        throws ParseException
-    {
-        QuarterlyPeriod instance = new QuarterlyPeriod( new SimpleDateFormat( "yyyy-MM-dd" ).parse( "2012-08-19" ) );
-        Date expResult = new SimpleDateFormat( "yyyy-MM-dd'T'HH:mm:ss" ).parse( "2012-07-01T00:00:00" );
-        Date result = instance.getStartDate();
-        assertEquals( expResult, result );
-    }
+	/**
+	 * Test of getStart method, of class QuarterlyPeriod.
+	 */
+	@Test
+	public void testGetStart() throws ParseException {
+		QuarterlyPeriod instance = new QuarterlyPeriod(new SimpleDateFormat(
+				"yyyy-MM-dd").parse("2012-08-19"));
+		Date expResult = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss")
+				.parse("2012-07-01T00:00:00");
+		Date result = instance.getStartDate();
+		assertEquals(expResult, result);
+	}
 
-    /**
-     * Test of getStart method, of class QuarterlyPeriod for Last Quarter.
-     */
-    @Test
-    public void testGetStartLastQuarter()
-        throws ParseException
-    {
-        QuarterlyPeriod instance = new QuarterlyPeriod( new SimpleDateFormat( "yyyy-MM-dd" ).parse( "2012-10-19" ) );
-        Date expResult = new SimpleDateFormat( "yyyy-MM-dd'T'HH:mm:ss" ).parse( "2012-10-01T00:00:00" );
-        Date result = instance.getStartDate();
-        assertEquals( expResult, result );
-    }
+	/**
+	 * Test of getStart method, of class QuarterlyPeriod for Last Quarter.
+	 */
+	@Test
+	public void testGetStartLastQuarter() throws ParseException {
+		QuarterlyPeriod instance = new QuarterlyPeriod(new SimpleDateFormat(
+				"yyyy-MM-dd").parse("2012-10-19"));
+		Date expResult = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss")
+				.parse("2012-10-01T00:00:00");
+		Date result = instance.getStartDate();
+		assertEquals(expResult, result);
+	}
 
-    /**
-     * Test of getEnd method, of class QuarterlyPeriod.
-     */
-    @Test
-    public void testGetEnd()
-        throws ParseException
-    {
-        QuarterlyPeriod instance = new QuarterlyPeriod( new SimpleDateFormat( "yyyy-MM-dd" ).parse( "2012-08-19" ) );
-        Date expResult = new SimpleDateFormat( "yyyy-MM-dd" ).parse( "2012-10-01" );
-        long time = expResult.getTime() - 1;
-        expResult.setTime( time );
+	/**
+	 * Test of getEnd method, of class QuarterlyPeriod.
+	 */
+	@Test
+	public void testGetEnd() throws ParseException {
+		QuarterlyPeriod instance = new QuarterlyPeriod(new SimpleDateFormat(
+				"yyyy-MM-dd").parse("2012-08-19"));
+		Date expResult = new SimpleDateFormat("yyyy-MM-dd").parse("2012-10-01");
+		long time = expResult.getTime() - 1;
+		expResult.setTime(time);
 
-        Date result = instance.getEndDate();
-        assertEquals( expResult, result );
-    }
+		Date result = instance.getEndDate();
+		assertEquals(expResult, result);
+	}
 
-    /**
-     * Test of getEnd method, of class QuarterlyPeriod for Last Quarter.
-     */
-    @Test
-    public void testGetEndLastQuarter()
-        throws ParseException
-    {
-        QuarterlyPeriod instance = new QuarterlyPeriod( new SimpleDateFormat( "yyyy-MM-dd" ).parse( "2012-10-19" ) );
-        Date expResult = new SimpleDateFormat( "yyyy-MM-dd" ).parse( "2013-01-01" );
-        long time = expResult.getTime() - 1;
-        expResult.setTime( time );
+	/**
+	 * Test of getEnd method, of class QuarterlyPeriod for Last Quarter.
+	 */
+	@Test
+	public void testGetEndLastQuarter() throws ParseException {
+		QuarterlyPeriod instance = new QuarterlyPeriod(new SimpleDateFormat(
+				"yyyy-MM-dd").parse("2012-10-19"));
+		Date expResult = new SimpleDateFormat("yyyy-MM-dd").parse("2013-01-01");
+		long time = expResult.getTime() - 1;
+		expResult.setTime(time);
 
-        Date result = instance.getEndDate();
-        assertEquals( expResult, result );
-    }
+		Date result = instance.getEndDate();
+		assertEquals(expResult, result);
+	}
 
-    /**
-     * Test of getAsIsoString method, of class QuarterlyPeriod.
-     */
-    @Test
-    public void testGetAsIsoString()
-        throws ParseException
-    {
-        QuarterlyPeriod qp1 = new QuarterlyPeriod( new SimpleDateFormat( "yyyy-MM-dd" ).parse( "2012-02-25" ) );
-        QuarterlyPeriod qp2 = new QuarterlyPeriod( new SimpleDateFormat( "yyyy-MM-dd" ).parse( "2012-05-14" ) );
-        QuarterlyPeriod qp3 = new QuarterlyPeriod( new SimpleDateFormat( "yyyy-MM-dd" ).parse( "2012-07-08" ) );
-        QuarterlyPeriod qp4 = new QuarterlyPeriod( new SimpleDateFormat( "yyyy-MM-dd" ).parse( "2012-10-29" ) );
-        String q1 = "2012Q1";
-        String q2 = "2012Q2";
-        String q3 = "2012Q3";
-        String q4 = "2012Q4";
-        assertEquals( q1, qp1.getAsIsoString() );
-        assertEquals( q2, qp2.getAsIsoString() );
-        assertEquals( q3, qp3.getAsIsoString() );
-        assertEquals( q4, qp4.getAsIsoString() );
-    }
+	/**
+	 * Test of getAsIsoString method, of class QuarterlyPeriod.
+	 */
+	@Test
+	public void testGetAsIsoString() throws ParseException {
+		QuarterlyPeriod qp1 = new QuarterlyPeriod(new SimpleDateFormat(
+				"yyyy-MM-dd").parse("2012-02-25"));
+		QuarterlyPeriod qp2 = new QuarterlyPeriod(new SimpleDateFormat(
+				"yyyy-MM-dd").parse("2012-05-14"));
+		QuarterlyPeriod qp3 = new QuarterlyPeriod(new SimpleDateFormat(
+				"yyyy-MM-dd").parse("2012-07-08"));
+		QuarterlyPeriod qp4 = new QuarterlyPeriod(new SimpleDateFormat(
+				"yyyy-MM-dd").parse("2012-10-29"));
+		String q1 = "2012Q1";
+		String q2 = "2012Q2";
+		String q3 = "2012Q3";
+		String q4 = "2012Q4";
+		assertEquals(q1, qp1.getAsIsoString());
+		assertEquals(q2, qp2.getAsIsoString());
+		assertEquals(q3, qp3.getAsIsoString());
+		assertEquals(q4, qp4.getAsIsoString());
+	}
 }

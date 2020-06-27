@@ -22,27 +22,21 @@ package org.openmrs.module.dhisreport.extension.html;
 
 import org.openmrs.module.web.extension.LinkExt;
 
-public class DhisReportHeader
-    extends LinkExt
-{
+public class DhisReportHeader extends LinkExt {
 
-    public MEDIA_TYPE getMediaType()
-    {
-        return MEDIA_TYPE.html;
-    }
+	public MEDIA_TYPE getMediaType() {
+		return MEDIA_TYPE.html;
+	}
 
-    public String getRequiredPrivilege()
-    {
-        return "View Dhisreport";
-    }
+	public String getRequiredPrivilege() {
+		return "View Dhisreport";
+	}
 
-    public String getLabel()
-    {
-        return "DHIS2";
-    }
+	public String getLabel() {
+		return "DHIS2";
+	}
 
-    public String getUrl()
-    {
-        return "module/dhisreport/listDhis2Reports.form";
-    }
+	public String getUrl() {
+		return "module/dhisreport/listDhis2Reports.form";
+	}
 }

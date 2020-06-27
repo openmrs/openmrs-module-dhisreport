@@ -30,83 +30,70 @@ package org.hisp.dhis.dxf2.importsummary;
 import java.util.List;
 import javax.xml.bind.annotation.*;
 
-@XmlAccessorType( XmlAccessType.FIELD )
-@XmlRootElement( name = "importSummary" )
-public class ImportSummary
-{
-    @XmlElement( required = true )
-    private ImportStatus status;
+@XmlAccessorType(XmlAccessType.FIELD)
+@XmlRootElement(name = "importSummary")
+public class ImportSummary {
+	@XmlElement(required = true)
+	private ImportStatus status;
 
-    @XmlElement( required = true )
-    private String description;
+	@XmlElement(required = true)
+	private String description;
 
-    @XmlElement( required = true )
-    private ImportCount dataValueCount;
+	@XmlElement(required = true)
+	private ImportCount dataValueCount;
 
-    @XmlElementWrapper( name = "conflicts", required = false )
-    @XmlElement( name = "conflict" )
-    private List<ImportConflict> conflicts;
+	@XmlElementWrapper(name = "conflicts", required = false)
+	@XmlElement(name = "conflict")
+	private List<ImportConflict> conflicts;
 
-    @XmlElement( required = true )
-    private String dataSetComplete;
+	@XmlElement(required = true)
+	private String dataSetComplete;
 
-    public ImportSummary()
-    {
-    }
+	public ImportSummary() {
+	}
 
-    public ImportSummary( ImportStatus status, String description )
-    {
-        this.status = status;
-        this.description = description;
-    }
+	public ImportSummary(ImportStatus status, String description) {
+		this.status = status;
+		this.description = description;
+	}
 
-    public ImportStatus getStatus()
-    {
-        return status;
-    }
+	public ImportStatus getStatus() {
+		return status;
+	}
 
-    public void setStatus( ImportStatus status )
-    {
-        this.status = status;
-    }
+	public void setStatus(ImportStatus status) {
+		this.status = status;
+	}
 
-    public String getDescription()
-    {
-        return description;
-    }
+	public String getDescription() {
+		return description;
+	}
 
-    public void setDescription( String description )
-    {
-        this.description = description;
-    }
+	public void setDescription(String description) {
+		this.description = description;
+	}
 
-    public ImportCount getDataValueCount()
-    {
-        return dataValueCount;
-    }
+	public ImportCount getDataValueCount() {
+		return dataValueCount;
+	}
 
-    public void setDataValueCount( ImportCount dataValueCount )
-    {
-        this.dataValueCount = dataValueCount;
-    }
+	public void setDataValueCount(ImportCount dataValueCount) {
+		this.dataValueCount = dataValueCount;
+	}
 
-    public List<ImportConflict> getConflicts()
-    {
-        return conflicts;
-    }
+	public List<ImportConflict> getConflicts() {
+		return conflicts;
+	}
 
-    public void setConflicts( List<ImportConflict> conflicts )
-    {
-        this.conflicts = conflicts;
-    }
+	public void setConflicts(List<ImportConflict> conflicts) {
+		this.conflicts = conflicts;
+	}
 
-    public String getDataSetComplete()
-    {
-        return dataSetComplete;
-    }
+	public String getDataSetComplete() {
+		return dataSetComplete;
+	}
 
-    public void setDataSetComplete( String dataSetComplete )
-    {
-        this.dataSetComplete = dataSetComplete;
-    }
+	public void setDataSetComplete(String dataSetComplete) {
+		this.dataSetComplete = dataSetComplete;
+	}
 }

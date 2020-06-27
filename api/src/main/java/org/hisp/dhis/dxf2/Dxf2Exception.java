@@ -25,12 +25,9 @@ import org.openmrs.module.dhisreport.api.DHIS2ReportingException;
  * 
  * @author bobj
  */
-public class Dxf2Exception
-    extends DHIS2ReportingException
-{
+public class Dxf2Exception extends DHIS2ReportingException {
 
-    public Dxf2Exception( String message, Throwable cause )
-    {
-        super( message, cause );
-    }
+	public Dxf2Exception(String message, Throwable cause) {
+		super(message, cause);
+	}
 }

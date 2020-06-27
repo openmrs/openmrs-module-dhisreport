@@ -35,119 +35,111 @@ import javax.xml.namespace.QName;
  * 
  * 
  */
-@XmlAccessorType( XmlAccessType.FIELD )
-@XmlType( name = "dataValueType", propOrder = { "annotation" } )
-public class DataValueType
-{
+@XmlAccessorType(XmlAccessType.FIELD)
+@XmlType(name = "dataValueType", propOrder = {"annotation"})
+public class DataValueType {
 
-    protected Object annotation;
+	protected Object annotation;
 
-    @XmlAttribute( name = "dataElement", required = true )
-    @XmlJavaTypeAdapter( CollapsedStringAdapter.class )
-    @XmlSchemaType( name = "token" )
-    protected String dataElement;
+	@XmlAttribute(name = "dataElement", required = true)
+	@XmlJavaTypeAdapter(CollapsedStringAdapter.class)
+	@XmlSchemaType(name = "token")
+	protected String dataElement;
 
-    @XmlAttribute( name = "value", required = true )
-    protected BigDecimal value;
+	@XmlAttribute(name = "value", required = true)
+	protected BigDecimal value;
 
-    @XmlAnyAttribute
-    private Map<QName, String> otherAttributes = new HashMap<QName, String>();
+	@XmlAnyAttribute
+	private Map<QName, String> otherAttributes = new HashMap<QName, String>();
 
-    /**
-     * Gets the value of the annotation property.
-     * 
-     * @return
-     *     possible object is
-     *     {@link Object }
-     *     
-     */
-    public Object getAnnotation()
-    {
-        return annotation;
-    }
+	/**
+	 * Gets the value of the annotation property.
+	 * 
+	 * @return
+	 *     possible object is
+	 *     {@link Object }
+	 *     
+	 */
+	public Object getAnnotation() {
+		return annotation;
+	}
 
-    /**
-     * Sets the value of the annotation property.
-     * 
-     * @param value
-     *     allowed object is
-     *     {@link Object }
-     *     
-     */
-    public void setAnnotation( Object value )
-    {
-        this.annotation = value;
-    }
+	/**
+	 * Sets the value of the annotation property.
+	 * 
+	 * @param value
+	 *     allowed object is
+	 *     {@link Object }
+	 *     
+	 */
+	public void setAnnotation(Object value) {
+		this.annotation = value;
+	}
 
-    /**
-     * Gets the value of the dataElement property.
-     * 
-     * @return
-     *     possible object is
-     *     {@link String }
-     *     
-     */
-    public String getDataElement()
-    {
-        return dataElement;
-    }
+	/**
+	 * Gets the value of the dataElement property.
+	 * 
+	 * @return
+	 *     possible object is
+	 *     {@link String }
+	 *     
+	 */
+	public String getDataElement() {
+		return dataElement;
+	}
 
-    /**
-     * Sets the value of the dataElement property.
-     * 
-     * @param value
-     *     allowed object is
-     *     {@link String }
-     *     
-     */
-    public void setDataElement( String value )
-    {
-        this.dataElement = value;
-    }
+	/**
+	 * Sets the value of the dataElement property.
+	 * 
+	 * @param value
+	 *     allowed object is
+	 *     {@link String }
+	 *     
+	 */
+	public void setDataElement(String value) {
+		this.dataElement = value;
+	}
 
-    /**
-     * Gets the value of the value property.
-     * 
-     * @return
-     *     possible object is
-     *     {@link BigDecimal }
-     *     
-     */
-    public BigDecimal getValue()
-    {
-        return value;
-    }
+	/**
+	 * Gets the value of the value property.
+	 * 
+	 * @return
+	 *     possible object is
+	 *     {@link BigDecimal }
+	 *     
+	 */
+	public BigDecimal getValue() {
+		return value;
+	}
 
-    /**
-     * Sets the value of the value property.
-     * 
-     * @param value
-     *     allowed object is
-     *     {@link BigDecimal }
-     *     
-     */
-    public void setValue( BigDecimal value )
-    {
-        this.value = value;
-    }
+	/**
+	 * Sets the value of the value property.
+	 * 
+	 * @param value
+	 *     allowed object is
+	 *     {@link BigDecimal }
+	 *     
+	 */
+	public void setValue(BigDecimal value) {
+		this.value = value;
+	}
 
-    /**
-     * Gets a map that contains attributes that aren't bound to any typed property on this class.
-     * 
-     * <p>
-     * the map is keyed by the name of the attribute and 
-     * the value is the string value of the attribute.
-     * 
-     * the map returned by this method is live, and you can add new attribute
-     * by updating the map directly. Because of this design, there's no setter.
-     * 
-     * 
-     * @return
-     *     always non-null
-     */
-    public Map<QName, String> getOtherAttributes()
-    {
-        return otherAttributes;
-    }
+	/**
+	 * Gets a map that contains attributes that aren't bound to any typed property on this class.
+	 * 
+	 * <p>
+	 * the map is keyed by the name of the attribute and 
+	 * the value is the string value of the attribute.
+	 * 
+	 * the map returned by this method is live, and you can add new attribute
+	 * by updating the map directly. Because of this design, there's no setter.
+	 * 
+	 * 
+	 * @return
+	 *     always non-null
+	 */
+	public Map<QName, String> getOtherAttributes() {
+		return otherAttributes;
+	}
 
 }

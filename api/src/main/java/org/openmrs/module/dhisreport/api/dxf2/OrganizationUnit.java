@@ -5,33 +5,28 @@ import javax.xml.bind.annotation.XmlAccessorType;
 import javax.xml.bind.annotation.XmlAttribute;
 import javax.xml.bind.annotation.XmlRootElement;
 
-@XmlRootElement( name = "organisationUnit" )
-@XmlAccessorType( XmlAccessType.FIELD )
-public class OrganizationUnit
-{   
-    @XmlAttribute
-    private String name;
+@XmlRootElement(name = "organisationUnit")
+@XmlAccessorType(XmlAccessType.FIELD)
+public class OrganizationUnit {
+	@XmlAttribute
+	private String name;
 
-    @XmlAttribute
-    private String code;
+	@XmlAttribute
+	private String code;
 
-    public String getName()
-    {
-        return name;
-    }
+	public String getName() {
+		return name;
+	}
 
-    public void setName( String name )
-    {
-        this.name = name;
-    }
+	public void setName(String name) {
+		this.name = name;
+	}
 
-    public String getCode()
-    {
-        return code;
-    }
+	public String getCode() {
+		return code;
+	}
 
-    public void setCode( String code )
-    {
-        this.code = code;
-    }
+	public void setCode(String code) {
+		this.code = code;
+	}
 }

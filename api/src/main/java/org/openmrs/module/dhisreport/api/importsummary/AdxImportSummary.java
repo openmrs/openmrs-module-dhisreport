@@ -14,73 +14,62 @@ package org.openmrs.module.dhisreport.api.importsummary;
 import javax.xml.bind.annotation.*;
 import java.util.List;
 
-@XmlAccessorType( XmlAccessType.FIELD )
-@XmlRootElement( name = "importSummary" )
-public class AdxImportSummary
-{
-    @XmlElement( required = true )
-    private String status;
+@XmlAccessorType(XmlAccessType.FIELD)
+@XmlRootElement(name = "importSummary")
+public class AdxImportSummary {
+	@XmlElement(required = true)
+	private String status;
 
-    @XmlElement( required = true )
-    private String description;
+	@XmlElement(required = true)
+	private String description;
 
-    @XmlElement( required = true )
-    private ImportCount importCount;
+	@XmlElement(required = true)
+	private ImportCount importCount;
 
-    @XmlElement( required = true )
-    private boolean dataSetComplete;
+	@XmlElement(required = true)
+	private boolean dataSetComplete;
 
-    @XmlElementWrapper( name = "conflicts" )
-    @XmlElement( name = "conflict" )
-    private List<ImportConflict> conflicts;
+	@XmlElementWrapper(name = "conflicts")
+	@XmlElement(name = "conflict")
+	private List<ImportConflict> conflicts;
 
-    public String getStatus()
-    {
-        return status;
-    }
+	public String getStatus() {
+		return status;
+	}
 
-    public void setStatus( String status )
-    {
-        this.status = status;
-    }
+	public void setStatus(String status) {
+		this.status = status;
+	}
 
-    public String getDescription()
-    {
-        return description;
-    }
+	public String getDescription() {
+		return description;
+	}
 
-    public void setDescription( String description )
-    {
-        this.description = description;
-    }
+	public void setDescription(String description) {
+		this.description = description;
+	}
 
-    public ImportCount getImportCount()
-    {
-        return importCount;
-    }
+	public ImportCount getImportCount() {
+		return importCount;
+	}
 
-    public void setImportCount( ImportCount importCount )
-    {
-        this.importCount = importCount;
-    }
+	public void setImportCount(ImportCount importCount) {
+		this.importCount = importCount;
+	}
 
-    public boolean isDataSetComplete()
-    {
-        return dataSetComplete;
-    }
+	public boolean isDataSetComplete() {
+		return dataSetComplete;
+	}
 
-    public void setDataSetComplete( boolean dataSetComplete )
-    {
-        this.dataSetComplete = dataSetComplete;
-    }
+	public void setDataSetComplete(boolean dataSetComplete) {
+		this.dataSetComplete = dataSetComplete;
+	}
 
-    public List<ImportConflict> getConflicts()
-    {
-        return conflicts;
-    }
+	public List<ImportConflict> getConflicts() {
+		return conflicts;
+	}
 
-    public void setConflicts( List<ImportConflict> conflicts )
-    {
-        this.conflicts = conflicts;
-    }
+	public void setConflicts(List<ImportConflict> conflicts) {
+		this.conflicts = conflicts;
+	}
 }

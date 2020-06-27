@@ -1,60 +1,51 @@
 package org.openmrs.module.dhisreport.api.syncmodel;
 
-public class SyncDataElementGroup
-{
+public class SyncDataElementGroup {
 
-    private String id;
+	private String id;
 
-    private String code;
+	private String code;
 
-    private String href;
+	private String href;
 
-    private String name;
+	private String name;
 
-    public String getId()
-    {
-        return id;
-    }
+	public String getId() {
+		return id;
+	}
 
-    public void setId( String id )
-    {
-        this.id = id;
-    }
+	public void setId(String id) {
+		this.id = id;
+	}
 
-    public String getCode()
-    {
-        return code;
-    }
+	public String getCode() {
+		return code;
+	}
 
-    public void setCode( String code )
-    {
-        this.code = code;
-    }
+	public void setCode(String code) {
+		this.code = code;
+	}
 
-    public String getHref()
-    {
-        return href;
-    }
+	public String getHref() {
+		return href;
+	}
 
-    public void setHref( String href )
-    {
-        this.href = href;
-    }
+	public void setHref(String href) {
+		this.href = href;
+	}
 
-    public String getName()
-    {
-        return name;
-    }
+	public String getName() {
+		return name;
+	}
 
-    public void setName( String name )
-    {
-        this.name = name;
-    }
+	public void setName(String name) {
+		this.name = name;
+	}
 
-    @Override
-    public String toString()
-    {
-        return "DEG [name=" + name + ", code=" + code + ", id=" + id + ", href=" + href + "]";
-    }
+	@Override
+	public String toString() {
+		return "DEG [name=" + name + ", code=" + code + ", id=" + id
+				+ ", href=" + href + "]";
+	}
 
 }

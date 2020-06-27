@@ -35,67 +35,66 @@ import org.springframework.core.io.ClassPathResource;
  * 
  * @author bobj
  */
-public class ReportTemplatesTest
-{
-    @Test
-    public void unMarshallReportTemplates()
-        throws Exception
-    {
-        ClassPathResource resource = new ClassPathResource( "templates_ethiopia.xml" );
-        JAXBContext jaxbContext = JAXBContext.newInstance( ReportTemplates.class );
+public class ReportTemplatesTest {
+	@Test
+	public void unMarshallReportTemplates() throws Exception {
+		ClassPathResource resource = new ClassPathResource(
+				"templates_ethiopia.xml");
+		JAXBContext jaxbContext = JAXBContext
+				.newInstance(ReportTemplates.class);
 
-        Unmarshaller jaxbUnmarshaller = jaxbContext.createUnmarshaller();
-        ReportTemplates reportTemplates = (ReportTemplates) jaxbUnmarshaller.unmarshal( resource.getInputStream() );
-        assertNotNull( reportTemplates );
-        List<ReportDefinition> reportDefinitions = reportTemplates.getReportDefinitions();
-        assertEquals( 2, reportDefinitions.size() );
-        for ( ReportDefinition rd : reportDefinitions )
-        {
-            for ( DataValueTemplate dvt : rd.getDataValueTemplates() )
-            {
-                assertNotNull( dvt.getDataelement() );
-                assertNotNull( dvt.getDataelement().getCode() );
-                assertNotNull( dvt.getDataelement().getName() );
-                assertNotNull( dvt.getDataelement().getUid() );
-                assertNotNull( dvt.getDisaggregation() );
-                assertNotNull( dvt.getDisaggregation().getCode() );
-                assertNotNull( dvt.getDisaggregation().getName() );
-                assertNotNull( dvt.getDisaggregation().getUid() );
-            }
-        }
-    }
+		Unmarshaller jaxbUnmarshaller = jaxbContext.createUnmarshaller();
+		ReportTemplates reportTemplates = (ReportTemplates) jaxbUnmarshaller
+				.unmarshal(resource.getInputStream());
+		assertNotNull(reportTemplates);
+		List<ReportDefinition> reportDefinitions = reportTemplates
+				.getReportDefinitions();
+		assertEquals(2, reportDefinitions.size());
+		for (ReportDefinition rd : reportDefinitions) {
+			for (DataValueTemplate dvt : rd.getDataValueTemplates()) {
+				assertNotNull(dvt.getDataelement());
+				assertNotNull(dvt.getDataelement().getCode());
+				assertNotNull(dvt.getDataelement().getName());
+				assertNotNull(dvt.getDataelement().getUid());
+				assertNotNull(dvt.getDisaggregation());
+				assertNotNull(dvt.getDisaggregation().getCode());
+				assertNotNull(dvt.getDisaggregation().getName());
+				assertNotNull(dvt.getDisaggregation().getUid());
+			}
+		}
+	}
 
-    @Test
-    public void marshallReportTemplates()
-        throws Exception
-    {
-        ClassPathResource resource = new ClassPathResource( "templates_ethiopia.xml" );
-        JAXBContext jaxbContext = JAXBContext.newInstance( ReportTemplates.class );
+	@Test
+	public void marshallReportTemplates() throws Exception {
+		ClassPathResource resource = new ClassPathResource(
+				"templates_ethiopia.xml");
+		JAXBContext jaxbContext = JAXBContext
+				.newInstance(ReportTemplates.class);
 
-        Unmarshaller jaxbUnmarshaller = jaxbContext.createUnmarshaller();
-        ReportTemplates reportTemplates = (ReportTemplates) jaxbUnmarshaller.unmarshal( resource.getInputStream() );
-        Collection<DataValueTemplate> dvts = reportTemplates.getReportDefinitions().get( 1 ).getDataValueTemplates();
-        for ( DataValueTemplate dvt : dvts )
-        {
-            dvt.setQuery( "select count(*) from something & something_else" );
-        }
-        Marshaller jaxbmarshaller = jaxbContext.createMarshaller();
-        jaxbmarshaller.marshal( reportTemplates, System.out );
-    }
+		Unmarshaller jaxbUnmarshaller = jaxbContext.createUnmarshaller();
+		ReportTemplates reportTemplates = (ReportTemplates) jaxbUnmarshaller
+				.unmarshal(resource.getInputStream());
+		Collection<DataValueTemplate> dvts = reportTemplates
+				.getReportDefinitions().get(1).getDataValueTemplates();
+		for (DataValueTemplate dvt : dvts) {
+			dvt.setQuery("select count(*) from something & something_else");
+		}
+		Marshaller jaxbmarshaller = jaxbContext.createMarshaller();
+		jaxbmarshaller.marshal(reportTemplates, System.out);
+	}
 
-    @Test
-    public void testDodgyQueries()
-    {
-        String updateQuery = "Some Update query";
-        String deleteQuery = "Some delete query";
-        String safeQuery = "Some safe query";
+	@Test
+	public void testDodgyQueries() {
+		String updateQuery = "Some Update query";
+		String deleteQuery = "Some delete query";
+		String safeQuery = "Some safe query";
 
-        DataValueTemplate dvt = new DataValueTemplate();
-        dvt.setQuery( updateQuery );
-        assertTrue( dvt.potentialUpdateDelete() );
-        dvt.setQuery( deleteQuery );
-        assertTrue( dvt.potentialUpdateDelete() );
-        dvt.setQuery( safeQuery );
-        assertFalse( dvt.potentialUpdateDelete() );
-    }
+		DataValueTemplate dvt = new DataValueTemplate();
+		dvt.setQuery(updateQuery);
+		assertTrue(dvt.potentialUpdateDelete());
+		dvt.setQuery(deleteQuery);
+		assertTrue(dvt.potentialUpdateDelete());
+		dvt.setQuery(safeQuery);
+		assertFalse(dvt.potentialUpdateDelete());
+	}
 }

@@ -25,52 +25,48 @@ import java.util.Date;
 import org.junit.Test;
 import static org.junit.Assert.*;
 
-public class MonthlyPeriodTest
-{
+public class MonthlyPeriodTest {
 
-    public MonthlyPeriodTest()
-    {
-    }
+	public MonthlyPeriodTest() {
+	}
 
-    /**
-     * Test of getStart method, of class MonthlyPeriod.
-     */
-    @Test
-    public void testGetStart()
-        throws ParseException
-    {
-        MonthlyPeriod instance = new MonthlyPeriod( new SimpleDateFormat( "yyyy-MM-dd" ).parse( "2012-10-19" ) );
-        Date expResult = new SimpleDateFormat( "yyyy-MM-dd'T'HH:mm:ss" ).parse( "2012-10-01T00:00:00" );
-        Date result = instance.getStartDate();
-        assertEquals( expResult, result );
-    }
+	/**
+	 * Test of getStart method, of class MonthlyPeriod.
+	 */
+	@Test
+	public void testGetStart() throws ParseException {
+		MonthlyPeriod instance = new MonthlyPeriod(new SimpleDateFormat(
+				"yyyy-MM-dd").parse("2012-10-19"));
+		Date expResult = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss")
+				.parse("2012-10-01T00:00:00");
+		Date result = instance.getStartDate();
+		assertEquals(expResult, result);
+	}
 
-    /**
-     * Test of getEnd method, of class MonthlyPeriod.
-     */
-    @Test
-    public void testGetEnd()
-        throws ParseException
-    {
-        MonthlyPeriod instance = new MonthlyPeriod( new SimpleDateFormat( "yyyy-MM-dd" ).parse( "2012-10-19" ) );
-        Date expResult = new SimpleDateFormat( "yyyy-MM-dd" ).parse( "2012-11-01" );
-        long time = expResult.getTime() - 1;
-        expResult.setTime( time );
+	/**
+	 * Test of getEnd method, of class MonthlyPeriod.
+	 */
+	@Test
+	public void testGetEnd() throws ParseException {
+		MonthlyPeriod instance = new MonthlyPeriod(new SimpleDateFormat(
+				"yyyy-MM-dd").parse("2012-10-19"));
+		Date expResult = new SimpleDateFormat("yyyy-MM-dd").parse("2012-11-01");
+		long time = expResult.getTime() - 1;
+		expResult.setTime(time);
 
-        Date result = instance.getEndDate();
-        assertEquals( expResult, result );
-    }
+		Date result = instance.getEndDate();
+		assertEquals(expResult, result);
+	}
 
-    /**
-     * Test of getAsIsoString method, of class MonthlyPeriod.
-     */
-    @Test
-    public void testGetAsIsoString()
-        throws ParseException
-    {
-        MonthlyPeriod instance = new MonthlyPeriod( new SimpleDateFormat( "yyyy-MM-dd" ).parse( "2012-10-19" ) );
-        String expResult = "201210";
-        String result = instance.getAsIsoString();
-        assertEquals( expResult, result );
-    }
+	/**
+	 * Test of getAsIsoString method, of class MonthlyPeriod.
+	 */
+	@Test
+	public void testGetAsIsoString() throws ParseException {
+		MonthlyPeriod instance = new MonthlyPeriod(new SimpleDateFormat(
+				"yyyy-MM-dd").parse("2012-10-19"));
+		String expResult = "201210";
+		String result = instance.getAsIsoString();
+		assertEquals(expResult, result);
+	}
 }

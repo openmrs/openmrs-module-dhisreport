@@ -51,169 +51,167 @@ import org.springframework.web.multipart.MultipartHttpServletRequest;
  * The main controller.
  */
 @Controller
-public class ReportDefinitionController
-{
+public class ReportDefinitionController {
 
-    protected final Log log = LogFactory.getLog( getClass() );
+	protected final Log log = LogFactory.getLog(getClass());
 
-    @RequestMapping( value = "/module/dhisreport/loadReportDefinitions", method = RequestMethod.GET )
-    public void uploadForm( ModelMap model )
-    {
-        model.addAttribute( "user", Context.getAuthenticatedUser() );
-    }
+	@RequestMapping(value = "/module/dhisreport/loadReportDefinitions", method = RequestMethod.GET)
+	public void uploadForm(ModelMap model) {
+		model.addAttribute("user", Context.getAuthenticatedUser());
+	}
 
-    @RequestMapping( value = "/module/dhisreport/loadReportDefinitions", method = RequestMethod.POST )
-    public void upload( ModelMap model, HttpServletRequest request )
-        throws Exception
-    {
-        HttpSession session = request.getSession();
-        model.addAttribute( "user", Context.getAuthenticatedUser() );
+	@RequestMapping(value = "/module/dhisreport/loadReportDefinitions", method = RequestMethod.POST)
+	public void upload(ModelMap model, HttpServletRequest request)
+			throws Exception {
+		HttpSession session = request.getSession();
+		model.addAttribute("user", Context.getAuthenticatedUser());
 
-        MultipartHttpServletRequest multipartRequest = (MultipartHttpServletRequest) request;
-        MultipartFile multipartFile = multipartRequest.getFile( "datafile" );
+		MultipartHttpServletRequest multipartRequest = (MultipartHttpServletRequest) request;
+		MultipartFile multipartFile = multipartRequest.getFile("datafile");
 
-        DHIS2ReportingService service = Context.getService( DHIS2ReportingService.class );
-        InputStream is = multipartFile.getInputStream();
-        try
-        {
-            service.unMarshallandSaveReportTemplates( is );
-            session.setAttribute( WebConstants.OPENMRS_MSG_ATTR, Context.getMessageSourceService().getMessage(
-                "dhisreport.uploadSuccess" ) );
-        }
-        catch ( Exception ex )
-        {
-            log.error( "Error loading file: " + ex );
-            session.setAttribute( WebConstants.OPENMRS_ERROR_ATTR, Context.getMessageSourceService().getMessage(
-                "dhisreport.uploadError" ) );
-        }
-        finally
-        {
-            is.close();
-        }
-    }
+		DHIS2ReportingService service = Context
+				.getService(DHIS2ReportingService.class);
+		InputStream is = multipartFile.getInputStream();
+		try {
+			service.unMarshallandSaveReportTemplates(is);
+			session.setAttribute(WebConstants.OPENMRS_MSG_ATTR, Context
+					.getMessageSourceService().getMessage(
+							"dhisreport.uploadSuccess"));
+		} catch (Exception ex) {
+			log.error("Error loading file: " + ex);
+			session.setAttribute(WebConstants.OPENMRS_ERROR_ATTR, Context
+					.getMessageSourceService().getMessage(
+							"dhisreport.uploadError"));
+		} finally {
+			is.close();
+		}
+	}
 
-    @RequestMapping( value = "/module/dhisreport/exportReportDefinitions", method = RequestMethod.GET )
-    public void export( ModelMap model, HttpServletResponse response )
-        throws Exception
-    {
-        response.setContentType( "application/xml" );
-        response.setCharacterEncoding( "UTF-8" );
-        response.addHeader( "Content-Disposition", "attachment; filename=reportDefinition.xml" );
-        DHIS2ReportingService service = Context.getService( DHIS2ReportingService.class );
-        ReportTemplates templates = service.getReportTemplates();
-        service.marshallReportTemplates( response.getOutputStream(), templates );
-    }
+	@RequestMapping(value = "/module/dhisreport/exportReportDefinitions", method = RequestMethod.GET)
+	public void export(ModelMap model, HttpServletResponse response)
+			throws Exception {
+		response.setContentType("application/xml");
+		response.setCharacterEncoding("UTF-8");
+		response.addHeader("Content-Disposition",
+				"attachment; filename=reportDefinition.xml");
+		DHIS2ReportingService service = Context
+				.getService(DHIS2ReportingService.class);
+		ReportTemplates templates = service.getReportTemplates();
+		service.marshallReportTemplates(response.getOutputStream(), templates);
+	}
 
-    @RequestMapping( value = "/module/dhisreport/editReportDefinition", method = RequestMethod.GET )
-    public void editReportDefinition( ModelMap model, @RequestParam( value = "reportDefinition_id", required = false )
-    Integer reportDefinition_id )
-    {
-        DHIS2ReportingService service = Context.getService( DHIS2ReportingService.class );
+	@RequestMapping(value = "/module/dhisreport/editReportDefinition", method = RequestMethod.GET)
+	public void editReportDefinition(
+			ModelMap model,
+			@RequestParam(value = "reportDefinition_id", required = false) Integer reportDefinition_id) {
+		DHIS2ReportingService service = Context
+				.getService(DHIS2ReportingService.class);
 
-        model.addAttribute( "user", Context.getAuthenticatedUser() );
-        model.addAttribute( "reportDefinition", service.getReportDefinition( reportDefinition_id ) );
-    }
+		model.addAttribute("user", Context.getAuthenticatedUser());
+		model.addAttribute("reportDefinition", service
+				.getReportDefinition(reportDefinition_id));
+	}
 
-    @RequestMapping( value = "/module/dhisreport/deleteReportDefinition", method = RequestMethod.GET )
-    public String deleteReportDefinition( ModelMap model,
-        @RequestParam( value = "reportDefinition_id", required = false )
-        Integer reportDefinition_id, WebRequest webRequest )
-    {
-        DHIS2ReportingService service = Context.getService( DHIS2ReportingService.class );
+	@RequestMapping(value = "/module/dhisreport/deleteReportDefinition", method = RequestMethod.GET)
+	public String deleteReportDefinition(
+			ModelMap model,
+			@RequestParam(value = "reportDefinition_id", required = false) Integer reportDefinition_id,
+			WebRequest webRequest) {
+		DHIS2ReportingService service = Context
+				.getService(DHIS2ReportingService.class);
 
-        model.addAttribute( "user", Context.getAuthenticatedUser() );
+		model.addAttribute("user", Context.getAuthenticatedUser());
 
-        ReportDefinition rd = service.getReportDefinition( reportDefinition_id );
+		ReportDefinition rd = service.getReportDefinition(reportDefinition_id);
 
-        service.purgeReportDefinition( rd );
-        webRequest.setAttribute( WebConstants.OPENMRS_MSG_ATTR, Context.getMessageSourceService().getMessage(
-            "dhisreport.deleteSuccess" ), WebRequest.SCOPE_SESSION );
-        return "redirect:/module/dhisreport/listDhis2Reports.form";
-    }
+		service.purgeReportDefinition(rd);
+		webRequest.setAttribute(WebConstants.OPENMRS_MSG_ATTR, Context
+				.getMessageSourceService().getMessage(
+						"dhisreport.deleteSuccess"), WebRequest.SCOPE_SESSION);
+		return "redirect:/module/dhisreport/listDhis2Reports.form";
+	}
 
-    @RequestMapping( value = "/module/dhisreport/editDataValueTemplate.htm", method = RequestMethod.GET )
-    public String editDataValueTemplate( ModelMap model,
-        @RequestParam( value = "dataValueTemplate_id", required = false )
-        Integer dataValueTemplate_id, @RequestParam( value = "dataValueTemplate_query", required = false )
-        String dataValueTemplate_query )
-    {
-        DHIS2ReportingService service = Context.getService( DHIS2ReportingService.class );
+	@RequestMapping(value = "/module/dhisreport/editDataValueTemplate.htm", method = RequestMethod.GET)
+	public String editDataValueTemplate(
+			ModelMap model,
+			@RequestParam(value = "dataValueTemplate_id", required = false) Integer dataValueTemplate_id,
+			@RequestParam(value = "dataValueTemplate_query", required = false) String dataValueTemplate_query) {
+		DHIS2ReportingService service = Context
+				.getService(DHIS2ReportingService.class);
 
-        DataValueTemplate dvt = service.getDataValueTemplate( dataValueTemplate_id );
-        if ( dataValueTemplate_query.trim().equals( "" ) )
-        {
-            dvt.setDefaultreportquery( dvt.getQuery() );
-            dvt.setMappeddefinitionlabel( null );
-            dvt.setMappeddefinitionuuid( null );
-            dataValueTemplate_query = null;
-        }
-        dvt.setQuery( dataValueTemplate_query );
+		DataValueTemplate dvt = service
+				.getDataValueTemplate(dataValueTemplate_id);
+		if (dataValueTemplate_query.trim().equals("")) {
+			dvt.setDefaultreportquery(dvt.getQuery());
+			dvt.setMappeddefinitionlabel(null);
+			dvt.setMappeddefinitionuuid(null);
+			dataValueTemplate_query = null;
+		}
+		dvt.setQuery(dataValueTemplate_query);
 
-        service.saveDataValueTemplate( dvt );
+		service.saveDataValueTemplate(dvt);
 
-        model.addAttribute( "user", Context.getAuthenticatedUser() );
-        model.addAttribute( "dataValueTemplate", dvt );
-        return "redirect:/module/dhisreport/editReportDefinition.form?reportDefinition_id="
-            + dvt.getReportDefinition().getId();
-    }
+		model.addAttribute("user", Context.getAuthenticatedUser());
+		model.addAttribute("dataValueTemplate", dvt);
+		return "redirect:/module/dhisreport/editReportDefinition.form?reportDefinition_id="
+				+ dvt.getReportDefinition().getId();
+	}
 
-    @RequestMapping( value = "/module/dhisreport/getReportDefinitions", method = RequestMethod.POST )
-    public String getReportDefinitions( WebRequest webRequest, HttpServletRequest request )
-    {
-        String username = Context.getAdministrationService().getGlobalProperty( "dhisreport.dhis2UserName" );
-        String password = Context.getAdministrationService().getGlobalProperty( "dhisreport.dhis2Password" );
-        String dhisurl = Context.getAdministrationService().getGlobalProperty( "dhisreport.dhis2URL" );
-        String url = dhisurl + "/api/dataSets";
-        //String url = "https://play.dhis2.org/demo/api/dataSets";
-        String referer = webRequest.getHeader( "Referer" );
-        HttpSession session = request.getSession();
+	@RequestMapping(value = "/module/dhisreport/getReportDefinitions", method = RequestMethod.POST)
+	public String getReportDefinitions(WebRequest webRequest,
+			HttpServletRequest request) {
+		String username = Context.getAdministrationService().getGlobalProperty(
+				"dhisreport.dhis2UserName");
+		String password = Context.getAdministrationService().getGlobalProperty(
+				"dhisreport.dhis2Password");
+		String dhisurl = Context.getAdministrationService().getGlobalProperty(
+				"dhisreport.dhis2URL");
+		String url = dhisurl + "/api/dataSets";
+		//String url = "https://play.dhis2.org/demo/api/dataSets";
+		String referer = webRequest.getHeader("Referer");
+		HttpSession session = request.getSession();
 
-        try
-        {
-            DefaultHttpClient httpClient = new DefaultHttpClient();
-            HttpGet getRequest = new HttpGet( url );
-            getRequest.addHeader( "accept", "application/dsd+xml" );
-            getRequest.addHeader( BasicScheme.authenticate( new UsernamePasswordCredentials( username, password ),
-                "UTF-8", false ) );
-            HttpResponse response = httpClient.execute( getRequest );
+		try {
+			DefaultHttpClient httpClient = new DefaultHttpClient();
+			HttpGet getRequest = new HttpGet(url);
+			getRequest.addHeader("accept", "application/dsd+xml");
+			getRequest.addHeader(BasicScheme.authenticate(
+					new UsernamePasswordCredentials(username, password),
+					"UTF-8", false));
+			HttpResponse response = httpClient.execute(getRequest);
 
-            if ( response.getStatusLine().getStatusCode() != 200 )
-            {
-                log.error( "Failed : HTTP error code : " + response.getStatusLine().getStatusCode() );
-            }
+			if (response.getStatusLine().getStatusCode() != 200) {
+				log.error("Failed : HTTP error code : "
+						+ response.getStatusLine().getStatusCode());
+			}
 
-            InputStream is = response.getEntity().getContent();
-            try
-            {
-                DHIS2ReportingService service = Context.getService( DHIS2ReportingService.class );
-                service.unMarshallandSaveReportTemplates( is );
-                session.setAttribute( WebConstants.OPENMRS_MSG_ATTR, Context.getMessageSourceService().getMessage(
-                    "dhisreport.uploadSuccess" ) );
-            }
-            catch ( Exception ex )
-            {
-                log.error( "Error loading file: " + ex );
-                session.setAttribute( WebConstants.OPENMRS_ERROR_ATTR, Context.getMessageSourceService().getMessage(
-                    "dhisreport.uploadError" ) );
-            }
-            finally
-            {
-                is.close();
-            }
-            httpClient.getConnectionManager().shutdown();
-            return "redirect:" + referer;
-        }
-        catch ( ClientProtocolException ee )
-        {
-            log.debug( "An error occured in the HTTP protocol." + ee.toString() );
-            ee.printStackTrace();
-        }
-        catch ( IOException ee )
-        {
-            log.debug( "Problem accessing DHIS2 server: " + ee.toString() );
-            session.setAttribute( WebConstants.OPENMRS_ERROR_ATTR, Context.getMessageSourceService().getMessage(
-                "dhisreport.checkConnectionWithDHIS2" ) );
-        }
-        return "redirect:" + referer;
-    }
+			InputStream is = response.getEntity().getContent();
+			try {
+				DHIS2ReportingService service = Context
+						.getService(DHIS2ReportingService.class);
+				service.unMarshallandSaveReportTemplates(is);
+				session.setAttribute(WebConstants.OPENMRS_MSG_ATTR, Context
+						.getMessageSourceService().getMessage(
+								"dhisreport.uploadSuccess"));
+			} catch (Exception ex) {
+				log.error("Error loading file: " + ex);
+				session.setAttribute(WebConstants.OPENMRS_ERROR_ATTR, Context
+						.getMessageSourceService().getMessage(
+								"dhisreport.uploadError"));
+			} finally {
+				is.close();
+			}
+			httpClient.getConnectionManager().shutdown();
+			return "redirect:" + referer;
+		} catch (ClientProtocolException ee) {
+			log.debug("An error occured in the HTTP protocol." + ee.toString());
+			ee.printStackTrace();
+		} catch (IOException ee) {
+			log.debug("Problem accessing DHIS2 server: " + ee.toString());
+			session.setAttribute(WebConstants.OPENMRS_ERROR_ATTR, Context
+					.getMessageSourceService().getMessage(
+							"dhisreport.checkConnectionWithDHIS2"));
+		}
+		return "redirect:" + referer;
+	}
 }

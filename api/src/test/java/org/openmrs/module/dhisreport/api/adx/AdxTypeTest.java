@@ -1,6 +1,5 @@
 package org.openmrs.module.dhisreport.api.adx;
 
-
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertTrue;
 
@@ -23,21 +22,24 @@ import javax.xml.datatype.DatatypeFactory;
 import javax.xml.datatype.XMLGregorianCalendar;
 import javax.xml.namespace.QName;
 import javax.xml.xpath.XPathExpressionException;
-import org.junit.Test;
 
+import org.junit.Test;
 
 public class AdxTypeTest {
 
 	@Test
-	public void shouldHaveProperValuesInAllAttributesOfAdxType() throws JAXBException, FileNotFoundException,
-			XPathExpressionException, UnsupportedEncodingException, DatatypeConfigurationException {
+	public void shouldHaveProperValuesInAllAttributesOfAdxType()
+			throws JAXBException, FileNotFoundException,
+			XPathExpressionException, UnsupportedEncodingException,
+			DatatypeConfigurationException {
 		ObjectFactory of = new ObjectFactory();
 		AdxType adxt = of.createAdxType();
 		Map<QName, String> hm2 = adxt.getOtherAttributes();
 		QName qn3 = new QName("adxattri");
 		hm2.put(qn3, "adx");
 		XMLGregorianCalendar date3 = null;
-		date3 = DatatypeFactory.newInstance().newXMLGregorianCalendar(new GregorianCalendar(2016, 06, 14));
+		date3 = DatatypeFactory.newInstance().newXMLGregorianCalendar(
+				new GregorianCalendar(2016, 06, 14));
 		adxt.setExported(date3);
 		GroupType group = of.createGroupType();
 		group.setDataSet("(TB/HIV)VCCT");
@@ -89,7 +91,6 @@ public class AdxTypeTest {
 			for (QName qn : gt.getOtherAttributes().keySet()) {
 				if (gt.getOtherAttributes().containsKey(qn)) {
 					assertEquals("abcde", gt.getOtherAttributes().get(qn));
-
 				}
 			}
 
@@ -104,7 +105,6 @@ public class AdxTypeTest {
 				}
 			}
 		}
-
 	}
 
 }

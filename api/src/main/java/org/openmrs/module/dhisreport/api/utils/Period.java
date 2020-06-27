@@ -25,16 +25,15 @@ import java.util.Date;
  * 
  * @author bobj
  */
-public interface Period
-{
-    public void setStartDate( Date startDate );
+public interface Period {
+	public void setStartDate(Date startDate);
 
-    public void setEndDate( Date endDate );
+	public void setEndDate(Date endDate);
 
-    public Date getStartDate();
+	public Date getStartDate();
 
-    public Date getEndDate();
+	public Date getEndDate();
 
-    public String getAsIsoString();
+	public String getAsIsoString();
 
 }

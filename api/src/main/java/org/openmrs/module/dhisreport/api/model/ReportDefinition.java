@@ -32,161 +32,140 @@ import javax.xml.bind.annotation.*;
  * 
  * @author bobj
  */
-@XmlAccessorType( XmlAccessType.FIELD )
-@XmlType( name = "", propOrder = { "name", "uid", "code", "periodType", "dataValueTemplates" } )
-@XmlRootElement( name = "reportTemplate" )
-public class ReportDefinition
-    implements Serializable, Identifiable
-{
+@XmlAccessorType(XmlAccessType.FIELD)
+@XmlType(name = "", propOrder = {"name", "uid", "code", "periodType",
+		"dataValueTemplates"})
+@XmlRootElement(name = "reportTemplate")
+public class ReportDefinition implements Serializable, Identifiable {
 
-    /**
-     * 
-     */
-    private static final long serialVersionUID = -6618213228326732404L;
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = -6618213228326732404L;
 
-    @XmlTransient
-    protected Integer id;
+	@XmlTransient
+	protected Integer id;
 
-    @XmlElement( required = true )
-    protected String name;
+	@XmlElement(required = true)
+	protected String name;
 
-    @XmlElement( required = true )
-    protected String uid;
+	@XmlElement(required = true)
+	protected String uid;
 
-    @XmlElement( required = true )
-    @XmlID
-    protected String code;
+	@XmlElement(required = true)
+	@XmlID
+	protected String code;
 
-    @XmlElement( required = true )
-    protected String periodType;
+	@XmlElement(required = true)
+	protected String periodType;
 
-    @XmlElementWrapper( name = "dataValueTemplates" )
-    @XmlElement( name = "dataValueTemplate" )
-    protected Set<DataValueTemplate> dataValueTemplates = new HashSet<DataValueTemplate>();
+	@XmlElementWrapper(name = "dataValueTemplates")
+	@XmlElement(name = "dataValueTemplate")
+	protected Set<DataValueTemplate> dataValueTemplates = new HashSet<DataValueTemplate>();
 
-    @XmlTransient
-    protected String reportingReportId;
+	@XmlTransient
+	protected String reportingReportId;
 
-    @Override
-    public Integer getId()
-    {
-        return id;
-    }
+	@Override
+	public Integer getId() {
+		return id;
+	}
 
-    @Override
-    public void setId( Integer id )
-    {
-        this.id = id;
-    }
+	@Override
+	public void setId(Integer id) {
+		this.id = id;
+	}
 
-    public String getName()
-    {
-        return name;
-    }
+	public String getName() {
+		return name;
+	}
 
-    public void setName( String name )
-    {
-        this.name = name;
-    }
+	public void setName(String name) {
+		this.name = name;
+	}
 
-    public String getCode()
-    {
-        return code;
-    }
+	public String getCode() {
+		return code;
+	}
 
-    public void setCode( String code )
-    {
-        this.code = code;
-    }
+	public void setCode(String code) {
+		this.code = code;
+	}
 
-    @Override
-    public String getUid()
-    {
-        return uid;
-    }
+	@Override
+	public String getUid() {
+		return uid;
+	}
 
-    @Override
-    public void setUid( String uid )
-    {
-        this.uid = uid;
-    }
+	@Override
+	public void setUid(String uid) {
+		this.uid = uid;
+	}
 
-    public Set<DataValueTemplate> getDataValueTemplates()
-    {
-        return dataValueTemplates;
-    }
+	public Set<DataValueTemplate> getDataValueTemplates() {
+		return dataValueTemplates;
+	}
 
-    public void setDataValueTemplates( Set<DataValueTemplate> dataValueTemplates )
-    {
-        this.dataValueTemplates = dataValueTemplates;
-    }
+	public void setDataValueTemplates(Set<DataValueTemplate> dataValueTemplates) {
+		this.dataValueTemplates = dataValueTemplates;
+	}
 
-    public void addDataValueTemplate( DataValueTemplate dataValueTemplate )
-    {
-        dataValueTemplate.setReportDefinition( this );
-        dataValueTemplates.add( dataValueTemplate );
-    }
+	public void addDataValueTemplate(DataValueTemplate dataValueTemplate) {
+		dataValueTemplate.setReportDefinition(this);
+		dataValueTemplates.add(dataValueTemplate);
+	}
 
-    public void removeDataValueTemplate( DataValueTemplate dataValueTemplate )
-    {
-        dataValueTemplates.remove( id );
-    }
+	public void removeDataValueTemplate(DataValueTemplate dataValueTemplate) {
+		dataValueTemplates.remove(id);
+	}
 
-    @Override
-    public boolean equals( Object obj )
-    {
-        if ( obj == null )
-        {
-            return false;
-        }
-        if ( getClass() != obj.getClass() )
-        {
-            return false;
-        }
-        final ReportDefinition other = (ReportDefinition) obj;
-        if ( (this.name == null) ? (other.name != null) : !this.name.equals( other.name ) )
-        {
-            return false;
-        }
-        if ( (this.uid == null) ? (other.uid != null) : !this.uid.equals( other.uid ) )
-        {
-            return false;
-        }
-        if ( (this.code == null) ? (other.code != null) : !this.code.equals( other.code ) )
-        {
-            return false;
-        }
-        return true;
-    }
+	@Override
+	public boolean equals(Object obj) {
+		if (obj == null) {
+			return false;
+		}
+		if (getClass() != obj.getClass()) {
+			return false;
+		}
+		final ReportDefinition other = (ReportDefinition) obj;
+		if ((this.name == null) ? (other.name != null) : !this.name
+				.equals(other.name)) {
+			return false;
+		}
+		if ((this.uid == null) ? (other.uid != null) : !this.uid
+				.equals(other.uid)) {
+			return false;
+		}
+		if ((this.code == null) ? (other.code != null) : !this.code
+				.equals(other.code)) {
+			return false;
+		}
+		return true;
+	}
 
-    @Override
-    public int hashCode()
-    {
-        int hash = 7;
-        hash = 29 * hash + (this.name != null ? this.name.hashCode() : 0);
-        hash = 29 * hash + (this.uid != null ? this.uid.hashCode() : 0);
-        hash = 29 * hash + (this.code != null ? this.code.hashCode() : 0);
-        return hash;
-    }
+	@Override
+	public int hashCode() {
+		int hash = 7;
+		hash = 29 * hash + (this.name != null ? this.name.hashCode() : 0);
+		hash = 29 * hash + (this.uid != null ? this.uid.hashCode() : 0);
+		hash = 29 * hash + (this.code != null ? this.code.hashCode() : 0);
+		return hash;
+	}
 
-    public String getPeriodType()
-    {
-        return periodType;
-    }
+	public String getPeriodType() {
+		return periodType;
+	}
 
-    public void setPeriodType( String periodType )
-    {
-        this.periodType = periodType;
-    }
+	public void setPeriodType(String periodType) {
+		this.periodType = periodType;
+	}
 
-    public String getReportingReportId()
-    {
-        return reportingReportId;
-    }
+	public String getReportingReportId() {
+		return reportingReportId;
+	}
 
-    public void setReportingReportId( String reportingReportId )
-    {
-        this.reportingReportId = reportingReportId;
-    }
+	public void setReportingReportId(String reportingReportId) {
+		this.reportingReportId = reportingReportId;
+	}
 
 }

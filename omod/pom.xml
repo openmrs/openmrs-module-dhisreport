@@ -1,4 +1,5 @@
-<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
     <modelVersion>4.0.0</modelVersion>
 
     <parent>
@@ -27,7 +28,7 @@
             </exclusions>
         </dependency>
         <!-- End OpenMRS modules -->
-        
+
         <!-- Begin OpenMRS core -->
         <dependency>
             <groupId>org.openmrs.api</groupId>
@@ -40,7 +41,7 @@
             <artifactId>openmrs-web</artifactId>
             <type>jar</type>
         </dependency>
-        
+
         <dependency>
             <groupId>org.openmrs.api</groupId>
             <artifactId>openmrs-api</artifactId>
@@ -61,14 +62,14 @@
             <type>pom</type>
             <scope>test</scope>
         </dependency>
-        
+
         <!-- End OpenMRS core -->
 
         <dependency>
             <groupId>org.openmrs.module</groupId>
             <artifactId>reporting-api</artifactId>
         </dependency>
-        
+
         <dependency>
             <groupId>org.openmrs.module</groupId>
             <artifactId>legacyui-omod</artifactId>
@@ -118,7 +119,7 @@
                         <includeEmptyDirs>true</includeEmptyDirs>
                     </configuration>
                 </plugin>
-                <!--This plugin's configuration is used to store Eclipse m2e settings 
+                <!--This plugin's configuration is used to store Eclipse m2e settings
                 only. It has no influence on the Maven build itself. -->
                 <plugin>
                     <groupId>org.eclipse.m2e</groupId>
@@ -137,7 +138,7 @@
                                         </goals>
                                     </pluginExecutionFilter>
                                     <action>
-                                        <ignore />
+                                        <ignore/>
                                     </action>
                                 </pluginExecution>
                                 <pluginExecution>
@@ -150,27 +151,27 @@
                                         </goals>
                                     </pluginExecutionFilter>
                                     <action>
-                                        <ignore />
+                                        <ignore/>
                                     </action>
                                 </pluginExecution>
                                 <pluginExecution>
-                                	<pluginExecutionFilter>
-                                		<groupId>
-                                			com.googlecode.maven-java-formatter-plugin
-                                		</groupId>
-                                		<artifactId>
-                                			maven-java-formatter-plugin
-                                		</artifactId>
-                                		<versionRange>
-                                			[0.3.1,)
-                                		</versionRange>
-                                		<goals>
-                                			<goal>format</goal>
-                                		</goals>
-                                	</pluginExecutionFilter>
-                                	<action>
-                                		<ignore />
-                                	</action>
+                                    <pluginExecutionFilter>
+                                        <groupId>
+                                            com.googlecode.maven-java-formatter-plugin
+                                        </groupId>
+                                        <artifactId>
+                                            maven-java-formatter-plugin
+                                        </artifactId>
+                                        <versionRange>
+                                            [0.3.1,)
+                                        </versionRange>
+                                        <goals>
+                                            <goal>format</goal>
+                                        </goals>
+                                    </pluginExecutionFilter>
+                                    <action>
+                                        <ignore/>
+                                    </action>
                                 </pluginExecution>
                             </pluginExecutions>
                         </lifecycleMappingMetadata>

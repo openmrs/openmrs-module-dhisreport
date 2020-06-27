@@ -23,14 +23,13 @@ package org.openmrs.module.dhisreport.api.model;
  * 
  * @author bobj
  */
-public interface Identifiable
-{
+public interface Identifiable {
 
-    public String getUid();
+	public String getUid();
 
-    public void setUid( String uid );
+	public void setUid(String uid);
 
-    public Integer getId();
+	public Integer getId();
 
-    public void setId( Integer uid );
+	public void setId(Integer uid);
 }

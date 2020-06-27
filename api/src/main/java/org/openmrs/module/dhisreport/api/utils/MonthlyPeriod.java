@@ -27,51 +27,44 @@ import org.joda.time.DateTime;
  * 
  * @author bobj
  */
-public class MonthlyPeriod
-    implements Period
-{
+public class MonthlyPeriod implements Period {
 
-    public static final String ISO_FORMAT = "yyyyMM";
+	public static final String ISO_FORMAT = "yyyyMM";
 
-    protected Date startDate;
+	protected Date startDate;
 
-    protected Date endDate;
+	protected Date endDate;
 
-    @Override
-    public void setStartDate( Date startDate )
-    {
-        this.startDate = startDate;
-    }
+	@Override
+	public void setStartDate(Date startDate) {
+		this.startDate = startDate;
+	}
 
-    @Override
-    public void setEndDate( Date endDate )
-    {
-        this.endDate = endDate;
-    }
+	@Override
+	public void setEndDate(Date endDate) {
+		this.endDate = endDate;
+	}
 
-    @Override
-    public Date getStartDate()
-    {
-        return startDate;
-    }
+	@Override
+	public Date getStartDate() {
+		return startDate;
+	}
 
-    @Override
-    public Date getEndDate()
-    {
-        return endDate;
-    }
+	@Override
+	public Date getEndDate() {
+		return endDate;
+	}
 
-    public MonthlyPeriod( Date date )
-    {
-        DateTime dt = new DateTime( date );
-        startDate = dt.dayOfMonth().withMinimumValue().toDate();
-        endDate = dt.dayOfMonth().withMaximumValue().withTime( 23, 59, 59, 999 ).toDate();
-    }
+	public MonthlyPeriod(Date date) {
+		DateTime dt = new DateTime(date);
+		startDate = dt.dayOfMonth().withMinimumValue().toDate();
+		endDate = dt.dayOfMonth().withMaximumValue().withTime(23, 59, 59, 999)
+				.toDate();
+	}
 
-    @Override
-    public String getAsIsoString()
-    {
-        return new SimpleDateFormat( ISO_FORMAT ).format( getStartDate() );
-    }
+	@Override
+	public String getAsIsoString() {
+		return new SimpleDateFormat(ISO_FORMAT).format(getStartDate());
+	}
 
 }

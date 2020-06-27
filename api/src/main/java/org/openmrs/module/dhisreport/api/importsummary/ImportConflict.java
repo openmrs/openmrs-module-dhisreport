@@ -16,48 +16,41 @@ import javax.xml.bind.annotation.XmlAccessType;
 import javax.xml.bind.annotation.XmlAccessorType;
 import javax.xml.bind.annotation.XmlAttribute;
 
-@XmlAccessorType( XmlAccessType.FIELD )
-public class ImportConflict
-{
-    @XmlAttribute( required = true )
-    private String object;
+@XmlAccessorType(XmlAccessType.FIELD)
+public class ImportConflict {
+	@XmlAttribute(required = true)
+	private String object;
 
-    @XmlAttribute( required = true )
-    private String value;
+	@XmlAttribute(required = true)
+	private String value;
 
-    public ImportConflict()
-    {
-    }
+	public ImportConflict() {
+	}
 
-    public ImportConflict( String object, String value )
-    {
-        this.object = object;
-        this.value = value;
-    }
+	public ImportConflict(String object, String value) {
+		this.object = object;
+		this.value = value;
+	}
 
-    public String getObject()
-    {
-        return object;
-    }
+	public String getObject() {
+		return object;
+	}
 
-    public void setObject( String object )
-    {
-        this.object = object;
-    }
+	public void setObject(String object) {
+		this.object = object;
+	}
 
-    public String getValue()
-    {
-        return value;
-    }
+	public String getValue() {
+		return value;
+	}
 
-    public void setValue( String value )
-    {
-        this.value = value;
-    }
+	public void setValue(String value) {
+		this.value = value;
+	}
 
-    @Override
-    public String toString()
-    {
-        return "ImportConflict{" + "object='" + object + '\'' + ", value='" + value + '\'' + '}';
-    }
+	@Override
+	public String toString() {
+		return "ImportConflict{" + "object='" + object + '\'' + ", value='"
+				+ value + '\'' + '}';
+	}
 }

@@ -29,28 +29,25 @@ import org.openmrs.module.dhisreport.api.utils.Period;
  * 
  * @author bobj
  */
-public class PeriodTest
-{
+public class PeriodTest {
 
-    @Test
-    public void startAndEndDatesTest()
-    {
-        Calendar cal = Calendar.getInstance();
-        cal.set( 2012, Calendar.MARCH, 5 );
-        Period p = new MonthlyPeriod( cal.getTime() );
+	@Test
+	public void startAndEndDatesTest() {
+		Calendar cal = Calendar.getInstance();
+		cal.set(2012, Calendar.MARCH, 5);
+		Period p = new MonthlyPeriod(cal.getTime());
 
-        // System.out.println( p.getStart().toString() );
-        // System.out.println( p.getEnd().toString() );
-    }
+		// System.out.println( p.getStart().toString() );
+		// System.out.println( p.getEnd().toString() );
+	}
 
-    @Test
-    public void isoStringTest()
-    {
-        Calendar cal = Calendar.getInstance();
-        cal.set( 2012, Calendar.MARCH, 5 );
-        Period p = new MonthlyPeriod( cal.getTime() );
+	@Test
+	public void isoStringTest() {
+		Calendar cal = Calendar.getInstance();
+		cal.set(2012, Calendar.MARCH, 5);
+		Period p = new MonthlyPeriod(cal.getTime());
 
-        assertEquals( "201203", p.getAsIsoString() );
-    }
+		assertEquals("201203", p.getAsIsoString());
+	}
 
 }

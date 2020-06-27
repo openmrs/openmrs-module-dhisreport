@@ -32,116 +32,108 @@ import org.springframework.core.io.ClassPathResource;
 /**
  * Tests {@link $ DHIS2ReportingService} .
  */
-public class DHIS2ReportingServiceDAOTest
-{
+public class DHIS2ReportingServiceDAOTest {
 
-    private DHIS2ReportingService service;
+	private DHIS2ReportingService service;
 
-    // uids of sample data
-    private static final String DE_ANC1_UID = "nvVDDkfbbhf";
+	// uids of sample data
+	private static final String DE_ANC1_UID = "nvVDDkfbbhf";
 
-    private static final String DE_ANC4_UID = "OWeOBFxrvrv";
+	private static final String DE_ANC4_UID = "OWeOBFxrvrv";
 
-    private static final String RT_POPULATION_UID = "Az7yGdS293Y";
+	private static final String RT_POPULATION_UID = "Az7yGdS293Y";
 
-    private static final String DE_POP_UID = "xX6RDH6AZTK";
+	private static final String DE_POP_UID = "xX6RDH6AZTK";
 
-    private Disaggregation _default;
+	private Disaggregation _default;
 
-    private ReportDefinition rd;
+	private ReportDefinition rd;
 
-    @Before
-    public void before()
-        throws Exception
-    {
-        _default = new Disaggregation();
-        _default.setName( "default" );
-        _default.setCode( "default" );
+	@Before
+	public void before() throws Exception {
+		_default = new Disaggregation();
+		_default.setName("default");
+		_default.setCode("default");
 
-        service = Context.getService( DHIS2ReportingService.class );
-        ClassPathResource resource = new ClassPathResource( "templates_ethiopia.xml" );
-        service.unMarshallandSaveReportTemplates( resource.getInputStream() );
-    }
+		service = Context.getService(DHIS2ReportingService.class);
+		ClassPathResource resource = new ClassPathResource(
+				"templates_ethiopia.xml");
+		service.unMarshallandSaveReportTemplates(resource.getInputStream());
+	}
 
-    @Ignore
-    @Test
-    public void dataElementDAOTest()
-    {
-        DataElement de1 = new DataElement();
-        de1.setName( "Malaria cases" );
-        de1.setCode( "DE1" );
-        de1.setUid( "ghggyugugug" );
+	@Ignore
+	@Test
+	public void dataElementDAOTest() {
+		DataElement de1 = new DataElement();
+		de1.setName("Malaria cases");
+		de1.setCode("DE1");
+		de1.setUid("ghggyugugug");
 
-        DataElement de2 = new DataElement();
-        de2.setName( "STI cases" );
-        de2.setCode( "DE2" );
-        de2.setUid( "ghrwyugugpo" );
+		DataElement de2 = new DataElement();
+		de2.setName("STI cases");
+		de2.setCode("DE2");
+		de2.setUid("ghrwyugugpo");
 
-        DataElement de = service.saveDataElement( de1 );
-        assertEquals( de1.getName(), de.getName() );
-        service.saveDataElement( de2 );
-        de1.setName( "Something else" );
-        service.saveDataElement( de2 );
+		DataElement de = service.saveDataElement(de1);
+		assertEquals(de1.getName(), de.getName());
+		service.saveDataElement(de2);
+		de1.setName("Something else");
+		service.saveDataElement(de2);
 
-        Collection<DataElement> des = service.getAllDataElements();
-        assertEquals( 5, des.size() );
+		Collection<DataElement> des = service.getAllDataElements();
+		assertEquals(5, des.size());
 
-    }
+	}
 
-    @Ignore
-    @Test
-    public void disAggregationDAOTest()
-    {
-        assertEquals( 3, service.getAllDataElements().size() );
-        assertEquals( 3, service.getAllDisaggregations().size() );
-        assertEquals( 2, service.getAllReportDefinitions().size() );
-    }
+	@Ignore
+	@Test
+	public void disAggregationDAOTest() {
+		assertEquals(3, service.getAllDataElements().size());
+		assertEquals(3, service.getAllDisaggregations().size());
+		assertEquals(2, service.getAllReportDefinitions().size());
+	}
 
-    @Ignore
-    @Test
-    public void dataValueSetDAOTest()
-    {
-        DataElement popDe = service.getDataElementByUid( DE_POP_UID );
-        // should fail
-        // service.purgeDataElement( de1 );
-        assertNotNull( service.getAllReportDefinitions() );
+	@Ignore
+	@Test
+	public void dataValueSetDAOTest() {
+		DataElement popDe = service.getDataElementByUid(DE_POP_UID);
+		// should fail
+		// service.purgeDataElement( de1 );
+		assertNotNull(service.getAllReportDefinitions());
 
-        rd = service.getReportDefinitionByUId( RT_POPULATION_UID );
-        Collection<DataValueTemplate> dvTemplates = rd.getDataValueTemplates();
-        assertEquals( 2, dvTemplates.size() );
-    }
+		rd = service.getReportDefinitionByUId(RT_POPULATION_UID);
+		Collection<DataValueTemplate> dvTemplates = rd.getDataValueTemplates();
+		assertEquals(2, dvTemplates.size());
+	}
 
-    /**
-     * TODO: re-enable this with proper test data
-     */
-    @Ignore
-    @Test
-    public void queryTest()
-    {
-    }
+	/**
+	 * TODO: re-enable this with proper test data
+	 */
+	@Ignore
+	@Test
+	public void queryTest() {
+	}
 
-    @Ignore
-    @Test
-    public void unMarshallandSaveReportTemplates()
-        throws Exception
-    {
-        ClassPathResource resource = new ClassPathResource( "templates_ethiopia.xml" );
-        service.unMarshallandSaveReportTemplates( resource.getInputStream() );
-    }
+	@Ignore
+	@Test
+	public void unMarshallandSaveReportTemplates() throws Exception {
+		ClassPathResource resource = new ClassPathResource(
+				"templates_ethiopia.xml");
+		service.unMarshallandSaveReportTemplates(resource.getInputStream());
+	}
 
-    @Ignore
-    @Test
-    public void marshallerTest()
-        throws Exception
-    {
-        ClassPathResource resource = new ClassPathResource( "templates_ethiopia.xml" );
-        service.unMarshallandSaveReportTemplates( resource.getInputStream() );
+	@Ignore
+	@Test
+	public void marshallerTest() throws Exception {
+		ClassPathResource resource = new ClassPathResource(
+				"templates_ethiopia.xml");
+		service.unMarshallandSaveReportTemplates(resource.getInputStream());
 
-        ReportTemplates rds = service.getReportTemplates();
-        assertEquals( 3, rds.getDataElements().size() );
-        assertEquals( 3, rds.getDisaggregations().size() );
-        assertEquals( 2, rds.getReportDefinitions().size() );
+		ReportTemplates rds = service.getReportTemplates();
+		assertEquals(3, rds.getDataElements().size());
+		assertEquals(3, rds.getDisaggregations().size());
+		assertEquals(2, rds.getReportDefinitions().size());
 
-        service.marshallReportTemplates( System.out, rds );
-    }
+		service.marshallReportTemplates(System.out, rds);
+	}
 }

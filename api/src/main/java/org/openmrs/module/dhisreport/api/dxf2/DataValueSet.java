@@ -37,204 +37,186 @@ import javax.xml.transform.TransformerFactory;
 import javax.xml.transform.stream.StreamResult;
 import javax.xml.transform.stream.StreamSource;
 
-@XmlAccessorType( XmlAccessType.FIELD )
-@XmlType( name = "", propOrder = { "dataValue" } )
-@XmlRootElement( name = "dataValueSet" )
-public class DataValueSet
-{
-    public static final String XSLT2SDMX = "";
+@XmlAccessorType(XmlAccessType.FIELD)
+@XmlType(name = "", propOrder = {"dataValue"})
+@XmlRootElement(name = "dataValueSet")
+public class DataValueSet {
+	public static final String XSLT2SDMX = "";
 
-    public static enum Month
-    {
+	public static enum Month {
 
-        JAN, FEB, MAR, APR, MAY, JUN, JUL, AUG, SEP, NOV, DEC
-    };
+		JAN, FEB, MAR, APR, MAY, JUN, JUL, AUG, SEP, NOV, DEC
+	};
 
-    @XmlElement( required = true )
-    protected List<DataValue> dataValue = new LinkedList<DataValue>();
+	@XmlElement(required = true)
+	protected List<DataValue> dataValue = new LinkedList<DataValue>();
 
-    @XmlAttribute
-    @XmlSchemaType( name = "date" )
-    protected XMLGregorianCalendar completeDate;
+	@XmlAttribute
+	@XmlSchemaType(name = "date")
+	protected XMLGregorianCalendar completeDate;
 
-    @XmlAttribute( required = true )
-    protected String dataSet;
+	@XmlAttribute(required = true)
+	protected String dataSet;
 
-    @XmlAttribute( required = true )
-    protected String orgUnit;
+	@XmlAttribute(required = true)
+	protected String orgUnit;
 
-    @XmlAttribute( required = true )
-    protected String period;
+	@XmlAttribute(required = true)
+	protected String period;
 
-    @XmlAttribute( required = false )
-    protected String dataElementIdScheme;
+	@XmlAttribute(required = false)
+	protected String dataElementIdScheme;
 
-    @XmlAttribute( required = false )
-    protected String orgUnitIdScheme;
+	@XmlAttribute(required = false)
+	protected String orgUnitIdScheme;
 
-    /**
-     * Gets the value of the dataValue property.
-     * 
-     * <p>
-     * This accessor method returns a reference to the live list, not a
-     * snapshot. Therefore any modification you make to the returned list will
-     * be present inside the JAXB object. This is why there is not a
-     * <CODE>set</CODE> method for the dataValue property.
-     * 
-     * <p>
-     * For example, to add a new item, do as follows:
-     * 
-     * <pre>
-     * getDataValue().add( newItem );
-     * </pre>
-     * 
-     * 
-     * <p>
-     * Objects of the following type(s) are allowed in the list
-     * {@link DataValue }
-     * 
-     * 
-     */
-    public List<DataValue> getDataValues()
-    {
-        if ( dataValue == null )
-        {
-            dataValue = new ArrayList<DataValue>();
-        }
-        return this.dataValue;
-    }
+	/**
+	 * Gets the value of the dataValue property.
+	 * 
+	 * <p>
+	 * This accessor method returns a reference to the live list, not a
+	 * snapshot. Therefore any modification you make to the returned list will
+	 * be present inside the JAXB object. This is why there is not a
+	 * <CODE>set</CODE> method for the dataValue property.
+	 * 
+	 * <p>
+	 * For example, to add a new item, do as follows:
+	 * 
+	 * <pre>
+	 * getDataValue().add( newItem );
+	 * </pre>
+	 * 
+	 * 
+	 * <p>
+	 * Objects of the following type(s) are allowed in the list
+	 * {@link DataValue }
+	 * 
+	 * 
+	 */
+	public List<DataValue> getDataValues() {
+		if (dataValue == null) {
+			dataValue = new ArrayList<DataValue>();
+		}
+		return this.dataValue;
+	}
 
-    public String getDataElementIdScheme()
-    {
-        return dataElementIdScheme;
-    }
+	public String getDataElementIdScheme() {
+		return dataElementIdScheme;
+	}
 
-    public void setDataElementIdScheme( String dataElementIdScheme )
-    {
-        this.dataElementIdScheme = dataElementIdScheme;
-    }
+	public void setDataElementIdScheme(String dataElementIdScheme) {
+		this.dataElementIdScheme = dataElementIdScheme;
+	}
 
-    public String getOrgUnitIdScheme()
-    {
-        return orgUnitIdScheme;
-    }
+	public String getOrgUnitIdScheme() {
+		return orgUnitIdScheme;
+	}
 
-    public void setOrgUnitIdScheme( String orgUnitIdScheme )
-    {
-        this.orgUnitIdScheme = orgUnitIdScheme;
-    }
+	public void setOrgUnitIdScheme(String orgUnitIdScheme) {
+		this.orgUnitIdScheme = orgUnitIdScheme;
+	}
 
-    /**
-     * Gets the value of the completeDate property.
-     * 
-     * @return possible object is {@link XMLGregorianCalendar }
-     * 
-     */
-    public XMLGregorianCalendar getCompleteDate()
-    {
-        return completeDate;
-    }
+	/**
+	 * Gets the value of the completeDate property.
+	 * 
+	 * @return possible object is {@link XMLGregorianCalendar }
+	 * 
+	 */
+	public XMLGregorianCalendar getCompleteDate() {
+		return completeDate;
+	}
 
-    /**
-     * Sets the value of the completeDate property.
-     * 
-     * @param value allowed object is {@link XMLGregorianCalendar }
-     * 
-     */
-    public void setCompleteDate( XMLGregorianCalendar value )
-    {
-        this.completeDate = value;
-    }
+	/**
+	 * Sets the value of the completeDate property.
+	 * 
+	 * @param value allowed object is {@link XMLGregorianCalendar }
+	 * 
+	 */
+	public void setCompleteDate(XMLGregorianCalendar value) {
+		this.completeDate = value;
+	}
 
-    /**
-     * Gets the value of the dataSet property.
-     * 
-     * @return possible object is {@link String }
-     * 
-     */
-    public String getDataSet()
-    {
-        return dataSet;
-    }
+	/**
+	 * Gets the value of the dataSet property.
+	 * 
+	 * @return possible object is {@link String }
+	 * 
+	 */
+	public String getDataSet() {
+		return dataSet;
+	}
 
-    /**
-     * Sets the value of the dataSet property.
-     * 
-     * @param value allowed object is {@link String }
-     * 
-     */
-    public void setDataSet( String value )
-    {
-        this.dataSet = value;
-    }
+	/**
+	 * Sets the value of the dataSet property.
+	 * 
+	 * @param value allowed object is {@link String }
+	 * 
+	 */
+	public void setDataSet(String value) {
+		this.dataSet = value;
+	}
 
-    /**
-     * Gets the value of the orgUnit property.
-     * 
-     * @return possible object is {@link String }
-     * 
-     */
-    public String getOrgUnit()
-    {
-        return orgUnit;
-    }
+	/**
+	 * Gets the value of the orgUnit property.
+	 * 
+	 * @return possible object is {@link String }
+	 * 
+	 */
+	public String getOrgUnit() {
+		return orgUnit;
+	}
 
-    /**
-     * Sets the value of the orgUnit property.
-     * 
-     * @param value allowed object is {@link String }
-     * 
-     */
-    public void setOrgUnit( String value )
-    {
-        this.orgUnit = value;
-    }
+	/**
+	 * Sets the value of the orgUnit property.
+	 * 
+	 * @param value allowed object is {@link String }
+	 * 
+	 */
+	public void setOrgUnit(String value) {
+		this.orgUnit = value;
+	}
 
-    /**
-     * Gets the value of the period property.
-     * 
-     * @return possible object is {@link String }
-     * 
-     */
-    public String getPeriod()
-    {
-        return period;
-    }
+	/**
+	 * Gets the value of the period property.
+	 * 
+	 * @return possible object is {@link String }
+	 * 
+	 */
+	public String getPeriod() {
+		return period;
+	}
 
-    /**
-     * Sets the value of the period property.
-     * 
-     * @param value allowed object is {@link String }
-     * 
-     */
-    public void setPeriod( String value )
-    {
-        this.period = value;
-    }
+	/**
+	 * Sets the value of the period property.
+	 * 
+	 * @param value allowed object is {@link String }
+	 * 
+	 */
+	public void setPeriod(String value) {
+		this.period = value;
+	}
 
-    public void marshall( OutputStream outputStream )
-        throws JAXBException
-    {
-        JAXBContext jaxbContext = JAXBContext.newInstance( this.getClass() );
-        Marshaller marshaller = jaxbContext.createMarshaller();
+	public void marshall(OutputStream outputStream) throws JAXBException {
+		JAXBContext jaxbContext = JAXBContext.newInstance(this.getClass());
+		Marshaller marshaller = jaxbContext.createMarshaller();
 
-        marshaller.marshal( this, outputStream );
-    }
+		marshaller.marshal(this, outputStream);
+	}
 
-    public void marshallSDMX( OutputStream outputStream )
-        throws JAXBException, TransformerConfigurationException, TransformerException
-    {
-        JAXBContext jaxbContext = JAXBContext.newInstance( this.getClass() );
-        Marshaller marshaller = jaxbContext.createMarshaller();
+	public void marshallSDMX(OutputStream outputStream) throws JAXBException,
+			TransformerConfigurationException, TransformerException {
+		JAXBContext jaxbContext = JAXBContext.newInstance(this.getClass());
+		Marshaller marshaller = jaxbContext.createMarshaller();
 
-        JAXBSource source = new JAXBSource( jaxbContext, this );
+		JAXBSource source = new JAXBSource(jaxbContext, this);
 
-        TransformerFactory tf = TransformerFactory.newInstance();
-        Transformer t = tf.newTransformer( new StreamSource( ClassLoader.class
-            .getResourceAsStream( "/xslt/dxf2sdmxcross.xsl" ) ) );
+		TransformerFactory tf = TransformerFactory.newInstance();
+		Transformer t = tf.newTransformer(new StreamSource(ClassLoader.class
+				.getResourceAsStream("/xslt/dxf2sdmxcross.xsl")));
 
-        String dateParam = new SimpleDateFormat( "yyyy-MM-dd" ).format( new Date() );
-        t.setParameter( "date", dateParam );
-        t.transform( source, new StreamResult( outputStream ) );
-    }
+		String dateParam = new SimpleDateFormat("yyyy-MM-dd")
+				.format(new Date());
+		t.setParameter("date", dateParam);
+		t.transform(source, new StreamResult(outputStream));
+	}
 }

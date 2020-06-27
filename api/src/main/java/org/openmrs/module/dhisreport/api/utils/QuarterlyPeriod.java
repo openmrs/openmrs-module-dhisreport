@@ -27,80 +27,71 @@ import org.joda.time.DateTimeConstants;
  * Class to create period for Quarterly reporting. You can also mention just the
  * week number in ISO8601 and initializes startDate and endDate
  */
-public class QuarterlyPeriod
-    implements Period
-{
+public class QuarterlyPeriod implements Period {
 
-    public static final String ISO_FORMAT = "yyyy'Q'n";
+	public static final String ISO_FORMAT = "yyyy'Q'n";
 
-    protected Date startDate;
+	protected Date startDate;
 
-    protected Date endDate;
+	protected Date endDate;
 
-    @Override
-    public void setStartDate( Date startDate )
-    {
-        this.startDate = startDate;
-    }
+	@Override
+	public void setStartDate(Date startDate) {
+		this.startDate = startDate;
+	}
 
-    @Override
-    public void setEndDate( Date endDate )
-    {
-        this.endDate = endDate;
-    }
+	@Override
+	public void setEndDate(Date endDate) {
+		this.endDate = endDate;
+	}
 
-    @Override
-    public Date getStartDate()
-    {
-        return startDate;
-    }
+	@Override
+	public Date getStartDate() {
+		return startDate;
+	}
 
-    @Override
-    public Date getEndDate()
-    {
-        return endDate;
-    }
+	@Override
+	public Date getEndDate() {
+		return endDate;
+	}
 
-    /**
-     * TODO: Probably more efficient ways to do this. But this is least cryptic
-     * 
-     * @param date
-     */
-    public QuarterlyPeriod( Date date )
-    {
-        DateTime dt = new DateTime( date );
-        int monthNum = dt.getMonthOfYear();
-        if ( monthNum >= 1 && monthNum <= 3 )
-        {
-            startDate = dt.withMonthOfYear( DateTimeConstants.JANUARY ).dayOfMonth().withMinimumValue().toDate();
-            endDate = dt.withMonthOfYear( DateTimeConstants.MARCH ).dayOfMonth().withMaximumValue().withTime( 23, 59,
-                59, 999 ).toDate();
-        }
-        else if ( monthNum >= 4 && monthNum <= 6 )
-        {
-            startDate = dt.withMonthOfYear( DateTimeConstants.APRIL ).dayOfMonth().withMinimumValue().toDate();
-            endDate = dt.withMonthOfYear( DateTimeConstants.JUNE ).dayOfMonth().withMaximumValue().withTime( 23, 59,
-                59, 999 ).toDate();
-        }
-        else if ( monthNum >= 7 && monthNum <= 9 )
-        {
-            startDate = dt.withMonthOfYear( DateTimeConstants.JULY ).dayOfMonth().withMinimumValue().toDate();
-            endDate = dt.withMonthOfYear( DateTimeConstants.SEPTEMBER ).dayOfMonth().withMaximumValue().withTime( 23,
-                59, 59, 999 ).toDate();
-        }
-        else if ( monthNum >= 10 && monthNum <= 12 )
-        {
-            startDate = dt.withMonthOfYear( DateTimeConstants.OCTOBER ).dayOfMonth().withMinimumValue().toDate();
-            endDate = dt.withMonthOfYear( DateTimeConstants.DECEMBER ).dayOfMonth().withMaximumValue().withTime( 23,
-                59, 59, 999 ).toDate();
-        }
-    }
+	/**
+	 * TODO: Probably more efficient ways to do this. But this is least cryptic
+	 * 
+	 * @param date
+	 */
+	public QuarterlyPeriod(Date date) {
+		DateTime dt = new DateTime(date);
+		int monthNum = dt.getMonthOfYear();
+		if (monthNum >= 1 && monthNum <= 3) {
+			startDate = dt.withMonthOfYear(DateTimeConstants.JANUARY)
+					.dayOfMonth().withMinimumValue().toDate();
+			endDate = dt.withMonthOfYear(DateTimeConstants.MARCH).dayOfMonth()
+					.withMaximumValue().withTime(23, 59, 59, 999).toDate();
+		} else if (monthNum >= 4 && monthNum <= 6) {
+			startDate = dt.withMonthOfYear(DateTimeConstants.APRIL)
+					.dayOfMonth().withMinimumValue().toDate();
+			endDate = dt.withMonthOfYear(DateTimeConstants.JUNE).dayOfMonth()
+					.withMaximumValue().withTime(23, 59, 59, 999).toDate();
+		} else if (monthNum >= 7 && monthNum <= 9) {
+			startDate = dt.withMonthOfYear(DateTimeConstants.JULY).dayOfMonth()
+					.withMinimumValue().toDate();
+			endDate = dt.withMonthOfYear(DateTimeConstants.SEPTEMBER)
+					.dayOfMonth().withMaximumValue().withTime(23, 59, 59, 999)
+					.toDate();
+		} else if (monthNum >= 10 && monthNum <= 12) {
+			startDate = dt.withMonthOfYear(DateTimeConstants.OCTOBER)
+					.dayOfMonth().withMinimumValue().toDate();
+			endDate = dt.withMonthOfYear(DateTimeConstants.DECEMBER)
+					.dayOfMonth().withMaximumValue().withTime(23, 59, 59, 999)
+					.toDate();
+		}
+	}
 
-    @Override
-    public String getAsIsoString()
-    {
-        DateTime dt = new DateTime( getStartDate() );
-        return dt.getYear() + "Q" + ((dt.getMonthOfYear() / 3) + 1);
-    }
+	@Override
+	public String getAsIsoString() {
+		DateTime dt = new DateTime(getStartDate());
+		return dt.getYear() + "Q" + ((dt.getMonthOfYear() / 3) + 1);
+	}
 
 }
