@@ -37,7 +37,7 @@
 	</table>
 </form>
 
-<tr>
+
 
 <h3>
 	<spring:message code="dhisreport.mappedLocations" />
