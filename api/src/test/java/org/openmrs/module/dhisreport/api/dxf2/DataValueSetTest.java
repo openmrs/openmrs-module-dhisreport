@@ -43,118 +43,104 @@ import org.xml.sax.InputSource;
  * 
  * @author bobj
  */
-public class DataValueSetTest
-{
+public class DataValueSetTest {
 
-    @Test
-    public void marshallDataValueSet()
-        throws Exception
-    {
-        DataValueSet dvset = new DataValueSet();
-        dvset.setDataSet( "ANC" );
-        dvset.setOrgUnit( "OU1" );
-        dvset.setPeriod( "2012-09" );
-        List<DataValue> dataValues = dvset.getDataValues();
-        dataValues.add( new DataValue( "DE1", "45" ) );
-        dataValues.add( new DataValue( "DE2", "45" ) );
-        dataValues.add( new DataValue( "DE3", "r543efdgty2", "53" ) );
+	@Test
+	public void marshallDataValueSet() throws Exception {
+		DataValueSet dvset = new DataValueSet();
+		dvset.setDataSet("ANC");
+		dvset.setOrgUnit("OU1");
+		dvset.setPeriod("2012-09");
+		List<DataValue> dataValues = dvset.getDataValues();
+		dataValues.add(new DataValue("DE1", "45"));
+		dataValues.add(new DataValue("DE2", "45"));
+		dataValues.add(new DataValue("DE3", "r543efdgty2", "53"));
 
-        Writer xmlWriter = new StringWriter();
-        JAXBContext jaxbContext = JAXBContext.newInstance( DataValueSet.class );
+		Writer xmlWriter = new StringWriter();
+		JAXBContext jaxbContext = JAXBContext.newInstance(DataValueSet.class);
 
-        Marshaller jaxbmarshaller = jaxbContext.createMarshaller();
-        jaxbmarshaller.marshal( dvset, xmlWriter );
-        String xml = xmlWriter.toString();
+		Marshaller jaxbmarshaller = jaxbContext.createMarshaller();
+		jaxbmarshaller.marshal(dvset, xmlWriter);
+		String xml = xmlWriter.toString();
 
-        //System.out.println( xml );
-        assertEquals( "3", xpathTest( "count(//d:dataValue)", xml ) );
-        assertEquals( "53", xpathTest( "//d:dataValue[3]/@value", xml ) );
-        assertEquals( "r543efdgty2", xpathTest( "//d:dataValue[3]/@categoryOptionCombo", xml ) );
+		//System.out.println( xml );
+		assertEquals("3", xpathTest("count(//d:dataValue)", xml));
+		assertEquals("53", xpathTest("//d:dataValue[3]/@value", xml));
+		assertEquals("r543efdgty2", xpathTest(
+				"//d:dataValue[3]/@categoryOptionCombo", xml));
 
-    }
+	}
 
-    @Test
-    public void marshallSDMXDataValueSet()
-        throws Exception
-    {
-        DataValueSet dvset = new DataValueSet();
-        dvset.setDataSet( "ANC" );
-        dvset.setOrgUnit( "OU1" );
-        dvset.setPeriod( "2012-09" );
-        List<DataValue> dataValues = dvset.getDataValues();
-        dataValues.add( new DataValue( "DE1", "45" ) );
-        dataValues.add( new DataValue( "DE2", "45" ) );
-        dataValues.add( new DataValue( "DE3", "r543efdgty2", "53" ) );
+	@Test
+	public void marshallSDMXDataValueSet() throws Exception {
+		DataValueSet dvset = new DataValueSet();
+		dvset.setDataSet("ANC");
+		dvset.setOrgUnit("OU1");
+		dvset.setPeriod("2012-09");
+		List<DataValue> dataValues = dvset.getDataValues();
+		dataValues.add(new DataValue("DE1", "45"));
+		dataValues.add(new DataValue("DE2", "45"));
+		dataValues.add(new DataValue("DE3", "r543efdgty2", "53"));
 
-        ByteArrayOutputStream outStream = new ByteArrayOutputStream();
-        dvset.marshallSDMX( outStream );
+		ByteArrayOutputStream outStream = new ByteArrayOutputStream();
+		dvset.marshallSDMX(outStream);
 
-        //System.out.println( outStream.toString() );
-        assertEquals( "3", xpathTest( "count(//*[local-name()='OBS_VALUE'])", outStream.toString() ) );
-        assertEquals( "r543efdgty2", xpathTest( "//*[local-name()='OBS_VALUE'][3]/@DISAGG", outStream.toString() ) );
+		//System.out.println( outStream.toString() );
+		assertEquals("3", xpathTest("count(//*[local-name()='OBS_VALUE'])",
+				outStream.toString()));
+		assertEquals("r543efdgty2", xpathTest(
+				"//*[local-name()='OBS_VALUE'][3]/@DISAGG", outStream
+						.toString()));
 
-    }
+	}
 
-    @Test
-    public void unMarshallDataValueSet()
-        throws Exception
-    {
-        ClassPathResource resource = new ClassPathResource( "dvset.xml" );
-        JAXBContext jaxbContext = JAXBContext.newInstance( DataValueSet.class );
+	@Test
+	public void unMarshallDataValueSet() throws Exception {
+		ClassPathResource resource = new ClassPathResource("dvset.xml");
+		JAXBContext jaxbContext = JAXBContext.newInstance(DataValueSet.class);
 
-        Unmarshaller jaxbUnmarshaller = jaxbContext.createUnmarshaller();
-        DataValueSet dvset = (DataValueSet) jaxbUnmarshaller.unmarshal( resource.getInputStream() );
-        assertEquals( 5, dvset.getDataValues().size() );
-    }
+		Unmarshaller jaxbUnmarshaller = jaxbContext.createUnmarshaller();
+		DataValueSet dvset = (DataValueSet) jaxbUnmarshaller.unmarshal(resource
+				.getInputStream());
+		assertEquals(5, dvset.getDataValues().size());
+	}
 
-    protected String xpathTest( String xpathString, String xml )
-        throws XPathExpressionException
-    {
-        InputSource source = new InputSource( new StringReader( xml ) );
-        XPathFactory factory = XPathFactory.newInstance();
-        XPath xpath = factory.newXPath();
-        xpath.setNamespaceContext( new Dxf2NamespaceResolver() );
+	protected String xpathTest(String xpathString, String xml)
+			throws XPathExpressionException {
+		InputSource source = new InputSource(new StringReader(xml));
+		XPathFactory factory = XPathFactory.newInstance();
+		XPath xpath = factory.newXPath();
+		xpath.setNamespaceContext(new Dxf2NamespaceResolver());
 
-        return (String) xpath.evaluate( xpathString, source );
-    }
+		return (String) xpath.evaluate(xpathString, source);
+	}
 
-    // we need this to resolve dxf2 namespace in xpath
-    protected class Dxf2NamespaceResolver
-        implements NamespaceContext
-    {
+	// we need this to resolve dxf2 namespace in xpath
+	protected class Dxf2NamespaceResolver implements NamespaceContext {
 
-        @Override
-        public String getNamespaceURI( String prefix )
-        {
-            if ( prefix == null )
-            {
-                throw new IllegalArgumentException( "No prefix provided!" );
-            }
-            else
-            {
-                if ( prefix.equals( "d" ) )
-                {
-                    return "http://dhis2.org/schema/dxf/2.0";
-                }
-                else
-                {
-                    return XMLConstants.NULL_NS_URI;
-                }
-            }
-        }
+		@Override
+		public String getNamespaceURI(String prefix) {
+			if (prefix == null) {
+				throw new IllegalArgumentException("No prefix provided!");
+			} else {
+				if (prefix.equals("d")) {
+					return "http://dhis2.org/schema/dxf/2.0";
+				} else {
+					return XMLConstants.NULL_NS_URI;
+				}
+			}
+		}
 
-        @Override
-        public String getPrefix( String namespaceURI )
-        {
-            // Not needed in this context.
-            return null;
-        }
+		@Override
+		public String getPrefix(String namespaceURI) {
+			// Not needed in this context.
+			return null;
+		}
 
-        @Override
-        public Iterator getPrefixes( String namespaceURI )
-        {
-            // Not needed in this context.
-            return null;
-        }
-    }
+		@Override
+		public Iterator getPrefixes(String namespaceURI) {
+			// Not needed in this context.
+			return null;
+		}
+	}
 }

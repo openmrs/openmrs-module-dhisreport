@@ -30,27 +30,25 @@ import org.openmrs.module.dhisreport.api.dxf2.DataValueSet;
  *
  * @author bobj
  */
-public interface Dhis2Server
-{
+public interface Dhis2Server {
 
-    /**
-     * low level method to access dhis2 resources directly
-     *
-     * @param path
-     * @return
-     * @throws Dhis2Exception
-     */
-    // public InputStream fetchDhisResource( String path ) throws
-    // Dhis2Exception;
+	/**
+	 * low level method to access dhis2 resources directly
+	 *
+	 * @param path
+	 * @return
+	 * @throws Dhis2Exception
+	 */
+	// public InputStream fetchDhisResource( String path ) throws
+	// Dhis2Exception;
 
-    boolean isConfigured();
+	boolean isConfigured();
 
-    ReportDefinition fetchReportTemplates()
-        throws DHIS2ReportingException;
+	ReportDefinition fetchReportTemplates() throws DHIS2ReportingException;
 
-    ImportSummary postReport( DataValueSet report )
-        throws DHIS2ReportingException;
+	ImportSummary postReport(DataValueSet report)
+			throws DHIS2ReportingException;
 
-    AdxImportSummary postAdxReport(AdxType report )
-        throws DHIS2ReportingException;
+	AdxImportSummary postAdxReport(AdxType report)
+			throws DHIS2ReportingException;
 }

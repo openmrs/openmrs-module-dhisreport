@@ -27,7 +27,6 @@ package org.hisp.dhis.dxf2.importsummary;
  * SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-public enum ImportStatus
-{
-    SUCCESS, ERROR
+public enum ImportStatus {
+	SUCCESS, ERROR
 }

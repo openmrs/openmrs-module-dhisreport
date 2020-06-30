@@ -53,246 +53,222 @@ import org.openmrs.module.dhisreport.api.model.ReportDefinition;
  *
  * @author bobj
  */
-public class HttpDhis2Server
-    implements Dhis2Server
-{
+public class HttpDhis2Server implements Dhis2Server {
 
-    private static Log log = LogFactory.getLog( HttpDhis2Server.class );
+	private static Log log = LogFactory.getLog(HttpDhis2Server.class);
 
-    public static final String REPORTS_METADATA_PATH = "/api/forms.xml";
+	public static final String REPORTS_METADATA_PATH = "/api/forms.xml";
 
-    public static final String DATAVALUESET_PATH = "/api/dataValueSets?dataElementIdScheme=CODE&orgUnitIdScheme=CODE&idScheme=CODE";
+	public static final String DATAVALUESET_PATH = "/api/dataValueSets?dataElementIdScheme=CODE&orgUnitIdScheme=CODE&idScheme=CODE";
 
-    private URL url;
+	private URL url;
 
-    private String username;
+	private String username;
 
-    private String password;
+	private String password;
 
-    public URL getUrl()
-    {
-        return url;
-    }
+	public URL getUrl() {
+		return url;
+	}
 
-    public void setUrl( URL url )
-    {
-        this.url = url;
-    }
+	public void setUrl(URL url) {
+		this.url = url;
+	}
 
-    public String getPassword()
-    {
-        return password;
-    }
+	public String getPassword() {
+		return password;
+	}
 
-    public void setPassword( String password )
-    {
-        this.password = password;
-    }
+	public void setPassword(String password) {
+		this.password = password;
+	}
 
-    public String getUsername()
-    {
-        return username;
-    }
+	public String getUsername() {
+		return username;
+	}
 
-    public void setUsername( String username )
-    {
-        this.username = username;
-    }
+	public void setUsername(String username) {
+		this.username = username;
+	}
 
-    public HttpDhis2Server()
-    {
-    }
+	public HttpDhis2Server() {
+	}
 
-    @Override
-    public boolean isConfigured()
-    {
-        if ( username == null | password == null | url == null )
-        {
-            return false;
-        }
-        if ( username.isEmpty() | password.isEmpty() | url.getHost().isEmpty() )
-        {
-            return false;
-        }
+	@Override
+	public boolean isConfigured() {
+		if (username == null | password == null | url == null) {
+			return false;
+		}
+		if (username.isEmpty() | password.isEmpty() | url.getHost().isEmpty()) {
+			return false;
+		}
 
-        return true;
-    }
+		return true;
+	}
 
-    @Override
-    public ImportSummary postReport( DataValueSet report )
-        throws DHIS2ReportingException
-    {
-        log.debug( "Posting datavalueset report" );
-        ImportSummary summary = null;
+	@Override
+	public ImportSummary postReport(DataValueSet report)
+			throws DHIS2ReportingException {
+		log.debug("Posting datavalueset report");
+		ImportSummary summary = null;
 
-        StringWriter xmlReport = new StringWriter();
-        try
-        {
-            JAXBContext jaxbDataValueSetContext = JAXBContext.newInstance( DataValueSet.class );
+		StringWriter xmlReport = new StringWriter();
+		try {
+			JAXBContext jaxbDataValueSetContext = JAXBContext
+					.newInstance(DataValueSet.class);
 
-            Marshaller dataValueSetMarshaller = jaxbDataValueSetContext.createMarshaller();
-            // output pretty printed
-            dataValueSetMarshaller.setProperty( Marshaller.JAXB_FORMATTED_OUTPUT, true );
-            dataValueSetMarshaller.marshal( report, xmlReport );
-        }
-        catch ( JAXBException ex )
-        {
-            throw new Dxf2Exception( "Problem marshalling dataValueSet", ex );
-        }
+			Marshaller dataValueSetMarshaller = jaxbDataValueSetContext
+					.createMarshaller();
+			// output pretty printed
+			dataValueSetMarshaller.setProperty(
+					Marshaller.JAXB_FORMATTED_OUTPUT, true);
+			dataValueSetMarshaller.marshal(report, xmlReport);
+		} catch (JAXBException ex) {
+			throw new Dxf2Exception("Problem marshalling dataValueSet", ex);
+		}
 
-        //System.out.print( "URL-" + url );
+		//System.out.print( "URL-" + url );
 
-        String host = url.getHost();
-        int port = url.getPort();
+		String host = url.getHost();
+		int port = url.getPort();
 
-        //System.out.print( "URL-" + url + ":host-" + host + ":port-" );
-        // System.out.println( port );
+		//System.out.print( "URL-" + url + ":host-" + host + ":port-" );
+		// System.out.println( port );
 
-        HttpHost targetHost = new HttpHost( host, port, url.getProtocol() );
-        DefaultHttpClient httpclient = new DefaultHttpClient();
-        BasicHttpContext localcontext = new BasicHttpContext();
+		HttpHost targetHost = new HttpHost(host, port, url.getProtocol());
+		DefaultHttpClient httpclient = new DefaultHttpClient();
+		BasicHttpContext localcontext = new BasicHttpContext();
 
-        try
-        {
-            HttpPost httpPost = new HttpPost( url.getPath() + DATAVALUESET_PATH );
-            Credentials creds = new UsernamePasswordCredentials( username, password );
-            Header bs = new BasicScheme().authenticate( creds, httpPost, localcontext );
-            httpPost.addHeader( "Authorization", bs.getValue() );
-            httpPost.addHeader( "Content-Type", "application/xml+adx" );
-            httpPost.addHeader( "Accept", "application/xml" );
+		try {
+			HttpPost httpPost = new HttpPost(url.getPath() + DATAVALUESET_PATH);
+			Credentials creds = new UsernamePasswordCredentials(username,
+					password);
+			Header bs = new BasicScheme().authenticate(creds, httpPost,
+					localcontext);
+			httpPost.addHeader("Authorization", bs.getValue());
+			httpPost.addHeader("Content-Type", "application/xml+adx");
+			httpPost.addHeader("Accept", "application/xml");
 
-            httpPost.setEntity( new StringEntity( xmlReport.toString() ) );
-            HttpResponse response = httpclient.execute( targetHost, httpPost, localcontext );
-            HttpEntity entity = response.getEntity();
+			httpPost.setEntity(new StringEntity(xmlReport.toString()));
+			HttpResponse response = httpclient.execute(targetHost, httpPost,
+					localcontext);
+			HttpEntity entity = response.getEntity();
 
-            if ( response.getStatusLine().getStatusCode() != 200 )
-            {
-                throw new Dhis2Exception( this, response.getStatusLine().getReasonPhrase(), null );
-            }
+			if (response.getStatusLine().getStatusCode() != 200) {
+				throw new Dhis2Exception(this, response.getStatusLine()
+						.getReasonPhrase(), null);
+			}
 
-            if ( entity != null )
-            {
-                JAXBContext jaxbImportSummaryContext = JAXBContext.newInstance( ImportSummary.class );
-                Unmarshaller importSummaryUnMarshaller = jaxbImportSummaryContext.createUnmarshaller();
-                summary = (ImportSummary) importSummaryUnMarshaller.unmarshal( entity.getContent() );
-            }
-            else
-            {
-                summary = new ImportSummary();
-                summary.setStatus( ImportStatus.ERROR );
-            }
-            // EntityUtils.consume( entity );
+			if (entity != null) {
+				JAXBContext jaxbImportSummaryContext = JAXBContext
+						.newInstance(ImportSummary.class);
+				Unmarshaller importSummaryUnMarshaller = jaxbImportSummaryContext
+						.createUnmarshaller();
+				summary = (ImportSummary) importSummaryUnMarshaller
+						.unmarshal(entity.getContent());
+			} else {
+				summary = new ImportSummary();
+				summary.setStatus(ImportStatus.ERROR);
+			}
+			// EntityUtils.consume( entity );
 
-            // TODO: fix these catches ...
-        }
-        catch ( JAXBException ex )
-        {
-            throw new Dhis2Exception( this, "Problem unmarshalling AdxImportSummary", ex );
-        }
-        catch ( AuthenticationException ex )
-        {
-            throw new Dhis2Exception( this, "Problem authenticating to DHIS2 server", ex );
-        }
-        catch ( IOException ex )
-        {
-            throw new Dhis2Exception( this, "Problem accessing DHIS2 server", ex );
-        }
-        finally
-        {
-            httpclient.getConnectionManager().shutdown();
-        }
-        return summary;
-    }
+			// TODO: fix these catches ...
+		} catch (JAXBException ex) {
+			throw new Dhis2Exception(this,
+					"Problem unmarshalling AdxImportSummary", ex);
+		} catch (AuthenticationException ex) {
+			throw new Dhis2Exception(this,
+					"Problem authenticating to DHIS2 server", ex);
+		} catch (IOException ex) {
+			throw new Dhis2Exception(this, "Problem accessing DHIS2 server", ex);
+		} finally {
+			httpclient.getConnectionManager().shutdown();
+		}
+		return summary;
+	}
 
-    @Override
-    public AdxImportSummary postAdxReport(AdxType report )
-        throws DHIS2ReportingException
-    {
-        log.debug( "Posting A report" );
-        AdxImportSummary summaries = null;
+	@Override
+	public AdxImportSummary postAdxReport(AdxType report)
+			throws DHIS2ReportingException {
+		log.debug("Posting A report");
+		AdxImportSummary summaries = null;
 
-        StringWriter xmlReport = new StringWriter();
-        try
-        {
-            JAXBContext jaxbDataValueSetContext = JAXBContext.newInstance( AdxType.class );
+		StringWriter xmlReport = new StringWriter();
+		try {
+			JAXBContext jaxbDataValueSetContext = JAXBContext
+					.newInstance(AdxType.class);
 
-            Marshaller adxTypeMarshaller = jaxbDataValueSetContext.createMarshaller();
-            // output pretty printed
-            adxTypeMarshaller.setProperty( Marshaller.JAXB_FORMATTED_OUTPUT, true );
-            adxTypeMarshaller.marshal( report, xmlReport );
-        }
-        catch ( JAXBException ex )
-        {
-            throw new Dxf2Exception( "Problem marshalling adxtype", ex );
-        }
+			Marshaller adxTypeMarshaller = jaxbDataValueSetContext
+					.createMarshaller();
+			// output pretty printed
+			adxTypeMarshaller.setProperty(Marshaller.JAXB_FORMATTED_OUTPUT,
+					true);
+			adxTypeMarshaller.marshal(report, xmlReport);
+		} catch (JAXBException ex) {
+			throw new Dxf2Exception("Problem marshalling adxtype", ex);
+		}
 
-        //System.out.print( "URL-" + url );
+		//System.out.print( "URL-" + url );
 
-        String host = url.getHost();
-        int port = url.getPort();
+		String host = url.getHost();
+		int port = url.getPort();
 
-        //System.out.print( "URL-" + url + ":host-" + host + ":port-" );
-        // System.out.println( port );
+		//System.out.print( "URL-" + url + ":host-" + host + ":port-" );
+		// System.out.println( port );
 
-        HttpHost targetHost = new HttpHost( host, port, url.getProtocol() );
-        DefaultHttpClient httpclient = new DefaultHttpClient();
-        BasicHttpContext localcontext = new BasicHttpContext();
+		HttpHost targetHost = new HttpHost(host, port, url.getProtocol());
+		DefaultHttpClient httpclient = new DefaultHttpClient();
+		BasicHttpContext localcontext = new BasicHttpContext();
 
-        try
-        {
-            HttpPost httpPost = new HttpPost( url.getPath() + DATAVALUESET_PATH );
-            Credentials creds = new UsernamePasswordCredentials( username, password );
-            Header bs = new BasicScheme().authenticate( creds, httpPost, localcontext );
-            httpPost.addHeader( "Authorization", bs.getValue() );
-            httpPost.addHeader( "Content-Type", "application/adx+xml" );
-            httpPost.addHeader( "Accept", "application/xml" );
+		try {
+			HttpPost httpPost = new HttpPost(url.getPath() + DATAVALUESET_PATH);
+			Credentials creds = new UsernamePasswordCredentials(username,
+					password);
+			Header bs = new BasicScheme().authenticate(creds, httpPost,
+					localcontext);
+			httpPost.addHeader("Authorization", bs.getValue());
+			httpPost.addHeader("Content-Type", "application/adx+xml");
+			httpPost.addHeader("Accept", "application/xml");
 
-            httpPost.setEntity( new StringEntity( xmlReport.toString() ) );
-            HttpResponse response = httpclient.execute( targetHost, httpPost, localcontext );
-            HttpEntity entity = response.getEntity();
+			httpPost.setEntity(new StringEntity(xmlReport.toString()));
+			HttpResponse response = httpclient.execute(targetHost, httpPost,
+					localcontext);
+			HttpEntity entity = response.getEntity();
 
-            if ( response.getStatusLine().getStatusCode() != 200 )
-            {
-                throw new Dhis2Exception( this, response.getStatusLine().getReasonPhrase(), null );
-            }
+			if (response.getStatusLine().getStatusCode() != 200) {
+				throw new Dhis2Exception(this, response.getStatusLine()
+						.getReasonPhrase(), null);
+			}
 
-            if ( entity != null )
-            {
-                JAXBContext jaxbImportSummaryContext = JAXBContext.newInstance( AdxImportSummary.class );
-                Unmarshaller importSummaryUnMarshaller = jaxbImportSummaryContext.createUnmarshaller();
-                summaries = (AdxImportSummary) importSummaryUnMarshaller.unmarshal( entity.getContent() );
-            }
-            else
-            {
-                summaries = new AdxImportSummary();
-            }
-            // EntityUtils.consume( entity );
+			if (entity != null) {
+				JAXBContext jaxbImportSummaryContext = JAXBContext
+						.newInstance(AdxImportSummary.class);
+				Unmarshaller importSummaryUnMarshaller = jaxbImportSummaryContext
+						.createUnmarshaller();
+				summaries = (AdxImportSummary) importSummaryUnMarshaller
+						.unmarshal(entity.getContent());
+			} else {
+				summaries = new AdxImportSummary();
+			}
+			// EntityUtils.consume( entity );
 
-            // TODO: fix these catches ...
-        }
-        catch ( JAXBException ex )
-        {
-            throw new Dhis2Exception( this, "Problem unmarshalling AdxImportSummary", ex );
-        }
-        catch ( AuthenticationException ex )
-        {
-            throw new Dhis2Exception( this, "Problem authenticating to DHIS2 server", ex );
-        }
-        catch ( IOException ex )
-        {
-            throw new Dhis2Exception( this, "Problem accessing DHIS2 server", ex );
-        }
-        finally
-        {
-            httpclient.getConnectionManager().shutdown();
-        }
-        return summaries;
-    }
+			// TODO: fix these catches ...
+		} catch (JAXBException ex) {
+			throw new Dhis2Exception(this,
+					"Problem unmarshalling AdxImportSummary", ex);
+		} catch (AuthenticationException ex) {
+			throw new Dhis2Exception(this,
+					"Problem authenticating to DHIS2 server", ex);
+		} catch (IOException ex) {
+			throw new Dhis2Exception(this, "Problem accessing DHIS2 server", ex);
+		} finally {
+			httpclient.getConnectionManager().shutdown();
+		}
+		return summaries;
+	}
 
-    @Override
-    public ReportDefinition fetchReportTemplates()
-        throws Dhis2Exception
-    {
-        throw new UnsupportedOperationException( "Not supported yet." );
-    }
+	@Override
+	public ReportDefinition fetchReportTemplates() throws Dhis2Exception {
+		throw new UnsupportedOperationException("Not supported yet.");
+	}
 }

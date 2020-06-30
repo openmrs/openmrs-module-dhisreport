@@ -28,51 +28,44 @@ import org.joda.time.DateTimeConstants;
  * Class to create period for weekly reporting. You can also mention just the
  * week number in ISO8601 and initializes startDate and endDate
  */
-public class WeeklyPeriod
-    implements Period
-{
+public class WeeklyPeriod implements Period {
 
-    public static final String ISO_FORMAT = "yyyy'W'ww";
+	public static final String ISO_FORMAT = "yyyy'W'ww";
 
-    protected Date startDate;
+	protected Date startDate;
 
-    protected Date endDate;
+	protected Date endDate;
 
-    @Override
-    public void setStartDate( Date startDate )
-    {
-        this.startDate = startDate;
-    }
+	@Override
+	public void setStartDate(Date startDate) {
+		this.startDate = startDate;
+	}
 
-    @Override
-    public void setEndDate( Date endDate )
-    {
-        this.endDate = endDate;
-    }
+	@Override
+	public void setEndDate(Date endDate) {
+		this.endDate = endDate;
+	}
 
-    @Override
-    public Date getStartDate()
-    {
-        return startDate;
-    }
+	@Override
+	public Date getStartDate() {
+		return startDate;
+	}
 
-    @Override
-    public Date getEndDate()
-    {
-        return endDate;
-    }
+	@Override
+	public Date getEndDate() {
+		return endDate;
+	}
 
-    public WeeklyPeriod( Date date )
-    {
-        DateTime dt = new DateTime( date );
-        startDate = dt.withDayOfWeek( DateTimeConstants.MONDAY ).toDate();
-        endDate = dt.withDayOfWeek( DateTimeConstants.SUNDAY ).withTime( 23, 59, 59, 999 ).toDate();
-    }
+	public WeeklyPeriod(Date date) {
+		DateTime dt = new DateTime(date);
+		startDate = dt.withDayOfWeek(DateTimeConstants.MONDAY).toDate();
+		endDate = dt.withDayOfWeek(DateTimeConstants.SUNDAY).withTime(23, 59,
+				59, 999).toDate();
+	}
 
-    @Override
-    public String getAsIsoString()
-    {
-        return new SimpleDateFormat( ISO_FORMAT ).format( getStartDate() );
-    }
+	@Override
+	public String getAsIsoString() {
+		return new SimpleDateFormat(ISO_FORMAT).format(getStartDate());
+	}
 
 }

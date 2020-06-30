@@ -11,55 +11,46 @@ import org.openmrs.module.dhisreport.api.model.DataElement;
  *
  * @author maurya
  */
-public class AggregatedResultSet
-{
+public class AggregatedResultSet {
 
-    private DataValueSet dataValueSet;
+	private DataValueSet dataValueSet;
 
-    private Map<DataElement, String> dataElementMap;
+	private Map<DataElement, String> dataElementMap;
 
-    private ImportSummary importSummary;
+	private ImportSummary importSummary;
 
-    private AdxImportSummary adxImportSummary;
+	private AdxImportSummary adxImportSummary;
 
-    public DataValueSet getDataValueSet()
-    {
-        return dataValueSet;
-    }
+	public DataValueSet getDataValueSet() {
+		return dataValueSet;
+	}
 
-    public void setDataValueSet( DataValueSet dataValueSet )
-    {
-        this.dataValueSet = dataValueSet;
-    }
+	public void setDataValueSet(DataValueSet dataValueSet) {
+		this.dataValueSet = dataValueSet;
+	}
 
-    public Map<DataElement, String> getDataElementMap()
-    {
-        return dataElementMap;
-    }
+	public Map<DataElement, String> getDataElementMap() {
+		return dataElementMap;
+	}
 
-    public void setDataElementMap( Map<DataElement, String> dataElementMap )
-    {
-        this.dataElementMap = dataElementMap;
-    }
+	public void setDataElementMap(Map<DataElement, String> dataElementMap) {
+		this.dataElementMap = dataElementMap;
+	}
 
-    public ImportSummary getImportSummary()
-    {
-        return importSummary;
-    }
+	public ImportSummary getImportSummary() {
+		return importSummary;
+	}
 
-    public void setImportSummary( ImportSummary importSummary )
-    {
-        this.importSummary = importSummary;
-    }
+	public void setImportSummary(ImportSummary importSummary) {
+		this.importSummary = importSummary;
+	}
 
-    public AdxImportSummary getAdxImportSummary()
-    {
-        return adxImportSummary;
-    }
+	public AdxImportSummary getAdxImportSummary() {
+		return adxImportSummary;
+	}
 
-    public void setAdxImportSummary( AdxImportSummary adxImportSummary )
-    {
-        this.adxImportSummary = adxImportSummary;
-    }
+	public void setAdxImportSummary(AdxImportSummary adxImportSummary) {
+		this.adxImportSummary = adxImportSummary;
+	}
 
 }

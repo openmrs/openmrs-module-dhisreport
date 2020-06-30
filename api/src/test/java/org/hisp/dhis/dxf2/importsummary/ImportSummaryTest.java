@@ -30,35 +30,31 @@ import org.springframework.core.io.ClassPathResource;
  * 
  * @author bobj
  */
-public class ImportSummaryTest
-{
+public class ImportSummaryTest {
 
-    @Test
-    public void marshallImportSummary()
-        throws Exception
-    {
-        ImportSummary summary = new ImportSummary();
-        summary.setDescription( "Testing" );
-        summary.setStatus( ImportStatus.SUCCESS );
-        summary.setDataValueCount( new ImportCount( 2, 1, 4 ) );
+	@Test
+	public void marshallImportSummary() throws Exception {
+		ImportSummary summary = new ImportSummary();
+		summary.setDescription("Testing");
+		summary.setStatus(ImportStatus.SUCCESS);
+		summary.setDataValueCount(new ImportCount(2, 1, 4));
 
-        JAXBContext jaxbContext = JAXBContext.newInstance( ImportSummary.class );
+		JAXBContext jaxbContext = JAXBContext.newInstance(ImportSummary.class);
 
-        Marshaller jaxbmarshaller = jaxbContext.createMarshaller();
-        jaxbmarshaller.marshal( summary, System.out );
-    }
+		Marshaller jaxbmarshaller = jaxbContext.createMarshaller();
+		jaxbmarshaller.marshal(summary, System.out);
+	}
 
-    @Test
-    public void unMarshallImportSummary()
-        throws Exception
-    {
-        ClassPathResource resource = new ClassPathResource( "importSummary.xml" );
-        JAXBContext jaxbContext = JAXBContext.newInstance( ImportSummary.class );
+	@Test
+	public void unMarshallImportSummary() throws Exception {
+		ClassPathResource resource = new ClassPathResource("importSummary.xml");
+		JAXBContext jaxbContext = JAXBContext.newInstance(ImportSummary.class);
 
-        Unmarshaller jaxbUnmarshaller = jaxbContext.createUnmarshaller();
-        ImportSummary importSummary = (ImportSummary) jaxbUnmarshaller.unmarshal( resource.getInputStream() );
-        assertEquals( 3, importSummary.getDataValueCount().getImported() );
-        assertEquals( 0, importSummary.getDataValueCount().getUpdated() );
-        assertEquals( 1, importSummary.getDataValueCount().getIgnored() );
-    }
+		Unmarshaller jaxbUnmarshaller = jaxbContext.createUnmarshaller();
+		ImportSummary importSummary = (ImportSummary) jaxbUnmarshaller
+				.unmarshal(resource.getInputStream());
+		assertEquals(3, importSummary.getDataValueCount().getImported());
+		assertEquals(0, importSummary.getDataValueCount().getUpdated());
+		assertEquals(1, importSummary.getDataValueCount().getIgnored());
+	}
 }

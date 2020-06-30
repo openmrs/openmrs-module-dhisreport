@@ -39,182 +39,178 @@ import org.openmrs.scheduler.tasks.AbstractTask;
  * Implementation of a task that writes "Hello World" to a log file.
  * 
  */
-public class PostToDhisTask
-    extends AbstractTask
-{
+public class PostToDhisTask extends AbstractTask {
 
-    private static Log log = LogFactory.getLog( PostToDhisTask.class );
+	private static Log log = LogFactory.getLog(PostToDhisTask.class);
 
-    /**
-     * Public constructor.
-     */
-    public PostToDhisTask()
-    {
-        log.debug( "hello world task created at " + new Date() );
-    }
+	/**
+	 * Public constructor.
+	 */
+	public PostToDhisTask() {
+		log.debug("hello world task created at " + new Date());
+	}
 
-    public void execute()
-    {
-        log.debug( "executing hello world task" );
+	public void execute() {
+		log.debug("executing hello world task");
 
-        // get all reports
+		// get all reports
 
-        DHIS2ReportingService service = Context.getService( DHIS2ReportingService.class );
-        Collection<ReportDefinition> reportdefs = service.getAllReportDefinitions();
+		DHIS2ReportingService service = Context
+				.getService(DHIS2ReportingService.class);
+		Collection<ReportDefinition> reportdefs = service
+				.getAllReportDefinitions();
 
-        // iterate over each report
-        String urlParameters = null;
-        // get location for the report/hospital
-        List<Location> locations = Context.getLocationService().getAllLocations();
-        String orgUnit = null;
-        Integer reportId = null;
-        String dateStr = null;
-        String freq = null;
-        String resultDestination = "post";
+		// iterate over each report
+		String urlParameters = null;
+		// get location for the report/hospital
+		List<Location> locations = Context.getLocationService()
+				.getAllLocations();
+		String orgUnit = null;
+		Integer reportId = null;
+		String dateStr = null;
+		String freq = null;
+		String resultDestination = "post";
 
-        for ( Location location : locations )
-        {
-            // System.out.println( "location information UUID-" +
-            // location.getUuid() + ":display string-"
-            // + location.getDisplayString() + ":" );
-            if ( location.getDisplayString().contains( "[" ) )
-            {
-                String temp = location.getDisplayString();
-                orgUnit = location.getDisplayString().substring( (temp.indexOf( "[" ) + 1), (temp.indexOf( "]" )) );
-                // System.out.println( "Current Location ID-" + orgUnit );
-            }
-        }
+		for (Location location : locations) {
+			// System.out.println( "location information UUID-" +
+			// location.getUuid() + ":display string-"
+			// + location.getDisplayString() + ":" );
+			if (location.getDisplayString().contains("[")) {
+				String temp = location.getDisplayString();
+				orgUnit = location.getDisplayString().substring(
+						(temp.indexOf("[") + 1), (temp.indexOf("]")));
+				// System.out.println( "Current Location ID-" + orgUnit );
+			}
+		}
 
-        Calendar cal = Calendar.getInstance();
-        int year = cal.get( Calendar.YEAR );
-        int month = cal.get( Calendar.MONTH ); // Note: zero based!
-        int week = cal.get( Calendar.WEEK_OF_YEAR );
+		Calendar cal = Calendar.getInstance();
+		int year = cal.get(Calendar.YEAR);
+		int month = cal.get(Calendar.MONTH); // Note: zero based!
+		int week = cal.get(Calendar.WEEK_OF_YEAR);
 
-        for ( ReportDefinition reports : reportdefs )
-        //        while ( !reportdefs.isEmpty() )
-        {
-            //            Iterator<ReportDefinition> reportiterator = reportdefs.iterator();
-            //            ReportDefinition reports = reportiterator.next();
-            reportId = reports.getId();
-            //  System.out.println( "reportId is-" + reportId );
-            freq = reports.getPeriodType();
+		for (ReportDefinition reports : reportdefs)
+		//        while ( !reportdefs.isEmpty() )
+		{
+			//            Iterator<ReportDefinition> reportiterator = reportdefs.iterator();
+			//            ReportDefinition reports = reportiterator.next();
+			reportId = reports.getId();
+			//  System.out.println( "reportId is-" + reportId );
+			freq = reports.getPeriodType();
 
-            try
-            {
-                if ( freq.equalsIgnoreCase( "Monthly" ) )
-                {
-                    if ( month == 0 )
-                        month = 12;
-                    dateStr = year + "-" + Integer.toString( (month) );
-                }
-                if ( freq.equalsIgnoreCase( "Weekly" ) )
-                {
-                    if ( week > 10 )
-                        dateStr = year + "-" + "W" + Integer.toString( (week - 1) );
-                    else
-                        dateStr = year + "-" + "W0" + Integer.toString( (week - 1) );
-                }
+			try {
+				if (freq.equalsIgnoreCase("Monthly")) {
+					if (month == 0)
+						month = 12;
+					dateStr = year + "-" + Integer.toString((month));
+				}
+				if (freq.equalsIgnoreCase("Weekly")) {
+					if (week > 10)
+						dateStr = year + "-" + "W"
+								+ Integer.toString((week - 1));
+					else
+						dateStr = year + "-" + "W0"
+								+ Integer.toString((week - 1));
+				}
 
-                //   System.out.println( "Date String-" + dateStr );
+				//   System.out.println( "Date String-" + dateStr );
 
-                urlParameters = "location=" + orgUnit + "&frequency=" + freq + "&date=" + dateStr
-                    + "&resultDestination=" + resultDestination + "&reportDefinition_id=" + reportId.toString();
-                // location=DDU01&frequency=monthly&date=2013-Mar&resultDestination=post&reportDefinition_id=58
+				urlParameters = "location=" + orgUnit + "&frequency=" + freq
+						+ "&date=" + dateStr + "&resultDestination="
+						+ resultDestination + "&reportDefinition_id="
+						+ reportId.toString();
+				// location=DDU01&frequency=monthly&date=2013-Mar&resultDestination=post&reportDefinition_id=58
 
-                int reponsecode = sendPost( urlParameters );
-                //                if ( reponsecode == 400 )
-                //                {
-                //                    reportdefs.remove( reports );
-                //                }
-                Thread.sleep( 5000 );
-            }
-            catch ( Exception e )
-            {
-                // TODO Auto-generated catch block
-                e.printStackTrace();
-                //   System.out.println( "Enterted Catch for report =" + reportId );
-                continue;
-            }
+				int reponsecode = sendPost(urlParameters);
+				//                if ( reponsecode == 400 )
+				//                {
+				//                    reportdefs.remove( reports );
+				//                }
+				Thread.sleep(5000);
+			} catch (Exception e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+				//   System.out.println( "Enterted Catch for report =" + reportId );
+				continue;
+			}
 
-        }//outer
+		}//outer
 
-        // get parameter for each report
-        // send post request for each report
-        super.startExecuting();
-    }
+		// get parameter for each report
+		// send post request for each report
+		super.startExecuting();
+	}
 
-    public void shutdown()
-    {
-        log.debug( "shutting down hello world task" );
-        this.stopExecuting();
-    }
+	public void shutdown() {
+		log.debug("shutting down hello world task");
+		this.stopExecuting();
+	}
 
-    private int sendPost( String urlParameters )
-        throws Exception
-    {
+	private int sendPost(String urlParameters) throws Exception {
 
-        String url = "http://localhost:8081/openmrs18/module/dhisreport/executeReport.form";
-        url = Context.getAdministrationService().getGlobalProperty( "dhisreport.SchedulerURL" );
+		String url = "http://localhost:8081/openmrs18/module/dhisreport/executeReport.form";
+		url = Context.getAdministrationService().getGlobalProperty(
+				"dhisreport.SchedulerURL");
 
-        final String USER_AGENT = "Mozilla/5.0";
+		final String USER_AGENT = "Mozilla/5.0";
 
-        URL obj = new URL( url );
-        HttpURLConnection con = (HttpURLConnection) obj.openConnection();
+		URL obj = new URL(url);
+		HttpURLConnection con = (HttpURLConnection) obj.openConnection();
 
-        // add reuqest header
-        con.setRequestMethod( "POST" );
-        con.setRequestProperty( "User-Agent", USER_AGENT );
-        con.setRequestProperty( "Accept-Language", "en-US,en;q=0.5" );
-        con.setRequestProperty( "Host", "localhost:8081" );
+		// add reuqest header
+		con.setRequestMethod("POST");
+		con.setRequestProperty("User-Agent", USER_AGENT);
+		con.setRequestProperty("Accept-Language", "en-US,en;q=0.5");
+		con.setRequestProperty("Host", "localhost:8081");
 
-        DHIS2ReportingService service = Context.getService( DHIS2ReportingService.class );
-        String dhisurl = Context.getAdministrationService().getGlobalProperty( "dhisreport.dhis2URL" );
-        String dhisusername = Context.getAdministrationService().getGlobalProperty( "dhisreport.dhis2UserName" );
-        String dhispassword = Context.getAdministrationService().getGlobalProperty( "dhisreport.dhis2Password" );
-        HttpDhis2Server server = service.getDhis2Server();
+		DHIS2ReportingService service = Context
+				.getService(DHIS2ReportingService.class);
+		String dhisurl = Context.getAdministrationService().getGlobalProperty(
+				"dhisreport.dhis2URL");
+		String dhisusername = Context.getAdministrationService()
+				.getGlobalProperty("dhisreport.dhis2UserName");
+		String dhispassword = Context.getAdministrationService()
+				.getGlobalProperty("dhisreport.dhis2Password");
+		HttpDhis2Server server = service.getDhis2Server();
 
-        URL urltemp = null;
-        try
-        {
-            urltemp = new URL( dhisurl );
-        }
-        catch ( MalformedURLException e )
-        {
-            e.printStackTrace();
-        }
+		URL urltemp = null;
+		try {
+			urltemp = new URL(dhisurl);
+		} catch (MalformedURLException e) {
+			e.printStackTrace();
+		}
 
-        server.setUrl( urltemp );
-        server.setUsername( dhisusername );
-        server.setPassword( dhispassword );
+		server.setUrl(urltemp);
+		server.setUsername(dhisusername);
+		server.setPassword(dhispassword);
 
-        // String urlParameters =
-        // "sn=C02G8416DRJM&cn=&locale=&caller=&num=12345";
+		// String urlParameters =
+		// "sn=C02G8416DRJM&cn=&locale=&caller=&num=12345";
 
-        // Send post request
-        con.setDoOutput( true );
-        DataOutputStream wr = new DataOutputStream( con.getOutputStream() );
-        wr.writeBytes( urlParameters );
-        wr.flush();
-        wr.close();
+		// Send post request
+		con.setDoOutput(true);
+		DataOutputStream wr = new DataOutputStream(con.getOutputStream());
+		wr.writeBytes(urlParameters);
+		wr.flush();
+		wr.close();
 
-        int responseCode = con.getResponseCode();
-        // System.out.println( "\nSending 'POST' request to URL : " + url );
-        //System.out.println( "Post parameters : " + urlParameters );
-        //System.out.println( "Response Code : " + responseCode );
+		int responseCode = con.getResponseCode();
+		// System.out.println( "\nSending 'POST' request to URL : " + url );
+		//System.out.println( "Post parameters : " + urlParameters );
+		//System.out.println( "Response Code : " + responseCode );
 
-        BufferedReader in = new BufferedReader( new InputStreamReader( con.getInputStream() ) );
-        String inputLine;
-        StringBuffer response = new StringBuffer();
+		BufferedReader in = new BufferedReader(new InputStreamReader(con
+				.getInputStream()));
+		String inputLine;
+		StringBuffer response = new StringBuffer();
 
-        while ( (inputLine = in.readLine()) != null )
-        {
-            response.append( inputLine );
-        }
-        in.close();
+		while ((inputLine = in.readLine()) != null) {
+			response.append(inputLine);
+		}
+		in.close();
 
-        // print result
-        //        System.out.println( response.toString() );
-        return responseCode;
+		// print result
+		//        System.out.println( response.toString() );
+		return responseCode;
 
-    }
+	}
 }

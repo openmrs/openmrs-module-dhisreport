@@ -48,100 +48,93 @@ import org.springframework.web.bind.annotation.RequestParam;
  */
 
 @Controller
-public class ReportSyncController
-{
+public class ReportSyncController {
 
-    protected final Log log = LogFactory.getLog( getClass() );
+	protected final Log log = LogFactory.getLog(getClass());
 
-    @RequestMapping( value = "/module/dhisreport/fullReportSync", method = RequestMethod.GET )
-    public String fullReportSync( ModelMap model )
-    {
-        DHIS2ReportingService service = Context.getService( DHIS2ReportingService.class );
+	@RequestMapping(value = "/module/dhisreport/fullReportSync", method = RequestMethod.GET)
+	public String fullReportSync(ModelMap model) {
+		DHIS2ReportingService service = Context
+				.getService(DHIS2ReportingService.class);
 
-        // System.out.println( "Entered Sync Controller" );
+		// System.out.println( "Entered Sync Controller" );
 
-        ReportSynchronizer rs = new ReportSynchronizer();
+		ReportSynchronizer rs = new ReportSynchronizer();
 
-        try
-        {
+		try {
 
-            rs.fullSync();
+			rs.fullSync();
 
-            DateFormat df = new SimpleDateFormat( "MM/dd/yyyy HH:mm:ss" );
+			DateFormat df = new SimpleDateFormat("MM/dd/yyyy HH:mm:ss");
 
-            // Get the date today using Calendar object.
-            Date today = Calendar.getInstance().getTime();
-            // Using DateFormat format method we can create a string
-            // representation of a date with the defined format.
-            String reportDate = df.format( today );
+			// Get the date today using Calendar object.
+			Date today = Calendar.getInstance().getTime();
+			// Using DateFormat format method we can create a string
+			// representation of a date with the defined format.
+			String reportDate = df.format(today);
 
-            List<GlobalProperty> gbl = Context.getAdministrationService().getGlobalPropertiesByPrefix( "dhisreport" );
+			List<GlobalProperty> gbl = Context.getAdministrationService()
+					.getGlobalPropertiesByPrefix("dhisreport");
 
-            //  System.out.println( "before"+ Context.getAdministrationService().getGlobalProperty( "dhisreport.dhis2SyncDate" ) );
+			//  System.out.println( "before"+ Context.getAdministrationService().getGlobalProperty( "dhisreport.dhis2SyncDate" ) );
 
-            for ( GlobalProperty g : gbl )
-            {
-                // System.out.println( g.getProperty() );
-                if ( g.getProperty().equals( "dhisreport.dhis2SyncDate" ) )
-                {
-                    //   System.out.println( g.getDescription() );
-                    g.setPropertyValue( reportDate );
-                    Context.getAdministrationService().saveGlobalProperty( g );
+			for (GlobalProperty g : gbl) {
+				// System.out.println( g.getProperty() );
+				if (g.getProperty().equals("dhisreport.dhis2SyncDate")) {
+					//   System.out.println( g.getDescription() );
+					g.setPropertyValue(reportDate);
+					Context.getAdministrationService().saveGlobalProperty(g);
 
-                }
-            }
+				}
+			}
 
-            // System.out.println( Context.getAdministrationService().getGlobalProperty( "dhisreport.dhis2SyncDate" ) );
-        }
-        catch ( UnsupportedEncodingException e )
-        {
-            e.printStackTrace();
-        }
+			// System.out.println( Context.getAdministrationService().getGlobalProperty( "dhisreport.dhis2SyncDate" ) );
+		} catch (UnsupportedEncodingException e) {
+			e.printStackTrace();
+		}
 
-        model.addAttribute( "user", Context.getAuthenticatedUser() );
-        model.addAttribute( "reportDefinitions", service.getAllReportDefinitions() );
+		model.addAttribute("user", Context.getAuthenticatedUser());
+		model.addAttribute("reportDefinitions", service
+				.getAllReportDefinitions());
 
-        return "redirect:/module/dhisreport/listDhis2Reports.form";
-    }
+		return "redirect:/module/dhisreport/listDhis2Reports.form";
+	}
 
-    @RequestMapping( value = "/module/dhisreport/partReportSync", method = RequestMethod.GET )
-    public void partReportSync( ModelMap model )
-    {
-        DHIS2ReportingService service = Context.getService( DHIS2ReportingService.class );
+	@RequestMapping(value = "/module/dhisreport/partReportSync", method = RequestMethod.GET)
+	public void partReportSync(ModelMap model) {
+		DHIS2ReportingService service = Context
+				.getService(DHIS2ReportingService.class);
 
-        model.addAttribute( "user", Context.getAuthenticatedUser() );
-        model.addAttribute( "reportDefinitions", service.getAllReportDefinitions() );
-    }
+		model.addAttribute("user", Context.getAuthenticatedUser());
+		model.addAttribute("reportDefinitions", service
+				.getAllReportDefinitions());
+	}
 
-    @RequestMapping( value = "/module/dhisreport/partReportSync.form", method = RequestMethod.POST )
-    public String partReportSync( @RequestParam( "reportids" )
-    String[] ids, HttpServletRequest request )
-    {
-        String temp = "";
-        HttpSession httpSession = request.getSession();
-        Integer reportId = null;
-        try
-        {
-            DHIS2ReportingService dhisService = Context.getService( DHIS2ReportingService.class );
-            if ( ids != null && ids.length > 0 )
-            {
-                for ( String sId : ids )
-                {
-                    // reportId = Integer.parseInt( sId );
-                    //  System.out.println( sId );
-                }
-            }
-        }
-        catch ( Exception e )
-        {
-            httpSession.setAttribute( WebConstants.OPENMRS_MSG_ATTR, "Can not delete report " );
-            log.error( e );
-        }
-        // httpSession.setAttribute(WebConstants.OPENMRS_MSG_ATTR,
-        // StringUtils.isBlank(temp) ? "sdmxhddataexport.report.deleted" :
-        // temp);
+	@RequestMapping(value = "/module/dhisreport/partReportSync.form", method = RequestMethod.POST)
+	public String partReportSync(@RequestParam("reportids") String[] ids,
+			HttpServletRequest request) {
+		String temp = "";
+		HttpSession httpSession = request.getSession();
+		Integer reportId = null;
+		try {
+			DHIS2ReportingService dhisService = Context
+					.getService(DHIS2ReportingService.class);
+			if (ids != null && ids.length > 0) {
+				for (String sId : ids) {
+					// reportId = Integer.parseInt( sId );
+					//  System.out.println( sId );
+				}
+			}
+		} catch (Exception e) {
+			httpSession.setAttribute(WebConstants.OPENMRS_MSG_ATTR,
+					"Can not delete report ");
+			log.error(e);
+		}
+		// httpSession.setAttribute(WebConstants.OPENMRS_MSG_ATTR,
+		// StringUtils.isBlank(temp) ? "sdmxhddataexport.report.deleted" :
+		// temp);
 
-        return "redirect:/module/dhisreport/partReportSync.form";
-    }
+		return "redirect:/module/dhisreport/partReportSync.form";
+	}
 
 }

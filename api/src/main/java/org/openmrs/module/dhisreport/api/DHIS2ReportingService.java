@@ -47,216 +47,216 @@ import org.springframework.transaction.annotation.Transactional;
  * @see org.openmrs.api.context.Context
  */
 @Transactional
-public interface DHIS2ReportingService
-    extends OpenmrsService
-{
+public interface DHIS2ReportingService extends OpenmrsService {
 
-    // -----------------------------------------------------------------------
-    // DHIS Rest API calls
-    // -----------------------------------------------------------------------
-    /**
-     * Initialize url and credentials for DHIS server
-     *
-     * @param server
-     */
-    public void setDhis2Server( HttpDhis2Server server );
+	// -----------------------------------------------------------------------
+	// DHIS Rest API calls
+	// -----------------------------------------------------------------------
+	/**
+	 * Initialize url and credentials for DHIS server
+	 *
+	 * @param server
+	 */
+	public void setDhis2Server(HttpDhis2Server server);
 
-    /**
-     * @return the Dhis2 server
-     */
-    public HttpDhis2Server getDhis2Server();
+	/**
+	 * @return the Dhis2 server
+	 */
+	public HttpDhis2Server getDhis2Server();
 
-    /**
-     * @return @throws DHIS2ReportingException
-     */
-    public ReportDefinition fetchReportTemplates()
-        throws DHIS2ReportingException;
+	/**
+	 * @return @throws DHIS2ReportingException
+	 */
+	public ReportDefinition fetchReportTemplates()
+			throws DHIS2ReportingException;
 
-    /**
-     * @param dvset
-     * @return
-     * @throws DHIS2ReportingException
-     */
-    public ImportSummary postDataValueSet( DataValueSet dvset )
-        throws DHIS2ReportingException;
+	/**
+	 * @param dvset
+	 * @return
+	 * @throws DHIS2ReportingException
+	 */
+	public ImportSummary postDataValueSet(DataValueSet dvset)
+			throws DHIS2ReportingException;
 
-    public AdxImportSummary postAdxReport(AdxType adxReport )
-        throws DHIS2ReportingException;
+	public AdxImportSummary postAdxReport(AdxType adxReport)
+			throws DHIS2ReportingException;
 
-    // -----------------------------------------------------------------------
-    // Data access methods
-    // -----------------------------------------------------------------------
-    /**
-     * @param id
-     * @return
-     */
-    @Transactional( readOnly = true )
-    public DataElement getDataElement( Integer id );
+	// -----------------------------------------------------------------------
+	// Data access methods
+	// -----------------------------------------------------------------------
+	/**
+	 * @param id
+	 * @return
+	 */
+	@Transactional(readOnly = true)
+	public DataElement getDataElement(Integer id);
 
-    /**
-     * @param uid
-     * @return
-     */
-    @Transactional( readOnly = true )
-    public DataElement getDataElementByUid( String uid );
+	/**
+	 * @param uid
+	 * @return
+	 */
+	@Transactional(readOnly = true)
+	public DataElement getDataElementByUid(String uid);
 
-    /**
-     * @param code
-     * @return
-     */
-    @Transactional( readOnly = true )
-    public DataElement getDataElementByCode( String code );
+	/**
+	 * @param code
+	 * @return
+	 */
+	@Transactional(readOnly = true)
+	public DataElement getDataElementByCode(String code);
 
-    /**
-     * @param de
-     * @return
-     */
-    @Transactional
-    public DataElement saveDataElement( DataElement de );
+	/**
+	 * @param de
+	 * @return
+	 */
+	@Transactional
+	public DataElement saveDataElement(DataElement de);
 
-    /**
-     * @param de
-     */
-    @Transactional
-    public void purgeDataElement( DataElement de );
+	/**
+	 * @param de
+	 */
+	@Transactional
+	public void purgeDataElement(DataElement de);
 
-    /**
-     * @return
-     */
-    @Transactional( readOnly = true )
-    public Collection<DataElement> getAllDataElements();
+	/**
+	 * @return
+	 */
+	@Transactional(readOnly = true)
+	public Collection<DataElement> getAllDataElements();
 
-    /**
-     * @param id
-     * @return
-     */
-    @Transactional( readOnly = true )
-    public Disaggregation getDisaggregation( Integer id );
+	/**
+	 * @param id
+	 * @return
+	 */
+	@Transactional(readOnly = true)
+	public Disaggregation getDisaggregation(Integer id);
 
-    /**
-     * @param disagg
-     * @return
-     */
-    @Transactional
-    public Disaggregation saveDisaggregation( Disaggregation disagg );
+	/**
+	 * @param disagg
+	 * @return
+	 */
+	@Transactional
+	public Disaggregation saveDisaggregation(Disaggregation disagg);
 
-    /**
-     * @param disagg
-     */
-    @Transactional
-    public void purgeDisaggregation( Disaggregation disagg );
+	/**
+	 * @param disagg
+	 */
+	@Transactional
+	public void purgeDisaggregation(Disaggregation disagg);
 
-    /**
-     * @return
-     */
-    @Transactional( readOnly = true )
-    public Collection<Disaggregation> getAllDisaggregations();
+	/**
+	 * @return
+	 */
+	@Transactional(readOnly = true)
+	public Collection<Disaggregation> getAllDisaggregations();
 
-    /**
-     * @param id
-     * @return
-     */
-    @Transactional( readOnly = true )
-    public ReportDefinition getReportDefinition( Integer id );
+	/**
+	 * @param id
+	 * @return
+	 */
+	@Transactional(readOnly = true)
+	public ReportDefinition getReportDefinition(Integer id);
 
-    @Transactional( readOnly = true )
-    public ReportDefinition getReportDefinitionByUId( String uid );
+	@Transactional(readOnly = true)
+	public ReportDefinition getReportDefinitionByUId(String uid);
 
-    @Transactional( readOnly = true )
-    public ReportDefinition getReportDefinitionByCode( String code );
+	@Transactional(readOnly = true)
+	public ReportDefinition getReportDefinitionByCode(String code);
 
-    /**
-     * @param reportDefinition
-     * @return
-     */
-    @Transactional
-    public ReportDefinition saveReportDefinition( ReportDefinition reportDefinition );
+	/**
+	 * @param reportDefinition
+	 * @return
+	 */
+	@Transactional
+	public ReportDefinition saveReportDefinition(
+			ReportDefinition reportDefinition);
 
-    /**
-     * @param rd
-     */
-    @Transactional
-    public void purgeReportDefinition( ReportDefinition rd );
+	/**
+	 * @param rd
+	 */
+	@Transactional
+	public void purgeReportDefinition(ReportDefinition rd);
 
-    /**
-     * @return
-     */
-    @Transactional( readOnly = true )
-    public Collection<ReportDefinition> getAllReportDefinitions();
+	/**
+	 * @return
+	 */
+	@Transactional(readOnly = true)
+	public Collection<ReportDefinition> getAllReportDefinitions();
 
-    // -----------------------------------------------------------------------
-    // ReportTemplates (DHIS2 Data Structure Definition)
-    // -----------------------------------------------------------------------
-    /**
-     * @param rt
-     */
-    @Transactional
-    public void saveReportTemplates( ReportTemplates rt );
+	// -----------------------------------------------------------------------
+	// ReportTemplates (DHIS2 Data Structure Definition)
+	// -----------------------------------------------------------------------
+	/**
+	 * @param rt
+	 */
+	@Transactional
+	public void saveReportTemplates(ReportTemplates rt);
 
-    /**
-     * @param is
-     * @throws Exception
-     */
-    public void unMarshallandSaveReportTemplates( InputStream is )
-        throws Exception;
+	/**
+	 * @param is
+	 * @throws Exception
+	 */
+	public void unMarshallandSaveReportTemplates(InputStream is)
+			throws Exception;
 
-    @Transactional
-    public ReportTemplates getReportTemplates();
+	@Transactional
+	public ReportTemplates getReportTemplates();
 
-    /**
-     * @param is
-     * @throws Exception
-     */
-    public void marshallReportTemplates( OutputStream os, ReportTemplates rt )
-        throws Exception;
+	/**
+	 * @param is
+	 * @throws Exception
+	 */
+	public void marshallReportTemplates(OutputStream os, ReportTemplates rt)
+			throws Exception;
 
-    // -----------------------------------------------------------------------
-    // ReportEvaluation
-    // -----------------------------------------------------------------------
-    /**
-     * @param dv
-     * @param period
-     * @param location
-     * @return
-     */
-    String evaluateDataValueTemplate( DataValueTemplate dv, Period period, Location location )
-        throws DHIS2ReportingException;
+	// -----------------------------------------------------------------------
+	// ReportEvaluation
+	// -----------------------------------------------------------------------
+	/**
+	 * @param dv
+	 * @param period
+	 * @param location
+	 * @return
+	 */
+	String evaluateDataValueTemplate(DataValueTemplate dv, Period period,
+			Location location) throws DHIS2ReportingException;
 
-    /**
-     * @param reportDefinition
-     * @param period
-     * @param location
-     * @return
-     */
-    DataValueSet evaluateReportDefinition( ReportDefinition reportDefinition, Period period, Location location,
-        boolean priority );
+	/**
+	 * @param reportDefinition
+	 * @param period
+	 * @param location
+	 * @return
+	 */
+	DataValueSet evaluateReportDefinition(ReportDefinition reportDefinition,
+			Period period, Location location, boolean priority);
 
-    DataValueSet generateReportingReportDefinition( ReportDefinition reportDefinition, Period period, Location location )
-        throws Exception;
+	DataValueSet generateReportingReportDefinition(
+			ReportDefinition reportDefinition, Period period, Location location)
+			throws Exception;
 
-    /**
-     * @param id
-     * @return
-     */
-    @Transactional
-    public DataValueTemplate getDataValueTemplate( Integer id );
+	/**
+	 * @param id
+	 * @return
+	 */
+	@Transactional
+	public DataValueTemplate getDataValueTemplate(Integer id);
 
-    /**
-     * @param dvt
-     */
-    @Transactional
-    public void saveDataValueTemplate( DataValueTemplate dvt );
+	/**
+	 * @param dvt
+	 */
+	@Transactional
+	public void saveDataValueTemplate(DataValueTemplate dvt);
 
-    /**
-     * @param OU_Code
-     * @return
-     */
-    public Location getLocationByOU_Code( String OU_Code );
+	/**
+	 * @param OU_Code
+	 * @return
+	 */
+	public Location getLocationByOU_Code(String OU_Code);
 
-    public void saveDataValueTemplateTest( DataValueTemplate dvt );
+	public void saveDataValueTemplateTest(DataValueTemplate dvt);
 
-    public Location getLocationByOrgUnitCode( String orgUnitCode );
+	public Location getLocationByOrgUnitCode(String orgUnitCode);
 
-    public DHIS2ReportingDAO getDao();
+	public DHIS2ReportingDAO getDao();
 
 }

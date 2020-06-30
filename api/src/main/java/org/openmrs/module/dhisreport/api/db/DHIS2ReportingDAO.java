@@ -35,60 +35,60 @@ import org.openmrs.module.dhisreport.api.utils.Period;
 /**
  * Database methods for {@link DHIS2ReportingService}.
  */
-public interface DHIS2ReportingDAO
-{
+public interface DHIS2ReportingDAO {
 
-    public DataElement getDataElement( Integer id );
+	public DataElement getDataElement(Integer id);
 
-    public DataElement getDataElementByUid( String uid );
+	public DataElement getDataElementByUid(String uid);
 
-    public DataElement getDataElementByCode( String code );
+	public DataElement getDataElementByCode(String code);
 
-    public DataElement saveDataElement( DataElement de );
+	public DataElement saveDataElement(DataElement de);
 
-    public void deleteDataElement( DataElement de );
+	public void deleteDataElement(DataElement de);
 
-    public Collection<DataElement> getAllDataElements();
+	public Collection<DataElement> getAllDataElements();
 
-    public Disaggregation getDisaggregation( Integer id );
+	public Disaggregation getDisaggregation(Integer id);
 
-    public Disaggregation getDisaggregationByUid( String uid );
+	public Disaggregation getDisaggregationByUid(String uid);
 
-    public Disaggregation saveDisaggregation( Disaggregation disagg );
+	public Disaggregation saveDisaggregation(Disaggregation disagg);
 
-    public Collection<Disaggregation> getAllDisaggregations();
+	public Collection<Disaggregation> getAllDisaggregations();
 
-    public void deleteDisaggregation( Disaggregation disagg );
+	public void deleteDisaggregation(Disaggregation disagg);
 
-    public ReportDefinition getReportDefinition( Integer id );
+	public ReportDefinition getReportDefinition(Integer id);
 
-    public ReportDefinition getReportDefinitionByUid( String uid );
+	public ReportDefinition getReportDefinitionByUid(String uid);
 
-    public ReportDefinition getReportDefinitionByCode( String code );
+	public ReportDefinition getReportDefinitionByCode(String code);
 
-    public ReportDefinition saveReportDefinition( ReportDefinition rd );
+	public ReportDefinition saveReportDefinition(ReportDefinition rd);
 
-    public Collection<ReportDefinition> getAllReportDefinitions();
+	public Collection<ReportDefinition> getAllReportDefinitions();
 
-    public void deleteReportDefinition( ReportDefinition rd );
+	public void deleteReportDefinition(ReportDefinition rd);
 
-    public String evaluateDataValueTemplate( DataValueTemplate dvt, Period period, Location location, boolean priority )
-        throws DHIS2ReportingException;
+	public String evaluateDataValueTemplate(DataValueTemplate dvt,
+			Period period, Location location, boolean priority)
+			throws DHIS2ReportingException;
 
-    public DataValueTemplate getDataValueTemplate( Integer id );
+	public DataValueTemplate getDataValueTemplate(Integer id);
 
-    public DataValueTemplate saveDataValueTemplate( DataValueTemplate dvt );
+	public DataValueTemplate saveDataValueTemplate(DataValueTemplate dvt);
 
-    public Location getLocationByOU_Code( String OU_Code );
+	public Location getLocationByOU_Code(String OU_Code);
 
-    public DataValueTemplate saveDataValueTemplateTest( DataValueTemplate dvt );
+	public DataValueTemplate saveDataValueTemplateTest(DataValueTemplate dvt);
 
-    public SessionFactory getSessionFactory();
+	public SessionFactory getSessionFactory();
 
-    public Identifiable saveReportDefinitionObject( ReportDefinition rd );
+	public Identifiable saveReportDefinitionObject(ReportDefinition rd);
 
-    public Identifiable saveDataElementObject( DataElement de );
+	public Identifiable saveDataElementObject(DataElement de);
 
-    public Identifiable saveObject( Identifiable object );
+	public Identifiable saveObject(Identifiable object);
 
 }

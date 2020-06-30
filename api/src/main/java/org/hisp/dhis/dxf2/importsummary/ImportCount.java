@@ -29,92 +29,77 @@ package org.hisp.dhis.dxf2.importsummary;
 
 import javax.xml.bind.annotation.*;
 
-@XmlAccessorType( XmlAccessType.FIELD )
-public class ImportCount
-{
-    @XmlAttribute( required = true )
-    private int imported;
+@XmlAccessorType(XmlAccessType.FIELD)
+public class ImportCount {
+	@XmlAttribute(required = true)
+	private int imported;
 
-    @XmlAttribute( required = true )
-    private int updated;
+	@XmlAttribute(required = true)
+	private int updated;
 
-    @XmlAttribute( required = true )
-    private int ignored;
+	@XmlAttribute(required = true)
+	private int ignored;
 
-    public ImportCount()
-    {
-    }
+	public ImportCount() {
+	}
 
-    public ImportCount( int imported, int updated, int ignored )
-    {
-        this.imported = imported;
-        this.updated = updated;
-        this.ignored = ignored;
-    }
+	public ImportCount(int imported, int updated, int ignored) {
+		this.imported = imported;
+		this.updated = updated;
+		this.ignored = ignored;
+	}
 
-    public int getImported()
-    {
-        return imported;
-    }
+	public int getImported() {
+		return imported;
+	}
 
-    public void setImported( int imported )
-    {
-        this.imported = imported;
-    }
+	public void setImported(int imported) {
+		this.imported = imported;
+	}
 
-    public int getUpdated()
-    {
-        return updated;
-    }
+	public int getUpdated() {
+		return updated;
+	}
 
-    public void setUpdated( int updated )
-    {
-        this.updated = updated;
-    }
+	public void setUpdated(int updated) {
+		this.updated = updated;
+	}
 
-    public int getIgnored()
-    {
-        return ignored;
-    }
+	public int getIgnored() {
+		return ignored;
+	}
 
-    public void setIgnored( int ignored )
-    {
-        this.ignored = ignored;
-    }
+	public void setIgnored(int ignored) {
+		this.ignored = ignored;
+	}
 
-    @Override
-    public String toString()
-    {
-        return "[imports=" + imported + ", updates=" + updated + ", ignores=" + ignored + "]";
-    }
+	@Override
+	public String toString() {
+		return "[imports=" + imported + ", updates=" + updated + ", ignores="
+				+ ignored + "]";
+	}
 
-    public void incrementImported()
-    {
-        imported++;
-    }
+	public void incrementImported() {
+		imported++;
+	}
 
-    public void incrementUpdated()
-    {
-        updated++;
-    }
+	public void incrementUpdated() {
+		updated++;
+	}
 
-    public void incrementIgnored()
-    {
-        ignored++;
-    }
+	public void incrementIgnored() {
+		ignored++;
+	}
 
-    public void incrementImported( int n )
-    {
-        imported += n;
-    }
+	public void incrementImported(int n) {
+		imported += n;
+	}
 
-    public void incrementUpdated( int n )
-    {
-        updated += n;
-    }
+	public void incrementUpdated(int n) {
+		updated += n;
+	}
 
-    public void incrementIgnored( int n )
-    {
-        ignored += n;
-    }
+	public void incrementIgnored(int n) {
+		ignored += n;
+	}
 }

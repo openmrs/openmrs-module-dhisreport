@@ -7,20 +7,17 @@ import javax.xml.bind.annotation.XmlAccessorType;
 import javax.xml.bind.annotation.XmlElement;
 import javax.xml.bind.annotation.XmlRootElement;
 
-@XmlRootElement( name = "dataSets" )
-@XmlAccessorType( XmlAccessType.FIELD )
-public class DataSets
-{
-    @XmlElement( name = "dataSet" )
-    private List<DataSet> dataSets = null;
+@XmlRootElement(name = "dataSets")
+@XmlAccessorType(XmlAccessType.FIELD)
+public class DataSets {
+	@XmlElement(name = "dataSet")
+	private List<DataSet> dataSets = null;
 
-    public List<DataSet> getDataSets()
-    {
-        return dataSets;
-    }
+	public List<DataSet> getDataSets() {
+		return dataSets;
+	}
 
-    public void setDataSets( List<DataSet> dataSets )
-    {
-        this.dataSets = dataSets;
-    }
+	public void setDataSets(List<DataSet> dataSets) {
+		this.dataSets = dataSets;
+	}
 }

@@ -25,51 +25,49 @@ import org.openmrs.module.dhisreport.api.adx.ObjectFactory;
 import org.openmrs.module.dhisreport.api.importsummary.AdxImportSummary;
 import org.openmrs.test.BaseModuleContextSensitiveTest;
 
-public class HttpDhis2ServerTest
-    extends BaseModuleContextSensitiveTest
-{
+public class HttpDhis2ServerTest extends BaseModuleContextSensitiveTest {
 
-    @Test
-    public void postAdxReportTest()
-        throws DatatypeConfigurationException, MalformedURLException, DHIS2ReportingException
-    {
-        HttpDhis2Server server = mock( HttpDhis2Server.class );
-        ObjectFactory of = new ObjectFactory();
+	@Test
+	public void postAdxReportTest() throws DatatypeConfigurationException,
+			MalformedURLException, DHIS2ReportingException {
+		HttpDhis2Server server = mock(HttpDhis2Server.class);
+		ObjectFactory of = new ObjectFactory();
 
-        AdxType adxt = of.createAdxType();
+		AdxType adxt = of.createAdxType();
 
-        XMLGregorianCalendar date3 = null;
-        date3 = DatatypeFactory.newInstance().newXMLGregorianCalendar( new GregorianCalendar( 2016, 06, 14 ) );
-        adxt.setExported( date3 );
-        GroupType group = of.createGroupType();
-        group.setOrgUnit( "OU_559" );
-        group.setPeriod( "2015-06-01/P1M" );
-        Map<QName, String> hm1 = group.getOtherAttributes();
-        QName qn2 = new QName( "idScheme" );
-        hm1.put( qn2, "Code" );
+		XMLGregorianCalendar date3 = null;
+		date3 = DatatypeFactory.newInstance().newXMLGregorianCalendar(
+				new GregorianCalendar(2016, 06, 14));
+		adxt.setExported(date3);
+		GroupType group = of.createGroupType();
+		group.setOrgUnit("OU_559");
+		group.setPeriod("2015-06-01/P1M");
+		Map<QName, String> hm1 = group.getOtherAttributes();
+		QName qn2 = new QName("idScheme");
+		hm1.put(qn2, "Code");
 
-        List<GroupType> groups = adxt.getGroup();
+		List<GroupType> groups = adxt.getGroup();
 
-        List<DataValueType> dvt = group.getDataValue();
-        DataValueType dv = new DataValueType();
-        dv.setDataElement( "DE_98454" );
-        BigDecimal bd = new BigDecimal( 32.0 );
-        dv.setValue( bd );
+		List<DataValueType> dvt = group.getDataValue();
+		DataValueType dv = new DataValueType();
+		dv.setDataElement("DE_98454");
+		BigDecimal bd = new BigDecimal(32.0);
+		dv.setValue(bd);
 
-        dvt.add( dv );
-        groups.add( group );
+		dvt.add(dv);
+		groups.add(group);
 
-        URL url = new URL( "http://localhost:8089/dhis" );
-        server.setUrl( url );
-        server.setPassword( "district" );
-        server.setUsername( "admin2" );
+		URL url = new URL("http://localhost:8089/dhis");
+		server.setUrl(url);
+		server.setPassword("district");
+		server.setUsername("admin2");
 
-        AdxImportSummary summary = new AdxImportSummary();
-        summary.setStatus( "SUCCESS" );
-        when( server.postAdxReport( adxt ) ).thenReturn( summary );
-        AdxImportSummary summaries = server.postAdxReport( adxt );
+		AdxImportSummary summary = new AdxImportSummary();
+		summary.setStatus("SUCCESS");
+		when(server.postAdxReport(adxt)).thenReturn(summary);
+		AdxImportSummary summaries = server.postAdxReport(adxt);
 
-        assertEquals( summaries.getStatus(), "SUCCESS" );
-    }
+		assertEquals(summaries.getStatus(), "SUCCESS");
+	}
 
 }

@@ -26,110 +26,96 @@ import javax.xml.bind.annotation.*;
  * 
  * @author bobj
  */
-@XmlAccessorType( XmlAccessType.FIELD )
-@XmlRootElement( name = "dataElement" )
-public class DataElement
-    implements Serializable, Identifiable
-{
+@XmlAccessorType(XmlAccessType.FIELD)
+@XmlRootElement(name = "dataElement")
+public class DataElement implements Serializable, Identifiable {
 
-    @XmlTransient
-    protected Integer id;
+	@XmlTransient
+	protected Integer id;
 
-    @XmlAttribute( required = true )
-    @XmlID
-    protected String code;
+	@XmlAttribute(required = true)
+	@XmlID
+	protected String code;
 
-    @XmlAttribute( required = true )
-    protected String uid;
+	@XmlAttribute(required = true)
+	protected String uid;
 
-    @XmlAttribute( required = true )
-    protected String name;
+	@XmlAttribute(required = true)
+	protected String name;
 
-    @Override
-    public String getUid()
-    {
-        return uid;
-    }
+	@Override
+	public String getUid() {
+		return uid;
+	}
 
-    @Override
-    public void setUid( String uid )
-    {
-        this.uid = uid;
-    }
+	@Override
+	public void setUid(String uid) {
+		this.uid = uid;
+	}
 
-    public String getCode()
-    {
-        return code;
-    }
+	public String getCode() {
+		return code;
+	}
 
-    public void setCode( String code )
-    {
-        this.code = code;
-    }
+	public void setCode(String code) {
+		this.code = code;
+	}
 
-    @Override
-    public Integer getId()
-    {
-        return id;
-    }
+	@Override
+	public Integer getId() {
+		return id;
+	}
 
-    @Override
-    public void setId( Integer id )
-    {
-        this.id = id;
-    }
+	@Override
+	public void setId(Integer id) {
+		this.id = id;
+	}
 
-    public String getName()
-    {
-        return name;
-    }
+	public String getName() {
+		return name;
+	}
 
-    public void setName( String name )
-    {
-        this.name = name;
-    }
+	public void setName(String name) {
+		this.name = name;
+	}
 
-    @Override
-    public boolean equals( Object obj )
-    {
-        if ( obj == null )
-        {
-            return false;
-        }
-        if ( getClass() != obj.getClass() )
-        {
-            return false;
-        }
-        final DataElement other = (DataElement) obj;
-        if ( (this.code == null) ? (other.code != null) : !this.code.equals( other.code ) )
-        {
-            return false;
-        }
-        if ( (this.uid == null) ? (other.uid != null) : !this.uid.equals( other.uid ) )
-        {
-            return false;
-        }
-        if ( (this.name == null) ? (other.name != null) : !this.name.equals( other.name ) )
-        {
-            return false;
-        }
-        return true;
-    }
+	@Override
+	public boolean equals(Object obj) {
+		if (obj == null) {
+			return false;
+		}
+		if (getClass() != obj.getClass()) {
+			return false;
+		}
+		final DataElement other = (DataElement) obj;
+		if ((this.code == null) ? (other.code != null) : !this.code
+				.equals(other.code)) {
+			return false;
+		}
+		if ((this.uid == null) ? (other.uid != null) : !this.uid
+				.equals(other.uid)) {
+			return false;
+		}
+		if ((this.name == null) ? (other.name != null) : !this.name
+				.equals(other.name)) {
+			return false;
+		}
+		return true;
+	}
 
-    @Override
-    public int hashCode()
-    {
-        int hash = 3;
-        hash = 89 * hash + (this.code != null ? this.code.hashCode() : 0);
-        hash = 89 * hash + (this.uid != null ? this.uid.hashCode() : 0);
-        hash = 89 * hash + (this.name != null ? this.name.hashCode() : 0);
-        return hash;
-    }
+	@Override
+	public int hashCode() {
+		int hash = 3;
+		hash = 89 * hash + (this.code != null ? this.code.hashCode() : 0);
+		hash = 89 * hash + (this.uid != null ? this.uid.hashCode() : 0);
+		hash = 89 * hash + (this.name != null ? this.name.hashCode() : 0);
+		return hash;
+	}
 
-    @Override
-    public String toString()
-    {
-        return "DE: " + this.getId() + " : " + this.getCode() + " : " + this.getUid() + " : " + this.getName();
-    }
+	@Override
+	public String toString() {
+		return "DE: " + this.getId() + " : " + this.getCode() + " : "
+				+ this.getUid() + " : " + this.getName();
+	}
 
 }

@@ -20,54 +20,49 @@ import javax.xml.namespace.QName;
  * 
  */
 @XmlRegistry
-public class ObjectFactory
-{
+public class ObjectFactory {
 
-    private final static QName _Adx_QNAME = new QName( "urn:ihe:qrph:adx:2015", "adx" );
+	private final static QName _Adx_QNAME = new QName("urn:ihe:qrph:adx:2015",
+			"adx");
 
-    /**
-     * Create a new ObjectFactory that can be used to create new instances of schema derived classes for package: org.ihe.qrph.adx
-     * 
-     */
-    public ObjectFactory()
-    {
-    }
+	/**
+	 * Create a new ObjectFactory that can be used to create new instances of schema derived classes for package: org.ihe.qrph.adx
+	 * 
+	 */
+	public ObjectFactory() {
+	}
 
-    /**
-     * Create an instance of {@link AdxType }
-     * 
-     */
-    public AdxType createAdxType()
-    {
-        return new AdxType();
-    }
+	/**
+	 * Create an instance of {@link AdxType }
+	 * 
+	 */
+	public AdxType createAdxType() {
+		return new AdxType();
+	}
 
-    /**
-     * Create an instance of {@link DataValueType }
-     * 
-     */
-    public DataValueType createDataValueType()
-    {
-        return new DataValueType();
-    }
+	/**
+	 * Create an instance of {@link DataValueType }
+	 * 
+	 */
+	public DataValueType createDataValueType() {
+		return new DataValueType();
+	}
 
-    /**
-     * Create an instance of {@link GroupType }
-     * 
-     */
-    public GroupType createGroupType()
-    {
-        return new GroupType();
-    }
+	/**
+	 * Create an instance of {@link GroupType }
+	 * 
+	 */
+	public GroupType createGroupType() {
+		return new GroupType();
+	}
 
-    /**
-     * Create an instance of {@link JAXBElement }{@code <}{@link AdxType }{@code >}}
-     * 
-     */
-    @XmlElementDecl( namespace = "urn:ihe:qrph:adx:2015", name = "adx" )
-    public JAXBElement<AdxType> createAdx( AdxType value )
-    {
-        return new JAXBElement<AdxType>( _Adx_QNAME, AdxType.class, null, value );
-    }
+	/**
+	 * Create an instance of {@link JAXBElement }{@code <}{@link AdxType }{@code >}}
+	 * 
+	 */
+	@XmlElementDecl(namespace = "urn:ihe:qrph:adx:2015", name = "adx")
+	public JAXBElement<AdxType> createAdx(AdxType value) {
+		return new JAXBElement<AdxType>(_Adx_QNAME, AdxType.class, null, value);
+	}
 
 }

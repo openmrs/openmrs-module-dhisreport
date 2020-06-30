@@ -37,54 +37,49 @@ import org.springframework.core.io.ClassPathResource;
 /**
  * Tests {@link $ DHIS2ReportingService} .
  */
-public class DHIS2ReportingServiceDXFTest
-{
+public class DHIS2ReportingServiceDXFTest {
 
-    private DHIS2ReportingService service;
+	private DHIS2ReportingService service;
 
-    @Ignore
-    @Before
-    public void before()
-        throws Exception
-    {
-        // executeDataSet(XML_DATASET_PATH + new
-        // TestUtil().getTestDatasetFilename(XML_HTML_FORM_ENTRY_SERVICE_DATASET));
-        service = Context.getService( DHIS2ReportingService.class );
-    }
+	@Ignore
+	@Before
+	public void before() throws Exception {
+		// executeDataSet(XML_DATASET_PATH + new
+		// TestUtil().getTestDatasetFilename(XML_HTML_FORM_ENTRY_SERVICE_DATASET));
+		service = Context.getService(DHIS2ReportingService.class);
+	}
 
-    @Ignore
-    @Test
-    public void setServerParamsTest()
-        throws MalformedURLException
-    {
-        HttpDhis2Server server = new HttpDhis2Server();
-        server.setUsername( "admin" );
-        server.setPassword( "district" );
-        server.setUrl( new URL( "http://apps.dhis2.org/dev" ) );
+	@Ignore
+	@Test
+	public void setServerParamsTest() throws MalformedURLException {
+		HttpDhis2Server server = new HttpDhis2Server();
+		server.setUsername("admin");
+		server.setPassword("district");
+		server.setUrl(new URL("http://apps.dhis2.org/dev"));
 
-        service.setDhis2Server( server );
-    }
+		service.setDhis2Server(server);
+	}
 
-    @Ignore
-    @Test
-    public void postDhisReportTest()
-        throws Exception
-    {
-        HttpDhis2Server server = new HttpDhis2Server();
-        server.setUsername( "admin" );
-        server.setPassword( "district" );
-        server.setUrl( new URL( "http://apps.dhis2.org/dev" ) );
+	@Ignore
+	@Test
+	public void postDhisReportTest() throws Exception {
+		HttpDhis2Server server = new HttpDhis2Server();
+		server.setUsername("admin");
+		server.setPassword("district");
+		server.setUrl(new URL("http://apps.dhis2.org/dev"));
 
-        service.setDhis2Server( server );
-        ClassPathResource resource = new ClassPathResource( "dvset.xml" );
-        JAXBContext jaxbContext = JAXBContext.newInstance( DataValueSet.class );
+		service.setDhis2Server(server);
+		ClassPathResource resource = new ClassPathResource("dvset.xml");
+		JAXBContext jaxbContext = JAXBContext.newInstance(DataValueSet.class);
 
-        Unmarshaller jaxbUnmarshaller = jaxbContext.createUnmarshaller();
-        DataValueSet dvset = (DataValueSet) jaxbUnmarshaller.unmarshal( resource.getInputStream() );
-        ImportSummary summary = service.postDataValueSet( dvset );
-        JAXBContext importSummaryContext = JAXBContext.newInstance( ImportSummary.class );
+		Unmarshaller jaxbUnmarshaller = jaxbContext.createUnmarshaller();
+		DataValueSet dvset = (DataValueSet) jaxbUnmarshaller.unmarshal(resource
+				.getInputStream());
+		ImportSummary summary = service.postDataValueSet(dvset);
+		JAXBContext importSummaryContext = JAXBContext
+				.newInstance(ImportSummary.class);
 
-        Marshaller jaxbmarshaller = importSummaryContext.createMarshaller();
-        jaxbmarshaller.marshal( summary, System.out );
-    }
+		Marshaller jaxbmarshaller = importSummaryContext.createMarshaller();
+		jaxbmarshaller.marshal(summary, System.out);
+	}
 }
