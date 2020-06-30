@@ -1,4 +1,4 @@
-/**
+/*
  *  Copyright 2012 Society for Health Information Systems Programmes, India (HISP India)
  *
  *  This file is part of DHIS2 Reporting module.
@@ -22,7 +22,7 @@ package org.openmrs.module.dhisreport.api.dhis;
 import org.openmrs.module.dhisreport.api.DHIS2ReportingException;
 
 /**
- * 
+ *
  * @author bobj
  */
 public class Dhis2Exception extends DHIS2ReportingException {

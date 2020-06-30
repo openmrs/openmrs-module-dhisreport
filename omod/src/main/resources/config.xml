@@ -19,15 +19,15 @@
 			org.openmrs.module.reporting
 		</require_module>
 	</require_modules>
-	
+
 	<aware_of_modules>
 	    <aware_of_module>org.openmrs.module.legacyui</aware_of_module>
 	</aware_of_modules>
-	
+
     <!-- Module Activator -->
     <activator>${project.parent.groupId}.${project.parent.artifactId}.DHIS2ReportingActivator</activator>
-	
-	
+
+
     <!-- Adds link to admin page -->
     <extension>
         <point>org.openmrs.admin.list</point>
@@ -48,12 +48,14 @@
 	</filter-mapping>
     <!-- Maps hibernate file's, if present -->
     <mappingFiles>
-        ReportDefinition.hbm.xml
         DataElement.hbm.xml
-        Disaggregation.hbm.xml
         DataValueTemplate.hbm.xml
+				DataSet.hbm.xml
+			  Category.hbm.xml
+			  CategoryOption.hbm.xml
+        Disaggregation.hbm.xml
     </mappingFiles>
-	
+
 	<privilege>
 		<name>View Dhisreport</name>
 		<description>Allows user to view Dhisreport</description>
@@ -62,30 +64,30 @@
 		<name>Manage Dhisreport</name>
 		<description>Allows user to manage Dhisreport</description>
 	</privilege>
-	
-	
+
+
 	<globalProperty>
 		<property>${project.parent.artifactId}.dhis2URL </property>
 		<defaultValue>http://httpbin.org/post</defaultValue>
 		<description>
-			DHIS2 URL where the report has to be sent. 
+			DHIS2 URL where the report has to be sent.
 		</description>
 	</globalProperty>
 	<globalProperty>
 		<property>${project.parent.artifactId}.dhis2UserName</property>
 		<defaultValue>dhis2 username</defaultValue>
 		<description>
-			The Username of the DHIS Server 
+			The Username of the DHIS Server
 		</description>
 	</globalProperty>
 	<globalProperty>
 		<property>${project.parent.artifactId}.dhis2Password</property>
 		<defaultValue></defaultValue>
 		<description>
-			The Password of the DHIS Server 
+			The Password of the DHIS Server
 		</description>
 	</globalProperty>
-		
+
 	<globalProperty>
 		<property>${project.parent.artifactId}.dhis2SyncDate</property>
 		<defaultValue></defaultValue>
@@ -100,8 +102,8 @@
 			URL of the page where we post reports (e.g. http://localhost:8081/openmrs18/module/dhisreport/executeReport.form )
 		</description>
 	</globalProperty>
-		
-	
+
+
     <!-- Internationalization -->
     <!-- All message codes should start with ${project.parent.artifactId}. -->
     <messages>

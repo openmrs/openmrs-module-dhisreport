@@ -23,7 +23,6 @@ import java.net.URL;
 import java.util.Calendar;
 import java.util.Collection;
 import java.util.Date;
-import java.util.Iterator;
 import java.util.List;
 
 import org.apache.commons.logging.Log;
@@ -32,12 +31,11 @@ import org.openmrs.Location;
 import org.openmrs.api.context.Context;
 import org.openmrs.module.dhisreport.api.DHIS2ReportingService;
 import org.openmrs.module.dhisreport.api.dhis.HttpDhis2Server;
-import org.openmrs.module.dhisreport.api.model.ReportDefinition;
 import org.openmrs.scheduler.tasks.AbstractTask;
 
 /**
  * Implementation of a task that writes "Hello World" to a log file.
- * 
+ *
  */
 public class PostToDhisTask extends AbstractTask {
 
@@ -50,94 +48,9 @@ public class PostToDhisTask extends AbstractTask {
 		log.debug("hello world task created at " + new Date());
 	}
 
+	@Override
 	public void execute() {
-		log.debug("executing hello world task");
 
-		// get all reports
-
-		DHIS2ReportingService service = Context
-				.getService(DHIS2ReportingService.class);
-		Collection<ReportDefinition> reportdefs = service
-				.getAllReportDefinitions();
-
-		// iterate over each report
-		String urlParameters = null;
-		// get location for the report/hospital
-		List<Location> locations = Context.getLocationService()
-				.getAllLocations();
-		String orgUnit = null;
-		Integer reportId = null;
-		String dateStr = null;
-		String freq = null;
-		String resultDestination = "post";
-
-		for (Location location : locations) {
-			// System.out.println( "location information UUID-" +
-			// location.getUuid() + ":display string-"
-			// + location.getDisplayString() + ":" );
-			if (location.getDisplayString().contains("[")) {
-				String temp = location.getDisplayString();
-				orgUnit = location.getDisplayString().substring(
-						(temp.indexOf("[") + 1), (temp.indexOf("]")));
-				// System.out.println( "Current Location ID-" + orgUnit );
-			}
-		}
-
-		Calendar cal = Calendar.getInstance();
-		int year = cal.get(Calendar.YEAR);
-		int month = cal.get(Calendar.MONTH); // Note: zero based!
-		int week = cal.get(Calendar.WEEK_OF_YEAR);
-
-		for (ReportDefinition reports : reportdefs)
-		//        while ( !reportdefs.isEmpty() )
-		{
-			//            Iterator<ReportDefinition> reportiterator = reportdefs.iterator();
-			//            ReportDefinition reports = reportiterator.next();
-			reportId = reports.getId();
-			//  System.out.println( "reportId is-" + reportId );
-			freq = reports.getPeriodType();
-
-			try {
-				if (freq.equalsIgnoreCase("Monthly")) {
-					if (month == 0)
-						month = 12;
-					dateStr = year + "-" + Integer.toString((month));
-				}
-				if (freq.equalsIgnoreCase("Weekly")) {
-					if (week > 10)
-						dateStr = year + "-" + "W"
-								+ Integer.toString((week - 1));
-					else
-						dateStr = year + "-" + "W0"
-								+ Integer.toString((week - 1));
-				}
-
-				//   System.out.println( "Date String-" + dateStr );
-
-				urlParameters = "location=" + orgUnit + "&frequency=" + freq
-						+ "&date=" + dateStr + "&resultDestination="
-						+ resultDestination + "&reportDefinition_id="
-						+ reportId.toString();
-				// location=DDU01&frequency=monthly&date=2013-Mar&resultDestination=post&reportDefinition_id=58
-
-				int reponsecode = sendPost(urlParameters);
-				//                if ( reponsecode == 400 )
-				//                {
-				//                    reportdefs.remove( reports );
-				//                }
-				Thread.sleep(5000);
-			} catch (Exception e) {
-				// TODO Auto-generated catch block
-				e.printStackTrace();
-				//   System.out.println( "Enterted Catch for report =" + reportId );
-				continue;
-			}
-
-		}//outer
-
-		// get parameter for each report
-		// send post request for each report
-		super.startExecuting();
 	}
 
 	public void shutdown() {
@@ -194,10 +107,6 @@ public class PostToDhisTask extends AbstractTask {
 		wr.close();
 
 		int responseCode = con.getResponseCode();
-		// System.out.println( "\nSending 'POST' request to URL : " + url );
-		//System.out.println( "Post parameters : " + urlParameters );
-		//System.out.println( "Response Code : " + responseCode );
-
 		BufferedReader in = new BufferedReader(new InputStreamReader(con
 				.getInputStream()));
 		String inputLine;
@@ -207,9 +116,6 @@ public class PostToDhisTask extends AbstractTask {
 			response.append(inputLine);
 		}
 		in.close();
-
-		// print result
-		//        System.out.println( response.toString() );
 		return responseCode;
 
 	}

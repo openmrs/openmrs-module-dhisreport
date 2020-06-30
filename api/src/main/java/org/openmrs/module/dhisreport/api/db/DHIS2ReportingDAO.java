@@ -19,75 +19,19 @@
  **/
 package org.openmrs.module.dhisreport.api.db;
 
-import java.util.Collection;
-
 import org.hibernate.SessionFactory;
 import org.openmrs.Location;
-import org.openmrs.module.dhisreport.api.DHIS2ReportingException;
 import org.openmrs.module.dhisreport.api.DHIS2ReportingService;
-import org.openmrs.module.dhisreport.api.model.DataElement;
-import org.openmrs.module.dhisreport.api.model.DataValueTemplate;
-import org.openmrs.module.dhisreport.api.model.Disaggregation;
 import org.openmrs.module.dhisreport.api.model.Identifiable;
-import org.openmrs.module.dhisreport.api.model.ReportDefinition;
-import org.openmrs.module.dhisreport.api.utils.Period;
 
 /**
  * Database methods for {@link DHIS2ReportingService}.
  */
 public interface DHIS2ReportingDAO {
 
-	public DataElement getDataElement(Integer id);
-
-	public DataElement getDataElementByUid(String uid);
-
-	public DataElement getDataElementByCode(String code);
-
-	public DataElement saveDataElement(DataElement de);
-
-	public void deleteDataElement(DataElement de);
-
-	public Collection<DataElement> getAllDataElements();
-
-	public Disaggregation getDisaggregation(Integer id);
-
-	public Disaggregation getDisaggregationByUid(String uid);
-
-	public Disaggregation saveDisaggregation(Disaggregation disagg);
-
-	public Collection<Disaggregation> getAllDisaggregations();
-
-	public void deleteDisaggregation(Disaggregation disagg);
-
-	public ReportDefinition getReportDefinition(Integer id);
-
-	public ReportDefinition getReportDefinitionByUid(String uid);
-
-	public ReportDefinition getReportDefinitionByCode(String code);
-
-	public ReportDefinition saveReportDefinition(ReportDefinition rd);
-
-	public Collection<ReportDefinition> getAllReportDefinitions();
-
-	public void deleteReportDefinition(ReportDefinition rd);
-
-	public String evaluateDataValueTemplate(DataValueTemplate dvt,
-			Period period, Location location, boolean priority)
-			throws DHIS2ReportingException;
-
-	public DataValueTemplate getDataValueTemplate(Integer id);
-
-	public DataValueTemplate saveDataValueTemplate(DataValueTemplate dvt);
-
 	public Location getLocationByOU_Code(String OU_Code);
 
-	public DataValueTemplate saveDataValueTemplateTest(DataValueTemplate dvt);
-
 	public SessionFactory getSessionFactory();
-
-	public Identifiable saveReportDefinitionObject(ReportDefinition rd);
-
-	public Identifiable saveDataElementObject(DataElement de);
 
 	public Identifiable saveObject(Identifiable object);
 

@@ -41,9 +41,9 @@ import org.openmrs.LocationAttribute;
 import org.openmrs.LocationAttributeType;
 import org.openmrs.api.context.Context;
 import org.openmrs.module.dhisreport.api.DHIS2ReportingService;
+import org.openmrs.module.dhisreport.api.dfx2.Metadata;
+import org.openmrs.module.dhisreport.api.dfx2.OrganizationUnit;
 import org.openmrs.module.dhisreport.api.dhis.HttpDhis2Server;
-import org.openmrs.module.dhisreport.api.dxf2.Metadata;
-import org.openmrs.module.dhisreport.api.dxf2.OrganizationUnit;
 import org.openmrs.web.WebConstants;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.ModelMap;
@@ -218,8 +218,6 @@ public class LocationMappingController {
 		try {
 			response = httpClient.execute(getRequest);
 			is = response.getEntity().getContent();
-			// String result = getStringFromInputStream( is );
-			// System.out.println( result + "\n" );
 			JAXBContext jaxbContext = JAXBContext.newInstance(Metadata.class);
 			javax.xml.bind.Unmarshaller jaxbUnmarshaller = jaxbContext
 					.createUnmarshaller();

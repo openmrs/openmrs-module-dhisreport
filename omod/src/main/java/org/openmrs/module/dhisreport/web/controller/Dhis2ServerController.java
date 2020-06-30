@@ -36,7 +36,6 @@ import org.openmrs.GlobalProperty;
 import org.openmrs.api.context.Context;
 import org.openmrs.module.dhisreport.api.DHIS2ReportingService;
 import org.openmrs.module.dhisreport.api.dhis.HttpDhis2Server;
-import org.openmrs.module.dhisreport.api.model.ReportDefinition;
 import org.openmrs.web.WebConstants;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.ModelMap;
@@ -44,16 +43,6 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.context.request.WebRequest;
-import org.openmrs.module.dhisreport.api.dxf2.Metadata;
-import org.openmrs.module.dhisreport.api.dxf2.OrganizationUnit;
-import org.openmrs.Location;
-import org.openmrs.LocationAttribute;
-import org.openmrs.LocationAttributeType;
-import org.apache.http.client.ClientProtocolException;
-import javax.xml.bind.JAXBContext;
-import java.io.InputStream;
-import java.util.ArrayList;
-import java.util.List;
 
 /**
  * The main controller.
@@ -93,19 +82,6 @@ public class Dhis2ServerController {
 
 		model.addAttribute("user", Context.getAuthenticatedUser());
 		model.addAttribute("dhis2Server", server);
-
-	}
-
-	@RequestMapping("/module/dhisreport/editReportCode")
-	public void editReportCode(
-			@RequestParam(required = false, value = "reportCode") String reportCode,
-			@RequestParam(required = false, value = "reportId") Integer reportId) {
-
-		DHIS2ReportingService service = Context
-				.getService(DHIS2ReportingService.class);
-		ReportDefinition rd = service.getReportDefinition(reportId);
-		rd.setCode(reportCode);
-		service.saveReportDefinition(rd);
 
 	}
 
@@ -156,8 +132,6 @@ public class Dhis2ServerController {
 		DHIS2ReportingService service = Context
 				.getService(DHIS2ReportingService.class);
 		HttpDhis2Server server = service.getDhis2Server();
-
-		// System.out.println( "parameters received on post request" + urlString + username + password );
 
 		if (server == null) {
 			server = new HttpDhis2Server();
@@ -229,8 +203,6 @@ public class Dhis2ServerController {
 
 			HttpResponse response = httpclient.execute(targetHost, httpGet,
 					localcontext);
-
-			//System.out.println( "Http Response :" + response + ":" + response.getStatusLine().getStatusCode() );
 
 			if (response.getStatusLine().getStatusCode() == 200) {
 				log.debug("Dhis2 server configured: " + username + ":xxxxxx  "

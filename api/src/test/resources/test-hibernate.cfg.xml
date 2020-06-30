@@ -2,12 +2,8 @@
 <!DOCTYPE hibernate-configuration PUBLIC
     "-//Hibernate/Hibernate Configuration DTD 3.0//EN"
    	"http://hibernate.sourceforge.net/hibernate-configuration-3.0.dtd">
- 
+
 <hibernate-configuration>
     <session-factory>
-        <mapping resource="ReportDefinition.hbm.xml" />
-        <mapping resource="DataElement.hbm.xml" />
-        <mapping resource="Disaggregation.hbm.xml" />
-        <mapping resource="DataValueTemplate.hbm.xml" />
     </session-factory>
 </hibernate-configuration>
