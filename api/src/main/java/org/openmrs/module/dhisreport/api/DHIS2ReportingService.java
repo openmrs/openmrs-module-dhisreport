@@ -19,20 +19,10 @@
  **/
 package org.openmrs.module.dhisreport.api;
 
-import java.io.InputStream;
-import java.io.OutputStream;
-import java.util.Collection;
-
-import org.openmrs.module.dhisreport.api.adx.AdxType;
-import org.openmrs.module.dhisreport.api.db.DHIS2ReportingDAO;
-import org.openmrs.module.dhisreport.api.dxf2.DataValueSet;
-import org.hisp.dhis.dxf2.importsummary.ImportSummary;
 import org.openmrs.Location;
 import org.openmrs.api.OpenmrsService;
+import org.openmrs.module.dhisreport.api.db.DHIS2ReportingDAO;
 import org.openmrs.module.dhisreport.api.dhis.HttpDhis2Server;
-import org.openmrs.module.dhisreport.api.importsummary.AdxImportSummary;
-import org.openmrs.module.dhisreport.api.model.*;
-import org.openmrs.module.dhisreport.api.utils.Period;
 import org.springframework.transaction.annotation.Transactional;
 
 /**
@@ -65,195 +55,10 @@ public interface DHIS2ReportingService extends OpenmrsService {
 	public HttpDhis2Server getDhis2Server();
 
 	/**
-	 * @return @throws DHIS2ReportingException
-	 */
-	public ReportDefinition fetchReportTemplates()
-			throws DHIS2ReportingException;
-
-	/**
-	 * @param dvset
-	 * @return
-	 * @throws DHIS2ReportingException
-	 */
-	public ImportSummary postDataValueSet(DataValueSet dvset)
-			throws DHIS2ReportingException;
-
-	public AdxImportSummary postAdxReport(AdxType adxReport)
-			throws DHIS2ReportingException;
-
-	// -----------------------------------------------------------------------
-	// Data access methods
-	// -----------------------------------------------------------------------
-	/**
-	 * @param id
-	 * @return
-	 */
-	@Transactional(readOnly = true)
-	public DataElement getDataElement(Integer id);
-
-	/**
-	 * @param uid
-	 * @return
-	 */
-	@Transactional(readOnly = true)
-	public DataElement getDataElementByUid(String uid);
-
-	/**
-	 * @param code
-	 * @return
-	 */
-	@Transactional(readOnly = true)
-	public DataElement getDataElementByCode(String code);
-
-	/**
-	 * @param de
-	 * @return
-	 */
-	@Transactional
-	public DataElement saveDataElement(DataElement de);
-
-	/**
-	 * @param de
-	 */
-	@Transactional
-	public void purgeDataElement(DataElement de);
-
-	/**
-	 * @return
-	 */
-	@Transactional(readOnly = true)
-	public Collection<DataElement> getAllDataElements();
-
-	/**
-	 * @param id
-	 * @return
-	 */
-	@Transactional(readOnly = true)
-	public Disaggregation getDisaggregation(Integer id);
-
-	/**
-	 * @param disagg
-	 * @return
-	 */
-	@Transactional
-	public Disaggregation saveDisaggregation(Disaggregation disagg);
-
-	/**
-	 * @param disagg
-	 */
-	@Transactional
-	public void purgeDisaggregation(Disaggregation disagg);
-
-	/**
-	 * @return
-	 */
-	@Transactional(readOnly = true)
-	public Collection<Disaggregation> getAllDisaggregations();
-
-	/**
-	 * @param id
-	 * @return
-	 */
-	@Transactional(readOnly = true)
-	public ReportDefinition getReportDefinition(Integer id);
-
-	@Transactional(readOnly = true)
-	public ReportDefinition getReportDefinitionByUId(String uid);
-
-	@Transactional(readOnly = true)
-	public ReportDefinition getReportDefinitionByCode(String code);
-
-	/**
-	 * @param reportDefinition
-	 * @return
-	 */
-	@Transactional
-	public ReportDefinition saveReportDefinition(
-			ReportDefinition reportDefinition);
-
-	/**
-	 * @param rd
-	 */
-	@Transactional
-	public void purgeReportDefinition(ReportDefinition rd);
-
-	/**
-	 * @return
-	 */
-	@Transactional(readOnly = true)
-	public Collection<ReportDefinition> getAllReportDefinitions();
-
-	// -----------------------------------------------------------------------
-	// ReportTemplates (DHIS2 Data Structure Definition)
-	// -----------------------------------------------------------------------
-	/**
-	 * @param rt
-	 */
-	@Transactional
-	public void saveReportTemplates(ReportTemplates rt);
-
-	/**
-	 * @param is
-	 * @throws Exception
-	 */
-	public void unMarshallandSaveReportTemplates(InputStream is)
-			throws Exception;
-
-	@Transactional
-	public ReportTemplates getReportTemplates();
-
-	/**
-	 * @param is
-	 * @throws Exception
-	 */
-	public void marshallReportTemplates(OutputStream os, ReportTemplates rt)
-			throws Exception;
-
-	// -----------------------------------------------------------------------
-	// ReportEvaluation
-	// -----------------------------------------------------------------------
-	/**
-	 * @param dv
-	 * @param period
-	 * @param location
-	 * @return
-	 */
-	String evaluateDataValueTemplate(DataValueTemplate dv, Period period,
-			Location location) throws DHIS2ReportingException;
-
-	/**
-	 * @param reportDefinition
-	 * @param period
-	 * @param location
-	 * @return
-	 */
-	DataValueSet evaluateReportDefinition(ReportDefinition reportDefinition,
-			Period period, Location location, boolean priority);
-
-	DataValueSet generateReportingReportDefinition(
-			ReportDefinition reportDefinition, Period period, Location location)
-			throws Exception;
-
-	/**
-	 * @param id
-	 * @return
-	 */
-	@Transactional
-	public DataValueTemplate getDataValueTemplate(Integer id);
-
-	/**
-	 * @param dvt
-	 */
-	@Transactional
-	public void saveDataValueTemplate(DataValueTemplate dvt);
-
-	/**
 	 * @param OU_Code
 	 * @return
 	 */
 	public Location getLocationByOU_Code(String OU_Code);
-
-	public void saveDataValueTemplateTest(DataValueTemplate dvt);
 
 	public Location getLocationByOrgUnitCode(String orgUnitCode);
 

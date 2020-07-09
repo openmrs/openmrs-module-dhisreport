@@ -1,7 +1,6 @@
-package org.openmrs.module.dhisreport.api.dxf2;
+package org.openmrs.module.dhisreport.api.dfx2;
 
 import java.util.List;
-
 import javax.xml.bind.annotation.XmlAccessType;
 import javax.xml.bind.annotation.XmlAccessorType;
 import javax.xml.bind.annotation.XmlElement;
