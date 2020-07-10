@@ -71,6 +71,7 @@
 
         <calculationVersion>1.1</calculationVersion>
         <serialization.xstreamVersion>0.2.12</serialization.xstreamVersion>
+        <javaCompilerVersion>1.8</javaCompilerVersion>
     </properties>
 
     <dependencyManagement>
@@ -211,6 +212,16 @@
                         <tagNameFormat>@{project.version}</tagNameFormat>
                     </configuration>
                 </plugin>
+                <plugin>
+                    <groupId>org.apache.maven.plugins</groupId>
+                    <artifactId>maven-compiler-plugin</artifactId>
+                    <version>3.8.1</version>
+                    <configuration>
+                        <target>${javaCompilerVersion}</target>
+                        <source>${javaCompilerVersion}</source>
+                        <encoding>UTF-8</encoding>
+                    </configuration>
+                </plugin>
             </plugins>
         </pluginManagement>
     </build>
@@ -233,5 +244,4 @@
             </snapshots>
         </pluginRepository>
     </pluginRepositories>
-
 </project>
