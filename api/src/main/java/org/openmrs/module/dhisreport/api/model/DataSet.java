@@ -13,15 +13,34 @@ import java.io.Serializable;
 import java.util.HashSet;
 import java.util.Objects;
 import java.util.Set;
+import javax.xml.bind.annotation.XmlAccessType;
+import javax.xml.bind.annotation.XmlAccessorType;
+import javax.xml.bind.annotation.XmlAttribute;
+import javax.xml.bind.annotation.XmlRootElement;
+import javax.xml.bind.annotation.XmlTransient;
 
+@XmlAccessorType(XmlAccessType.FIELD)
+@XmlRootElement(name = "dataSet")
 public class DataSet implements Serializable, Identifiable {
 
+  @XmlTransient
   private Integer id;
+
+  @XmlAttribute(name = "id")
   private String uid;
+
+  @XmlAttribute
   private String code;
+
+  @XmlAttribute
   private String name;
+
   private String periodType;
+
+  @XmlTransient
   private String reportUuid;
+
+  @XmlTransient
   private Set<DataElement> dataElements = new HashSet<DataElement>(0);
 
   @Override

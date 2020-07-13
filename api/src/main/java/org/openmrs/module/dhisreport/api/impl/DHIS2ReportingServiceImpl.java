@@ -19,8 +19,12 @@
  **/
 package org.openmrs.module.dhisreport.api.impl;
 
+import java.io.InputStream;
 import java.util.ArrayList;
 import java.util.List;
+import javax.xml.bind.JAXBContext;
+import javax.xml.bind.JAXBException;
+import javax.xml.bind.Unmarshaller;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.openmrs.Location;
@@ -30,6 +34,8 @@ import org.openmrs.api.impl.BaseOpenmrsService;
 import org.openmrs.module.dhisreport.api.DHIS2ReportingService;
 import org.openmrs.module.dhisreport.api.db.DHIS2ReportingDAO;
 import org.openmrs.module.dhisreport.api.dhis.HttpDhis2Server;
+import org.openmrs.module.dhisreport.api.model.DataSet;
+import org.openmrs.module.dhisreport.api.model.DataSetMetadata;
 
 /**
  * It is a default implementation of {@link DHIS2ReportingService}.
@@ -88,5 +94,18 @@ public class DHIS2ReportingServiceImpl extends BaseOpenmrsService
 			}
 		}
 		return null;
+	}
+
+	@Override
+	public void importDataSet(InputStream is) throws JAXBException {
+		// Unmarshal the XML file
+		JAXBContext jaxbContext = JAXBContext
+				.newInstance(DataSetMetadata.class);
+		Unmarshaller jaxbUnmarshaller = jaxbContext.createUnmarshaller();
+		DataSetMetadata dataSetMetadata = (DataSetMetadata) jaxbUnmarshaller.unmarshal(is);
+		// Save the Datasets in the DB
+		for (DataSet dataSet: dataSetMetadata.getDataSets()) {
+			dao.saveObject(dataSet);
+		}
 	}
 }

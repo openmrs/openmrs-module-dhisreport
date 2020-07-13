@@ -67,13 +67,13 @@ public class HibernateDHIS2ReportingDAO implements DHIS2ReportingDAO {
 	@Transactional
 	public Identifiable saveObject(Identifiable object) {
 		Session session = getCurrentSession();
-		// force merge if uid already exists
+		// Check if the object is exists in the DB
 		Identifiable existingObject = getObjectByUid(object.getUid(), object
 				.getClass());
 		if (existingObject != null) {
+			// Remove existing object from the session
 			session.evict(existingObject);
 			object.setId(existingObject.getId());
-			session.load(object, object.getId());
 		}
 		getCurrentSession().saveOrUpdate(object);
 		return object;

@@ -19,6 +19,8 @@
  **/
 package org.openmrs.module.dhisreport.api;
 
+import java.io.InputStream;
+import javax.xml.bind.JAXBException;
 import org.openmrs.Location;
 import org.openmrs.api.OpenmrsService;
 import org.openmrs.module.dhisreport.api.db.DHIS2ReportingDAO;
@@ -63,5 +65,7 @@ public interface DHIS2ReportingService extends OpenmrsService {
 	public Location getLocationByOrgUnitCode(String orgUnitCode);
 
 	public DHIS2ReportingDAO getDao();
+
+	public void importDataSet(InputStream is) throws JAXBException;
 
 }
