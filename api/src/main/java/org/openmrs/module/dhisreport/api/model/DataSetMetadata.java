@@ -7,35 +7,23 @@
  * Copyright (C) OpenMRS Inc. OpenMRS is a registered trademark and the OpenMRS
  * graphic logo is a trademark of OpenMRS Inc.
  */
-package org.openmrs.module.dhisreport.api.model.dxf2;
+package org.openmrs.module.dhisreport.api.model;
 
 import java.io.Serializable;
 import java.util.Set;
 import javax.xml.bind.annotation.XmlAccessType;
 import javax.xml.bind.annotation.XmlAccessorType;
-import javax.xml.bind.annotation.XmlAttribute;
 import javax.xml.bind.annotation.XmlElement;
 import javax.xml.bind.annotation.XmlElementWrapper;
 import javax.xml.bind.annotation.XmlRootElement;
-import org.openmrs.module.dhisreport.api.model.DataSet;
 
 @XmlAccessorType(XmlAccessType.FIELD)
 @XmlRootElement(name = "metadata")
-public class Metadata implements Serializable {
-	@XmlAttribute(name = "date")
-	String date;
+public class DataSetMetadata implements Serializable {
 
 	@XmlElementWrapper(name = "dataSets", required = true)
 	@XmlElement(name = "dataSet")
-	protected Set<DataSet> dataSets;
-
-	public String getDate() {
-		return date;
-	}
-
-	public void setDate(String date) {
-		this.date = date;
-	}
+	private Set<DataSet> dataSets;
 
 	public Set<DataSet> getDataSets() {
 		return dataSets;
