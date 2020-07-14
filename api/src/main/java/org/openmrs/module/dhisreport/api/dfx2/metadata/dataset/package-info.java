@@ -8,7 +8,7 @@
  * graphic logo is a trademark of OpenMRS Inc.
  */
 @XmlSchema(namespace = "http://dhis2.org/schema/dxf/2.0", xmlns = {@XmlNs(namespaceURI = "http://dhis2.org/schema/dxf/2.0", prefix = "")}, elementFormDefault = XmlNsForm.QUALIFIED)
-package org.openmrs.module.dhisreport.api.model;
+package org.openmrs.module.dhisreport.api.dfx2.metadata.dataset;
 
 import javax.xml.bind.annotation.XmlNs;
 import javax.xml.bind.annotation.XmlNsForm;

@@ -66,6 +66,11 @@ public interface DHIS2ReportingService extends OpenmrsService {
 
 	public DHIS2ReportingDAO getDao();
 
-	public void importDataSet(InputStream is) throws JAXBException;
+	/**
+	 * Imports a Dataset along with metadata
+	 * @param inputStream the input stream of the import file
+	 * @throws JAXBException if the input stream cannot unmarshal
+	 */
+	public void importDataSet(InputStream inputStream) throws JAXBException;
 
 }

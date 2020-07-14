@@ -35,7 +35,8 @@ import org.openmrs.module.dhisreport.api.DHIS2ReportingService;
 import org.openmrs.module.dhisreport.api.db.DHIS2ReportingDAO;
 import org.openmrs.module.dhisreport.api.dhis.HttpDhis2Server;
 import org.openmrs.module.dhisreport.api.model.DataSet;
-import org.openmrs.module.dhisreport.api.model.DataSetMetadata;
+import org.openmrs.module.dhisreport.api.dfx2.metadata.dataset.Metadata;
+import org.openmrs.module.dhisreport.api.dfx2.metadata.dataset.Metadata.DataSets;
 
 /**
  * It is a default implementation of {@link DHIS2ReportingService}.
@@ -97,15 +98,25 @@ public class DHIS2ReportingServiceImpl extends BaseOpenmrsService
 	}
 
 	@Override
-	public void importDataSet(InputStream is) throws JAXBException {
+	public void importDataSet(InputStream inputStream) throws JAXBException {
 		// Unmarshal the XML file
 		JAXBContext jaxbContext = JAXBContext
-				.newInstance(DataSetMetadata.class);
+				.newInstance(Metadata.class);
 		Unmarshaller jaxbUnmarshaller = jaxbContext.createUnmarshaller();
-		DataSetMetadata dataSetMetadata = (DataSetMetadata) jaxbUnmarshaller.unmarshal(is);
-		// Save the Datasets in the DB
-		for (DataSet dataSet: dataSetMetadata.getDataSets()) {
-			dao.saveObject(dataSet);
-		}
+		Metadata metadata = (Metadata) jaxbUnmarshaller.unmarshal(inputStream);
+		// Extract dataset from metadata
+		DataSet dataSet = extractDataset(metadata);
+		// Save the dataset in the DB
+		dao.saveObject(dataSet);
+	}
+
+	private static DataSet extractDataset(Metadata metadata) {
+		DataSets.DataSet ds = metadata.getDataSets().getDataSet();
+		DataSet dataSet = new DataSet();
+		dataSet.setUid(ds.getId());
+		dataSet.setCode(ds.getCode());
+		dataSet.setName(ds.getName());
+		dataSet.setPeriodType(ds.getPeriodType());
+		return dataSet;
 	}
 }
