@@ -16,12 +16,10 @@ import java.util.Set;
 
 public class DataElement implements Serializable, Identifiable {
 
-  protected Integer id;
-  protected String code;
-  protected String uid;
-  protected String name;
-
-  protected Set<DataSet> dataSets = new HashSet<DataSet>(0);
+  private Integer id;
+  private String code;
+  private String uid;
+  private String name;
 
   @Override
   public String getUid() {
@@ -57,14 +55,6 @@ public class DataElement implements Serializable, Identifiable {
 
   public void setName(String name) {
     this.name = name;
-  }
-
-  public Set<DataSet> getDataSets() {
-    return dataSets;
-  }
-
-  public void setDataSets(Set<DataSet> dataSets) {
-    this.dataSets = dataSets;
   }
 
   @Override
