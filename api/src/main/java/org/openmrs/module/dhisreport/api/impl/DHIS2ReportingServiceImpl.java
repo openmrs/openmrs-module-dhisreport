@@ -21,7 +21,10 @@ package org.openmrs.module.dhisreport.api.impl;
 
 import java.io.InputStream;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
+import java.util.Set;
 import javax.xml.bind.JAXBContext;
 import javax.xml.bind.JAXBException;
 import javax.xml.bind.Unmarshaller;
@@ -34,9 +37,13 @@ import org.openmrs.api.impl.BaseOpenmrsService;
 import org.openmrs.module.dhisreport.api.DHIS2ReportingService;
 import org.openmrs.module.dhisreport.api.db.DHIS2ReportingDAO;
 import org.openmrs.module.dhisreport.api.dhis.HttpDhis2Server;
+import org.openmrs.module.dhisreport.api.model.Category;
+import org.openmrs.module.dhisreport.api.model.CategoryOption;
+import org.openmrs.module.dhisreport.api.model.DataElement;
 import org.openmrs.module.dhisreport.api.model.DataSet;
 import org.openmrs.module.dhisreport.api.dfx2.metadata.dataset.Metadata;
 import org.openmrs.module.dhisreport.api.dfx2.metadata.dataset.Metadata.DataSets;
+import org.openmrs.module.dhisreport.api.model.Disaggregation;
 
 /**
  * It is a default implementation of {@link DHIS2ReportingService}.
@@ -104,19 +111,113 @@ public class DHIS2ReportingServiceImpl extends BaseOpenmrsService
 				.newInstance(Metadata.class);
 		Unmarshaller jaxbUnmarshaller = jaxbContext.createUnmarshaller();
 		Metadata metadata = (Metadata) jaxbUnmarshaller.unmarshal(inputStream);
-		// Extract dataset from metadata
-		DataSet dataSet = extractDataset(metadata);
-		// Save the dataset in the DB
-		dao.saveObject(dataSet);
+		// Extract Category Options, Categories, Disaggregations, Data Elements and Data Sets
+		Map<String, CategoryOption> categoryOptionMap = extractCategoryOptions(metadata);
+		Map<String, Category> categoryMap = extractCategories(metadata);
+		Map<String, DataElement> dataElementMap = extractDataElements(metadata);
+		DataSet dataSet = extractDataset(metadata, dataElementMap);
+		extractDisgarigations(metadata, categoryMap, categoryOptionMap);
 	}
 
-	private static DataSet extractDataset(Metadata metadata) {
-		DataSets.DataSet ds = metadata.getDataSets().getDataSet();
+	/**
+	 * Extract and save Data Elements from the metadata
+	 *
+	 * @param metadata the Metadata object
+	 * @return a Map that contains the Data Element objects paired with uuid as the key
+	 */
+	private Map<String, DataElement> extractDataElements(Metadata metadata) {
+		Map<String, DataElement> dataElementMap = new HashMap<>();
+		for (Metadata.DataElements.DataElement de : metadata.getDataElements().getDataElement()) {
+			DataElement dataElement = new DataElement();
+			dataElement.setUid(de.getId());
+			dataElement.setCode(de.getCode());
+			dataElement.setName(de.getName());
+			dao.saveObject(dataElement);
+			dataElementMap.put(de.getId(), dataElement);
+		}
+		return dataElementMap;
+	}
+
+	/**
+	 * Extract and save Categories from the metadata
+	 *
+	 * @param metadata the Metadata object
+	 * @return a Map that contains the Category objects paired with uuid as the key
+	 */
+	private Map<String, Category> extractCategories(Metadata metadata) {
+		Map<String, Category> categoryMap = new HashMap<>();
+		for (Metadata.Categories.Category categoryMeta : metadata.getCategories().getCategory()) {
+			Category category = new Category();
+			category.setUid(categoryMeta.getId());
+			category.setCode(categoryMeta.getCode());
+			category.setName(categoryMeta.getName());
+			dao.saveObject(category);
+			categoryMap.put(categoryMeta.getId(), category);
+		}
+		return categoryMap;
+	}
+
+	/**
+	 * Extract and save Category Options from the metadata
+	 *
+	 * @param metadata the Metadata object
+	 * @return a Map that contains the Category Option objects paired with uuid as the key
+	 */
+	private Map<String, CategoryOption> extractCategoryOptions(Metadata metadata) {
+		Map<String, CategoryOption> categoryOptionMap = new HashMap<>();
+		for (Metadata.CategoryOptions.CategoryOption categoryOptionMeta :
+				metadata.getCategoryOptions().getCategoryOption()) {
+			CategoryOption categoryOption = new CategoryOption();
+			categoryOption.setUid(categoryOptionMeta.getId());
+			categoryOption.setCode(categoryOptionMeta.getCode());
+			categoryOption.setName(categoryOptionMeta.getName());
+			dao.saveObject(categoryOption);
+			categoryOptionMap.put(categoryOptionMeta.getId(), categoryOption);
+		}
+		return categoryOptionMap;
+	}
+
+	/**
+	 * Extract and save a Dataset from the metadata
+	 *
+	 * @param metadata the Metadata object
+	 * @return a Map that contains the Category objects paired with uuid as the key
+	 */
+	private DataSet extractDataset(Metadata metadata,
+			Map<String, DataElement> dataElementMap) {
+		DataSets.DataSet dataSetMeta = metadata.getDataSets().getDataSet();
 		DataSet dataSet = new DataSet();
-		dataSet.setUid(ds.getId());
-		dataSet.setCode(ds.getCode());
-		dataSet.setName(ds.getName());
-		dataSet.setPeriodType(ds.getPeriodType());
+		dataSet.setUid(dataSetMeta.getId());
+		dataSet.setCode(dataSetMeta.getCode());
+		dataSet.setName(dataSetMeta.getName());
+		dataSet.setPeriodType(dataSetMeta.getPeriodType());
+		Set<DataElement> dataElements = dataSet.getDataElements();
+		// Add the saved data elements to the Dataset
+		for (DataSets.DataSet.DataSetElements.DataSetElement dataElementMeta : dataSetMeta
+				.getDataSetElements().getDataSetElement()) {
+			dataElements.add(dataElementMap.get(dataElementMeta.getDataElement().getId()));
+		}
+		dao.saveObject(dataSet);
 		return dataSet;
+	}
+
+	/**
+	 * Extract and save Disaggregations from the metadata
+	 *
+	 * @param metadata the Metadata object
+	 */
+	private void extractDisgarigations(Metadata metadata, Map<String, Category> categoryMap,
+			Map<String, CategoryOption> categoryOptionMap) {
+		for (Metadata.Categories.Category categoryMeta : metadata.getCategories().getCategory()) {
+			Category category = categoryMap.get(categoryMeta.getId());
+			for (Metadata.Categories.Category.CategoryOptions.CategoryOption categoryOptionMeta : categoryMeta
+					.getCategoryOptions().getCategoryOption()) {
+				CategoryOption categoryOption = categoryOptionMap.get(categoryOptionMeta.getId());
+				Disaggregation disaggregation = new Disaggregation();
+				disaggregation.setCategory(category);
+				disaggregation.setCategoryOption(categoryOption);
+				dao.saveDisaggregation(disaggregation);
+			}
+		}
 	}
 }

@@ -22,7 +22,7 @@ public class DataSet implements Serializable, Identifiable {
   private String name;
   private String periodType;
   private String reportUuid;
-  private Set<DataElement> dataElements = new HashSet<DataElement>(0);
+  private Set<DataElement> dataElements = new HashSet<DataElement>();
 
   @Override
   public Integer getId() {
