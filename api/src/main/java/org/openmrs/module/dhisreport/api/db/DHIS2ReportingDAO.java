@@ -19,11 +19,14 @@
  **/
 package org.openmrs.module.dhisreport.api.db;
 
+import java.util.List;
 import org.hibernate.SessionFactory;
 import org.openmrs.Location;
 import org.openmrs.module.dhisreport.api.DHIS2ReportingService;
 import org.openmrs.module.dhisreport.api.model.Category;
 import org.openmrs.module.dhisreport.api.model.CategoryOption;
+import org.openmrs.module.dhisreport.api.model.DataSet;
+import org.openmrs.module.dhisreport.api.model.DataValueTemplate;
 import org.openmrs.module.dhisreport.api.model.Disaggregation;
 import org.openmrs.module.dhisreport.api.model.Identifiable;
 
@@ -58,4 +61,10 @@ public interface DHIS2ReportingDAO {
 	public Disaggregation getDisaggregationByCategoryAndCategoryOption(
 			Category category, CategoryOption categoryOption);
 
+
+	public List<Disaggregation> getDisaggregationsByCategory(Category category);
+
+	public DataValueTemplate saveDataValueTemplate(DataValueTemplate dataValueTemplate);
+
+	public void removeDataValueTemplatesByDataSet(DataSet dataSet);
 }

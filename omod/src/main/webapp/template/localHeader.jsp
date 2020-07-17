@@ -16,7 +16,7 @@
     <li
             <c:if test='<%= request.getRequestURI().contains("/loadReportDefinitions") %>'>class="active"</c:if>>
         <a
-                href="${pageContext.request.contextPath}/module/dhisreport/loadReportDefinitions.form"><spring:message
+                href="${pageContext.request.contextPath}/module/dhisreport/metadata.form"><spring:message
                 code="dhisreport.importExport" /></a>
 
 	<li

@@ -159,7 +159,6 @@
 
 			CREATE TABLE IF NOT EXISTS `dhisreport_datavalue_template` (
 			`id` INT NOT NULL AUTO_INCREMENT,
-			`name` VARCHAR(255) NOT NULL,
 			`dataset_id` INT NOT NULL,
 			`dataelement_id` INT NOT NULL,
 			`reportDefinitionUuid` VARCHAR(36) NULL,

@@ -20,9 +20,11 @@
 package org.openmrs.module.dhisreport.api.db.hibernate;
 
 import java.lang.reflect.Method;
+import java.util.List;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.hibernate.Criteria;
+import org.hibernate.Query;
 import org.hibernate.Session;
 import org.hibernate.SessionFactory;
 import org.hibernate.criterion.Restrictions;
@@ -30,6 +32,8 @@ import org.openmrs.Location;
 import org.openmrs.module.dhisreport.api.db.DHIS2ReportingDAO;
 import org.openmrs.module.dhisreport.api.model.Category;
 import org.openmrs.module.dhisreport.api.model.CategoryOption;
+import org.openmrs.module.dhisreport.api.model.DataSet;
+import org.openmrs.module.dhisreport.api.model.DataValueTemplate;
 import org.openmrs.module.dhisreport.api.model.Disaggregation;
 import org.openmrs.module.dhisreport.api.model.Identifiable;
 import org.springframework.transaction.annotation.Transactional;
@@ -113,6 +117,33 @@ public class HibernateDHIS2ReportingDAO implements DHIS2ReportingDAO {
 		Criteria criteria = getCurrentSession().createCriteria(Location.class);
 		criteria.add(Restrictions.like("name", OU_Code));
 		return (Location) criteria.uniqueResult();
+	}
+
+	@Override
+	@Transactional
+	public List<Disaggregation> getDisaggregationsByCategory(Category category) {
+		Session session = this.getCurrentSession();
+		Criteria criteria = session.createCriteria(Disaggregation.class);
+		criteria.add(Restrictions.eq("category", category));
+		return criteria.list();
+	}
+
+	@Override
+	@Transactional
+	public DataValueTemplate saveDataValueTemplate(DataValueTemplate dataValueTemplate) {
+		Session session = this.getCurrentSession();
+		session.save(dataValueTemplate);
+		return dataValueTemplate;
+	}
+
+	@Override
+	@Transactional
+	public void removeDataValueTemplatesByDataSet(
+			DataSet dataSet){
+		Session session = getCurrentSession();
+		Query query = session.createQuery("delete DataValueTemplate where dataset_id= :DataSetId");
+		query.setParameter("DataSetId", dataSet.getId());
+		query.executeUpdate();
 	}
 
 	/**

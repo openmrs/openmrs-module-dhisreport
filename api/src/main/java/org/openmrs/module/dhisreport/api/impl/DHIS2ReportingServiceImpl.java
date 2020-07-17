@@ -22,9 +22,12 @@ package org.openmrs.module.dhisreport.api.impl;
 import java.io.InputStream;
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
+import java.util.Optional;
 import java.util.Set;
+import java.util.stream.Collectors;
 import javax.xml.bind.JAXBContext;
 import javax.xml.bind.JAXBException;
 import javax.xml.bind.Unmarshaller;
@@ -43,6 +46,7 @@ import org.openmrs.module.dhisreport.api.model.DataElement;
 import org.openmrs.module.dhisreport.api.model.DataSet;
 import org.openmrs.module.dhisreport.api.dfx2.metadata.dataset.Metadata;
 import org.openmrs.module.dhisreport.api.dfx2.metadata.dataset.Metadata.DataSets;
+import org.openmrs.module.dhisreport.api.model.DataValueTemplate;
 import org.openmrs.module.dhisreport.api.model.Disaggregation;
 
 /**
@@ -117,6 +121,8 @@ public class DHIS2ReportingServiceImpl extends BaseOpenmrsService
 		Map<String, DataElement> dataElementMap = extractDataElements(metadata);
 		DataSet dataSet = extractDataset(metadata, dataElementMap);
 		extractDisgarigations(metadata, categoryMap, categoryOptionMap);
+		//
+		generateDataValueTemplates(metadata, dataSet, categoryMap);
 	}
 
 	/**
@@ -181,7 +187,7 @@ public class DHIS2ReportingServiceImpl extends BaseOpenmrsService
 	 * Extract and save a Dataset from the metadata
 	 *
 	 * @param metadata the Metadata object
-	 * @return a Map that contains the Category objects paired with uuid as the key
+	 * @return the extracted Data Set
 	 */
 	private DataSet extractDataset(Metadata metadata,
 			Map<String, DataElement> dataElementMap) {
@@ -205,6 +211,7 @@ public class DHIS2ReportingServiceImpl extends BaseOpenmrsService
 	 * Extract and save Disaggregations from the metadata
 	 *
 	 * @param metadata the Metadata object
+	 * @param categoryMap a map which contains Categories paired with UUIDs
 	 */
 	private void extractDisgarigations(Metadata metadata, Map<String, Category> categoryMap,
 			Map<String, CategoryOption> categoryOptionMap) {
@@ -219,5 +226,93 @@ public class DHIS2ReportingServiceImpl extends BaseOpenmrsService
 				dao.saveDisaggregation(disaggregation);
 			}
 		}
+	}
+
+	/**
+	 * Generates Data Value Templates from the metadata. This method removes the previously generated
+	 * Data value Templates if the DataSet has been imported before.
+	 *
+	 * @param metadata    the Metadata Object
+	 * @param dataSet     extracted DataSet
+	 * @param categoryMap a map which contains Categories paired with UUIDs
+	 */
+	private void generateDataValueTemplates(Metadata metadata, DataSet dataSet,
+			Map<String, Category> categoryMap) {
+		// Remove previously generated Data Value Templates for the given DataSet
+		dao.removeDataValueTemplatesByDataSet(dataSet);
+		for (DataElement dataElement : dataSet.getDataElements()) {
+			// Get the corresponding DataElement meta object from the metadata
+			Optional<Metadata.DataElements.DataElement> dataElementMeta =
+					metadata.getDataElements().getDataElement()
+							.stream()
+							.filter(dataElementMetaObject -> dataElementMetaObject.getId()
+									.equals(dataElement.getUid()))
+							.findFirst();
+			// Get the corresponding Category Combo from the metadata using the DataElement meta object
+			Optional<Metadata.CategoryCombos.CategoryCombo> categoryComboMeta = metadata
+					.getCategoryCombos().getCategoryCombo()
+					.stream()
+					.filter(categoryComboMetaObject -> categoryComboMetaObject.getId()
+							.equals(dataElementMeta.get().getCategoryCombo().getId()))
+					.findFirst();
+			// Create a list of Categories of the DataElement using the Category Combo
+			List<Category> categories = categoryComboMeta.get().getCategories().getCategory()
+					.stream()
+					.map(category -> categoryMap.get(category.getId()))
+					.collect(Collectors.toList());
+			// Get Disaggregations of each Category and group them by Category
+			List<List<Disaggregation>> groupedDisaggregationList = categories.stream()
+					.map(category -> dao.getDisaggregationsByCategory(category))
+					.collect(Collectors.toList());
+			// Generate disaggregation combinations for the current DataElement
+			List<List<Disaggregation>> combinations = getDisaggregationCombinations(
+					groupedDisaggregationList, 0);
+			// Save Data Value Templates for each generated combinations
+			for (List<Disaggregation> combination : combinations
+			) {
+				DataValueTemplate dataValueTemplate = new DataValueTemplate();
+				dataValueTemplate.setDataSet(dataSet);
+				dataValueTemplate.setDataElement(dataElement);
+				dataValueTemplate.setDisaggregations(new HashSet<>(combination));
+				dao.saveDataValueTemplate(dataValueTemplate);
+			}
+		}
+	}
+
+	/**
+	 * Generates Disaggregation combinations recursively.
+	 *
+	 * @param groupedDisaggregationList a list of lists of Disaggregations grouped by Categories
+	 * @param position                  the current position of the groupedDisaggregationList
+	 * @return a list that contains Disaggregation combinations
+	 */
+	private List<List<Disaggregation>> getDisaggregationCombinations(
+			List<List<Disaggregation>> groupedDisaggregationList, int position) {
+		List<List<Disaggregation>> combinations = new ArrayList<>();
+		// Get current group from the groupedDisaggregationList
+		List<Disaggregation> currentDisaggregationGroup = groupedDisaggregationList.get(position);
+		// Iterate each disaggregation and add combinations to the combinations list
+		for (Disaggregation disaggregation :
+				currentDisaggregationGroup) {
+			if (position < groupedDisaggregationList.size() - 1) {
+				// Recall the method to get combinations from the bottom level
+				List<List<Disaggregation>> depthCombinations = getDisaggregationCombinations(
+						groupedDisaggregationList,
+						position + 1);
+				// Append the current Disaggregation to each retrieved combination
+				for (List<Disaggregation> combination : depthCombinations
+				) {
+					combination.add(disaggregation);
+					combinations.add(combination);
+				}
+			} else {
+				// Create a new combination and add it to the combinations list if the recursion reached
+				// to the bottom level
+				List<Disaggregation> tempCombination = new ArrayList<>();
+				tempCombination.add(disaggregation);
+				combinations.add(tempCombination);
+			}
+		}
+		return combinations;
 	}
 }

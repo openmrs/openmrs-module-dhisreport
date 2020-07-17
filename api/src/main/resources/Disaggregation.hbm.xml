@@ -6,7 +6,7 @@
             <generator class="native"/>
         </id>
         <discriminator column="id" insert="false"/>
-        <many-to-one name="category" column="category_id" not-null="true"/>
-        <many-to-one name="categoryOption" column="category_option_id" not-null="true"/>
+        <many-to-one name="category" column="category_id" not-null="true" fetch="join"/>
+        <many-to-one name="categoryOption" column="category_option_id" not-null="true" fetch="join"/>
     </class>
 </hibernate-mapping>

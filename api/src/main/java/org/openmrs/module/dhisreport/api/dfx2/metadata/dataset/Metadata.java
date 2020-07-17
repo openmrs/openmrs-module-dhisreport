@@ -1818,7 +1818,7 @@ public class Metadata {
             public static class Categories {
 
                 @XmlElement(required = true)
-                protected Category category;
+                protected List<Category> category;
 
                 /**
                  * Gets the value of the category property.
@@ -1828,7 +1828,7 @@ public class Metadata {
                  *     {@link Category }
                  *
                  */
-                public Category getCategory() {
+                public List<Category> getCategory() {
                     return category;
                 }
 
@@ -1840,7 +1840,7 @@ public class Metadata {
                  *     {@link Category }
                  *
                  */
-                public void setCategory(Category value) {
+                public void setCategory(List<Category> value) {
                     this.category = value;
                 }
 
