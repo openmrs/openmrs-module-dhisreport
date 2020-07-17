@@ -17,7 +17,6 @@ import java.util.Set;
 public class DataValueTemplate implements Serializable {
 
   private Integer id;
-  private String name;
   private DataSet dataSet;
   private DataElement dataElement;
   private String reportDefinitionUuid;
@@ -30,14 +29,6 @@ public class DataValueTemplate implements Serializable {
 
   public void setId(Integer id) {
     this.id = id;
-  }
-
-  public String getName() {
-    return name;
-  }
-
-  public void setName(String name) {
-    this.name = name;
   }
 
   public DataSet getDataSet() {
@@ -90,7 +81,6 @@ public class DataValueTemplate implements Serializable {
     }
     DataValueTemplate that = (DataValueTemplate) o;
     return Objects.equals(getId(), that.getId())
-        && Objects.equals(getName(), that.getName())
         && Objects.equals(getDataSet(), that.getDataSet())
         && Objects.equals(getDataElement(), that.getDataElement())
         && Objects.equals(getReportDefinitionUuid(), that
@@ -102,7 +92,7 @@ public class DataValueTemplate implements Serializable {
 
   @Override
   public int hashCode() {
-    return Objects.hash(getId(), getName(), getDataSet(), getDataElement(),
+    return Objects.hash(getId(), getDataSet(), getDataElement(),
         getReportDefinitionUuid(), getReportDefinitionLabel(),
         getDisaggregations());
   }
