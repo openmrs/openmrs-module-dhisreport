@@ -30,6 +30,7 @@ import org.hibernate.SessionFactory;
 import org.hibernate.criterion.Restrictions;
 import org.openmrs.Location;
 import org.openmrs.module.dhisreport.api.db.DHIS2ReportingDAO;
+import org.openmrs.module.dhisreport.api.dfx2.metadata.dataset.Metadata.DataSets;
 import org.openmrs.module.dhisreport.api.model.Category;
 import org.openmrs.module.dhisreport.api.model.CategoryOption;
 import org.openmrs.module.dhisreport.api.model.DataSet;
@@ -144,6 +145,14 @@ public class HibernateDHIS2ReportingDAO implements DHIS2ReportingDAO {
 		Query query = session.createQuery("delete DataValueTemplate where dataset_id= :DataSetId");
 		query.setParameter("DataSetId", dataSet.getId());
 		query.executeUpdate();
+	}
+
+	@Override
+	@Transactional
+	public List<DataSet> getAllDataSets(){
+		Session session = getCurrentSession();
+		Query query = session.createQuery("from DataSet");
+		return (List<DataSet>) query.list();
 	}
 
 	/**

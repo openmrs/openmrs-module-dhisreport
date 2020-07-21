@@ -23,6 +23,7 @@ import java.util.List;
 import org.hibernate.SessionFactory;
 import org.openmrs.Location;
 import org.openmrs.module.dhisreport.api.DHIS2ReportingService;
+import org.openmrs.module.dhisreport.api.dfx2.metadata.dataset.Metadata.DataSets;
 import org.openmrs.module.dhisreport.api.model.Category;
 import org.openmrs.module.dhisreport.api.model.CategoryOption;
 import org.openmrs.module.dhisreport.api.model.DataSet;
@@ -67,4 +68,11 @@ public interface DHIS2ReportingDAO {
 	public DataValueTemplate saveDataValueTemplate(DataValueTemplate dataValueTemplate);
 
 	public void removeDataValueTemplatesByDataSet(DataSet dataSet);
+
+	/**
+	 * Finds all imported DataSets from the database.
+	 *
+	 * @return a List of Datasets
+	 */
+	public List<DataSet> getAllDataSets();
 }

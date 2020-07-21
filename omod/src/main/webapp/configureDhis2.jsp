@@ -3,7 +3,7 @@
 
 <%@ include file="template/localHeader.jsp"%>
 
-<h3><spring:message code="dhisreport.dhis2" />DHIS2 Server</h3>
+<h3><spring:message code="dhisreport.dhis2" /></h3>
 
 <form method="POST">
     <table>

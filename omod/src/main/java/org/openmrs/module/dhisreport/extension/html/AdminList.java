@@ -53,7 +53,7 @@ public class AdminList extends AdministrationSectionExt {
 	@Override
 	public Map<String, String> getLinks() {
 		LinkedHashMap<String, String> map = new LinkedHashMap<String, String>();
-		map.put("/module/dhisreport/listDhis2Reports.form", "dhisreport.home");
+		map.put("/module/dhisreport/datasets.form", "dhisreport.home");
 		return map;
 	}
 
