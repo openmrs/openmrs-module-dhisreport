@@ -20,11 +20,13 @@
 package org.openmrs.module.dhisreport.api;
 
 import java.io.InputStream;
+import java.util.List;
 import javax.xml.bind.JAXBException;
 import org.openmrs.Location;
 import org.openmrs.api.OpenmrsService;
 import org.openmrs.module.dhisreport.api.db.DHIS2ReportingDAO;
 import org.openmrs.module.dhisreport.api.dhis.HttpDhis2Server;
+import org.openmrs.module.dhisreport.api.model.DataSet;
 import org.springframework.transaction.annotation.Transactional;
 
 /**
@@ -72,5 +74,12 @@ public interface DHIS2ReportingService extends OpenmrsService {
 	 * @throws JAXBException if the input stream cannot unmarshal
 	 */
 	public void importDataSet(InputStream inputStream) throws JAXBException;
+
+	/**
+	 * Gets all imported DataSets.
+	 *
+	 * @return a List of Datasets
+	 */
+	public List<DataSet> getAllDataSets();
 
 }

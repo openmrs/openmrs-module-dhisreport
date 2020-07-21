@@ -125,6 +125,11 @@ public class DHIS2ReportingServiceImpl extends BaseOpenmrsService
 		generateDataValueTemplates(metadata, dataSet, categoryMap);
 	}
 
+	@Override
+	public List<DataSet> getAllDataSets(){
+		return dao.getAllDataSets();
+	}
+
 	/**
 	 * Extract and save Data Elements from the metadata
 	 *
