@@ -82,4 +82,18 @@ public interface DHIS2ReportingService extends OpenmrsService {
 	 */
 	public List<DataSet> getAllDataSets();
 
+	/**
+	 * Finds a dataset by UUID
+	 *
+	 * @return the DataSet
+	 */
+	public DataSet getDataSetByUid(String uid);
+
+	/**
+	 * Updates the Report mapping of a DataSet
+	 *
+	 * @param dataSet the DataSet which needs to be updated
+	 * @param reportUuid the UUID of a Period indicator Report Definition
+	 */
+	public void updateReportOfADataSet(DataSet dataSet, String reportUuid);
 }

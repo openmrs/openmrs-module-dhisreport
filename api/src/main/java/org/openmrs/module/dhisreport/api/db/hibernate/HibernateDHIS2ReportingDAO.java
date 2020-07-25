@@ -133,7 +133,7 @@ public class HibernateDHIS2ReportingDAO implements DHIS2ReportingDAO {
 	@Transactional
 	public DataValueTemplate saveDataValueTemplate(DataValueTemplate dataValueTemplate) {
 		Session session = this.getCurrentSession();
-		session.save(dataValueTemplate);
+		session.saveOrUpdate(dataValueTemplate);
 		return dataValueTemplate;
 	}
 
@@ -153,6 +153,21 @@ public class HibernateDHIS2ReportingDAO implements DHIS2ReportingDAO {
 		Session session = getCurrentSession();
 		Query query = session.createQuery("from DataSet");
 		return (List<DataSet>) query.list();
+	}
+
+	@Override
+	@Transactional
+	public DataSet getDataSetByUid(String uid){
+		return (DataSet) getObjectByUid(uid, DataSet.class);
+	}
+
+	@Override
+	@Transactional
+	public List<DataValueTemplate> getDataValueTemplatesByDataSet(DataSet dataSet){
+		Session session = this.getCurrentSession();
+		Criteria criteria = session.createCriteria(DataValueTemplate.class);
+		criteria.add(Restrictions.eq("dataSet", dataSet));
+		return criteria.list();
 	}
 
 	/**

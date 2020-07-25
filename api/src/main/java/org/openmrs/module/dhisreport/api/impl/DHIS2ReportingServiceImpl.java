@@ -130,6 +130,25 @@ public class DHIS2ReportingServiceImpl extends BaseOpenmrsService
 		return dao.getAllDataSets();
 	}
 
+	@Override
+	public DataSet getDataSetByUid(String uid){
+		return dao.getDataSetByUid(uid);
+	}
+
+	@Override
+	public void updateReportOfADataSet(DataSet dataSet, String reportUuid){
+		List<DataValueTemplate> dataValueTemplates = dao.getDataValueTemplatesByDataSet(dataSet);
+		// Remove existing report definition mappings of the filtered Data Value Templates
+		dataValueTemplates.forEach(dataValueTemplate -> {
+			dataValueTemplate.setReportDefinitionLabel(null);
+			dataValueTemplate.setReportDefinitionUuid(null);
+			dao.saveDataValueTemplate(dataValueTemplate);
+		});
+		// Set new report Uuid
+		dataSet.setReportUuid(reportUuid);
+		dao.saveObject(dataSet);
+	}
+
 	/**
 	 * Extract and save Data Elements from the metadata
 	 *
