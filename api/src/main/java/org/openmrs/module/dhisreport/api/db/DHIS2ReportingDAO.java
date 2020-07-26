@@ -23,7 +23,6 @@ import java.util.List;
 import org.hibernate.SessionFactory;
 import org.openmrs.Location;
 import org.openmrs.module.dhisreport.api.DHIS2ReportingService;
-import org.openmrs.module.dhisreport.api.dfx2.metadata.dataset.Metadata.DataSets;
 import org.openmrs.module.dhisreport.api.model.Category;
 import org.openmrs.module.dhisreport.api.model.CategoryOption;
 import org.openmrs.module.dhisreport.api.model.DataSet;
@@ -62,11 +61,35 @@ public interface DHIS2ReportingDAO {
 	public Disaggregation getDisaggregationByCategoryAndCategoryOption(
 			Category category, CategoryOption categoryOption);
 
-
+	/**
+	 * Finds Disaggregations by given Category
+	 *
+	 * @param category the Category which should be included in the Disaggregation
+	 * @return a list of Disagregations
+	 */
 	public List<Disaggregation> getDisaggregationsByCategory(Category category);
 
+	/**
+	 * Finds Data Value Templates by given DataSet
+	 *
+	 * @param dataSet the Category which should be included in the Data Value Templates
+	 * @return a list of Data Value Templates
+	 */
+	public List<DataValueTemplate> getDataValueTemplatesByDataSet(DataSet dataSet);
+
+	/**
+	 * Saves a given Data Value Template Object to the database
+	 *
+	 * @param dataValueTemplate a Data Value Template object
+	 * @return the saved Data Value Template object
+	 */
 	public DataValueTemplate saveDataValueTemplate(DataValueTemplate dataValueTemplate);
 
+	/**
+	 * Removes Data Value Templates by a given DataSet
+	 *
+	 * @param dataSet a Dataset object
+	 */
 	public void removeDataValueTemplatesByDataSet(DataSet dataSet);
 
 	/**
@@ -75,4 +98,12 @@ public interface DHIS2ReportingDAO {
 	 * @return a List of Datasets
 	 */
 	public List<DataSet> getAllDataSets();
+
+	/**
+	 * Finds a dataset by UUID
+	 *
+	 * @return the DataSet
+	 */
+	public DataSet getDataSetByUid(String uid);
+
 }

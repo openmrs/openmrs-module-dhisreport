@@ -37,6 +37,6 @@ public class DhisReportHeader extends LinkExt {
 	}
 
 	public String getUrl() {
-		return "module/dhisreport/listDhis2Reports.form";
+		return "module/dhisreport/datasets.form";
 	}
 }
