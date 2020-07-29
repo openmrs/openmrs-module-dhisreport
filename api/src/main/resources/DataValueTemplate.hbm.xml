@@ -8,8 +8,7 @@
         <discriminator column="id" insert="false"/>
         <many-to-one name="dataElement" column="dataelement_id" not-null="true"/>
         <many-to-one name="dataSet" column="dataset_id" not-null="true"/>
-        <property column="reportDefinitionUuid" name="reportDefinitionUuid"/>
-        <property column="reportDefinitionLabel" name="reportDefinitionLabel"/>
+        <property column="reportIndicatorUuid" name="reportIndicatorUuid"/>
         <set name="disaggregations" table="${project.parent.artifactId}_datavalue_template_disaggregation"
           lazy="true" fetch="select" cascade="all">
             <key>

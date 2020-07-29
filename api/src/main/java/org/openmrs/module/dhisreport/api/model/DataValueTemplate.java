@@ -19,8 +19,7 @@ public class DataValueTemplate implements Serializable {
   private Integer id;
   private DataSet dataSet;
   private DataElement dataElement;
-  private String reportDefinitionUuid;
-  private String reportDefinitionLabel;
+  private String reportIndicatorUuid;
   private Set<Disaggregation> disaggregations = new HashSet<Disaggregation>(0);
 
   public Integer getId() {
@@ -47,20 +46,12 @@ public class DataValueTemplate implements Serializable {
     this.dataElement = dataElement;
   }
 
-  public String getReportDefinitionUuid() {
-    return reportDefinitionUuid;
+  public String getReportIndicatorUuid() {
+    return reportIndicatorUuid;
   }
 
-  public void setReportDefinitionUuid(String reportDefinitionUuid) {
-    this.reportDefinitionUuid = reportDefinitionUuid;
-  }
-
-  public String getReportDefinitionLabel() {
-    return reportDefinitionLabel;
-  }
-
-  public void setReportDefinitionLabel(String reportDefinitionLabel) {
-    this.reportDefinitionLabel = reportDefinitionLabel;
+  public void setReportIndicatorUuid(String reportIndicatorUuid) {
+    this.reportIndicatorUuid = reportIndicatorUuid;
   }
 
   public Set<Disaggregation> getDisaggregations() {
@@ -83,17 +74,15 @@ public class DataValueTemplate implements Serializable {
     return Objects.equals(getId(), that.getId())
         && Objects.equals(getDataSet(), that.getDataSet())
         && Objects.equals(getDataElement(), that.getDataElement())
-        && Objects.equals(getReportDefinitionUuid(), that
-        .getReportDefinitionUuid())
-        && Objects.equals(getReportDefinitionLabel(), that
-        .getReportDefinitionLabel())
+        && Objects.equals(getReportIndicatorUuid(), that
+        .getReportIndicatorUuid())
         && getDisaggregations().equals(that.getDisaggregations());
   }
 
   @Override
   public int hashCode() {
     return Objects.hash(getId(), getDataSet(), getDataElement(),
-        getReportDefinitionUuid(), getReportDefinitionLabel(),
+        getReportIndicatorUuid(),
         getDisaggregations());
   }
 }

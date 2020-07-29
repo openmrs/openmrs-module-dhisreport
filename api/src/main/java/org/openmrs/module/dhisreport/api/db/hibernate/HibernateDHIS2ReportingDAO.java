@@ -131,6 +131,15 @@ public class HibernateDHIS2ReportingDAO implements DHIS2ReportingDAO {
 
 	@Override
 	@Transactional
+	public DataValueTemplate getDataValueTemplateById(Integer id){
+		Session session = this.getCurrentSession();
+		Criteria criteria = session.createCriteria(DataValueTemplate.class);
+		criteria.add(Restrictions.eq("id", id));
+		return (DataValueTemplate) criteria.uniqueResult();
+	}
+
+	@Override
+	@Transactional
 	public DataValueTemplate saveDataValueTemplate(DataValueTemplate dataValueTemplate) {
 		Session session = this.getCurrentSession();
 		session.saveOrUpdate(dataValueTemplate);
