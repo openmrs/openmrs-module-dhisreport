@@ -70,6 +70,14 @@ public interface DHIS2ReportingDAO {
 	public List<Disaggregation> getDisaggregationsByCategory(Category category);
 
 	/**
+	 * Finds DataValueTemplate by id
+	 *
+	 * @param id the ID of the DAtaValueTemplate
+	 * @return the corresponding DataValueTemplate or null
+	 */
+	public DataValueTemplate getDataValueTemplateById(Integer id);
+
+	/**
 	 * Finds Data Value Templates by given DataSet
 	 *
 	 * @param dataSet the Category which should be included in the Data Value Templates

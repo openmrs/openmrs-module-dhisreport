@@ -161,8 +161,7 @@
 			`id` INT NOT NULL AUTO_INCREMENT,
 			`dataset_id` INT NOT NULL,
 			`dataelement_id` INT NOT NULL,
-			`reportDefinitionUuid` VARCHAR(36) NULL,
-			`reportDefinitionLabel` VARCHAR(255) NULL,
+			`reportIndicatorUuid` VARCHAR(36) NULL,
 			PRIMARY KEY (`id`),
 			CONSTRAINT `fk_datavalue_template_dataset`
 			FOREIGN KEY (`dataset_id`)

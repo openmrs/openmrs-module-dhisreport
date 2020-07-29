@@ -27,6 +27,7 @@ import org.openmrs.api.OpenmrsService;
 import org.openmrs.module.dhisreport.api.db.DHIS2ReportingDAO;
 import org.openmrs.module.dhisreport.api.dhis.HttpDhis2Server;
 import org.openmrs.module.dhisreport.api.model.DataSet;
+import org.openmrs.module.dhisreport.api.model.DataValueTemplate;
 import org.springframework.transaction.annotation.Transactional;
 
 /**
@@ -96,4 +97,20 @@ public interface DHIS2ReportingService extends OpenmrsService {
 	 * @param reportUuid the UUID of a Period indicator Report Definition
 	 */
 	public void updateReportOfADataSet(DataSet dataSet, String reportUuid);
+
+	/**
+	 * Finds Data Value Templates by given DataSet
+	 *
+	 * @param dataSet the Category which should be included in the Data Value Templates
+	 * @return a list of Data Value Templates
+	 */
+	public List<DataValueTemplate> getDataValueTemplatesByDataSet(DataSet dataSet);
+
+	/**
+	 * Updates the Report Indicator of a DataValueTemplate
+	 *
+	 * @param dataValueTemplateId the ID of the DataValueTemplate
+	 * @param reportIndicatorUuid the new reportIndicatorUuid
+	 */
+	public void updateReportIndicatorOfDataValueTemplate(Integer dataValueTemplateId, String reportIndicatorUuid);
 }

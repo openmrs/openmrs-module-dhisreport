@@ -140,13 +140,27 @@ public class DHIS2ReportingServiceImpl extends BaseOpenmrsService
 		List<DataValueTemplate> dataValueTemplates = dao.getDataValueTemplatesByDataSet(dataSet);
 		// Remove existing report definition mappings of the filtered Data Value Templates
 		dataValueTemplates.forEach(dataValueTemplate -> {
-			dataValueTemplate.setReportDefinitionLabel(null);
-			dataValueTemplate.setReportDefinitionUuid(null);
-			dao.saveDataValueTemplate(dataValueTemplate);
+			if(dataValueTemplate.getReportIndicatorUuid() != null){
+				dataValueTemplate.setReportIndicatorUuid(null);
+				dao.saveDataValueTemplate(dataValueTemplate);
+			}
 		});
 		// Set new report Uuid
 		dataSet.setReportUuid(reportUuid);
 		dao.saveObject(dataSet);
+	}
+
+	@Override
+	public List<DataValueTemplate> getDataValueTemplatesByDataSet(DataSet dataSet) {
+			return dao.getDataValueTemplatesByDataSet(dataSet);
+	}
+
+	@Override
+	public void updateReportIndicatorOfDataValueTemplate(Integer dataValueTemplateId, String reportIndicatorUuid){
+		DataValueTemplate dataValueTemplate =  dao.getDataValueTemplateById(dataValueTemplateId);
+		// Todo: Check the existence of the dataValueTemplate and the reportIndicator
+		dataValueTemplate.setReportIndicatorUuid(reportIndicatorUuid);
+		dao.saveDataValueTemplate(dataValueTemplate);
 	}
 
 	/**

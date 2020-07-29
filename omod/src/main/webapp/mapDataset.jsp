@@ -12,7 +12,9 @@
 <div id="currentReport">
     <c:choose>
         <c:when test="${currentReport != null}">
-            <a href="${pageContext.request.contextPath}/module/reporting/reports/periodIndicatorReport.form?uuid=${currentReport.uuid}">
+            <a href="${pageContext.request.contextPath}/module/reporting/reports/periodIndicatorReport.form?uuid=${currentReport.uuid}"
+               target="_blank"
+            >
                     ${currentReport.name}
             </a>
         </c:when>
@@ -45,28 +47,96 @@
         cancel
     </button>
 </div>
-
+<div>
+    <div class="boxHeader">
+        <strong>
+            Map Data Value Templates
+        </strong>
+    </div>
+    <%-- Todo: Add an edit button to each Data Value Template --%>
+    <div class="box">
+        <table id="column-table" width="100%">
+            <thead>
+            <tr>
+                <th>Data Element Code</th>
+                <th>Data Element</th>
+                <th>Disaggregations</th>
+                <th>Report Indicator</th>
+            </tr>
+            </thead>
+            <tbody>
+            <c:forEach items="${dataValueTemplates}" var="dataValueTemplate">
+                <tr>
+                    <td>${dataValueTemplate.dataElement.code}</td>
+                    <td>${dataValueTemplate.dataElement.name}</td>
+                    <td>
+                        <c:forEach items="${dataValueTemplate.disaggregations}"
+                                   var="disaggregation">
+                            ${disaggregation.category.name}&nbsp;=&nbsp;${disaggregation.categoryOption.name},&nbsp;
+                        </c:forEach>
+                    </td>
+                    <td>
+                        <select id="dvt_${dataValueTemplate.id}">
+                            <option disabled selected>Select a report indicator</option>
+                            <c:forEach var="column"
+                                       items="${currentReport.indicatorDataSetDefinition.columns}">
+                                <option value="${column.indicator.parameterizable.cohortDefinition.parameterizable.uuid}"
+                                        <c:if test="${column.indicator.parameterizable.cohortDefinition.parameterizable.uuid == dataValueTemplate.reportIndicatorUuid}">
+                                            selected
+                                        </c:if>
+                                >
+                                        ${column.label}
+                                </option>
+                            </c:forEach>
+                        </select>
+                        <button onclick="updateReportIndicator(${dataValueTemplate.id})">
+                            save
+                        </button>
+                    </td>
+                </tr>
+            </c:forEach>
+            </tbody>
+        </table>
+    </div>
+</div>
 <script>
-    function viewEditReportForm() {
-        $("#currentReport").hide();
-        $("#editReport").show();
-    }
+  function viewEditReportForm() {
+    $("#currentReport").hide();
+    $("#editReport").show();
+  }
 
-    function closeEditReportForm() {
-        $("#currentReport").show();
-        $("#editReport").hide();
-    }
+  function closeEditReportForm() {
+    $("#currentReport").show();
+    $("#editReport").hide();
+  }
 
-    function updateReport() {
-      const reportUuid = $("#reportSelector").val();
-      $.post(
-          "${pageContext.request.contextPath}/module/dhisreport/dataset/${dataset.uid}/updateReport.form",
-          {reportUuid},
-          function () {
-            // Reload the page after the operation is success
-            location.reload();
+  function updateReport() {
+    // Todo: Handle errors
+    const reportUuid = $("#reportSelector").val();
+    $.post(
+        "${pageContext.request.contextPath}/module/dhisreport/dataset/${dataset.uid}/updateReport.form",
+        {reportUuid},
+        function () {
+          // Reload the page after the operation is success
+          location.reload();
+        }
+    );
+  }
+
+  function updateReportIndicator(dataValueTemplateId) {
+    const reportIndicatorUuid = $("#dvt_" + dataValueTemplateId).val();
+    // Todo: Handle errors
+    $.ajax({
+          url: "${pageContext.request.contextPath}/module/dhisreport/dataValueTemplates/"
+              + dataValueTemplateId + "/updateReportIndicator.form",
+          type: "POST",
+          data: {reportIndicatorUuid: reportIndicatorUuid},
+          success: function () {
+            // Display an alert after the operation is success
+            alert("Saved!");
           }
-      );
-    }
+        }
+    );
+  }
 </script>
 <%@ include file="/WEB-INF/template/footer.jsp" %>
