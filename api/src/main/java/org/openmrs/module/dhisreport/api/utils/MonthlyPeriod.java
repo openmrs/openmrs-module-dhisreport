@@ -24,16 +24,16 @@ import java.util.Date;
 import org.joda.time.DateTime;
 
 /**
- * 
+ *
  * @author bobj
  */
 public class MonthlyPeriod implements Period {
 
 	public static final String ISO_FORMAT = "yyyyMM";
 
-	protected Date startDate;
-
-	protected Date endDate;
+	private Date startDate;
+	private Date endDate;
+	private String adxPeriod;
 
 	@Override
 	public void setStartDate(Date startDate) {
@@ -55,11 +55,22 @@ public class MonthlyPeriod implements Period {
 		return endDate;
 	}
 
+	@Override
+	public void setAdxPeriod(String adxPeriod) {
+		this.adxPeriod = adxPeriod;
+	}
+
+	@Override
+	public String getAdxPeriod() {
+		return adxPeriod;
+	}
+
 	public MonthlyPeriod(Date date) {
 		DateTime dt = new DateTime(date);
 		startDate = dt.dayOfMonth().withMinimumValue().toDate();
 		endDate = dt.dayOfMonth().withMaximumValue().withTime(23, 59, 59, 999)
 				.toDate();
+		adxPeriod = new SimpleDateFormat("yyyy-MM-dd").format(date) + "/P1M";
 	}
 
 	@Override

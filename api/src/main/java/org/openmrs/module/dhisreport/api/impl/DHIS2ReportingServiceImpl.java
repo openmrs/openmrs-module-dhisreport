@@ -20,7 +20,10 @@
 package org.openmrs.module.dhisreport.api.impl;
 
 import java.io.InputStream;
+import java.math.BigDecimal;
+import java.time.Instant;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
@@ -31,13 +34,22 @@ import java.util.stream.Collectors;
 import javax.xml.bind.JAXBContext;
 import javax.xml.bind.JAXBException;
 import javax.xml.bind.Unmarshaller;
+import javax.xml.datatype.DatatypeConfigurationException;
+import javax.xml.datatype.DatatypeFactory;
+import javax.xml.namespace.QName;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.openmrs.Location;
 import org.openmrs.LocationAttribute;
+import org.openmrs.LocationAttributeType;
 import org.openmrs.api.context.Context;
 import org.openmrs.api.impl.BaseOpenmrsService;
+import org.openmrs.module.dhisreport.api.DHIS2ReportingException;
 import org.openmrs.module.dhisreport.api.DHIS2ReportingService;
+import org.openmrs.module.dhisreport.api.adx.AdxType;
+import org.openmrs.module.dhisreport.api.adx.DataValueType;
+import org.openmrs.module.dhisreport.api.adx.GroupType;
+import org.openmrs.module.dhisreport.api.adx.importsummary.AdxImportSummary;
 import org.openmrs.module.dhisreport.api.db.DHIS2ReportingDAO;
 import org.openmrs.module.dhisreport.api.dhis.HttpDhis2Server;
 import org.openmrs.module.dhisreport.api.model.Category;
@@ -48,6 +60,18 @@ import org.openmrs.module.dhisreport.api.dfx2.metadata.dataset.Metadata;
 import org.openmrs.module.dhisreport.api.dfx2.metadata.dataset.Metadata.DataSets;
 import org.openmrs.module.dhisreport.api.model.DataValueTemplate;
 import org.openmrs.module.dhisreport.api.model.Disaggregation;
+import org.openmrs.module.dhisreport.api.utils.MonthlyPeriod;
+import org.openmrs.module.dhisreport.api.utils.Period;
+import org.openmrs.module.dhisreport.api.utils.WeeklyPeriod;
+import org.openmrs.module.reporting.dataset.definition.CohortIndicatorDataSetDefinition.CohortIndicatorAndDimensionColumn;
+import org.openmrs.module.reporting.evaluation.parameter.Mapped;
+import org.openmrs.module.reporting.report.Report;
+import org.openmrs.module.reporting.report.ReportRequest;
+import org.openmrs.module.reporting.report.definition.ReportDefinition;
+import org.openmrs.module.reporting.report.definition.service.ReportDefinitionService;
+import org.openmrs.module.reporting.report.renderer.RenderingMode;
+import org.openmrs.module.reporting.report.service.ReportService;
+import org.openmrs.module.reporting.web.renderers.DefaultWebRenderer;
 
 /**
  * It is a default implementation of {@link DHIS2ReportingService}.
@@ -161,6 +185,17 @@ public class DHIS2ReportingServiceImpl extends BaseOpenmrsService
 		// Todo: Check the existence of the dataValueTemplate and the reportIndicator
 		dataValueTemplate.setReportIndicatorUuid(reportIndicatorUuid);
 		dao.saveDataValueTemplate(dataValueTemplate);
+	}
+
+	@Override
+	public AdxImportSummary postDataSetToDHIS2(String uid, String locationUuid, Date startDate) throws DHIS2ReportingException {
+		DataSet dataSet = getDataSetByUid(uid);
+		String organizationUnit = getOrganizationUnit(locationUuid);
+		Period period = generatePeriod(startDate, dataSet.getPeriodType());
+		Report report = executeReportDefinition(dataSet.getReportUuid(), period);
+		Map<DataValueTemplate, String> mappedDataValueTemplates = mapReportWithDataSet(report, dataSet);
+		AdxType adxTemplate = generateAdxTemplate(mappedDataValueTemplates, dataSet, organizationUnit, period.getAdxPeriod());
+		return dhis2Server.postAdxData(adxTemplate);
 	}
 
 	/**
@@ -353,4 +388,156 @@ public class DHIS2ReportingServiceImpl extends BaseOpenmrsService
 		}
 		return combinations;
 	}
+
+	/**
+	 * Executes a provided Report Definition.
+	 *
+	 * @param reportDefinitionUuid UUID of the Report Definition
+	 * @param period period object
+	 * @return the executed report
+	 * @throws DHIS2ReportingException if the mapperd Report Definition doesn't exists
+	 */
+	private Report executeReportDefinition(String reportDefinitionUuid, Period period)
+			throws DHIS2ReportingException {
+		ReportDefinition reportDefinition = Context.getService(ReportDefinitionService.class).getDefinitionByUuid(reportDefinitionUuid);
+		if(reportDefinition == null){
+			throw new DHIS2ReportingException("The mapped report Definition doesn't exists.");
+		}
+		Map<String, Object> parameters = new HashMap<String, Object>();
+		parameters.put("startDate", period.getStartDate());
+		parameters.put("endDate", period.getEndDate());
+		ReportRequest reportRequest = new ReportRequest();
+		reportRequest.setReportDefinition(new Mapped<>(
+				reportDefinition, parameters));
+		reportRequest.setRenderingMode(new RenderingMode(new DefaultWebRenderer(),
+				"Web", null, 100));
+		return Context.getService(ReportService.class).runReport(reportRequest);
+	}
+
+	/**
+	 * Generates a period object with ADX Period type.
+	 *
+	 * @param startDate starting Date of the period
+	 * @param periodType period type
+	 * @return a period object
+	 * @throws DHIS2ReportingException if the period type is not supported by the module
+	 */
+	private Period generatePeriod(Date startDate, String periodType)
+			throws DHIS2ReportingException {
+		switch (periodType){
+			case "Weekly":
+				return new WeeklyPeriod(startDate);
+			case "Monthly":
+				return new MonthlyPeriod(startDate);
+			default:
+				throw new DHIS2ReportingException("Unsupported Period Type: "+ periodType);
+		}
+	}
+
+	/**
+	 * Gets the mapped DHIS2 Organization code of an OpenMRS location.
+	 *
+	 * @param locationUuid UUID of OpenMRS location
+	 * @return the Code of the mapped DHIS2 Organization Unit
+	 * @throws DHIS2ReportingException if the provided location is invalid or not mapped with a DHIS2
+	 *                                 Organization Unit
+	 */
+	private String getOrganizationUnit(String locationUuid) throws DHIS2ReportingException {
+		Optional<LocationAttributeType> maybeLocationAttributeType = getCodeAttributeType();
+		if (!maybeLocationAttributeType.isPresent()) {
+			throw new DHIS2ReportingException("Location is not mapped with an organisation");
+		}
+		Location location = Context.getLocationService().getLocationByUuid(locationUuid);
+		if (location == null) {
+			throw new DHIS2ReportingException("Invalid Location");
+		}
+		return (String) location
+				.getActiveAttributes(maybeLocationAttributeType.get()).get(0).getValue();
+	}
+
+	/**
+	 * Gets the Attribute Type that stores dhis2 Organization Unit code.
+	 *
+	 * @return the Optional instance that contains the Attribute type
+	 */
+	private Optional<LocationAttributeType> getCodeAttributeType() {
+		return Context.getLocationService()
+				.getAllLocationAttributeTypes().stream()
+				.filter(locationAttributeType -> locationAttributeType.getName().equals("CODE"))
+				.findFirst();
+	}
+
+	/**
+	 * Maps a Report's value with a DataSet's Data Value Templates.
+	 *
+	 * @param report executed OpenMRS report
+	 * @param dataSet DataSet to be mapped with
+	 * @return mapped DataValues
+	 */
+	private Map<DataValueTemplate, String> mapReportWithDataSet(Report report, DataSet dataSet) {
+		Map<DataValueTemplate, String> mappedDataValueTemplates = new HashMap<>();
+		Map<String, String> indicatorValues = new HashMap<>();
+		report.getReportData().getDataSets().forEach((key, reportingDataSet) -> {
+			reportingDataSet.forEach(dataSetRow -> {
+				dataSetRow.getColumnValues().forEach((dataSetColumn, value) -> {
+					if (dataSetColumn instanceof CohortIndicatorAndDimensionColumn) {
+						String uuid = ((CohortIndicatorAndDimensionColumn) dataSetColumn).getIndicator()
+								.getParameterizable().getCohortDefinition().getParameterizable().getUuid();
+						indicatorValues.put(uuid, value.toString());
+					}
+				});
+			});
+		});
+
+		List<DataValueTemplate> dataValueTemplates = dao.getDataValueTemplatesByDataSet(dataSet);
+		dataValueTemplates.forEach(dataValueTemplate -> {
+			String reportIndicatorUuid = dataValueTemplate.getReportIndicatorUuid();
+			if (indicatorValues.containsKey(reportIndicatorUuid)) {
+				mappedDataValueTemplates.put(dataValueTemplate, indicatorValues.get(reportIndicatorUuid));
+			}
+		});
+
+		return mappedDataValueTemplates;
+	}
+
+	/**
+	 * Generates a new ADX Template for a given DataSet that is ready to be sent to DHIS2.
+	 *
+	 * @param mappedDataValueTemplates a map contains Data Value Templates mapped with corresponding values
+	 * @param dataSet the parent DataSet of Data Value Templates
+	 * @param organizationUnitCode code of DHIS2 Organization Unit
+	 * @param adxPeriod ADX period string for the period of data
+	 * @return generated ADX template
+	 * @throws DHIS2ReportingException if unable to set exported time
+	 */
+	private AdxType generateAdxTemplate(Map<DataValueTemplate, String> mappedDataValueTemplates, DataSet dataSet, String organizationUnitCode, String adxPeriod)
+			throws DHIS2ReportingException {
+		AdxType adxTemplate = new AdxType();
+		try {
+			Instant currentTime = Instant.now();
+			adxTemplate.setExported(DatatypeFactory.newInstance().newXMLGregorianCalendar(currentTime.toString()));
+		} catch (DatatypeConfigurationException e) {
+			throw new DHIS2ReportingException("Error occurred while setting the date for ADX template");
+		}
+		GroupType groupType = new GroupType();
+		groupType.setDataSet(dataSet.getUid());
+		groupType.setOrgUnit(organizationUnitCode);
+		groupType.setPeriod(adxPeriod);
+		adxTemplate.getGroup().add(groupType);
+		List<DataValueType> dataValueTypes = groupType.getDataValue();
+		mappedDataValueTemplates.forEach((dataValueTemplate, value) -> {
+			DataValueType dataValueType = new DataValueType();
+			dataValueType.setDataElement(dataValueTemplate.getDataElement().getUid());
+			dataValueType.setValue(new BigDecimal(value));
+			Map<QName, String> otherAttributes = dataValueType.getOtherAttributes();
+			dataValueTemplate.getDisaggregations().forEach(disaggregation -> {
+					String categoryCode = disaggregation.getCategory().getCode();
+					String categoryOptionUid = disaggregation.getCategoryOption().getUid();
+					otherAttributes.put(new QName(categoryCode), categoryOptionUid);
+			});
+			dataValueTypes.add(dataValueType);
+		});
+		return adxTemplate;
+	}
+
 }
