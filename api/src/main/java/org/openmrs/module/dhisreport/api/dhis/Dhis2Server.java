@@ -19,22 +19,26 @@
  **/
 package org.openmrs.module.dhisreport.api.dhis;
 
+import java.io.IOException;
+import org.openmrs.module.dhisreport.api.DHIS2ReportingException;
+import org.openmrs.module.dhisreport.api.adx.AdxType;
+import org.openmrs.module.dhisreport.api.adx.importsummary.AdxImportSummary;
+
 /**
  *
  * @author bobj
  */
 public interface Dhis2Server {
 
-	/**
-	 * low level method to access dhis2 resources directly
-	 *
-	 * @param path
-	 * @return
-	 * @throws Dhis2Exception
-	 */
-	// public InputStream fetchDhisResource( String path ) throws
-	// Dhis2Exception;
-
 	boolean isConfigured();
+
+	/**
+	 * Posts provided ADX template to DHIS2
+	 *
+	 * @param adxTemplate And ADX Template which contains data
+	 * @return Adx Import Summary returned by DHIS2
+	 */
+	public AdxImportSummary postAdxData(AdxType adxTemplate)
+			throws DHIS2ReportingException;
 
 }

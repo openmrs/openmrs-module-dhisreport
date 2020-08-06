@@ -22,7 +22,7 @@ package org.openmrs.module.dhisreport.api.utils;
 import java.util.Date;
 
 /**
- * 
+ *
  * @author bobj
  */
 public interface Period {
@@ -35,5 +35,9 @@ public interface Period {
 	public Date getEndDate();
 
 	public String getAsIsoString();
+
+	public void setAdxPeriod(String adxPeriod);
+
+	public String getAdxPeriod();
 
 }

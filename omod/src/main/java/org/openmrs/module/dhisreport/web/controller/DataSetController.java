@@ -1,14 +1,23 @@
 package org.openmrs.module.dhisreport.web.controller;
 
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
+import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
+import java.util.Optional;
 import java.util.stream.Collectors;
+import org.openmrs.Location;
+import org.openmrs.LocationAttribute;
+import org.openmrs.LocationAttributeType;
 import org.openmrs.api.context.Context;
+import org.openmrs.module.dhisreport.api.DHIS2ReportingException;
 import org.openmrs.module.dhisreport.api.DHIS2ReportingService;
+import org.openmrs.module.dhisreport.api.adx.importsummary.AdxImportSummary;
 import org.openmrs.module.dhisreport.api.model.DataSet;
 import org.openmrs.module.dhisreport.api.model.DataValueTemplate;
 import org.openmrs.module.reporting.definition.DefinitionSummary;
 import org.openmrs.module.reporting.report.definition.PeriodIndicatorReportDefinition;
-import org.openmrs.module.reporting.report.definition.ReportDefinition;
 import org.openmrs.module.reporting.report.definition.service.ReportDefinitionService;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.ModelMap;
@@ -39,8 +48,8 @@ public class DataSetController {
     // Get all the available Data Sets
     DataSet dataSet = service.getDataSetByUid(uid);
     PeriodIndicatorReportDefinition reportDefinition = null;
-    if(dataSet.getReportUuid() != null) {
-       reportDefinition = (PeriodIndicatorReportDefinition) Context
+    if (dataSet.getReportUuid() != null) {
+      reportDefinition = (PeriodIndicatorReportDefinition) Context
           .getService(ReportDefinitionService.class).getDefinitionByUuid(
               dataSet.getReportUuid());
     }
@@ -69,7 +78,8 @@ public class DataSetController {
         .getService(DHIS2ReportingService.class);
     DataSet dataSet = service.getDataSetByUid(uid);
     // Updates the Report if it is different from the current report
-    if (!dataSet.getReportUuid().equals(reportUuid)) {
+    // Todo: check getRepotUuid is null
+    if (!reportUuid.equals(dataSet.getReportUuid())) {
       service.updateReportOfADataSet(dataSet, reportUuid);
     }
   }
@@ -82,5 +92,65 @@ public class DataSetController {
     DHIS2ReportingService service = Context
         .getService(DHIS2ReportingService.class);
     service.updateReportIndicatorOfDataValueTemplate(id, reportIndicatorUuid);
+  }
+
+  @RequestMapping(value = "/module/dhisreport/prepareDatasetToPost",
+      method = RequestMethod.GET)
+  public void prepareDatasetToPost(ModelMap modelMap, @RequestParam String uid) {
+    DHIS2ReportingService service = Context
+        .getService(DHIS2ReportingService.class);
+    DataSet dataSet = service.getDataSetByUid(uid);
+    boolean isAllDataValuesTemplatesMapped = service.getDataValueTemplatesByDataSet(dataSet)
+        .stream().allMatch(dataValueTemplate -> dataValueTemplate.getReportIndicatorUuid() != null);
+    List<Location> locations = Context.getLocationService().getAllLocations();
+        List<Location> mappedLocations = new ArrayList<>();
+    Optional<LocationAttributeType> maybeLocationAttributeType = getCodeAttributeType();
+
+    if(maybeLocationAttributeType.isPresent()){
+      LocationAttributeType locationAttributeType = maybeLocationAttributeType.get();
+      mappedLocations = locations.stream().filter(location -> {
+        List<LocationAttribute> activeAttributes = location
+            .getActiveAttributes(locationAttributeType);
+        return activeAttributes.size() > 0;
+      }).collect(Collectors.toList());
+    }
+
+    // Add relevant attributes to the Model Map
+    modelMap.addAttribute("dataset", dataSet);
+    modelMap.addAttribute("isAllDataValuesTemplatesMapped", isAllDataValuesTemplatesMapped);
+    modelMap.addAttribute("mappedLocations", mappedLocations);
+    modelMap.addAttribute("user", Context.getAuthenticatedUser());
+  }
+
+  @RequestMapping(value = "/module/dhisreport/postDataSet",
+      method = RequestMethod.POST)
+  public void postDataSet(ModelMap modelMap, @RequestParam String uid,
+      @RequestParam String locationUuid, @RequestParam(value = "startDate") String startDate) {
+    DHIS2ReportingService service = Context
+        .getService(DHIS2ReportingService.class);
+    try {
+      Date date = new SimpleDateFormat("yyyy-MM-dd").parse(startDate);
+      AdxImportSummary importSummary = service.postDataSetToDHIS2(uid,locationUuid, date);
+      modelMap.addAttribute("importSummary", importSummary);
+      modelMap.addAttribute("isError", false);
+    } catch (DHIS2ReportingException e) {
+      modelMap.addAttribute("isError", true);
+      modelMap.addAttribute("errorMessage", e.getMessage());
+    } catch (ParseException e){
+      modelMap.addAttribute("isError", true);
+      modelMap.addAttribute("errorMessage", "Unparsable date: "+ startDate);
+    }
+  }
+
+  /**
+   * Gets the Attribute Type that stores dhis2 Organization Unit code
+   *
+   * @return the Optional instance that contains the Attribute type
+   */
+  private Optional<LocationAttributeType> getCodeAttributeType() {
+    return Context.getLocationService()
+        .getAllLocationAttributeTypes().stream()
+        .filter(locationAttributeType -> locationAttributeType.getName().equals("CODE"))
+        .findFirst();
   }
 }

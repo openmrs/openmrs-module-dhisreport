@@ -34,6 +34,16 @@
             <groupId>org.openmrs.api</groupId>
             <artifactId>openmrs-api</artifactId>
             <type>jar</type>
+          <exclusions>
+            <exclusion>
+              <artifactId>stax-api</artifactId>
+              <groupId>stax</groupId>
+            </exclusion>
+              <exclusion>
+                  <artifactId>xml-apis</artifactId>
+                  <groupId>xml-apis</groupId>
+              </exclusion>
+          </exclusions>
         </dependency>
 
         <dependency>
@@ -47,6 +57,16 @@
             <artifactId>openmrs-api</artifactId>
             <type>test-jar</type>
             <scope>test</scope>
+          <exclusions>
+            <exclusion>
+              <artifactId>stax-api</artifactId>
+              <groupId>stax</groupId>
+            </exclusion>
+              <exclusion>
+                  <artifactId>xml-apis</artifactId>
+                  <groupId>xml-apis</groupId>
+              </exclusion>
+          </exclusions>
         </dependency>
 
         <dependency>

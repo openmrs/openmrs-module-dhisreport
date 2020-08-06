@@ -20,10 +20,12 @@
 package org.openmrs.module.dhisreport.api;
 
 import java.io.InputStream;
+import java.util.Date;
 import java.util.List;
 import javax.xml.bind.JAXBException;
 import org.openmrs.Location;
 import org.openmrs.api.OpenmrsService;
+import org.openmrs.module.dhisreport.api.adx.importsummary.AdxImportSummary;
 import org.openmrs.module.dhisreport.api.db.DHIS2ReportingDAO;
 import org.openmrs.module.dhisreport.api.dhis.HttpDhis2Server;
 import org.openmrs.module.dhisreport.api.model.DataSet;
@@ -113,4 +115,14 @@ public interface DHIS2ReportingService extends OpenmrsService {
 	 * @param reportIndicatorUuid the new reportIndicatorUuid
 	 */
 	public void updateReportIndicatorOfDataValueTemplate(Integer dataValueTemplateId, String reportIndicatorUuid);
+
+	/**
+	 * Post DataSet to the connected DHIS2 Instance
+	 * @param uid UID of DataSet
+	 * @param locationUuid UUID of OpenMRS location
+	 * @param startDate starting day of the period
+	 * @return
+	 * @throws DHIS2ReportingException
+	 */
+	public AdxImportSummary postDataSetToDHIS2(String uid, String locationUuid, Date startDate) throws DHIS2ReportingException;
 }

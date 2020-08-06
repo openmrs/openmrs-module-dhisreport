@@ -19,6 +19,7 @@
  **/
 package org.openmrs.module.dhisreport.api.utils;
 
+import java.text.SimpleDateFormat;
 import java.util.Date;
 import org.joda.time.DateTime;
 import org.joda.time.DateTimeConstants;
@@ -31,9 +32,9 @@ public class QuarterlyPeriod implements Period {
 
 	public static final String ISO_FORMAT = "yyyy'Q'n";
 
-	protected Date startDate;
-
-	protected Date endDate;
+	private Date startDate;
+	private Date endDate;
+	private String adxPeriod;
 
 	@Override
 	public void setStartDate(Date startDate) {
@@ -55,13 +56,24 @@ public class QuarterlyPeriod implements Period {
 		return endDate;
 	}
 
+	@Override
+	public void setAdxPeriod(String adxPeriod) {
+		this.adxPeriod = adxPeriod;
+	}
+
+	@Override
+	public String getAdxPeriod() {
+		return adxPeriod;
+	}
+
 	/**
 	 * TODO: Probably more efficient ways to do this. But this is least cryptic
-	 * 
+	 *
 	 * @param date
 	 */
 	public QuarterlyPeriod(Date date) {
 		DateTime dt = new DateTime(date);
+		adxPeriod = new SimpleDateFormat("yyyy-MM-dd").format(date) + "/P3M";
 		int monthNum = dt.getMonthOfYear();
 		if (monthNum >= 1 && monthNum <= 3) {
 			startDate = dt.withMonthOfYear(DateTimeConstants.JANUARY)

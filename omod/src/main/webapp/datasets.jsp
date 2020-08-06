@@ -15,8 +15,9 @@
     <c:forEach var="dataset" items="${datasets}">
         <tr>
             <td>${dataset.code}</td>
-            <td><a href="#">${dataset.name}</a></td>
+            <td>${dataset.name}</td>
             <td><a href="${pageContext.request.contextPath}/module/dhisreport/mapDataset.form?uid=${dataset.uid}">map</a></td>
+            <td><a href="${pageContext.request.contextPath}/module/dhisreport/prepareDatasetToPost.form?uid=${dataset.uid}">post</a></td>
         </tr>
     </c:forEach>
 </table>

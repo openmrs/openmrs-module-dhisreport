@@ -195,12 +195,12 @@
 			CONSTRAINT `fk_dataset_dataelement_dataset`
 			FOREIGN KEY (`dataset_id`)
 			REFERENCES `dhisreport_dataset` (`id`)
-			ON DELETE NO ACTION
+			ON DELETE CASCADE
 			ON UPDATE NO ACTION,
 			CONSTRAINT `fk_dataset_dataelement_dataelement`
 			FOREIGN KEY (`dataelement_id`)
 			REFERENCES `dhisreport_dataelement` (`id`)
-			ON DELETE NO ACTION
+			ON DELETE CASCADE
 			ON UPDATE NO ACTION)
 			ENGINE = InnoDB;
 
@@ -211,12 +211,12 @@
 			CONSTRAINT `fk_datavalue_template_has_disaggregation_data_value_template`
 			FOREIGN KEY (`datavalue_template_id`)
 			REFERENCES `dhisreport_datavalue_template` (`id`)
-			ON DELETE NO ACTION
+			ON DELETE CASCADE
 			ON UPDATE NO ACTION,
 			CONSTRAINT `fk_datavalue_template_has_disaggregation_disaggregation`
 			FOREIGN KEY (`disaggregation_id`)
 			REFERENCES `dhisreport_disaggregation` (`id`)
-			ON DELETE NO ACTION
+			ON DELETE CASCADE
 			ON UPDATE NO ACTION)
 			ENGINE = InnoDB;
 		</sql>
