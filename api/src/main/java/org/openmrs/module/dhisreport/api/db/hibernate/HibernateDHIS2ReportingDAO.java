@@ -30,12 +30,8 @@ import org.hibernate.SessionFactory;
 import org.hibernate.criterion.Restrictions;
 import org.openmrs.Location;
 import org.openmrs.module.dhisreport.api.db.DHIS2ReportingDAO;
-import org.openmrs.module.dhisreport.api.dfx2.metadata.dataset.Metadata.DataSets;
-import org.openmrs.module.dhisreport.api.model.Category;
-import org.openmrs.module.dhisreport.api.model.CategoryOption;
 import org.openmrs.module.dhisreport.api.model.DataSet;
 import org.openmrs.module.dhisreport.api.model.DataValueTemplate;
-import org.openmrs.module.dhisreport.api.model.Disaggregation;
 import org.openmrs.module.dhisreport.api.model.Identifiable;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -89,44 +85,10 @@ public class HibernateDHIS2ReportingDAO implements DHIS2ReportingDAO {
 	}
 
 	@Override
-	@Transactional
-	public Disaggregation saveDisaggregation(Disaggregation disaggregation) {
-		Session session = getCurrentSession();
-		Disaggregation existingDisaggregation = this
-				.getDisaggregationByCategoryAndCategoryOption(disaggregation.getCategory(),
-						disaggregation.getCategoryOption());
-		if (existingDisaggregation != null) {
-			return existingDisaggregation;
-		}
-		session.save(disaggregation);
-		return disaggregation;
-	}
-
-	@Override
-	@Transactional
-	public Disaggregation getDisaggregationByCategoryAndCategoryOption(Category category,
-			CategoryOption categoryOption) {
-		Session session = getCurrentSession();
-		Criteria criteria = session.createCriteria(Disaggregation.class);
-		criteria.add(Restrictions.eq("category", category));
-		criteria.add(Restrictions.eq("categoryOption", categoryOption));
-		return (Disaggregation) criteria.uniqueResult();
-	}
-
-	@Override
 	public Location getLocationByOU_Code(String OU_Code) {
 		Criteria criteria = getCurrentSession().createCriteria(Location.class);
 		criteria.add(Restrictions.like("name", OU_Code));
 		return (Location) criteria.uniqueResult();
-	}
-
-	@Override
-	@Transactional
-	public List<Disaggregation> getDisaggregationsByCategory(Category category) {
-		Session session = this.getCurrentSession();
-		Criteria criteria = session.createCriteria(Disaggregation.class);
-		criteria.add(Restrictions.eq("category", category));
-		return criteria.list();
 	}
 
 	@Override

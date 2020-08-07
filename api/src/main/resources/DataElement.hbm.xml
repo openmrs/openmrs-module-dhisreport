@@ -8,6 +8,5 @@
         <discriminator column="id" insert="false"/>
         <property column="name" name="name"/>
         <property column="uid" name="uid"/>
-        <property column="code" name="code"/>
     </class>
 </hibernate-mapping>

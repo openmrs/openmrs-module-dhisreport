@@ -8,15 +8,7 @@
         <discriminator column="id" insert="false"/>
         <many-to-one name="dataElement" column="dataelement_id" not-null="true"/>
         <many-to-one name="dataSet" column="dataset_id" not-null="true"/>
-        <property column="reportIndicatorUuid" name="reportIndicatorUuid"/>
-        <set name="disaggregations" table="${project.parent.artifactId}_datavalue_template_disaggregation"
-          lazy="true" fetch="select" cascade="all">
-            <key>
-                <column name="datavalue_template_id" not-null="true"/>
-            </key>
-            <many-to-many class="Disaggregation">
-                <column name="disaggregation_id" not-null="true"/>
-            </many-to-many>
-        </set>
+        <property name="reportIndicatorUuid" column="report_indicator_uuid"/>
+        <many-to-one name="categoryOptionCombo" column="category_option_combo_id" not-null="true" fetch="join"/>
     </class>
 </hibernate-mapping>

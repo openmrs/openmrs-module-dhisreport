@@ -17,7 +17,6 @@ import java.util.Set;
 public class DataElement implements Serializable, Identifiable {
 
   private Integer id;
-  private String code;
   private String uid;
   private String name;
 
@@ -29,14 +28,6 @@ public class DataElement implements Serializable, Identifiable {
   @Override
   public void setUid(String uid) {
     this.uid = uid;
-  }
-
-  public String getCode() {
-    return code;
-  }
-
-  public void setCode(String code) {
-    this.code = code;
   }
 
   @Override

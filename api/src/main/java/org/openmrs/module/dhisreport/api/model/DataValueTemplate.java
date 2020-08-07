@@ -20,7 +20,7 @@ public class DataValueTemplate implements Serializable {
   private DataSet dataSet;
   private DataElement dataElement;
   private String reportIndicatorUuid;
-  private Set<Disaggregation> disaggregations = new HashSet<Disaggregation>(0);
+  private CategoryOptionCombo categoryOptionCombo;
 
   public Integer getId() {
     return id;
@@ -54,12 +54,13 @@ public class DataValueTemplate implements Serializable {
     this.reportIndicatorUuid = reportIndicatorUuid;
   }
 
-  public Set<Disaggregation> getDisaggregations() {
-    return disaggregations;
+  public CategoryOptionCombo getCategoryOptionCombo() {
+    return categoryOptionCombo;
   }
 
-  public void setDisaggregations(Set<Disaggregation> disaggregations) {
-    this.disaggregations = disaggregations;
+  public void setCategoryOptionCombo(
+      CategoryOptionCombo categoryOptionCombo) {
+    this.categoryOptionCombo = categoryOptionCombo;
   }
 
   @Override
@@ -76,13 +77,13 @@ public class DataValueTemplate implements Serializable {
         && Objects.equals(getDataElement(), that.getDataElement())
         && Objects.equals(getReportIndicatorUuid(), that
         .getReportIndicatorUuid())
-        && getDisaggregations().equals(that.getDisaggregations());
+        && getCategoryOptionCombo().equals(that.getCategoryOptionCombo());
   }
 
   @Override
   public int hashCode() {
     return Objects.hash(getId(), getDataSet(), getDataElement(),
         getReportIndicatorUuid(),
-        getDisaggregations());
+        getCategoryOptionCombo());
   }
 }
