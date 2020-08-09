@@ -58,23 +58,16 @@
         <table id="column-table" width="100%">
             <thead>
             <tr>
-                <th>Data Element Code</th>
                 <th>Data Element</th>
-                <th>Disaggregations</th>
+                <th>Category Option Combination</th>
                 <th>Report Indicator</th>
             </tr>
             </thead>
             <tbody>
             <c:forEach items="${dataValueTemplates}" var="dataValueTemplate">
                 <tr>
-                    <td>${dataValueTemplate.dataElement.code}</td>
                     <td>${dataValueTemplate.dataElement.name}</td>
-                    <td>
-                        <c:forEach items="${dataValueTemplate.disaggregations}"
-                                   var="disaggregation">
-                            ${disaggregation.category.name}&nbsp;=&nbsp;${disaggregation.categoryOption.name},&nbsp;
-                        </c:forEach>
-                    </td>
+                    <td>${dataValueTemplate.categoryOptionCombo.name}</td>
                     <td>
                         <select id="dvt_${dataValueTemplate.id}">
                             <option disabled selected>Select a report indicator</option>

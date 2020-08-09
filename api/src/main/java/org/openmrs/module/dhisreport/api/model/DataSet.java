@@ -18,7 +18,6 @@ public class DataSet implements Serializable, Identifiable {
 
   private Integer id;
   private String uid;
-  private String code;
   private String name;
   private String periodType;
   private String reportUuid;
@@ -40,14 +39,6 @@ public class DataSet implements Serializable, Identifiable {
 
   public void setUid(String uid) {
     this.uid = uid;
-  }
-
-  public String getCode() {
-    return code;
-  }
-
-  public void setCode(String code) {
-    this.code = code;
   }
 
   public String getName() {

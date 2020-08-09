@@ -51,9 +51,7 @@
         DataElement.hbm.xml
         DataValueTemplate.hbm.xml
 				DataSet.hbm.xml
-			  Category.hbm.xml
-			  CategoryOption.hbm.xml
-        Disaggregation.hbm.xml
+			  CategoryOptionCombo.hbm.xml
     </mappingFiles>
 
 	<privilege>

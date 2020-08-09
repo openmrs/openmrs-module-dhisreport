@@ -1,12 +1,12 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE hibernate-mapping PUBLIC "-//Hibernate/Hibernate Mapping DTD 3.0//EN" "http://hibernate.sourceforge.net/hibernate-mapping-3.0.dtd">
 <hibernate-mapping package="org.openmrs.module.dhisreport.api.model">
-    <class name="Disaggregation" table="${project.parent.artifactId}_disaggregation">
+    <class name="CategoryOptionCombo" table="${project.parent.artifactId}_category_option_combo">
         <id column="id" name="id" unsaved-value="0">
             <generator class="native"/>
         </id>
         <discriminator column="id" insert="false"/>
-        <many-to-one name="category" column="category_id" not-null="true" fetch="join"/>
-        <many-to-one name="categoryOption" column="category_option_id" not-null="true" fetch="join"/>
+        <property column="name" name="name"/>
+        <property column="uid" name="uid"/>
     </class>
 </hibernate-mapping>

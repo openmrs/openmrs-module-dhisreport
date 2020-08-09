@@ -124,7 +124,6 @@
 			`id` int(11) NOT NULL AUTO_INCREMENT,
 			`name` varchar(230) NOT NULL,
 			`uid` varchar(11) NOT NULL,
-			`code` varchar(50) NOT NULL,
 			`periodType` varchar(50) NOT NULL,
 			`reportUuid` varchar(45),
 			PRIMARY KEY (`id`),
@@ -133,60 +132,12 @@
 
 			ALTER TABLE dhisreport_dataelement CHANGE de_name name VARCHAR(230);
 			ALTER TABLE dhisreport_dataelement MODIFY COLUMN code VARCHAR(50);
+			ALTER TABLE dhisreport_dataelement DROP COLUMN code;
 			ALTER TABLE dhisreport_dataelement MODIFY COLUMN uid VARCHAR(11);
-
-			CREATE TABLE IF NOT EXISTS `dhisreport_category` (
-			`id` INT NOT NULL AUTO_INCREMENT,
-			`uid` VARCHAR(11) NOT NULL,
-			`code` VARCHAR(50) NOT NULL,
-			`name` VARCHAR(230) NOT NULL,
-			UNIQUE KEY `uid` (`uid`),
-			PRIMARY KEY (`id`))
-			ENGINE = InnoDB;
-
-			CREATE TABLE IF NOT EXISTS `dhisreport_category_option` (
-			`id` INT NOT NULL AUTO_INCREMENT,
-			`uid` VARCHAR(11) NOT NULL,
-			`code` VARCHAR(50) NOT NULL,
-			`name` VARCHAR(230) NOT NULL,
-			UNIQUE KEY `uid` (`uid`),
-			PRIMARY KEY (`id`))
-			ENGINE = InnoDB;
 
 			DROP TABLE `dhisreport_datavalue_template`;
 			DROP TABLE `dhisreport_disaggregation`;
 			DROP TABLE `dhisreport_report_definition`;
-
-			CREATE TABLE IF NOT EXISTS `dhisreport_datavalue_template` (
-			`id` INT NOT NULL AUTO_INCREMENT,
-			`dataset_id` INT NOT NULL,
-			`dataelement_id` INT NOT NULL,
-			`reportIndicatorUuid` VARCHAR(36) NULL,
-			PRIMARY KEY (`id`),
-			CONSTRAINT `fk_datavalue_template_dataset`
-			FOREIGN KEY (`dataset_id`)
-			REFERENCES `dhisreport_dataset` (`id`)
-			ON DELETE CASCADE,
-			CONSTRAINT `fk_datavalue_template_dataelement`
-			FOREIGN KEY (`dataelement_id`)
-			REFERENCES `dhisreport_dataelement` (`id`)
-			ON DELETE CASCADE)
-			ENGINE = InnoDB;
-
-			CREATE TABLE IF NOT EXISTS `dhisreport_disaggregation` (
-			`id` INT NOT NULL AUTO_INCREMENT,
-			`category_id` INT NOT NULL,
-			`category_option_id` INT NOT NULL,
-			PRIMARY KEY (`id`),
-			CONSTRAINT `fk_disaggregation_combination_category`
-			FOREIGN KEY (`category_id`)
-			REFERENCES `dhisreport_category` (`id`)
-			ON DELETE CASCADE,
-			CONSTRAINT `fk_disaggregation_combination_category_option`
-			FOREIGN KEY (`category_option_id`)
-			REFERENCES `dhisreport_category_option` (`id`)
-			ON DELETE CASCADE)
-			ENGINE = InnoDB;
 
 			CREATE TABLE IF NOT EXISTS `dhisreport_dataset_dataelement` (
 			`dataset_id` INT NOT NULL,
@@ -204,18 +155,31 @@
 			ON UPDATE NO ACTION)
 			ENGINE = InnoDB;
 
-			CREATE TABLE IF NOT EXISTS `dhisreport_datavalue_template_disaggregation` (
-			`datavalue_template_id` INT NOT NULL,
-			`disaggregation_id` INT NOT NULL,
-			PRIMARY KEY (`datavalue_template_id`, `disaggregation_id`),
-			CONSTRAINT `fk_datavalue_template_has_disaggregation_data_value_template`
-			FOREIGN KEY (`datavalue_template_id`)
-			REFERENCES `dhisreport_datavalue_template` (`id`)
-			ON DELETE CASCADE
-			ON UPDATE NO ACTION,
-			CONSTRAINT `fk_datavalue_template_has_disaggregation_disaggregation`
-			FOREIGN KEY (`disaggregation_id`)
-			REFERENCES `dhisreport_disaggregation` (`id`)
+			CREATE TABLE IF NOT EXISTS `dhisreport_category_option_combo` (
+			`id` INT NOT NULL AUTO_INCREMENT,
+			`name` VARCHAR(230) NULL DEFAULT NULL,
+			`uid` VARCHAR(11) NULL DEFAULT NULL,
+			PRIMARY KEY (`id`))
+			ENGINE = InnoDB;
+
+			CREATE TABLE IF NOT EXISTS `dhisreport_datavalue_template` (
+			`id` INT NOT NULL AUTO_INCREMENT,
+			`dataset_id` INT NOT NULL,
+			`dataelement_id` INT NOT NULL,
+			`report_indicator_uuid` VARCHAR(36) NULL DEFAULT NULL,
+			`category_option_combo_id` INT NOT NULL,
+			PRIMARY KEY (`id`),
+			CONSTRAINT `fk_datavalue_template_dataelement`
+			FOREIGN KEY (`dataelement_id`)
+			REFERENCES `dhisreport_dataelement` (`id`)
+			ON DELETE CASCADE,
+			CONSTRAINT `fk_datavalue_template_dataset`
+			FOREIGN KEY (`dataset_id`)
+			REFERENCES `dhisreport_dataset` (`id`)
+			ON DELETE CASCADE,
+			CONSTRAINT `fk_dhisreport_datavalue_template_category_option_combo`
+			FOREIGN KEY (`category_option_combo_id`)
+			REFERENCES `dhisreport_category_option_combo` (`id`)
 			ON DELETE CASCADE
 			ON UPDATE NO ACTION)
 			ENGINE = InnoDB;
