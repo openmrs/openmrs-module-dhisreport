@@ -85,13 +85,6 @@ public class HibernateDHIS2ReportingDAO implements DHIS2ReportingDAO {
 	}
 
 	@Override
-	public Location getLocationByOU_Code(String OU_Code) {
-		Criteria criteria = getCurrentSession().createCriteria(Location.class);
-		criteria.add(Restrictions.like("name", OU_Code));
-		return (Location) criteria.uniqueResult();
-	}
-
-	@Override
 	@Transactional
 	public DataValueTemplate getDataValueTemplateById(Integer id){
 		Session session = this.getCurrentSession();

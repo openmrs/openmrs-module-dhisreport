@@ -17,15 +17,15 @@
         <tbody>
             <tr>
                 <td><spring:message code="dhisreport.dhis2URL" /></td>
-                <td><input name="url" type="text" size="30" value="${dhis2Server.url}" /></td>
+                <td><input name="url" type="text" size="30" value="${url}" /></td>
             </tr>
             <tr>
                 <td><spring:message code="dhisreport.dhis2UserName" /></td>
-                <td><input name="username" type="text" size="20" value="${dhis2Server.username}" /></td>
+                <td><input name="username" type="text" size="20" value="${username}" /></td>
             </tr>
             <tr>
                 <td><spring:message code="dhisreport.dhis2Password" /></td>
-                <td><input name="password" type="password" size="20" value="${dhis2Server.password}"/></td>
+                <td><input name="password" type="password" size="20" /></td>
             </tr>
             <tr>
                 <td />

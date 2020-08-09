@@ -32,8 +32,6 @@ import org.openmrs.module.dhisreport.api.model.Identifiable;
  */
 public interface DHIS2ReportingDAO {
 
-	public Location getLocationByOU_Code(String OU_Code);
-
 	public SessionFactory getSessionFactory();
 
 	public Identifiable saveObject(Identifiable object);

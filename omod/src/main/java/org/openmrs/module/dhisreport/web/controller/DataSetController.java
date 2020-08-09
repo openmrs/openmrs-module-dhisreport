@@ -143,7 +143,7 @@ public class DataSetController {
   }
 
   /**
-   * Gets the Attribute Type that stores dhis2 Organization Unit code
+   * Gets the Attribute Type that stores dhis2 Organisation Unit code
    *
    * @return the Optional instance that contains the Attribute type
    */

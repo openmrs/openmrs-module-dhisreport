@@ -108,28 +108,6 @@ public class DHIS2ReportingServiceImpl extends BaseOpenmrsService
 	}
 
 	@Override
-	public Location getLocationByOU_Code(String OU_Code) {
-		return dao.getLocationByOU_Code(OU_Code);
-	}
-
-	@Override
-	public Location getLocationByOrgUnitCode(String orgUnitCode) {
-		List<Location> locationList = new ArrayList<Location>();
-		locationList.addAll(Context.getLocationService().getAllLocations());
-		for (Location l : locationList) {
-			for (LocationAttribute la : l.getActiveAttributes()) {
-				if (la.getAttributeType().getName().equals("CODE")) {
-					if ((la.getValue().toString()).equals(orgUnitCode)) {
-						return l;
-					}
-				}
-
-			}
-		}
-		return null;
-	}
-
-	@Override
 	public void importDataSet(InputStream inputStream) throws JAXBException {
 		// Unmarshal the XML file
 		JAXBContext jaxbContext = JAXBContext
@@ -184,11 +162,11 @@ public class DHIS2ReportingServiceImpl extends BaseOpenmrsService
 	@Override
 	public AdxImportSummary postDataSetToDHIS2(String uid, String locationUuid, Date startDate) throws DHIS2ReportingException {
 		DataSet dataSet = getDataSetByUid(uid);
-		String organizationUnit = getOrganizationUnit(locationUuid);
+		String organisationUnit = getOrganisationUnit(locationUuid);
 		Period period = generatePeriod(startDate, dataSet.getPeriodType());
 		Report report = executeReportDefinition(dataSet.getReportUuid(), period);
 		Map<DataValueTemplate, String> mappedDataValueTemplates = mapReportWithDataSet(report, dataSet);
-		AdxType adxTemplate = generateAdxTemplate(mappedDataValueTemplates, dataSet, organizationUnit, period.getAdxPeriod());
+		AdxType adxTemplate = generateAdxTemplate(mappedDataValueTemplates, dataSet, organisationUnit, period.getAdxPeriod());
 		return dhis2Server.postAdxData(adxTemplate);
 	}
 
@@ -327,15 +305,15 @@ public class DHIS2ReportingServiceImpl extends BaseOpenmrsService
 	}
 
 	/**
-	 * Gets the mapped DHIS2 Organization code of an OpenMRS location.
+	 * Gets the mapped DHIS2 Organisation code of an OpenMRS location.
 	 *
 	 * @param locationUuid UUID of OpenMRS location
-	 * @return the Code of the mapped DHIS2 Organization Unit
+	 * @return the Code of the mapped DHIS2 Organisation Unit
 	 * @throws DHIS2ReportingException if the provided location is invalid or not mapped with a DHIS2
-	 *                                 Organization Unit
+	 *                                 Organisation Unit
 	 */
-	private String getOrganizationUnit(String locationUuid) throws DHIS2ReportingException {
-		Optional<LocationAttributeType> maybeLocationAttributeType = getCodeAttributeType();
+	private String getOrganisationUnit(String locationUuid) throws DHIS2ReportingException {
+		Optional<LocationAttributeType> maybeLocationAttributeType = getDhis2OrgUnitLocationAttributeType();
 		if (!maybeLocationAttributeType.isPresent()) {
 			throw new DHIS2ReportingException("Location is not mapped with an organisation");
 		}
@@ -347,16 +325,36 @@ public class DHIS2ReportingServiceImpl extends BaseOpenmrsService
 				.getActiveAttributes(maybeLocationAttributeType.get()).get(0).getValue();
 	}
 
-	/**
-	 * Gets the Attribute Type that stores dhis2 Organization Unit code.
-	 *
-	 * @return the Optional instance that contains the Attribute type
-	 */
-	private Optional<LocationAttributeType> getCodeAttributeType() {
+	public Optional<LocationAttributeType> getDhis2OrgUnitLocationAttributeType() {
 		return Context.getLocationService()
 				.getAllLocationAttributeTypes().stream()
-				.filter(locationAttributeType -> locationAttributeType.getName().equals("CODE"))
+				.filter(locationAttributeType -> locationAttributeType.getName().equals("DHIS2_ORG_UNIT"))
 				.findFirst();
+	}
+
+	public void mapLocationWithDhis2OrgUnit(String locationUuid, String dhis2OrgUnitUid) throws DHIS2ReportingException {
+		Location location = Context.getLocationService().getLocationByUuid(locationUuid);
+		if (location == null) {
+			throw new DHIS2ReportingException("Invalid Location");
+		}
+		Optional<LocationAttributeType> maybeLocationAttributeType = getDhis2OrgUnitLocationAttributeType();
+		LocationAttributeType attributeType;
+		if (maybeLocationAttributeType.isPresent()) {
+			attributeType = maybeLocationAttributeType.get();
+		} else {
+			attributeType = new LocationAttributeType();
+			attributeType.setName("DHIS2_ORG_UNIT");
+			attributeType.setDescription("DHIS2 Organisation Unit's UID");
+			attributeType.setMinOccurs(0);
+			attributeType.setMaxOccurs(1);
+			attributeType.setDatatypeClassname("org.openmrs.customdatatype.datatype.FreeTextDatatype");
+			Context.getLocationService().saveLocationAttributeType(attributeType);
+		}
+		LocationAttribute locationAttribute = new LocationAttribute();
+		locationAttribute.setAttributeType(attributeType);
+		locationAttribute.setValue(dhis2OrgUnitUid);
+		location.setAttribute(locationAttribute);
+		Context.getLocationService().saveLocation(location);
 	}
 
 	/**
@@ -397,12 +395,12 @@ public class DHIS2ReportingServiceImpl extends BaseOpenmrsService
 	 *
 	 * @param mappedDataValueTemplates a map contains Data Value Templates mapped with corresponding values
 	 * @param dataSet the parent DataSet of Data Value Templates
-	 * @param organizationUnitCode code of DHIS2 Organization Unit
+	 * @param organisationUnitCode code of DHIS2 Organisation Unit
 	 * @param adxPeriod ADX period string for the period of data
 	 * @return generated ADX template
 	 * @throws DHIS2ReportingException if unable to set exported time
 	 */
-	private AdxType generateAdxTemplate(Map<DataValueTemplate, String> mappedDataValueTemplates, DataSet dataSet, String organizationUnitCode, String adxPeriod)
+	private AdxType generateAdxTemplate(Map<DataValueTemplate, String> mappedDataValueTemplates, DataSet dataSet, String organisationUnitCode, String adxPeriod)
 			throws DHIS2ReportingException {
 		AdxType adxTemplate = new AdxType();
 		try {
@@ -413,7 +411,7 @@ public class DHIS2ReportingServiceImpl extends BaseOpenmrsService
 		}
 		GroupType groupType = new GroupType();
 		groupType.setDataSet(dataSet.getUid());
-		groupType.setOrgUnit(organizationUnitCode);
+		groupType.setOrgUnit(organisationUnitCode);
 		groupType.setPeriod(adxPeriod);
 		adxTemplate.getGroup().add(groupType);
 		List<DataValueType> dataValueTypes = groupType.getDataValue();
