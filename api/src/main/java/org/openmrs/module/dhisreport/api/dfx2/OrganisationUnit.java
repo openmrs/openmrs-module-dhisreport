@@ -7,12 +7,12 @@ import javax.xml.bind.annotation.XmlRootElement;
 
 @XmlRootElement(name = "organisationUnit")
 @XmlAccessorType(XmlAccessType.FIELD)
-public class OrganizationUnit {
+public class OrganisationUnit {
 	@XmlAttribute
 	private String name;
 
 	@XmlAttribute
-	private String code;
+	private String id;
 
 	public String getName() {
 		return name;
@@ -22,11 +22,11 @@ public class OrganizationUnit {
 		this.name = name;
 	}
 
-	public String getCode() {
-		return code;
+	public String getId() {
+		return id;
 	}
 
-	public void setCode(String code) {
-		this.code = code;
+	public void setId(String id) {
+		this.id = id;
 	}
 }

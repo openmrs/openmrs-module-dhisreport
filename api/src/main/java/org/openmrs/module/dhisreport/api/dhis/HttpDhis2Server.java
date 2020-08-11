@@ -20,38 +20,37 @@
 package org.openmrs.module.dhisreport.api.dhis;
 
 import java.io.IOException;
-import java.io.InputStream;
 import java.io.StringWriter;
 import java.net.MalformedURLException;
 import java.net.URL;
+import java.util.ArrayList;
+import java.util.List;
 import javax.xml.bind.JAXBContext;
 import javax.xml.bind.JAXBException;
 import javax.xml.bind.Marshaller;
 import javax.xml.bind.Unmarshaller;
+import org.apache.commons.lang.StringUtils;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.apache.http.Header;
 import org.apache.http.HttpEntity;
-import org.apache.http.HttpHost;
-import org.apache.http.HttpResponse;
 import org.apache.http.auth.AuthenticationException;
 import org.apache.http.auth.Credentials;
 import org.apache.http.auth.UsernamePasswordCredentials;
-import org.apache.http.client.HttpClient;
 import org.apache.http.client.methods.CloseableHttpResponse;
+import org.apache.http.client.methods.HttpGet;
 import org.apache.http.client.methods.HttpPost;
 import org.apache.http.entity.StringEntity;
 import org.apache.http.impl.auth.BasicScheme;
 import org.apache.http.impl.client.CloseableHttpClient;
-import org.apache.http.impl.client.DefaultHttpClient;
-import org.apache.http.impl.client.HttpClientBuilder;
 import org.apache.http.impl.client.HttpClients;
-import org.apache.http.protocol.BasicHttpContext;
 import org.hisp.dhis.dxf2.Dxf2Exception;
 import org.openmrs.api.context.Context;
 import org.openmrs.module.dhisreport.api.DHIS2ReportingException;
 import org.openmrs.module.dhisreport.api.adx.AdxType;
 import org.openmrs.module.dhisreport.api.adx.importsummary.AdxImportSummary;
+import org.openmrs.module.dhisreport.api.dfx2.Metadata;
+import org.openmrs.module.dhisreport.api.dfx2.OrganisationUnit;
 
 /**
  *
@@ -61,7 +60,8 @@ public class HttpDhis2Server implements Dhis2Server {
 
 	private static Log log = LogFactory.getLog(HttpDhis2Server.class);
 
-	public static final String DATAVALUESET_PATH = "/api/dataValueSets?orgUnitIdScheme=CODE";
+	public static final String DATAVALUESET_PATH = "/api/dataValueSets";
+	public static final String ORG_UNITS_PATH = "/api/organisationUnits.xml?fields=name,id&paging=false";
 
 	private URL url;
 
@@ -110,14 +110,8 @@ public class HttpDhis2Server implements Dhis2Server {
 
 	@Override
 	public boolean isConfigured() {
-		if (username == null | password == null | url == null) {
-			return false;
-		}
-		if (username.isEmpty() | password.isEmpty() | url.getHost().isEmpty()) {
-			return false;
-		}
-
-		return true;
+		return (StringUtils.isEmpty(username) && StringUtils.isEmpty(password) && url.getHost()
+				.isEmpty());
 	}
 
 	@Override
@@ -133,7 +127,6 @@ public class HttpDhis2Server implements Dhis2Server {
 		} catch (JAXBException ex) {
 			throw new Dxf2Exception("Problem marshalling adxtype", ex);
 		}
-		// Todo: Post Data to DHIS2 and return the
 		AdxImportSummary importSummary = null;
 
 		try (CloseableHttpClient client = HttpClients.createDefault()) {
@@ -178,5 +171,33 @@ public class HttpDhis2Server implements Dhis2Server {
 		}
 
 		return importSummary;
+	}
+
+	public List<OrganisationUnit> getDHIS2OrganisationUnits() throws Dhis2Exception {
+		try (CloseableHttpClient client = HttpClients.createDefault()) {
+			String url = this.getUrl() + ORG_UNITS_PATH;
+			HttpGet httpGet = new HttpGet(url + DATAVALUESET_PATH);
+			Credentials credentials = new UsernamePasswordCredentials(getUsername(),
+					getPassword());
+			Header bs = new BasicScheme().authenticate(credentials, httpGet, null);
+			httpGet.addHeader("Authorization", bs.getValue());
+			CloseableHttpResponse response = client.execute(httpGet);
+			HttpEntity entity = response.getEntity();
+			if (response.getStatusLine().getStatusCode() != 200) {
+				throw new Dhis2Exception(this, response.getStatusLine()
+						.getReasonPhrase(), null);
+			}
+			JAXBContext jaxbContext = JAXBContext.newInstance(Metadata.class);
+			javax.xml.bind.Unmarshaller jaxbUnmarshaller = jaxbContext
+					.createUnmarshaller();
+			Metadata metadata = (Metadata) jaxbUnmarshaller.unmarshal(entity.getContent());
+			return metadata.getOrganisationUnits().getOrganisationUnits();
+		}catch (IOException ex) {
+			throw new Dhis2Exception(this, "Problem accessing DHIS2 server", ex);
+		} catch (AuthenticationException ex) {
+			throw new Dhis2Exception(this, "Invalid credentials", ex);
+		} catch (JAXBException ex) {
+			throw new Dhis2Exception(this, "Can not unmarshal the response from DHIS2", ex);
+		}
 	}
 }

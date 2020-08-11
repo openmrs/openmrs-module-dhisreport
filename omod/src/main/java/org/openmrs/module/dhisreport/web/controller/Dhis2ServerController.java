@@ -81,7 +81,8 @@ public class Dhis2ServerController {
 		server.setPassword(dhispassword);
 
 		model.addAttribute("user", Context.getAuthenticatedUser());
-		model.addAttribute("dhis2Server", server);
+		model.addAttribute("username", dhisusername);
+		model.addAttribute("url", dhisurl);
 
 	}
 

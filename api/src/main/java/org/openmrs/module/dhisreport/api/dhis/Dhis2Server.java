@@ -19,10 +19,11 @@
  **/
 package org.openmrs.module.dhisreport.api.dhis;
 
-import java.io.IOException;
+import java.util.List;
 import org.openmrs.module.dhisreport.api.DHIS2ReportingException;
 import org.openmrs.module.dhisreport.api.adx.AdxType;
 import org.openmrs.module.dhisreport.api.adx.importsummary.AdxImportSummary;
+import org.openmrs.module.dhisreport.api.dfx2.OrganisationUnit;
 
 /**
  *
@@ -40,5 +41,13 @@ public interface Dhis2Server {
 	 */
 	public AdxImportSummary postAdxData(AdxType adxTemplate)
 			throws DHIS2ReportingException;
+
+	/**
+	 * Gets the Organisation Units of the connected DHIS2 instance
+	 *
+	 * @return list of Organisation Units
+	 * @throws Dhis2Exception if unable to fetch the Organisation Unit list
+	 */
+	public List<OrganisationUnit> getDHIS2OrganisationUnits() throws Dhis2Exception;
 
 }

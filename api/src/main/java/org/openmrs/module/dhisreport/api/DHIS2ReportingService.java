@@ -22,8 +22,10 @@ package org.openmrs.module.dhisreport.api;
 import java.io.InputStream;
 import java.util.Date;
 import java.util.List;
+import java.util.Optional;
 import javax.xml.bind.JAXBException;
 import org.openmrs.Location;
+import org.openmrs.LocationAttributeType;
 import org.openmrs.api.OpenmrsService;
 import org.openmrs.module.dhisreport.api.adx.importsummary.AdxImportSummary;
 import org.openmrs.module.dhisreport.api.db.DHIS2ReportingDAO;
@@ -60,14 +62,6 @@ public interface DHIS2ReportingService extends OpenmrsService {
 	 * @return the Dhis2 server
 	 */
 	public HttpDhis2Server getDhis2Server();
-
-	/**
-	 * @param OU_Code
-	 * @return
-	 */
-	public Location getLocationByOU_Code(String OU_Code);
-
-	public Location getLocationByOrgUnitCode(String orgUnitCode);
 
 	public DHIS2ReportingDAO getDao();
 
@@ -121,8 +115,24 @@ public interface DHIS2ReportingService extends OpenmrsService {
 	 * @param uid UID of DataSet
 	 * @param locationUuid UUID of OpenMRS location
 	 * @param startDate starting day of the period
-	 * @return
-	 * @throws DHIS2ReportingException
+	 * @return the ADX Import Summary returned by DHIS2
+	 * @throws DHIS2ReportingException if failed to post data
 	 */
 	public AdxImportSummary postDataSetToDHIS2(String uid, String locationUuid, Date startDate) throws DHIS2ReportingException;
+
+	/**
+	 * Gets the Attribute Type that stores dhis2 Organisation Unit code.
+	 *
+	 * @return the Optional instance that contains the Attribute type
+	 */
+	public Optional<LocationAttributeType> getDhis2OrgUnitLocationAttributeType();
+
+	/**
+	 * Maps a given location with a DHIS2 Organisation Unit
+	 *
+	 * @param locationUuid UUID of the location
+	 * @param dhis2OrgUnitUid UID of the DHIS2 Organisation Unit
+	 * @throws DHIS2ReportingException if unable to map the location
+	 */
+	public void mapLocationWithDhis2OrgUnit(String locationUuid, String dhis2OrgUnitUid) throws DHIS2ReportingException;
 }

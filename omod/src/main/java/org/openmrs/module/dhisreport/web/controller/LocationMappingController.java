@@ -19,30 +19,22 @@
  **/
 package org.openmrs.module.dhisreport.web.controller;
 
-import java.io.InputStream;
-import java.net.MalformedURLException;
-import java.net.URL;
-import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
-
-import javax.xml.bind.JAXBContext;
-
+import java.util.Map;
+import java.util.Optional;
+import java.util.function.Function;
+import java.util.stream.Collectors;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
-import org.apache.http.HttpResponse;
-import org.apache.http.auth.UsernamePasswordCredentials;
-import org.apache.http.client.ClientProtocolException;
-import org.apache.http.client.methods.HttpGet;
-import org.apache.http.impl.auth.BasicScheme;
-import org.apache.http.impl.client.DefaultHttpClient;
 import org.openmrs.Location;
 import org.openmrs.LocationAttribute;
 import org.openmrs.LocationAttributeType;
 import org.openmrs.api.context.Context;
+import org.openmrs.module.dhisreport.api.DHIS2ReportingException;
 import org.openmrs.module.dhisreport.api.DHIS2ReportingService;
-import org.openmrs.module.dhisreport.api.dfx2.Metadata;
-import org.openmrs.module.dhisreport.api.dfx2.OrganizationUnit;
+import org.openmrs.module.dhisreport.api.dfx2.OrganisationUnit;
+import org.openmrs.module.dhisreport.api.dhis.Dhis2Exception;
 import org.openmrs.module.dhisreport.api.dhis.HttpDhis2Server;
 import org.openmrs.web.WebConstants;
 import org.springframework.stereotype.Controller;
@@ -57,181 +49,65 @@ public class LocationMappingController {
 	protected final Log log = LogFactory.getLog(getClass());
 
 	@RequestMapping(value = "/module/dhisreport/mapLocations", method = RequestMethod.GET)
-	public void showConfigForm(ModelMap model, WebRequest webRequest) {
+	public void showConfigForm(ModelMap modelMap, WebRequest webRequest) {
 		DHIS2ReportingService service = Context
 				.getService(DHIS2ReportingService.class);
-
 		HttpDhis2Server server = service.getDhis2Server();
-		String dhisurl = Context.getAdministrationService().getGlobalProperty(
-				"dhisreport.dhis2URL");
-		String dhisusername = Context.getAdministrationService()
-				.getGlobalProperty("dhisreport.dhis2UserName");
-		String dhispassword = Context.getAdministrationService()
-				.getGlobalProperty("dhisreport.dhis2Password");
-
-		URL url = null;
+		Map<String, OrganisationUnit> organisationUnits;
 		try {
-			url = new URL(dhisurl);
-		} catch (MalformedURLException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
+			organisationUnits = server.getDHIS2OrganisationUnits().stream().collect(Collectors.toMap(
+					OrganisationUnit::getId, Function
+					.identity()));
+		} catch (Dhis2Exception e) {
+			webRequest.setAttribute(WebConstants.OPENMRS_ERROR_ATTR, Context
+							.getMessageSourceService().getMessage(
+							"dhisreport.currentConnectionFail"),
+					WebRequest.SCOPE_SESSION);
+			return;
 		}
-
-		model.addAttribute("locationList", Context.getLocationService()
-				.getAllLocations());
-		Metadata metadata = null;
-		List<OrganizationUnit> ou = null;
-		Dhis2ServerController connection = new Dhis2ServerController();
-		boolean val = connection.testConnection(url, dhisusername,
-				dhispassword, server, webRequest, model);
-		if (val == true) {
-			try {
-				metadata = getDHIS2OrganizationUnits();
-			} catch (Exception e) {
-				log.debug("Error in Unmarshalling");
-				e.printStackTrace();
-			}
-			if (metadata != null) {
-				ou = metadata.getOrganizationUnits().getOrganizationUnits();
-				model.addAttribute("orgunits", ou);
-
-				HashMap<String, String> hm = new HashMap<String, String>();
-				List<Location> locationList = new ArrayList<Location>();
-				locationList.addAll(Context.getLocationService()
-						.getAllLocations());
-
-				for (Location l : locationList) {
-					for (LocationAttribute la : l.getActiveAttributes()) {
-						if (la.getAttributeType().getName().equals("CODE")) {
-							if (la.getValue() != null) {
-
-								for (OrganizationUnit o : ou) {
-									if (la.getValue().equals(o.getCode())) {
-										hm.put(l.getName(), o.getName());
-									}
-								}
-							}
-						}
+		List<Location> locations = Context.getLocationService().getAllLocations();
+		Optional<LocationAttributeType> maybeLocationAttributeType = service
+				.getDhis2OrgUnitLocationAttributeType();
+		Map<Location, OrganisationUnit> mappedOrganisationUnits = new HashMap<>();
+		if(maybeLocationAttributeType.isPresent()){
+			LocationAttributeType locationAttributeType = maybeLocationAttributeType.get();
+			locations.forEach(location -> {
+				List<LocationAttribute> activeAttributes = location
+						.getActiveAttributes(locationAttributeType);
+				if(activeAttributes.size() > 0){
+					String orgUnitUid = (String) activeAttributes.get(0).getValue();
+					if(organisationUnits.containsKey(orgUnitUid)){
+						mappedOrganisationUnits.put(location, organisationUnits.get(orgUnitUid));
 					}
 				}
-				model.addAttribute("map", hm);
-				return;
-			}
+			});
 		}
-		webRequest.setAttribute(WebConstants.OPENMRS_MSG_ATTR, Context
-				.getMessageSourceService().getMessage(
-						"dhisreport.currentConnectionFail"),
-				WebRequest.SCOPE_SESSION);
-		model.addAttribute("orgunits", ou);
+		modelMap.addAttribute("organisationUnits", organisationUnits);
+		modelMap.addAttribute("mappedOrganisationUnits", mappedOrganisationUnits);
+		modelMap.addAttribute("locations", locations);
 	}
 
 	@RequestMapping(value = "/module/dhisreport/mapLocations", method = RequestMethod.POST)
 	public String mapLocations(
-			ModelMap model,
-			@RequestParam(value = "DHIS2OrgUnits", required = true) String dhis2OrgUnitCode,
-			@RequestParam(value = "openmrsLocations", required = true) String openmrsLocationName,
+			@RequestParam String dhis2OrgUnitUid,
+			@RequestParam String openmrsLocationUuid,
 			WebRequest webRequest) {
-		System.out.println("org unit does not  exits and it is : "
-				+ dhis2OrgUnitCode);
 		String referer = webRequest.getHeader("Referer");
-
-		if (dhis2OrgUnitCode.equals("")) {
-			System.out.println("org unit does not  exits");
+		DHIS2ReportingService service = Context
+				.getService(DHIS2ReportingService.class);
+		try {
+			service.mapLocationWithDhis2OrgUnit(openmrsLocationUuid, dhis2OrgUnitUid);
 			webRequest.setAttribute(WebConstants.OPENMRS_MSG_ATTR, Context
-					.getMessageSourceService().getMessage(
-							"dhisreport.orgUnitCodeDoesNotExist"),
+							.getMessageSourceService().getMessage(
+							"dhisreport.openMRSLocationMapped"),
 					WebRequest.SCOPE_SESSION);
-			return "redirect:" + referer;
-		}
-		List<Location> locationList = new ArrayList<Location>();
-		locationList.addAll(Context.getLocationService().getAllLocations());
-		Location loc = Context.getLocationService().getLocation(
-				openmrsLocationName);
-		if (loc == null) {
-			webRequest.setAttribute(WebConstants.OPENMRS_MSG_ATTR, Context
-					.getMessageSourceService().getMessage(
+		} catch (DHIS2ReportingException e) {
+			webRequest.setAttribute(WebConstants.OPENMRS_ERROR_ATTR, Context
+							.getMessageSourceService().getMessage(
 							"dhisreport.openMRSLocationDoesNotExist"),
 					WebRequest.SCOPE_SESSION);
-			return "redirect:" + referer;
 		}
-
-		List<LocationAttributeType> attributeTypes = Context
-				.getLocationService().getAllLocationAttributeTypes();
-		for (LocationAttributeType lat : attributeTypes) {
-			if (lat.getName().equals("CODE")) {
-				LocationAttribute locationAttribute = new LocationAttribute();
-				locationAttribute.setAttributeType(lat);
-				locationAttribute.setValue(dhis2OrgUnitCode);
-				loc.setAttribute(locationAttribute);
-				Context.getLocationService().saveLocation(loc);
-				webRequest.setAttribute(WebConstants.OPENMRS_MSG_ATTR, Context
-						.getMessageSourceService().getMessage(
-								"dhisreport.openMRSLocationMapped"),
-						WebRequest.SCOPE_SESSION);
-				return "redirect:" + referer;
-			}
-		}
-		LocationAttributeType attributetype = new LocationAttributeType();
-		attributetype.setName("CODE");
-		attributetype
-				.setDescription("Corresponding Value of ORG UNITS for DHIS");
-		attributetype.setMinOccurs(0);
-		attributetype.setMaxOccurs(1);
-		attributetype
-				.setDatatypeClassname("org.openmrs.customdatatype.datatype.FreeTextDatatype");
-		Context.getLocationService().saveLocationAttributeType(attributetype);
-
-		LocationAttribute locationAttribute = new LocationAttribute();
-		locationAttribute.setAttributeType(attributetype);
-		locationAttribute.setValue(dhis2OrgUnitCode);
-		loc.setAttribute(locationAttribute);
-		Context.getLocationService().saveLocation(loc);
-		webRequest.setAttribute(WebConstants.OPENMRS_MSG_ATTR, Context
-				.getMessageSourceService().getMessage(
-						"dhisreport.openMRSLocationMapped"),
-				WebRequest.SCOPE_SESSION);
 		return "redirect:" + referer;
-
-	}
-
-	public Metadata getDHIS2OrganizationUnits() throws Exception {
-		String username = Context.getAdministrationService().getGlobalProperty(
-				"dhisreport.dhis2UserName");
-		String password = Context.getAdministrationService().getGlobalProperty(
-				"dhisreport.dhis2Password");
-		String dhisurl = Context.getAdministrationService().getGlobalProperty(
-				"dhisreport.dhis2URL");
-		String url = dhisurl
-				+ "/api/organisationUnits.xml?fields=name,code&paging=false";
-		// String url = "https://play.dhis2.org/demo/api/dataSets";
-		// String referer = webRequest.getHeader( "Referer" );
-
-		DefaultHttpClient httpClient = new DefaultHttpClient();
-		HttpGet getRequest = new HttpGet(url);
-		getRequest.addHeader("accept", "application/xml");
-		getRequest.addHeader(BasicScheme.authenticate(
-				new UsernamePasswordCredentials(username, password), "UTF-8",
-				false));
-		HttpResponse response;
-		InputStream is = null;
-		Metadata metadata = null;
-		try {
-			response = httpClient.execute(getRequest);
-			is = response.getEntity().getContent();
-			JAXBContext jaxbContext = JAXBContext.newInstance(Metadata.class);
-			javax.xml.bind.Unmarshaller jaxbUnmarshaller = jaxbContext
-					.createUnmarshaller();
-			metadata = (Metadata) jaxbUnmarshaller.unmarshal(is);
-
-			return metadata;
-		} catch (ClientProtocolException e) {
-			log.debug("ClientProtocolException occured : " + e.toString());
-			e.printStackTrace();
-		} finally {
-			is.close();
-		}
-		return metadata;
-
 	}
 
 }
