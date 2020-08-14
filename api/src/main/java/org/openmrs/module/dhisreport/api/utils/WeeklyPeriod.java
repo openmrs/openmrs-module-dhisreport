@@ -20,6 +20,7 @@
 package org.openmrs.module.dhisreport.api.utils;
 
 import java.text.SimpleDateFormat;
+import java.util.Calendar;
 import java.util.Date;
 import org.joda.time.DateTime;
 import org.joda.time.DateTimeConstants;
@@ -28,50 +29,17 @@ import org.joda.time.DateTimeConstants;
  * Class to create period for weekly reporting. You can also mention just the
  * week number in ISO8601 and initializes startDate and endDate
  */
-public class WeeklyPeriod implements Period {
+public class WeeklyPeriod extends Period {
 
 	public static final String ISO_FORMAT = "yyyy'W'ww";
 
-	private Date startDate;
-	private Date endDate;
-	private String adxPeriod;
-
-	@Override
-	public void setStartDate(Date startDate) {
-		this.startDate = startDate;
-	}
-
-	@Override
-	public void setEndDate(Date endDate) {
-		this.endDate = endDate;
-	}
-
-	@Override
-	public Date getStartDate() {
-		return startDate;
-	}
-
-	@Override
-	public Date getEndDate() {
-		return endDate;
-	}
-
-	@Override
-	public void setAdxPeriod(String adxPeriod) {
-		this.adxPeriod = adxPeriod;
-	}
-
-	@Override
-	public String getAdxPeriod() {
-		return adxPeriod;
-	}
-
 	public WeeklyPeriod(Date date) {
-		DateTime dt = new DateTime(date);
-		startDate = dt.withDayOfWeek(DateTimeConstants.MONDAY).toDate();
-		endDate = dt.withDayOfWeek(DateTimeConstants.SUNDAY).withTime(23, 59,
-				59, 999).toDate();
-		adxPeriod = new SimpleDateFormat("yyyy-MM-dd").format(date) + "/P7D";
+		startDate = new DateTime(date).withDayOfWeek(DateTimeConstants.MONDAY).toDate();
+		Calendar calendar = Calendar.getInstance();
+		calendar.setTime(date);
+		calendar.add(Calendar.DATE, 7);
+		endDate = calendar.getTime();
+		adxPeriod = new SimpleDateFormat("yyyy-MM-dd").format(startDate) + "/P7D";
 	}
 
 	@Override

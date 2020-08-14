@@ -25,19 +25,36 @@ import java.util.Date;
  *
  * @author bobj
  */
-public interface Period {
-	public void setStartDate(Date startDate);
+public abstract class Period {
 
-	public void setEndDate(Date endDate);
+	protected Date startDate;
+	protected Date endDate;
+	protected String adxPeriod;
 
-	public Date getStartDate();
+	public Date getStartDate() {
+		return startDate;
+	}
 
-	public Date getEndDate();
+	public void setStartDate(Date startDate) {
+		this.startDate = startDate;
+	}
 
-	public String getAsIsoString();
+	public Date getEndDate() {
+		return endDate;
+	}
 
-	public void setAdxPeriod(String adxPeriod);
+	public void setEndDate(Date endDate) {
+		this.endDate = endDate;
+	}
 
-	public String getAdxPeriod();
+	public String getAdxPeriod() {
+		return adxPeriod;
+	}
+
+	public void setAdxPeriod(String adxPeriod) {
+		this.adxPeriod = adxPeriod;
+	}
+
+	public abstract String getAsIsoString();
 
 }

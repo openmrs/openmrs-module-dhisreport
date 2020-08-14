@@ -27,43 +27,9 @@ import org.joda.time.DateTime;
  *
  * @author bobj
  */
-public class MonthlyPeriod implements Period {
+public class MonthlyPeriod extends Period {
 
 	public static final String ISO_FORMAT = "yyyyMM";
-
-	private Date startDate;
-	private Date endDate;
-	private String adxPeriod;
-
-	@Override
-	public void setStartDate(Date startDate) {
-		this.startDate = startDate;
-	}
-
-	@Override
-	public void setEndDate(Date endDate) {
-		this.endDate = endDate;
-	}
-
-	@Override
-	public Date getStartDate() {
-		return startDate;
-	}
-
-	@Override
-	public Date getEndDate() {
-		return endDate;
-	}
-
-	@Override
-	public void setAdxPeriod(String adxPeriod) {
-		this.adxPeriod = adxPeriod;
-	}
-
-	@Override
-	public String getAdxPeriod() {
-		return adxPeriod;
-	}
 
 	public MonthlyPeriod(Date date) {
 		DateTime dt = new DateTime(date);

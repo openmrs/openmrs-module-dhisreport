@@ -28,43 +28,10 @@ import org.joda.time.DateTimeConstants;
  * Class to create period for Quarterly reporting. You can also mention just the
  * week number in ISO8601 and initializes startDate and endDate
  */
-public class QuarterlyPeriod implements Period {
+public class QuarterlyPeriod extends Period {
 
 	public static final String ISO_FORMAT = "yyyy'Q'n";
 
-	private Date startDate;
-	private Date endDate;
-	private String adxPeriod;
-
-	@Override
-	public void setStartDate(Date startDate) {
-		this.startDate = startDate;
-	}
-
-	@Override
-	public void setEndDate(Date endDate) {
-		this.endDate = endDate;
-	}
-
-	@Override
-	public Date getStartDate() {
-		return startDate;
-	}
-
-	@Override
-	public Date getEndDate() {
-		return endDate;
-	}
-
-	@Override
-	public void setAdxPeriod(String adxPeriod) {
-		this.adxPeriod = adxPeriod;
-	}
-
-	@Override
-	public String getAdxPeriod() {
-		return adxPeriod;
-	}
 
 	/**
 	 * TODO: Probably more efficient ways to do this. But this is least cryptic
