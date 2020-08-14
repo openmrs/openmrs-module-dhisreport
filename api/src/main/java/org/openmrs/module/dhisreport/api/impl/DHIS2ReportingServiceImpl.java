@@ -57,9 +57,17 @@ import org.openmrs.module.dhisreport.api.model.DataSet;
 import org.openmrs.module.dhisreport.api.dfx2.metadata.dataset.Metadata;
 import org.openmrs.module.dhisreport.api.dfx2.metadata.dataset.Metadata.DataSets;
 import org.openmrs.module.dhisreport.api.model.DataValueTemplate;
+import org.openmrs.module.dhisreport.api.utils.BiMonthlyPeriod;
+import org.openmrs.module.dhisreport.api.utils.DailyPeriod;
 import org.openmrs.module.dhisreport.api.utils.MonthlyPeriod;
 import org.openmrs.module.dhisreport.api.utils.Period;
+import org.openmrs.module.dhisreport.api.utils.QuarterlyPeriod;
 import org.openmrs.module.dhisreport.api.utils.WeeklyPeriod;
+import org.openmrs.module.dhisreport.api.utils.WeeklySaturdayPeriod;
+import org.openmrs.module.dhisreport.api.utils.WeeklySundayPeriod;
+import org.openmrs.module.dhisreport.api.utils.WeeklyThursdayPeriod;
+import org.openmrs.module.dhisreport.api.utils.WeeklyWednesdayPeriod;
+import org.openmrs.module.dhisreport.api.utils.YearlyPeriod;
 import org.openmrs.module.reporting.dataset.definition.CohortIndicatorDataSetDefinition.CohortIndicatorAndDimensionColumn;
 import org.openmrs.module.reporting.evaluation.parameter.Mapped;
 import org.openmrs.module.reporting.report.Report;
@@ -295,10 +303,26 @@ public class DHIS2ReportingServiceImpl extends BaseOpenmrsService
 	private Period generatePeriod(Date startDate, String periodType)
 			throws DHIS2ReportingException {
 		switch (periodType){
+			case "Daily":
+				return new DailyPeriod(startDate);
 			case "Weekly":
 				return new WeeklyPeriod(startDate);
+			case "WeeklyWednesday":
+				return new WeeklyWednesdayPeriod(startDate);
+			case "WeeklyThursday":
+				return new WeeklyThursdayPeriod(startDate);
+			case "WeeklySaturday":
+				return new WeeklySaturdayPeriod(startDate);
+			case "WeeklySunday":
+				return new WeeklySundayPeriod(startDate);
 			case "Monthly":
 				return new MonthlyPeriod(startDate);
+			case "BiMonthly":
+				return new BiMonthlyPeriod(startDate);
+			case "Quarterly":
+				return new QuarterlyPeriod(startDate);
+			case "Yearly":
+				return new YearlyPeriod(startDate);
 			default:
 				throw new DHIS2ReportingException("Unsupported Period Type: "+ periodType);
 		}

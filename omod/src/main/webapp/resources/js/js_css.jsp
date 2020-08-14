@@ -15,7 +15,7 @@
 *  You should have received a copy of the GNU General Public License
 *  along with Registration module.  If not, see <http://www.gnu.org/licenses/>.
 *
---%> 
+--%>
 
 <script type="text/javascript">
 	$ = jQuery.noConflict();
@@ -30,6 +30,7 @@
 <script type="text/javascript"  src="${pageContext.request.contextPath}/moduleResources/dhisreport/scripts/jquery/jquery.metadata.min.js" ></script>
 <script type="text/javascript"  src="${pageContext.request.contextPath}/moduleResources/dhisreport/scripts/jquery/jquery.monthpicker.js" ></script>
 <script type="text/javascript"  src="${pageContext.request.contextPath}/moduleResources/dhisreport/scripts/jquery/jquery.validate.min.js" ></script>
+<script type="text/javascript"  src="${pageContext.request.contextPath}/moduleResources/dhisreport/moment.min.js" ></script>
 
 
 
