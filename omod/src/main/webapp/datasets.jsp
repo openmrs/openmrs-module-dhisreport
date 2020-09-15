@@ -14,8 +14,8 @@
     <c:forEach var="dataset" items="${datasets}">
         <tr>
             <td>${dataset.name}</td>
-            <td><a href="${pageContext.request.contextPath}/module/dhisreport/mapDataset.form?uid=${dataset.uid}">map</a></td>
-            <td><a href="${pageContext.request.contextPath}/module/dhisreport/prepareDatasetToPost.form?uid=${dataset.uid}">post</a></td>
+            <td><a href="${pageContext.request.contextPath}/module/dhisreport/mapDataset.form?uuid=${dataset.uuid}">map</a></td>
+            <td><a href="${pageContext.request.contextPath}/module/dhisreport/prepareDatasetToPost.form?uuid=${dataset.uuid}">post</a></td>
         </tr>
     </c:forEach>
 </table>

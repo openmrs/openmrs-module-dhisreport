@@ -84,7 +84,7 @@ public interface DHIS2ReportingService extends OpenmrsService {
 	 *
 	 * @return the DataSet
 	 */
-	public DataSet getDataSetByUid(String uid);
+	public DataSet getDataSetByUuid(String uuid);
 
 	/**
 	 * Updates the Report mapping of a DataSet

@@ -10,24 +10,24 @@
 package org.openmrs.module.dhisreport.api.model;
 
 import java.io.Serializable;
-import java.util.HashSet;
 import java.util.Objects;
-import java.util.Set;
+import org.openmrs.OpenmrsObject;
 
-public class DataElement implements Serializable, Identifiable {
+public class DataElement implements Serializable, Identifiable, OpenmrsObject {
 
   private Integer id;
-  private String uid;
+  private String uuid;
+  private String code;
   private String name;
 
   @Override
-  public String getUid() {
-    return uid;
+  public String getCode() {
+    return code;
   }
 
   @Override
-  public void setUid(String uid) {
-    this.uid = uid;
+  public void setCode(String code) {
+    this.code = code;
   }
 
   @Override
@@ -38,6 +38,16 @@ public class DataElement implements Serializable, Identifiable {
   @Override
   public void setId(Integer id) {
     this.id = id;
+  }
+
+  @Override
+  public String getUuid() {
+    return uuid;
+  }
+
+  @Override
+  public void setUuid(String uuid) {
+    this.uuid = uuid;
   }
 
   public String getName() {
@@ -57,11 +67,11 @@ public class DataElement implements Serializable, Identifiable {
       return false;
     }
     DataElement that = (DataElement) o;
-    return Objects.equals(getUid(), that.getUid());
+    return Objects.equals(getCode(), that.getCode());
   }
 
   @Override
   public int hashCode() {
-    return Objects.hash(getUid());
+    return Objects.hash(getCode());
   }
 }

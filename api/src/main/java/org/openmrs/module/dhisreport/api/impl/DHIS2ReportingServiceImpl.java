@@ -30,12 +30,13 @@ import java.util.List;
 import java.util.Map;
 import java.util.Optional;
 import java.util.Set;
+import java.util.UUID;
+import java.util.stream.Collectors;
 import javax.xml.bind.JAXBContext;
 import javax.xml.bind.JAXBException;
 import javax.xml.bind.Unmarshaller;
 import javax.xml.datatype.DatatypeConfigurationException;
 import javax.xml.datatype.DatatypeFactory;
-import javax.xml.namespace.QName;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.openmrs.Location;
@@ -51,12 +52,14 @@ import org.openmrs.module.dhisreport.api.adx.GroupType;
 import org.openmrs.module.dhisreport.api.adx.importsummary.AdxImportSummary;
 import org.openmrs.module.dhisreport.api.db.DHIS2ReportingDAO;
 import org.openmrs.module.dhisreport.api.dhis.HttpDhis2Server;
-import org.openmrs.module.dhisreport.api.model.CategoryOptionCombo;
+import org.openmrs.module.dhisreport.api.model.Category;
+import org.openmrs.module.dhisreport.api.model.CategoryOption;
 import org.openmrs.module.dhisreport.api.model.DataElement;
 import org.openmrs.module.dhisreport.api.model.DataSet;
 import org.openmrs.module.dhisreport.api.dfx2.metadata.dataset.Metadata;
 import org.openmrs.module.dhisreport.api.dfx2.metadata.dataset.Metadata.DataSets;
 import org.openmrs.module.dhisreport.api.model.DataValueTemplate;
+import org.openmrs.module.dhisreport.api.model.Disaggregation;
 import org.openmrs.module.dhisreport.api.utils.BiMonthlyPeriod;
 import org.openmrs.module.dhisreport.api.utils.DailyPeriod;
 import org.openmrs.module.dhisreport.api.utils.MonthlyPeriod;
@@ -122,11 +125,13 @@ public class DHIS2ReportingServiceImpl extends BaseOpenmrsService
 				.newInstance(Metadata.class);
 		Unmarshaller jaxbUnmarshaller = jaxbContext.createUnmarshaller();
 		Metadata metadata = (Metadata) jaxbUnmarshaller.unmarshal(inputStream);
-		// Extract metadata and store in the DB
-		Map<String, Set<CategoryOptionCombo>> categoryOptionComboMap = extractCategoryOptionCombos(metadata);
+		// Extract Category Options, Categories, Disaggregations, Data Elements and Data Sets
+		Map<String, CategoryOption> categoryOptionMap = extractCategoryOptions(metadata);
+		Map<String, Category> categoryMap = extractCategories(metadata);
 		Map<String, DataElement> dataElementMap = extractDataElements(metadata);
 		DataSet dataSet = extractDataset(metadata, dataElementMap);
-		generateDataValueTemplates(metadata,dataSet,categoryOptionComboMap);
+		extractDisgarigations(metadata, categoryMap, categoryOptionMap);
+		generateDataValueTemplates(metadata, dataSet, categoryMap);
 	}
 
 	@Override
@@ -135,8 +140,8 @@ public class DHIS2ReportingServiceImpl extends BaseOpenmrsService
 	}
 
 	@Override
-	public DataSet getDataSetByUid(String uid){
-		return dao.getDataSetByUid(uid);
+	public DataSet getDataSetByUuid(String uuid){
+		return dao.getDataSetByUuid(uuid);
 	}
 
 	@Override
@@ -144,13 +149,13 @@ public class DHIS2ReportingServiceImpl extends BaseOpenmrsService
 		List<DataValueTemplate> dataValueTemplates = dao.getDataValueTemplatesByDataSet(dataSet);
 		// Remove existing report definition mappings of the filtered Data Value Templates
 		dataValueTemplates.forEach(dataValueTemplate -> {
-			if(dataValueTemplate.getReportIndicatorUuid() != null){
-				dataValueTemplate.setReportIndicatorUuid(null);
+			if(dataValueTemplate.getReportIndicatorLabel() != null){
+				dataValueTemplate.setReportIndicatorLabel(null);
 				dao.saveDataValueTemplate(dataValueTemplate);
 			}
 		});
 		// Set new report Uuid
-		dataSet.setReportUuid(reportUuid);
+		dataSet.setReportDefinitionUuid(reportUuid);
 		dao.saveObject(dataSet);
 	}
 
@@ -163,16 +168,16 @@ public class DHIS2ReportingServiceImpl extends BaseOpenmrsService
 	public void updateReportIndicatorOfDataValueTemplate(Integer dataValueTemplateId, String reportIndicatorUuid){
 		DataValueTemplate dataValueTemplate =  dao.getDataValueTemplateById(dataValueTemplateId);
 		// Todo: Check the existence of the dataValueTemplate and the reportIndicator
-		dataValueTemplate.setReportIndicatorUuid(reportIndicatorUuid);
+		dataValueTemplate.setReportIndicatorLabel(reportIndicatorUuid);
 		dao.saveDataValueTemplate(dataValueTemplate);
 	}
 
 	@Override
 	public AdxImportSummary postDataSetToDHIS2(String uid, String locationUuid, Date startDate) throws DHIS2ReportingException {
-		DataSet dataSet = getDataSetByUid(uid);
+		DataSet dataSet = getDataSetByUuid(uid);
 		String organisationUnit = getOrganisationUnit(locationUuid);
 		Period period = generatePeriod(startDate, dataSet.getPeriodType());
-		Report report = executeReportDefinition(dataSet.getReportUuid(), period);
+		Report report = executeReportDefinition(dataSet.getReportDefinitionUuid(), period);
 		Map<DataValueTemplate, String> mappedDataValueTemplates = mapReportWithDataSet(report, dataSet);
 		AdxType adxTemplate = generateAdxTemplate(mappedDataValueTemplates, dataSet, organisationUnit, period.getAdxPeriod());
 		return dhis2Server.postAdxData(adxTemplate);
@@ -188,7 +193,8 @@ public class DHIS2ReportingServiceImpl extends BaseOpenmrsService
 		Map<String, DataElement> dataElementMap = new HashMap<>();
 		for (Metadata.DataElements.DataElement de : metadata.getDataElements().getDataElement()) {
 			DataElement dataElement = new DataElement();
-			dataElement.setUid(de.getId());
+			dataElement.setUuid(UUID.randomUUID().toString());
+			dataElement.setCode(de.getCode());
 			dataElement.setName(de.getName());
 			dao.saveObject(dataElement);
 			dataElementMap.put(de.getId(), dataElement);
@@ -206,7 +212,8 @@ public class DHIS2ReportingServiceImpl extends BaseOpenmrsService
 			Map<String, DataElement> dataElementMap) {
 		DataSets.DataSet dataSetMeta = metadata.getDataSets().getDataSet();
 		DataSet dataSet = new DataSet();
-		dataSet.setUid(dataSetMeta.getId());
+		dataSet.setUuid(UUID.randomUUID().toString());
+		dataSet.setCode(dataSetMeta.getCode());
 		dataSet.setName(dataSetMeta.getName());
 		dataSet.setPeriodType(dataSetMeta.getPeriodType());
 		Set<DataElement> dataElements = dataSet.getDataElements();
@@ -220,24 +227,64 @@ public class DHIS2ReportingServiceImpl extends BaseOpenmrsService
 	}
 
 	/**
-	 * Generates a Map of CategoryOptionCombos grouped by CategoryCombo Uid
+	 * Extract and save Categories from the metadata
 	 *
-	 * @param metadata the Metadata Object
-	 * @return the generated map
+	 * @param metadata the Metadata object
+	 * @return a Map that contains the Category objects paired with uuid as the key
 	 */
-	private Map<String, Set<CategoryOptionCombo>> extractCategoryOptionCombos(Metadata metadata) {
-		Map<String, Set<CategoryOptionCombo>> categoryOptionComboMap = new HashMap<>();
-		metadata.getCategoryCombos().getCategoryCombo().forEach(
-				categoryCombo -> categoryOptionComboMap.put(categoryCombo.getId(), new HashSet<>()));
-		metadata.getCategoryOptionCombos().getCategoryOptionCombo().forEach(categoryOptionComboMeta -> {
-			CategoryOptionCombo categoryOptionCombo = new CategoryOptionCombo();
-			categoryOptionCombo.setUid(categoryOptionComboMeta.getId());
-			categoryOptionCombo.setName(categoryOptionComboMeta.getName());
-			dao.saveObject(categoryOptionCombo);
-			categoryOptionComboMap.get(categoryOptionComboMeta.getCategoryCombo().getId())
-					.add(categoryOptionCombo);
-		});
-		return categoryOptionComboMap;
+	private Map<String, Category> extractCategories(Metadata metadata) {
+		Map<String, Category> categoryMap = new HashMap<>();
+		for (Metadata.Categories.Category categoryMeta : metadata.getCategories().getCategory()) {
+			Category category = new Category();
+			category.setUuid(UUID.randomUUID().toString());
+			category.setCode(categoryMeta.getCode());
+			category.setName(categoryMeta.getName());
+			dao.saveObject(category);
+			categoryMap.put(categoryMeta.getId(), category);
+		}
+		return categoryMap;
+	}
+
+	/**
+	 * Extract and save Category Options from the metadata
+	 *
+	 * @param metadata the Metadata object
+	 * @return a Map that contains the Category Option objects paired with uuid as the key
+	 */
+	private Map<String, CategoryOption> extractCategoryOptions(Metadata metadata) {
+		Map<String, CategoryOption> categoryOptionMap = new HashMap<>();
+		for (Metadata.CategoryOptions.CategoryOption categoryOptionMeta :
+				metadata.getCategoryOptions().getCategoryOption()) {
+			CategoryOption categoryOption = new CategoryOption();
+			categoryOption.setUuid(UUID.randomUUID().toString());
+			categoryOption.setCode(categoryOptionMeta.getCode());
+			categoryOption.setName(categoryOptionMeta.getName());
+			dao.saveObject(categoryOption);
+			categoryOptionMap.put(categoryOptionMeta.getId(), categoryOption);
+		}
+		return categoryOptionMap;
+	}
+
+	/**
+	 * Extract and save Disaggregations from the metadata
+	 *
+	 * @param metadata the Metadata object
+	 * @param categoryMap a map which contains Categories paired with UUIDs
+	 */
+	private void extractDisgarigations(Metadata metadata, Map<String, Category> categoryMap,
+			Map<String, CategoryOption> categoryOptionMap) {
+		for (Metadata.Categories.Category categoryMeta : metadata.getCategories().getCategory()) {
+			Category category = categoryMap.get(categoryMeta.getId());
+			for (Metadata.Categories.Category.CategoryOptions.CategoryOption categoryOptionMeta : categoryMeta
+					.getCategoryOptions().getCategoryOption()) {
+				CategoryOption categoryOption = categoryOptionMap.get(categoryOptionMeta.getId());
+				Disaggregation disaggregation = new Disaggregation();
+				disaggregation.setUuid(UUID.randomUUID().toString());
+				disaggregation.setCategory(category);
+				disaggregation.setCategoryOption(categoryOption);
+				dao.saveDisaggregation(disaggregation);
+			}
+		}
 	}
 
 	/**
@@ -246,25 +293,87 @@ public class DHIS2ReportingServiceImpl extends BaseOpenmrsService
 	 *
 	 * @param metadata    the Metadata Object
 	 * @param dataSet     extracted DataSet
-	 * @param categoryOptionComboMap a map of CategoryOptionCombos grouped by CategoryComboUid
+	 * @param categoryMap a map which contains Categories paired with UUIDs
 	 */
-	private void generateDataValueTemplates(Metadata metadata, DataSet dataSet, Map<String, Set<CategoryOptionCombo>> categoryOptionComboMap) {
+	private void generateDataValueTemplates(Metadata metadata, DataSet dataSet,
+			Map<String, Category> categoryMap) {
+		// Remove previously generated Data Value Templates for the given DataSet
 		dao.removeDataValueTemplatesByDataSet(dataSet);
-		dataSet.getDataElements().forEach(dataElement -> {
+		for (DataElement dataElement : dataSet.getDataElements()) {
+			// Get the corresponding DataElement meta object from the metadata
 			Optional<Metadata.DataElements.DataElement> dataElementMeta =
 					metadata.getDataElements().getDataElement()
 							.stream()
-							.filter(obj -> obj.getId().equals(dataElement.getUid()))
+							.filter(dataElementMetaObject -> dataElementMetaObject.getCode()
+									.equals(dataElement.getCode()))
 							.findFirst();
-			Set<CategoryOptionCombo> categoryOptionCombos = categoryOptionComboMap.get(dataElementMeta.get().getCategoryCombo().getId());
-			categoryOptionCombos.forEach(categoryOptionCombo -> {
+			// Get the corresponding Category Combo from the metadata using the DataElement meta object
+			Optional<Metadata.CategoryCombos.CategoryCombo> categoryComboMeta = metadata
+					.getCategoryCombos().getCategoryCombo()
+					.stream()
+					.filter(categoryComboMetaObject -> categoryComboMetaObject.getId()
+							.equals(dataElementMeta.get().getCategoryCombo().getId()))
+					.findFirst();
+			// Create a list of Categories of the DataElement using the Category Combo
+			List<Category> categories = categoryComboMeta.get().getCategories().getCategory()
+					.stream()
+					.map(category -> categoryMap.get(category.getId()))
+					.collect(Collectors.toList());
+			// Get Disaggregations of each Category and group them by Category
+			List<List<Disaggregation>> groupedDisaggregationList = categories.stream()
+					.map(category -> dao.getDisaggregationsByCategory(category))
+					.collect(Collectors.toList());
+			// Generate disaggregation combinations for the current DataElement
+			List<List<Disaggregation>> combinations = getDisaggregationCombinations(
+					groupedDisaggregationList, 0);
+			// Save Data Value Templates for each generated combinations
+			for (List<Disaggregation> combination : combinations
+			) {
 				DataValueTemplate dataValueTemplate = new DataValueTemplate();
+				dataValueTemplate.setUuid(UUID.randomUUID().toString());
 				dataValueTemplate.setDataSet(dataSet);
 				dataValueTemplate.setDataElement(dataElement);
-				dataValueTemplate.setCategoryOptionCombo(categoryOptionCombo);
+				dataValueTemplate.setDisaggregations(new HashSet<>(combination));
 				dao.saveDataValueTemplate(dataValueTemplate);
-			});
-		});
+			}
+		}
+	}
+
+	/**
+	 * Generates Disaggregation combinations recursively.
+	 *
+	 * @param groupedDisaggregationList a list of lists of Disaggregations grouped by Categories
+	 * @param position                  the current position of the groupedDisaggregationList
+	 * @return a list that contains Disaggregation combinations
+	 */
+	private List<List<Disaggregation>> getDisaggregationCombinations(
+			List<List<Disaggregation>> groupedDisaggregationList, int position) {
+		List<List<Disaggregation>> combinations = new ArrayList<>();
+		// Get current group from the groupedDisaggregationList
+		List<Disaggregation> currentDisaggregationGroup = groupedDisaggregationList.get(position);
+		// Iterate each disaggregation and add combinations to the combinations list
+		for (Disaggregation disaggregation :
+				currentDisaggregationGroup) {
+			if (position < groupedDisaggregationList.size() - 1) {
+				// Recall the method to get combinations from the bottom level
+				List<List<Disaggregation>> depthCombinations = getDisaggregationCombinations(
+						groupedDisaggregationList,
+						position + 1);
+				// Append the current Disaggregation to each retrieved combination
+				for (List<Disaggregation> combination : depthCombinations
+				) {
+					combination.add(disaggregation);
+					combinations.add(combination);
+				}
+			} else {
+				// Create a new combination and add it to the combinations list if the recursion reached
+				// to the bottom level
+				List<Disaggregation> tempCombination = new ArrayList<>();
+				tempCombination.add(disaggregation);
+				combinations.add(tempCombination);
+			}
+		}
+		return combinations;
 	}
 
 	/**
@@ -405,7 +514,7 @@ public class DHIS2ReportingServiceImpl extends BaseOpenmrsService
 
 		List<DataValueTemplate> dataValueTemplates = dao.getDataValueTemplatesByDataSet(dataSet);
 		dataValueTemplates.forEach(dataValueTemplate -> {
-			String reportIndicatorUuid = dataValueTemplate.getReportIndicatorUuid();
+			String reportIndicatorUuid = dataValueTemplate.getReportIndicatorLabel();
 			if (indicatorValues.containsKey(reportIndicatorUuid)) {
 				mappedDataValueTemplates.put(dataValueTemplate, indicatorValues.get(reportIndicatorUuid));
 			}
@@ -434,19 +543,15 @@ public class DHIS2ReportingServiceImpl extends BaseOpenmrsService
 			throw new DHIS2ReportingException("Error occurred while setting the date for ADX template");
 		}
 		GroupType groupType = new GroupType();
-		groupType.setDataSet(dataSet.getUid());
+		groupType.setDataSet(dataSet.getCode());
 		groupType.setOrgUnit(organisationUnitCode);
 		groupType.setPeriod(adxPeriod);
 		adxTemplate.getGroup().add(groupType);
 		List<DataValueType> dataValueTypes = groupType.getDataValue();
 		mappedDataValueTemplates.forEach((dataValueTemplate, value) -> {
 			DataValueType dataValueType = new DataValueType();
-			dataValueType.setDataElement(dataValueTemplate.getDataElement().getUid());
+			dataValueType.setDataElement(dataValueTemplate.getDataElement().getCode());
 			dataValueType.setValue(new BigDecimal(value));
-			dataValueType.getOtherAttributes().put(
-					new QName("categoryOptionCombo"),
-					dataValueTemplate.getCategoryOptionCombo().getUid());
-			dataValueTypes.add(dataValueType);
 		});
 		return adxTemplate;
 	}

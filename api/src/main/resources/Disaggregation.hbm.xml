@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE hibernate-mapping PUBLIC "-//Hibernate/Hibernate Mapping DTD 3.0//EN" "http://hibernate.sourceforge.net/hibernate-mapping-3.0.dtd">
+<hibernate-mapping package="org.openmrs.module.dhisreport.api.model">
+  <class name="Disaggregation" table="${project.parent.artifactId}_disaggregation">
+    <id column="disaggregation_id" name="id" unsaved-value="0">
+      <generator class="native"/>
+    </id>
+    <discriminator column="disaggregation_id" insert="false"/>
+    <property column="uuid" name="uuid"/>
+    <many-to-one name="category" column="category_id" not-null="true"/>
+    <many-to-one name="categoryOption" column="category_option_id" not-null="true"/>
+  </class>
+</hibernate-mapping>
