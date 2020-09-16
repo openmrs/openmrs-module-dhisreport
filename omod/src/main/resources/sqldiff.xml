@@ -120,66 +120,110 @@
 			Update the current model to support ADX desegregations
 		</description>
 		<sql>
-			CREATE TABLE IF NOT EXISTS `dhisreport_dataset` (
-			`id` int(11) NOT NULL AUTO_INCREMENT,
-			`name` varchar(230) NOT NULL,
-			`uid` varchar(11) NOT NULL,
-			`periodType` varchar(50) NOT NULL,
-			`reportUuid` varchar(45),
-			PRIMARY KEY (`id`),
-			UNIQUE KEY `uid` (`uid`)
-			) ENGINE=InnoDB AUTO_INCREMENT=813 DEFAULT CHARSET=latin1;
-
-			ALTER TABLE dhisreport_dataelement CHANGE de_name name VARCHAR(230);
-			ALTER TABLE dhisreport_dataelement MODIFY COLUMN code VARCHAR(50);
-			ALTER TABLE dhisreport_dataelement DROP COLUMN code;
-			ALTER TABLE dhisreport_dataelement MODIFY COLUMN uid VARCHAR(11);
-
 			DROP TABLE `dhisreport_datavalue_template`;
 			DROP TABLE `dhisreport_disaggregation`;
 			DROP TABLE `dhisreport_report_definition`;
+			DROP TABLE `dhisreport_dataelement`;
 
-			CREATE TABLE IF NOT EXISTS `dhisreport_dataset_dataelement` (
+			CREATE TABLE IF NOT EXISTS `dhisreport_dataset` (
+			`dataset_id` INT NOT NULL AUTO_INCREMENT,
+			`uuid` VARCHAR(36) NOT NULL,
+			`name` VARCHAR(255) NOT NULL,
+			`code` VARCHAR(50) NOT NULL,
+			`period_type` VARCHAR(50) NOT NULL,
+			`report_definition_uuid` VARCHAR(36) NULL,
+			PRIMARY KEY (`dataset_id`))
+			ENGINE = InnoDB;
+
+			CREATE TABLE IF NOT EXISTS `dhisreport_data_element` (
+			`data_element_id` INT NOT NULL AUTO_INCREMENT,
+			`uuid` VARCHAR(36) NOT NULL,
+			`name` VARCHAR(255) NOT NULL,
+			`code` VARCHAR(50) NOT NULL,
+			PRIMARY KEY (`data_element_id`))
+			ENGINE = InnoDB;
+
+			CREATE TABLE IF NOT EXISTS `dhisreport_dataset_data_element` (
 			`dataset_id` INT NOT NULL,
-			`dataelement_id` INT NOT NULL,
-			PRIMARY KEY (`dataset_id`, `dataelement_id`),
-			CONSTRAINT `fk_dataset_dataelement_dataset`
+			`data_element_id` INT NOT NULL,
+			PRIMARY KEY (`dataset_id`, `data_element_id`),
+			CONSTRAINT `fk_dataset_has_data_element_dataset`
 			FOREIGN KEY (`dataset_id`)
-			REFERENCES `dhisreport_dataset` (`id`)
+			REFERENCES `dhisreport_dataset` (`dataset_id`)
 			ON DELETE CASCADE
 			ON UPDATE NO ACTION,
-			CONSTRAINT `fk_dataset_dataelement_dataelement`
-			FOREIGN KEY (`dataelement_id`)
-			REFERENCES `dhisreport_dataelement` (`id`)
+			CONSTRAINT `fk_dataset_has_data_element_data_element1`
+			FOREIGN KEY (`data_element_id`)
+			REFERENCES `dhisreport_data_element` (`data_element_id`)
 			ON DELETE CASCADE
 			ON UPDATE NO ACTION)
 			ENGINE = InnoDB;
 
-			CREATE TABLE IF NOT EXISTS `dhisreport_category_option_combo` (
-			`id` INT NOT NULL AUTO_INCREMENT,
-			`name` VARCHAR(230) NULL DEFAULT NULL,
-			`uid` VARCHAR(11) NULL DEFAULT NULL,
-			PRIMARY KEY (`id`))
+			CREATE TABLE IF NOT EXISTS `dhisreport_data_value_template` (
+			`data_value_template_id` INT NOT NULL AUTO_INCREMENT,
+			`uuid` VARCHAR(36) NOT NULL,
+			`dataset_id` INT NOT NULL,
+			`data_element_id` INT NOT NULL,
+			`report_indicator_label` VARCHAR(255) NULL,
+			PRIMARY KEY (`data_value_template_id`),
+			CONSTRAINT `fk_data_value_template_dataset1`
+			FOREIGN KEY (`dataset_id`)
+			REFERENCES `dhisreport_dataset` (`dataset_id`)
+			ON DELETE CASCADE
+			ON UPDATE NO ACTION,
+			CONSTRAINT `fk_data_value_template_data_element1`
+			FOREIGN KEY (`data_element_id`)
+			REFERENCES `dhisreport_data_element` (`data_element_id`)
+			ON DELETE CASCADE
+			ON UPDATE NO ACTION)
 			ENGINE = InnoDB;
 
-			CREATE TABLE IF NOT EXISTS `dhisreport_datavalue_template` (
-			`id` INT NOT NULL AUTO_INCREMENT,
-			`dataset_id` INT NOT NULL,
-			`dataelement_id` INT NOT NULL,
-			`report_indicator_uuid` VARCHAR(36) NULL DEFAULT NULL,
-			`category_option_combo_id` INT NOT NULL,
-			PRIMARY KEY (`id`),
-			CONSTRAINT `fk_datavalue_template_dataelement`
-			FOREIGN KEY (`dataelement_id`)
-			REFERENCES `dhisreport_dataelement` (`id`)
-			ON DELETE CASCADE,
-			CONSTRAINT `fk_datavalue_template_dataset`
-			FOREIGN KEY (`dataset_id`)
-			REFERENCES `dhisreport_dataset` (`id`)
-			ON DELETE CASCADE,
-			CONSTRAINT `fk_dhisreport_datavalue_template_category_option_combo`
-			FOREIGN KEY (`category_option_combo_id`)
-			REFERENCES `dhisreport_category_option_combo` (`id`)
+			CREATE TABLE IF NOT EXISTS `dhisreport_category` (
+			`category_id` INT NOT NULL AUTO_INCREMENT,
+			`uuid` VARCHAR(36) NOT NULL,
+			`code` VARCHAR(50) NOT NULL,
+			`name` VARCHAR(255) NOT NULL,
+			PRIMARY KEY (`category_id`))
+			ENGINE = InnoDB;
+
+			CREATE TABLE IF NOT EXISTS `dhisreport_category_option` (
+			`category_option_id` INT NOT NULL AUTO_INCREMENT,
+			`uuid` VARCHAR(36) NOT NULL,
+			`code` VARCHAR(50) NOT NULL,
+			`name` VARCHAR(255) NULL,
+			PRIMARY KEY (`category_option_id`))
+			ENGINE = InnoDB;
+
+			CREATE TABLE IF NOT EXISTS `dhisreport_disaggregation` (
+			`disaggregation_id` INT NOT NULL AUTO_INCREMENT,
+			`uuid` VARCHAR(36) NOT NULL,
+			`category_id` INT NOT NULL,
+			`category_option_id` INT NOT NULL,
+			PRIMARY KEY (`disaggregation_id`),
+			CONSTRAINT `fk_disaggregation_category1`
+			FOREIGN KEY (`category_id`)
+			REFERENCES `dhisreport_category` (`category_id`)
+			ON DELETE CASCADE
+			ON UPDATE NO ACTION,
+			CONSTRAINT `fk_disaggregation_category_option1`
+			FOREIGN KEY (`category_option_id`)
+			REFERENCES `dhisreport_category_option` (`category_option_id`)
+			ON DELETE CASCADE
+			ON UPDATE NO ACTION)
+			ENGINE = InnoDB;
+
+			CREATE TABLE IF NOT EXISTS `dhisreport_disaggregation_data_value_template` (
+			`disaggregation_id` INT NOT NULL,
+			`data_value_template_id` INT NOT NULL,
+			PRIMARY KEY (`disaggregation_id`, `data_value_template_id`),
+			CONSTRAINT `fk_dhisreport_disaggregation_has_dhisreport_data_value_templa1`
+			FOREIGN KEY (`disaggregation_id`)
+			REFERENCES `dhisreport_disaggregation` (`disaggregation_id`)
+			ON DELETE CASCADE
+			ON UPDATE NO ACTION,
+			CONSTRAINT `fk_dhisreport_disaggregation_has_dhisreport_data_value_templa2`
+			FOREIGN KEY (`data_value_template_id`)
+			REFERENCES `dhisreport_data_value_template` (`data_value_template_id`)
 			ON DELETE CASCADE
 			ON UPDATE NO ACTION)
 			ENGINE = InnoDB;

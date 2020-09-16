@@ -10,24 +10,38 @@
 package org.openmrs.module.dhisreport.api.model;
 
 import java.io.Serializable;
-import java.util.HashSet;
+import java.util.List;
 import java.util.Objects;
 import java.util.Set;
+import org.openmrs.OpenmrsObject;
 
-public class DataValueTemplate implements Serializable {
+public class DataValueTemplate implements Serializable, OpenmrsObject {
 
   private Integer id;
+  private String uuid;
   private DataSet dataSet;
   private DataElement dataElement;
-  private String reportIndicatorUuid;
-  private CategoryOptionCombo categoryOptionCombo;
+  private String reportIndicatorLabel;
+  private Set<Disaggregation> disaggregations;
 
+  @Override
   public Integer getId() {
     return id;
   }
 
+  @Override
   public void setId(Integer id) {
     this.id = id;
+  }
+
+  @Override
+  public String getUuid() {
+    return uuid;
+  }
+
+  @Override
+  public void setUuid(String uuid) {
+    this.uuid = uuid;
   }
 
   public DataSet getDataSet() {
@@ -46,21 +60,21 @@ public class DataValueTemplate implements Serializable {
     this.dataElement = dataElement;
   }
 
-  public String getReportIndicatorUuid() {
-    return reportIndicatorUuid;
+  public String getReportIndicatorLabel() {
+    return reportIndicatorLabel;
   }
 
-  public void setReportIndicatorUuid(String reportIndicatorUuid) {
-    this.reportIndicatorUuid = reportIndicatorUuid;
+  public void setReportIndicatorLabel(String reportIndicatorLabel) {
+    this.reportIndicatorLabel = reportIndicatorLabel;
   }
 
-  public CategoryOptionCombo getCategoryOptionCombo() {
-    return categoryOptionCombo;
+  public Set<Disaggregation> getDisaggregations() {
+    return disaggregations;
   }
 
-  public void setCategoryOptionCombo(
-      CategoryOptionCombo categoryOptionCombo) {
-    this.categoryOptionCombo = categoryOptionCombo;
+  public void setDisaggregations(
+      Set<Disaggregation> disaggregations) {
+    this.disaggregations = disaggregations;
   }
 
   @Override
@@ -75,15 +89,13 @@ public class DataValueTemplate implements Serializable {
     return Objects.equals(getId(), that.getId())
         && Objects.equals(getDataSet(), that.getDataSet())
         && Objects.equals(getDataElement(), that.getDataElement())
-        && Objects.equals(getReportIndicatorUuid(), that
-        .getReportIndicatorUuid())
-        && getCategoryOptionCombo().equals(that.getCategoryOptionCombo());
+        && Objects.equals(getReportIndicatorLabel(), that
+        .getReportIndicatorLabel());
   }
 
   @Override
   public int hashCode() {
     return Objects.hash(getId(), getDataSet(), getDataElement(),
-        getReportIndicatorUuid(),
-        getCategoryOptionCombo());
+        getReportIndicatorLabel());
   }
 }

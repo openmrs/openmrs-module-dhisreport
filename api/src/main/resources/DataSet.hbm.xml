@@ -2,21 +2,22 @@
 <!DOCTYPE hibernate-mapping PUBLIC "-//Hibernate/Hibernate Mapping DTD 3.0//EN" "http://hibernate.sourceforge.net/hibernate-mapping-3.0.dtd">
 <hibernate-mapping package="org.openmrs.module.dhisreport.api.model">
     <class name="DataSet" table="${project.parent.artifactId}_dataset">
-        <id column="id" name="id" unsaved-value="0">
+        <id column="dataset_id" name="id" unsaved-value="0">
             <generator class="native"/>
         </id>
-        <discriminator column="id" insert="false"/>
+        <discriminator column="dataset_id" insert="false"/>
+        <property column="uuid" name="uuid"/>
+        <property column="code" name="code"/>
         <property column="name" name="name"/>
-        <property column="uid" name="uid"/>
-        <property column="periodType" name="periodType"/>
-        <property column="reportUuid" name="reportUuid"/>
-        <set name="dataElements" table="${project.parent.artifactId}_dataset_dataelement"
+        <property column="period_type" name="periodType"/>
+        <property column="report_definition_uuid" name="reportDefinitionUuid"/>
+        <set name="dataElements" table="${project.parent.artifactId}_dataset_data_element"
           lazy="true" fetch="select" cascade="all">
             <key>
                 <column name="dataset_id" not-null="true"/>
             </key>
             <many-to-many class="DataElement">
-                <column name="dataelement_id" not-null="true"/>
+                <column name="data_element_id" not-null="true"/>
             </many-to-many>
         </set>
     </class>

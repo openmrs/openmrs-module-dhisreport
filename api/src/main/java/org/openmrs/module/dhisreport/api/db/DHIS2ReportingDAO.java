@@ -23,8 +23,11 @@ import java.util.List;
 import org.hibernate.SessionFactory;
 import org.openmrs.Location;
 import org.openmrs.module.dhisreport.api.DHIS2ReportingService;
+import org.openmrs.module.dhisreport.api.model.Category;
+import org.openmrs.module.dhisreport.api.model.CategoryOption;
 import org.openmrs.module.dhisreport.api.model.DataSet;
 import org.openmrs.module.dhisreport.api.model.DataValueTemplate;
+import org.openmrs.module.dhisreport.api.model.Disaggregation;
 import org.openmrs.module.dhisreport.api.model.Identifiable;
 
 /**
@@ -75,10 +78,44 @@ public interface DHIS2ReportingDAO {
 	public List<DataSet> getAllDataSets();
 
 	/**
+	 * Finds a dataset by CODE
+	 *
+	 * @return the DataSet
+	 */
+	public DataSet getDataSetByCode(String uid);
+
+	/**
 	 * Finds a dataset by UUID
 	 *
 	 * @return the DataSet
 	 */
-	public DataSet getDataSetByUid(String uid);
+	public DataSet getDataSetByUuid(String uuid);
 
+	/**
+	 * Finds Disaggregations by given Category
+	 *
+	 * @param category the Category which should be included in the Disaggregation
+	 * @return a list of Disagregations
+	 */
+	public List<Disaggregation> getDisaggregationsByCategory(Category category);
+
+	/**
+	 * Saves a given Disaggregation Object to the database If the Disaggregation exists on the
+	 * database, this will return the existing object
+	 *
+	 * @param disaggregation a Disaggregation Object
+	 * @return the saved Disaggregation Object
+	 */
+	public Disaggregation saveDisaggregation(Disaggregation disaggregation);
+
+	/**
+	 * Finds a Disaggregation object which has the given Category and Category Option
+	 *
+	 * @param category       the Category which should included in the Disaggregation
+	 * @param categoryOption the Category Option which should included in the Disaggregation
+	 * @return the Disaggregation Object if the a record exists on the database. Returns null if
+	 * there's no record
+	 */
+	public Disaggregation getDisaggregationByCategoryAndCategoryOption(
+			Category category, CategoryOption categoryOption);
 }

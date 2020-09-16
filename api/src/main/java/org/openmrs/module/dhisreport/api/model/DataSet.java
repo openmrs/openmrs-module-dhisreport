@@ -13,14 +13,16 @@ import java.io.Serializable;
 import java.util.HashSet;
 import java.util.Objects;
 import java.util.Set;
+import org.openmrs.OpenmrsObject;
 
-public class DataSet implements Serializable, Identifiable {
+public class DataSet implements Serializable, Identifiable, OpenmrsObject {
 
   private Integer id;
-  private String uid;
+  private String uuid;
+  private String code;
   private String name;
   private String periodType;
-  private String reportUuid;
+  private String reportDefinitionUuid;
   private Set<DataElement> dataElements = new HashSet<DataElement>();
 
   @Override
@@ -33,12 +35,24 @@ public class DataSet implements Serializable, Identifiable {
     this.id = id;
   }
 
-  public String getUid() {
-    return uid;
+  @Override
+  public String getUuid() {
+    return uuid;
   }
 
-  public void setUid(String uid) {
-    this.uid = uid;
+  @Override
+  public void setUuid(String uuid) {
+    this.uuid = uuid;
+  }
+
+  @Override
+  public String getCode() {
+    return code;
+  }
+
+  @Override
+  public void setCode(String code) {
+    this.code = code;
   }
 
   public String getName() {
@@ -57,12 +71,12 @@ public class DataSet implements Serializable, Identifiable {
     this.periodType = periodType;
   }
 
-  public String getReportUuid() {
-    return reportUuid;
+  public String getReportDefinitionUuid() {
+    return reportDefinitionUuid;
   }
 
-  public void setReportUuid(String reportUuid) {
-    this.reportUuid = reportUuid;
+  public void setReportDefinitionUuid(String reportDefinitionUuid) {
+    this.reportDefinitionUuid = reportDefinitionUuid;
   }
 
   public Set<DataElement> getDataElements() {
@@ -73,6 +87,8 @@ public class DataSet implements Serializable, Identifiable {
     this.dataElements = dataElements;
   }
 
+
+
   @Override
   public boolean equals(Object o) {
     if (this == o) {
@@ -82,11 +98,11 @@ public class DataSet implements Serializable, Identifiable {
       return false;
     }
     DataSet dataSet = (DataSet) o;
-    return Objects.equals(getUid(), dataSet.getUid());
+    return Objects.equals(getCode(), dataSet.getCode());
   }
 
   @Override
   public int hashCode() {
-    return Objects.hash(getUid());
+    return Objects.hash(getCode());
   }
 }

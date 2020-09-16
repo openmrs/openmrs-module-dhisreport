@@ -49,9 +49,11 @@
     <!-- Maps hibernate file's, if present -->
     <mappingFiles>
         DataElement.hbm.xml
-        DataValueTemplate.hbm.xml
 				DataSet.hbm.xml
-			  CategoryOptionCombo.hbm.xml
+				Category.hbm.xml
+				CategoryOption.hbm.xml
+				Disaggregation.hbm.xml
+				DataValueTemplate.hbm.xml
     </mappingFiles>
 
 	<privilege>

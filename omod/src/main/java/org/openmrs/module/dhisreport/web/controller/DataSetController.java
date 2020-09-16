@@ -42,16 +42,16 @@ public class DataSetController {
 
   @RequestMapping(value = "/module/dhisreport/mapDataset", method = RequestMethod.GET)
   public void mapDataSet(ModelMap modelMap,
-      @RequestParam String uid) {
+      @RequestParam String uuid) {
     DHIS2ReportingService service = Context
         .getService(DHIS2ReportingService.class);
     // Get all the available Data Sets
-    DataSet dataSet = service.getDataSetByUid(uid);
+    DataSet dataSet = service.getDataSetByUuid(uuid);
     PeriodIndicatorReportDefinition reportDefinition = null;
-    if (dataSet.getReportUuid() != null) {
+    if (dataSet.getReportDefinitionUuid() != null) {
       reportDefinition = (PeriodIndicatorReportDefinition) Context
           .getService(ReportDefinitionService.class).getDefinitionByUuid(
-              dataSet.getReportUuid());
+              dataSet.getReportDefinitionUuid());
     }
     List<DefinitionSummary> periodicIndicatorReports = Context.getService(
         ReportDefinitionService.class).getAllDefinitionSummaries(false)
@@ -73,13 +73,13 @@ public class DataSetController {
 
   @RequestMapping(value = "/module/dhisreport/dataset/{uid}/updateReport", method = RequestMethod.POST)
   public @ResponseBody
-  void updateReportOfADataSet(@PathVariable String uid, @RequestParam String reportUuid) {
+  void updateReportOfADataSet(@PathVariable String uuid, @RequestParam String reportUuid) {
     DHIS2ReportingService service = Context
         .getService(DHIS2ReportingService.class);
-    DataSet dataSet = service.getDataSetByUid(uid);
+    DataSet dataSet = service.getDataSetByUuid(uuid);
     // Updates the Report if it is different from the current report
     // Todo: check getRepotUuid is null
-    if (!reportUuid.equals(dataSet.getReportUuid())) {
+    if (!reportUuid.equals(dataSet.getReportDefinitionUuid())) {
       service.updateReportOfADataSet(dataSet, reportUuid);
     }
   }
@@ -96,12 +96,12 @@ public class DataSetController {
 
   @RequestMapping(value = "/module/dhisreport/prepareDatasetToPost",
       method = RequestMethod.GET)
-  public void prepareDatasetToPost(ModelMap modelMap, @RequestParam String uid) {
+  public void prepareDatasetToPost(ModelMap modelMap, @RequestParam String uuid) {
     DHIS2ReportingService service = Context
         .getService(DHIS2ReportingService.class);
-    DataSet dataSet = service.getDataSetByUid(uid);
+    DataSet dataSet = service.getDataSetByUuid(uuid);
     boolean isAllDataValuesTemplatesMapped = service.getDataValueTemplatesByDataSet(dataSet)
-        .stream().allMatch(dataValueTemplate -> dataValueTemplate.getReportIndicatorUuid() != null);
+        .stream().allMatch(dataValueTemplate -> dataValueTemplate.getReportIndicatorLabel() != null);
     List<Location> locations = Context.getLocationService().getAllLocations();
         List<Location> mappedLocations = new ArrayList<>();
     Optional<LocationAttributeType> maybeLocationAttributeType = getCodeAttributeType();
@@ -124,13 +124,13 @@ public class DataSetController {
 
   @RequestMapping(value = "/module/dhisreport/postDataSet",
       method = RequestMethod.POST)
-  public void postDataSet(ModelMap modelMap, @RequestParam String uid,
+  public void postDataSet(ModelMap modelMap, @RequestParam String uuid,
       @RequestParam String locationUuid, @RequestParam(value = "startDate") String startDate) {
     DHIS2ReportingService service = Context
         .getService(DHIS2ReportingService.class);
     try {
       Date date = new SimpleDateFormat("yyyy-MM-dd").parse(startDate);
-      AdxImportSummary importSummary = service.postDataSetToDHIS2(uid,locationUuid, date);
+      AdxImportSummary importSummary = service.postDataSetToDHIS2(uuid,locationUuid, date);
       modelMap.addAttribute("importSummary", importSummary);
       modelMap.addAttribute("isError", false);
     } catch (DHIS2ReportingException e) {
