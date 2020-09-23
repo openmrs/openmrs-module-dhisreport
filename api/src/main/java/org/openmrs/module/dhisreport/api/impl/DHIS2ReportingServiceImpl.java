@@ -37,6 +37,7 @@ import javax.xml.bind.JAXBException;
 import javax.xml.bind.Unmarshaller;
 import javax.xml.datatype.DatatypeConfigurationException;
 import javax.xml.datatype.DatatypeFactory;
+import javax.xml.namespace.QName;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.openmrs.Location;
@@ -173,8 +174,8 @@ public class DHIS2ReportingServiceImpl extends BaseOpenmrsService
 	}
 
 	@Override
-	public AdxImportSummary postDataSetToDHIS2(String uid, String locationUuid, Date startDate) throws DHIS2ReportingException {
-		DataSet dataSet = getDataSetByUuid(uid);
+	public AdxImportSummary postDataSetToDHIS2(String uuid, String locationUuid, Date startDate) throws DHIS2ReportingException {
+		DataSet dataSet = getDataSetByUuid(uuid);
 		String organisationUnit = getOrganisationUnit(locationUuid);
 		Period period = generatePeriod(startDate, dataSet.getPeriodType());
 		Report report = executeReportDefinition(dataSet.getReportDefinitionUuid(), period);
@@ -465,7 +466,7 @@ public class DHIS2ReportingServiceImpl extends BaseOpenmrsService
 				.findFirst();
 	}
 
-	public void mapLocationWithDhis2OrgUnit(String locationUuid, String dhis2OrgUnitUid) throws DHIS2ReportingException {
+	public void mapLocationWithDhis2OrgUnit(String locationUuid, String dhis2OrgUnitCode) throws DHIS2ReportingException {
 		Location location = Context.getLocationService().getLocationByUuid(locationUuid);
 		if (location == null) {
 			throw new DHIS2ReportingException("Invalid Location");
@@ -477,7 +478,7 @@ public class DHIS2ReportingServiceImpl extends BaseOpenmrsService
 		} else {
 			attributeType = new LocationAttributeType();
 			attributeType.setName("DHIS2_ORG_UNIT");
-			attributeType.setDescription("DHIS2 Organisation Unit's UID");
+			attributeType.setDescription("DHIS2 Organisation Unit's CODE");
 			attributeType.setMinOccurs(0);
 			attributeType.setMaxOccurs(1);
 			attributeType.setDatatypeClassname("org.openmrs.customdatatype.datatype.FreeTextDatatype");
@@ -485,7 +486,7 @@ public class DHIS2ReportingServiceImpl extends BaseOpenmrsService
 		}
 		LocationAttribute locationAttribute = new LocationAttribute();
 		locationAttribute.setAttributeType(attributeType);
-		locationAttribute.setValue(dhis2OrgUnitUid);
+		locationAttribute.setValue(dhis2OrgUnitCode);
 		location.setAttribute(locationAttribute);
 		Context.getLocationService().saveLocation(location);
 	}
@@ -503,11 +504,7 @@ public class DHIS2ReportingServiceImpl extends BaseOpenmrsService
 		report.getReportData().getDataSets().forEach((key, reportingDataSet) -> {
 			reportingDataSet.forEach(dataSetRow -> {
 				dataSetRow.getColumnValues().forEach((dataSetColumn, value) -> {
-					if (dataSetColumn instanceof CohortIndicatorAndDimensionColumn) {
-						String uuid = ((CohortIndicatorAndDimensionColumn) dataSetColumn).getIndicator()
-								.getParameterizable().getCohortDefinition().getParameterizable().getUuid();
-						indicatorValues.put(uuid, value.toString());
-					}
+					indicatorValues.put(dataSetColumn.getLabel(), value.toString());
 				});
 			});
 		});
@@ -552,6 +549,13 @@ public class DHIS2ReportingServiceImpl extends BaseOpenmrsService
 			DataValueType dataValueType = new DataValueType();
 			dataValueType.setDataElement(dataValueTemplate.getDataElement().getCode());
 			dataValueType.setValue(new BigDecimal(value));
+			Map<QName, String> otherAttributes = dataValueType.getOtherAttributes();
+			dataValueTemplate.getDisaggregations().forEach(disaggregation -> {
+				String categoryCode = disaggregation.getCategory().getCode();
+				String categoryOptionUid = disaggregation.getCategoryOption().getCode();
+				otherAttributes.put(new QName(categoryCode), categoryOptionUid);
+			});
+			dataValueTypes.add(dataValueType);
 		});
 		return adxTemplate;
 	}

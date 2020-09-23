@@ -112,13 +112,13 @@ public interface DHIS2ReportingService extends OpenmrsService {
 
 	/**
 	 * Post DataSet to the connected DHIS2 Instance
-	 * @param uid UID of DataSet
+	 * @param uuid UUID of DataSet
 	 * @param locationUuid UUID of OpenMRS location
 	 * @param startDate starting day of the period
 	 * @return the ADX Import Summary returned by DHIS2
 	 * @throws DHIS2ReportingException if failed to post data
 	 */
-	public AdxImportSummary postDataSetToDHIS2(String uid, String locationUuid, Date startDate) throws DHIS2ReportingException;
+	public AdxImportSummary postDataSetToDHIS2(String uuid, String locationUuid, Date startDate) throws DHIS2ReportingException;
 
 	/**
 	 * Gets the Attribute Type that stores dhis2 Organisation Unit code.
@@ -131,8 +131,8 @@ public interface DHIS2ReportingService extends OpenmrsService {
 	 * Maps a given location with a DHIS2 Organisation Unit
 	 *
 	 * @param locationUuid UUID of the location
-	 * @param dhis2OrgUnitUid UID of the DHIS2 Organisation Unit
+	 * @param dhis2OrgUnitCode CODE of the DHIS2 Organisation Unit
 	 * @throws DHIS2ReportingException if unable to map the location
 	 */
-	public void mapLocationWithDhis2OrgUnit(String locationUuid, String dhis2OrgUnitUid) throws DHIS2ReportingException;
+	public void mapLocationWithDhis2OrgUnit(String locationUuid, String dhis2OrgUnitCode) throws DHIS2ReportingException;
 }

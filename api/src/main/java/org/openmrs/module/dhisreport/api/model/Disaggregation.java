@@ -2,7 +2,7 @@ package org.openmrs.module.dhisreport.api.model;
 
 import org.openmrs.OpenmrsObject;
 
-public class Disaggregation implements OpenmrsObject {
+public class Disaggregation implements OpenmrsObject, Comparable<Disaggregation> {
   private Integer id;
   private String uuid;
   private Category category;
@@ -42,5 +42,10 @@ public class Disaggregation implements OpenmrsObject {
 
   public void setCategoryOption(CategoryOption categoryOption) {
     this.categoryOption = categoryOption;
+  }
+
+  @Override
+  public int compareTo(Disaggregation disaggregation) {
+    return this.getCategory().getName().compareTo(disaggregation.getCategory().getName());
   }
 }
