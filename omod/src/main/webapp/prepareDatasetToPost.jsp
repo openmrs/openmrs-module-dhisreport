@@ -57,7 +57,7 @@
                 </i>
             </p>
             <input type="hidden" name="startDate" id="startDate"/>
-            <input type="hidden" name="uid" value="${dataset.uid}"/>
+            <input type="hidden" name="uuid" value="${dataset.uuid}"/>
             <button type="submit">
                 Post Data
             </button>

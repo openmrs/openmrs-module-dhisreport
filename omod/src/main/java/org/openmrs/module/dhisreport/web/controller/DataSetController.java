@@ -3,7 +3,9 @@ package org.openmrs.module.dhisreport.web.controller;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.Date;
+import java.util.LinkedHashSet;
 import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
@@ -16,6 +18,7 @@ import org.openmrs.module.dhisreport.api.DHIS2ReportingService;
 import org.openmrs.module.dhisreport.api.adx.importsummary.AdxImportSummary;
 import org.openmrs.module.dhisreport.api.model.DataSet;
 import org.openmrs.module.dhisreport.api.model.DataValueTemplate;
+import org.openmrs.module.dhisreport.api.model.Disaggregation;
 import org.openmrs.module.reporting.definition.DefinitionSummary;
 import org.openmrs.module.reporting.report.definition.PeriodIndicatorReportDefinition;
 import org.openmrs.module.reporting.report.definition.service.ReportDefinitionService;
@@ -63,6 +66,12 @@ public class DataSetController {
             Collectors.toList());
     List<DataValueTemplate> dataValueTemplates = service
         .getDataValueTemplatesByDataSet(dataSet);
+    // Sort disaggregation objects
+    dataValueTemplates.forEach(dataValueTemplate -> {
+      List<Disaggregation> disaggregations = new ArrayList<>(dataValueTemplate.getDisaggregations());
+      Collections.sort(disaggregations);
+      dataValueTemplate.setDisaggregations(new LinkedHashSet<>(disaggregations));
+    });
     // Add relevant attributes to the Model Map
     modelMap.addAttribute("dataset", dataSet);
     modelMap.addAttribute("currentReport", reportDefinition);
@@ -71,7 +80,7 @@ public class DataSetController {
     modelMap.addAttribute("user", Context.getAuthenticatedUser());
   }
 
-  @RequestMapping(value = "/module/dhisreport/dataset/{uid}/updateReport", method = RequestMethod.POST)
+  @RequestMapping(value = "/module/dhisreport/dataset/{uuid}/updateReport", method = RequestMethod.POST)
   public @ResponseBody
   void updateReportOfADataSet(@PathVariable String uuid, @RequestParam String reportUuid) {
     DHIS2ReportingService service = Context
@@ -130,7 +139,7 @@ public class DataSetController {
         .getService(DHIS2ReportingService.class);
     try {
       Date date = new SimpleDateFormat("yyyy-MM-dd").parse(startDate);
-      AdxImportSummary importSummary = service.postDataSetToDHIS2(uuid,locationUuid, date);
+      AdxImportSummary importSummary = service.postDataSetToDHIS2(uuid, locationUuid, date);
       modelMap.addAttribute("importSummary", importSummary);
       modelMap.addAttribute("isError", false);
     } catch (DHIS2ReportingException e) {
@@ -150,7 +159,7 @@ public class DataSetController {
   private Optional<LocationAttributeType> getCodeAttributeType() {
     return Context.getLocationService()
         .getAllLocationAttributeTypes().stream()
-        .filter(locationAttributeType -> locationAttributeType.getName().equals("CODE"))
+        .filter(locationAttributeType -> locationAttributeType.getName().equals("DHIS2_ORG_UNIT"))
         .findFirst();
   }
 }

@@ -1,5 +1,7 @@
 <%@ include file="/WEB-INF/template/include.jsp" %>
 <%@ include file="/WEB-INF/template/header.jsp" %>
+<openmrs:require privilege="View Dhisreport" otherwise="/login.htm"
+                 redirect="/module/dhisreport/mapDatasets.form"/>
 <%@ include file="template/localHeader.jsp" %>
 
 <form action="metadata.form" method="post" enctype="multipart/form-data">

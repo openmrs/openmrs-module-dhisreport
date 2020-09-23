@@ -21,7 +21,7 @@
                 </c:forEach>
             </select></td>
             <td>
-                <select name="dhis2OrgUnitUid">
+                <select name="dhis2OrgUnitCode">
                     <c:forEach items="${organisationUnits}" var="organisationUnit">
                         <option value="${organisationUnit.key}">${organisationUnit.value.name}</option>
                     </c:forEach>

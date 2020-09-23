@@ -60,8 +60,8 @@ public class HttpDhis2Server implements Dhis2Server {
 
 	private static Log log = LogFactory.getLog(HttpDhis2Server.class);
 
-	public static final String DATAVALUESET_PATH = "/api/dataValueSets";
-	public static final String ORG_UNITS_PATH = "/api/organisationUnits.xml?fields=name,id&paging=false";
+	public static final String DATAVALUESET_PATH = "/api/dataValueSets?idScheme=code";
+	public static final String ORG_UNITS_PATH = "/api/organisationUnits.xml?fields=name,id,code&paging=false";
 
 	private URL url;
 

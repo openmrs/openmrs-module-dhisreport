@@ -56,7 +56,7 @@ public class LocationMappingController {
 		Map<String, OrganisationUnit> organisationUnits;
 		try {
 			organisationUnits = server.getDHIS2OrganisationUnits().stream().collect(Collectors.toMap(
-					OrganisationUnit::getId, Function
+					OrganisationUnit::getCode, Function
 					.identity()));
 		} catch (Dhis2Exception e) {
 			webRequest.setAttribute(WebConstants.OPENMRS_ERROR_ATTR, Context
@@ -89,14 +89,14 @@ public class LocationMappingController {
 
 	@RequestMapping(value = "/module/dhisreport/mapLocations", method = RequestMethod.POST)
 	public String mapLocations(
-			@RequestParam String dhis2OrgUnitUid,
+			@RequestParam String dhis2OrgUnitCode,
 			@RequestParam String openmrsLocationUuid,
 			WebRequest webRequest) {
 		String referer = webRequest.getHeader("Referer");
 		DHIS2ReportingService service = Context
 				.getService(DHIS2ReportingService.class);
 		try {
-			service.mapLocationWithDhis2OrgUnit(openmrsLocationUuid, dhis2OrgUnitUid);
+			service.mapLocationWithDhis2OrgUnit(openmrsLocationUuid, dhis2OrgUnitCode);
 			webRequest.setAttribute(WebConstants.OPENMRS_MSG_ATTR, Context
 							.getMessageSourceService().getMessage(
 							"dhisreport.openMRSLocationMapped"),

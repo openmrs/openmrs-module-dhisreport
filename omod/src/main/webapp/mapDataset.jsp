@@ -66,15 +66,21 @@
             <tbody>
             <c:forEach items="${dataValueTemplates}" var="dataValueTemplate">
                 <tr>
+                    <td>${dataValueTemplate.dataElement.code}</td>
                     <td>${dataValueTemplate.dataElement.name}</td>
-                    <td>${dataValueTemplate.categoryOptionCombo.name}</td>
+                    <td>
+                        <c:forEach items="${dataValueTemplate.disaggregations}"
+                                   var="disaggregation">
+                            ${disaggregation.category.name}&nbsp;=&nbsp;${disaggregation.categoryOption.name},&nbsp;
+                        </c:forEach>
+                    </td>
                     <td>
                         <select id="dvt_${dataValueTemplate.id}">
                             <option disabled selected>Select a report indicator</option>
                             <c:forEach var="column"
                                        items="${currentReport.indicatorDataSetDefinition.columns}">
-                                <option value="${column.indicator.parameterizable.cohortDefinition.parameterizable.uuid}"
-                                        <c:if test="${column.indicator.parameterizable.cohortDefinition.parameterizable.uuid == dataValueTemplate.reportIndicatorUuid}">
+                                <option value="${column.label}"
+                                        <c:if test="${column.label == dataValueTemplate.reportIndicatorLabel}">
                                             selected
                                         </c:if>
                                 >
@@ -107,7 +113,7 @@
     // Todo: Handle errors
     const reportUuid = $("#reportSelector").val();
     $.post(
-        "${pageContext.request.contextPath}/module/dhisreport/dataset/${dataset.uid}/updateReport.form",
+        "${pageContext.request.contextPath}/module/dhisreport/dataset/${dataset.uuid}/updateReport.form",
         {reportUuid},
         function () {
           // Reload the page after the operation is success

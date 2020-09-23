@@ -131,7 +131,9 @@ public class HibernateDHIS2ReportingDAO implements DHIS2ReportingDAO {
 	@Override
 	@Transactional
 	public DataSet getDataSetByUuid(String uuid){
-		return (DataSet) getObjectByCode(uuid, DataSet.class);
+		Criteria criteria = getCurrentSession().createCriteria(DataSet.class);
+		criteria.add(Restrictions.eq("uuid", uuid));
+		return (DataSet) criteria.uniqueResult();
 	}
 
 	@Override

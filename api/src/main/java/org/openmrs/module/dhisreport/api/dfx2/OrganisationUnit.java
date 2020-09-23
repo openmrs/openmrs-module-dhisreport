@@ -14,6 +14,9 @@ public class OrganisationUnit {
 	@XmlAttribute
 	private String id;
 
+	@XmlAttribute
+	private String code;
+
 	public String getName() {
 		return name;
 	}
@@ -28,5 +31,13 @@ public class OrganisationUnit {
 
 	public void setId(String id) {
 		this.id = id;
+	}
+
+	public String getCode() {
+		return code;
+	}
+
+	public void setCode(String code) {
+		this.code = code;
 	}
 }
